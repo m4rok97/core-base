@@ -4,24 +4,24 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package org.ignis.rpc.executor;
+package org.ignis.rpc.driver;
 
 @SuppressWarnings({"cast", "rawtypes", "serial", "unchecked", "unused"})
-public class IMapperModule {
+public class IClusterService {
 
   public interface Iface {
 
-    public void _map(org.ignis.rpc.IFunction funct) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public long newInstance() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void streamingMap(org.ignis.rpc.IFunction funct, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void keep(long cluster) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
   }
 
   public interface AsyncIface {
 
-    public void _map(org.ignis.rpc.IFunction funct, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void newInstance(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void streamingMap(org.ignis.rpc.IFunction funct, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void keep(long cluster, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -45,47 +45,48 @@ public class IMapperModule {
       super(iprot, oprot);
     }
 
-    public void _map(org.ignis.rpc.IFunction funct) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public long newInstance() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send__map(funct);
-      recv__map();
+      send_newInstance();
+      return recv_newInstance();
     }
 
-    public void send__map(org.ignis.rpc.IFunction funct) throws org.apache.thrift.TException
+    public void send_newInstance() throws org.apache.thrift.TException
     {
-      _map_args args = new _map_args();
-      args.setFunct(funct);
-      sendBase("_map", args);
+      newInstance_args args = new newInstance_args();
+      sendBase("newInstance", args);
     }
 
-    public void recv__map() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public long recv_newInstance() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      _map_result result = new _map_result();
-      receiveBase(result, "_map");
+      newInstance_result result = new newInstance_result();
+      receiveBase(result, "newInstance");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
       if (result.ex != null) {
         throw result.ex;
       }
-      return;
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "newInstance failed: unknown result");
     }
 
-    public void streamingMap(org.ignis.rpc.IFunction funct, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void keep(long cluster) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_streamingMap(funct, ordered);
-      recv_streamingMap();
+      send_keep(cluster);
+      recv_keep();
     }
 
-    public void send_streamingMap(org.ignis.rpc.IFunction funct, boolean ordered) throws org.apache.thrift.TException
+    public void send_keep(long cluster) throws org.apache.thrift.TException
     {
-      streamingMap_args args = new streamingMap_args();
-      args.setFunct(funct);
-      args.setOrdered(ordered);
-      sendBase("streamingMap", args);
+      keep_args args = new keep_args();
+      args.setCluster(cluster);
+      sendBase("keep", args);
     }
 
-    public void recv_streamingMap() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void recv_keep() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      streamingMap_result result = new streamingMap_result();
-      receiveBase(result, "streamingMap");
+      keep_result result = new keep_result();
+      receiveBase(result, "keep");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -110,59 +111,53 @@ public class IMapperModule {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void _map(org.ignis.rpc.IFunction funct, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void newInstance(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      _map_call method_call = new _map_call(funct, resultHandler, this, ___protocolFactory, ___transport);
+      newInstance_call method_call = new newInstance_call(resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class _map_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private org.ignis.rpc.IFunction funct;
-      public _map_call(org.ignis.rpc.IFunction funct, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class newInstance_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
+      public newInstance_call(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.funct = funct;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("_map", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        _map_args args = new _map_args();
-        args.setFunct(funct);
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("newInstance", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        newInstance_args args = new newInstance_args();
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
+        return (new Client(prot)).recv_newInstance();
       }
     }
 
-    public void streamingMap(org.ignis.rpc.IFunction funct, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void keep(long cluster, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      streamingMap_call method_call = new streamingMap_call(funct, ordered, resultHandler, this, ___protocolFactory, ___transport);
+      keep_call method_call = new keep_call(cluster, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class streamingMap_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private org.ignis.rpc.IFunction funct;
-      private boolean ordered;
-      public streamingMap_call(org.ignis.rpc.IFunction funct, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class keep_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+      private long cluster;
+      public keep_call(long cluster, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.funct = funct;
-        this.ordered = ordered;
+        this.cluster = cluster;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("streamingMap", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        streamingMap_args args = new streamingMap_args();
-        args.setFunct(funct);
-        args.setOrdered(ordered);
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("keep", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        keep_args args = new keep_args();
+        args.setCluster(cluster);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -190,18 +185,18 @@ public class IMapperModule {
     }
 
     private static <I extends Iface> java.util.Map<java.lang.String,  org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> getProcessMap(java.util.Map<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
-      processMap.put("_map", new _map());
-      processMap.put("streamingMap", new streamingMap());
+      processMap.put("newInstance", new newInstance());
+      processMap.put("keep", new keep());
       return processMap;
     }
 
-    public static class _map<I extends Iface> extends org.apache.thrift.ProcessFunction<I, _map_args> {
-      public _map() {
-        super("_map");
+    public static class newInstance<I extends Iface> extends org.apache.thrift.ProcessFunction<I, newInstance_args> {
+      public newInstance() {
+        super("newInstance");
       }
 
-      public _map_args getEmptyArgsInstance() {
-        return new _map_args();
+      public newInstance_args getEmptyArgsInstance() {
+        return new newInstance_args();
       }
 
       protected boolean isOneway() {
@@ -213,10 +208,11 @@ public class IMapperModule {
         return true;
       }
 
-      public _map_result getResult(I iface, _map_args args) throws org.apache.thrift.TException {
-        _map_result result = new _map_result();
+      public newInstance_result getResult(I iface, newInstance_args args) throws org.apache.thrift.TException {
+        newInstance_result result = new newInstance_result();
         try {
-          iface._map(args.funct);
+          result.success = iface.newInstance();
+          result.setSuccessIsSet(true);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -224,13 +220,13 @@ public class IMapperModule {
       }
     }
 
-    public static class streamingMap<I extends Iface> extends org.apache.thrift.ProcessFunction<I, streamingMap_args> {
-      public streamingMap() {
-        super("streamingMap");
+    public static class keep<I extends Iface> extends org.apache.thrift.ProcessFunction<I, keep_args> {
+      public keep() {
+        super("keep");
       }
 
-      public streamingMap_args getEmptyArgsInstance() {
-        return new streamingMap_args();
+      public keep_args getEmptyArgsInstance() {
+        return new keep_args();
       }
 
       protected boolean isOneway() {
@@ -242,10 +238,10 @@ public class IMapperModule {
         return true;
       }
 
-      public streamingMap_result getResult(I iface, streamingMap_args args) throws org.apache.thrift.TException {
-        streamingMap_result result = new streamingMap_result();
+      public keep_result getResult(I iface, keep_args args) throws org.apache.thrift.TException {
+        keep_result result = new keep_result();
         try {
-          iface.streamingMap(args.funct, args.ordered);
+          iface.keep(args.cluster);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -266,25 +262,27 @@ public class IMapperModule {
     }
 
     private static <I extends AsyncIface> java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
-      processMap.put("_map", new _map());
-      processMap.put("streamingMap", new streamingMap());
+      processMap.put("newInstance", new newInstance());
+      processMap.put("keep", new keep());
       return processMap;
     }
 
-    public static class _map<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, _map_args, Void> {
-      public _map() {
-        super("_map");
+    public static class newInstance<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, newInstance_args, java.lang.Long> {
+      public newInstance() {
+        super("newInstance");
       }
 
-      public _map_args getEmptyArgsInstance() {
-        return new _map_args();
+      public newInstance_args getEmptyArgsInstance() {
+        return new newInstance_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
-            _map_result result = new _map_result();
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.Long>() { 
+          public void onComplete(java.lang.Long o) {
+            newInstance_result result = new newInstance_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -298,7 +296,7 @@ public class IMapperModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            _map_result result = new _map_result();
+            newInstance_result result = new newInstance_result();
             if (e instanceof org.ignis.rpc.IRemoteException) {
               result.ex = (org.ignis.rpc.IRemoteException) e;
               result.setExIsSet(true);
@@ -330,25 +328,25 @@ public class IMapperModule {
         return false;
       }
 
-      public void start(I iface, _map_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface._map(args.funct,resultHandler);
+      public void start(I iface, newInstance_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+        iface.newInstance(resultHandler);
       }
     }
 
-    public static class streamingMap<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, streamingMap_args, Void> {
-      public streamingMap() {
-        super("streamingMap");
+    public static class keep<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, keep_args, Void> {
+      public keep() {
+        super("keep");
       }
 
-      public streamingMap_args getEmptyArgsInstance() {
-        return new streamingMap_args();
+      public keep_args getEmptyArgsInstance() {
+        return new keep_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            streamingMap_result result = new streamingMap_result();
+            keep_result result = new keep_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -362,7 +360,7 @@ public class IMapperModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            streamingMap_result result = new streamingMap_result();
+            keep_result result = new keep_result();
             if (e instanceof org.ignis.rpc.IRemoteException) {
               result.ex = (org.ignis.rpc.IRemoteException) e;
               result.setExIsSet(true);
@@ -394,26 +392,24 @@ public class IMapperModule {
         return false;
       }
 
-      public void start(I iface, streamingMap_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.streamingMap(args.funct, args.ordered,resultHandler);
+      public void start(I iface, keep_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.keep(args.cluster,resultHandler);
       }
     }
 
   }
 
-  public static class _map_args implements org.apache.thrift.TBase<_map_args, _map_args._Fields>, java.io.Serializable, Cloneable, Comparable<_map_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("_map_args");
+  public static class newInstance_args implements org.apache.thrift.TBase<newInstance_args, newInstance_args._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance_args");
 
-    private static final org.apache.thrift.protocol.TField FUNCT_FIELD_DESC = new org.apache.thrift.protocol.TField("funct", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new _map_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new _map_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance_argsTupleSchemeFactory();
 
-    private org.ignis.rpc.IFunction funct; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      FUNCT((short)1, "funct");
+;
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -428,8 +424,6 @@ public class IMapperModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // FUNCT
-            return FUNCT;
           default:
             return null;
         }
@@ -468,87 +462,37 @@ public class IMapperModule {
         return _fieldName;
       }
     }
-
-    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.FUNCT, new org.apache.thrift.meta_data.FieldMetaData("funct", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IFunction.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(_map_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance_args.class, metaDataMap);
     }
 
-    public _map_args() {
-    }
-
-    public _map_args(
-      org.ignis.rpc.IFunction funct)
-    {
-      this();
-      this.funct = funct;
+    public newInstance_args() {
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public _map_args(_map_args other) {
-      if (other.isSetFunct()) {
-        this.funct = new org.ignis.rpc.IFunction(other.funct);
-      }
+    public newInstance_args(newInstance_args other) {
     }
 
-    public _map_args deepCopy() {
-      return new _map_args(this);
+    public newInstance_args deepCopy() {
+      return new newInstance_args(this);
     }
 
     @Override
     public void clear() {
-      this.funct = null;
-    }
-
-    public org.ignis.rpc.IFunction getFunct() {
-      return this.funct;
-    }
-
-    public _map_args setFunct(org.ignis.rpc.IFunction funct) {
-      this.funct = funct;
-      return this;
-    }
-
-    public void unsetFunct() {
-      this.funct = null;
-    }
-
-    /** Returns true if field funct is set (has been assigned a value) and false otherwise */
-    public boolean isSetFunct() {
-      return this.funct != null;
-    }
-
-    public void setFunctIsSet(boolean value) {
-      if (!value) {
-        this.funct = null;
-      }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
-      case FUNCT:
-        if (value == null) {
-          unsetFunct();
-        } else {
-          setFunct((org.ignis.rpc.IFunction)value);
-        }
-        break;
-
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
-      case FUNCT:
-        return getFunct();
-
       }
       throw new java.lang.IllegalStateException();
     }
@@ -560,8 +504,6 @@ public class IMapperModule {
       }
 
       switch (field) {
-      case FUNCT:
-        return isSetFunct();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -570,25 +512,16 @@ public class IMapperModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof _map_args)
-        return this.equals((_map_args)that);
+      if (that instanceof newInstance_args)
+        return this.equals((newInstance_args)that);
       return false;
     }
 
-    public boolean equals(_map_args that) {
+    public boolean equals(newInstance_args that) {
       if (that == null)
         return false;
       if (this == that)
         return true;
-
-      boolean this_present_funct = true && this.isSetFunct();
-      boolean that_present_funct = true && that.isSetFunct();
-      if (this_present_funct || that_present_funct) {
-        if (!(this_present_funct && that_present_funct))
-          return false;
-        if (!this.funct.equals(that.funct))
-          return false;
-      }
 
       return true;
     }
@@ -597,31 +530,17 @@ public class IMapperModule {
     public int hashCode() {
       int hashCode = 1;
 
-      hashCode = hashCode * 8191 + ((isSetFunct()) ? 131071 : 524287);
-      if (isSetFunct())
-        hashCode = hashCode * 8191 + funct.hashCode();
-
       return hashCode;
     }
 
     @Override
-    public int compareTo(_map_args other) {
+    public int compareTo(newInstance_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
 
-      lastComparison = java.lang.Boolean.valueOf(isSetFunct()).compareTo(other.isSetFunct());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetFunct()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.funct, other.funct);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
       return 0;
     }
 
@@ -639,16 +558,9 @@ public class IMapperModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("_map_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance_args(");
       boolean first = true;
 
-      sb.append("funct:");
-      if (this.funct == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.funct);
-      }
-      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -674,15 +586,15 @@ public class IMapperModule {
       }
     }
 
-    private static class _map_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public _map_argsStandardScheme getScheme() {
-        return new _map_argsStandardScheme();
+    private static class newInstance_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance_argsStandardScheme getScheme() {
+        return new newInstance_argsStandardScheme();
       }
     }
 
-    private static class _map_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<_map_args> {
+    private static class newInstance_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, _map_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -692,15 +604,6 @@ public class IMapperModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // FUNCT
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.funct = new org.ignis.rpc.IFunction();
-                struct.funct.read(iprot);
-                struct.setFunctIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -712,51 +615,32 @@ public class IMapperModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, _map_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.funct != null) {
-          oprot.writeFieldBegin(FUNCT_FIELD_DESC);
-          struct.funct.write(oprot);
-          oprot.writeFieldEnd();
-        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
 
     }
 
-    private static class _map_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public _map_argsTupleScheme getScheme() {
-        return new _map_argsTupleScheme();
+    private static class newInstance_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance_argsTupleScheme getScheme() {
+        return new newInstance_argsTupleScheme();
       }
     }
 
-    private static class _map_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<_map_args> {
+    private static class newInstance_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, _map_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetFunct()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetFunct()) {
-          struct.funct.write(oprot);
-        }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, _map_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.funct = new org.ignis.rpc.IFunction();
-          struct.funct.read(iprot);
-          struct.setFunctIsSet(true);
-        }
       }
     }
 
@@ -765,18 +649,21 @@ public class IMapperModule {
     }
   }
 
-  public static class _map_result implements org.apache.thrift.TBase<_map_result, _map_result._Fields>, java.io.Serializable, Cloneable, Comparable<_map_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("_map_result");
+  public static class newInstance_result implements org.apache.thrift.TBase<newInstance_result, newInstance_result._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new _map_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new _map_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance_resultTupleSchemeFactory();
 
+    private long success; // required
     private org.ignis.rpc.IRemoteException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
       EX((short)1, "ex");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
@@ -792,6 +679,8 @@ public class IMapperModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           case 1: // EX
             return EX;
           default:
@@ -834,48 +723,82 @@ public class IMapperModule {
     }
 
     // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(_map_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance_result.class, metaDataMap);
     }
 
-    public _map_result() {
+    public newInstance_result() {
     }
 
-    public _map_result(
+    public newInstance_result(
+      long success,
       org.ignis.rpc.IRemoteException ex)
     {
       this();
+      this.success = success;
+      setSuccessIsSet(true);
       this.ex = ex;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public _map_result(_map_result other) {
+    public newInstance_result(newInstance_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
-    public _map_result deepCopy() {
-      return new _map_result(this);
+    public newInstance_result deepCopy() {
+      return new newInstance_result(this);
     }
 
     @Override
     public void clear() {
+      setSuccessIsSet(false);
+      this.success = 0;
       this.ex = null;
+    }
+
+    public long getSuccess() {
+      return this.success;
+    }
+
+    public newInstance_result setSuccess(long success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
     }
 
     public org.ignis.rpc.IRemoteException getEx() {
       return this.ex;
     }
 
-    public _map_result setEx(org.ignis.rpc.IRemoteException ex) {
+    public newInstance_result setEx(org.ignis.rpc.IRemoteException ex) {
       this.ex = ex;
       return this;
     }
@@ -897,6 +820,14 @@ public class IMapperModule {
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.Long)value);
+        }
+        break;
+
       case EX:
         if (value == null) {
           unsetEx();
@@ -910,6 +841,9 @@ public class IMapperModule {
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
       case EX:
         return getEx();
 
@@ -924,6 +858,8 @@ public class IMapperModule {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       case EX:
         return isSetEx();
       }
@@ -934,16 +870,25 @@ public class IMapperModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof _map_result)
-        return this.equals((_map_result)that);
+      if (that instanceof newInstance_result)
+        return this.equals((newInstance_result)that);
       return false;
     }
 
-    public boolean equals(_map_result that) {
+    public boolean equals(newInstance_result that) {
       if (that == null)
         return false;
       if (this == that)
         return true;
+
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
 
       boolean this_present_ex = true && this.isSetEx();
       boolean that_present_ex = true && that.isSetEx();
@@ -961,6 +906,8 @@ public class IMapperModule {
     public int hashCode() {
       int hashCode = 1;
 
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(success);
+
       hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
       if (isSetEx())
         hashCode = hashCode * 8191 + ex.hashCode();
@@ -969,13 +916,23 @@ public class IMapperModule {
     }
 
     @Override
-    public int compareTo(_map_result other) {
+    public int compareTo(newInstance_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
       if (lastComparison != 0) {
         return lastComparison;
@@ -1003,456 +960,19 @@ public class IMapperModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("_map_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance_result(");
       boolean first = true;
 
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
+      if (!first) sb.append(", ");
       sb.append("ex:");
       if (this.ex == null) {
         sb.append("null");
       } else {
         sb.append(this.ex);
       }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class _map_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public _map_resultStandardScheme getScheme() {
-        return new _map_resultStandardScheme();
-      }
-    }
-
-    private static class _map_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<_map_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, _map_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // EX
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IRemoteException();
-                struct.ex.read(iprot);
-                struct.setExIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, _map_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.ex != null) {
-          oprot.writeFieldBegin(EX_FIELD_DESC);
-          struct.ex.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class _map_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public _map_resultTupleScheme getScheme() {
-        return new _map_resultTupleScheme();
-      }
-    }
-
-    private static class _map_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<_map_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, _map_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetEx()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetEx()) {
-          struct.ex.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, _map_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IRemoteException();
-          struct.ex.read(iprot);
-          struct.setExIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class streamingMap_args implements org.apache.thrift.TBase<streamingMap_args, streamingMap_args._Fields>, java.io.Serializable, Cloneable, Comparable<streamingMap_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("streamingMap_args");
-
-    private static final org.apache.thrift.protocol.TField FUNCT_FIELD_DESC = new org.apache.thrift.protocol.TField("funct", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-    private static final org.apache.thrift.protocol.TField ORDERED_FIELD_DESC = new org.apache.thrift.protocol.TField("ordered", org.apache.thrift.protocol.TType.BOOL, (short)2);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new streamingMap_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new streamingMap_argsTupleSchemeFactory();
-
-    private org.ignis.rpc.IFunction funct; // required
-    private boolean ordered; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      FUNCT((short)1, "funct"),
-      ORDERED((short)2, "ordered");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // FUNCT
-            return FUNCT;
-          case 2: // ORDERED
-            return ORDERED;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    private static final int __ORDERED_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.FUNCT, new org.apache.thrift.meta_data.FieldMetaData("funct", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IFunction.class)));
-      tmpMap.put(_Fields.ORDERED, new org.apache.thrift.meta_data.FieldMetaData("ordered", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(streamingMap_args.class, metaDataMap);
-    }
-
-    public streamingMap_args() {
-    }
-
-    public streamingMap_args(
-      org.ignis.rpc.IFunction funct,
-      boolean ordered)
-    {
-      this();
-      this.funct = funct;
-      this.ordered = ordered;
-      setOrderedIsSet(true);
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public streamingMap_args(streamingMap_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      if (other.isSetFunct()) {
-        this.funct = new org.ignis.rpc.IFunction(other.funct);
-      }
-      this.ordered = other.ordered;
-    }
-
-    public streamingMap_args deepCopy() {
-      return new streamingMap_args(this);
-    }
-
-    @Override
-    public void clear() {
-      this.funct = null;
-      setOrderedIsSet(false);
-      this.ordered = false;
-    }
-
-    public org.ignis.rpc.IFunction getFunct() {
-      return this.funct;
-    }
-
-    public streamingMap_args setFunct(org.ignis.rpc.IFunction funct) {
-      this.funct = funct;
-      return this;
-    }
-
-    public void unsetFunct() {
-      this.funct = null;
-    }
-
-    /** Returns true if field funct is set (has been assigned a value) and false otherwise */
-    public boolean isSetFunct() {
-      return this.funct != null;
-    }
-
-    public void setFunctIsSet(boolean value) {
-      if (!value) {
-        this.funct = null;
-      }
-    }
-
-    public boolean isOrdered() {
-      return this.ordered;
-    }
-
-    public streamingMap_args setOrdered(boolean ordered) {
-      this.ordered = ordered;
-      setOrderedIsSet(true);
-      return this;
-    }
-
-    public void unsetOrdered() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __ORDERED_ISSET_ID);
-    }
-
-    /** Returns true if field ordered is set (has been assigned a value) and false otherwise */
-    public boolean isSetOrdered() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __ORDERED_ISSET_ID);
-    }
-
-    public void setOrderedIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ORDERED_ISSET_ID, value);
-    }
-
-    public void setFieldValue(_Fields field, java.lang.Object value) {
-      switch (field) {
-      case FUNCT:
-        if (value == null) {
-          unsetFunct();
-        } else {
-          setFunct((org.ignis.rpc.IFunction)value);
-        }
-        break;
-
-      case ORDERED:
-        if (value == null) {
-          unsetOrdered();
-        } else {
-          setOrdered((java.lang.Boolean)value);
-        }
-        break;
-
-      }
-    }
-
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case FUNCT:
-        return getFunct();
-
-      case ORDERED:
-        return isOrdered();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case FUNCT:
-        return isSetFunct();
-      case ORDERED:
-        return isSetOrdered();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof streamingMap_args)
-        return this.equals((streamingMap_args)that);
-      return false;
-    }
-
-    public boolean equals(streamingMap_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_funct = true && this.isSetFunct();
-      boolean that_present_funct = true && that.isSetFunct();
-      if (this_present_funct || that_present_funct) {
-        if (!(this_present_funct && that_present_funct))
-          return false;
-        if (!this.funct.equals(that.funct))
-          return false;
-      }
-
-      boolean this_present_ordered = true;
-      boolean that_present_ordered = true;
-      if (this_present_ordered || that_present_ordered) {
-        if (!(this_present_ordered && that_present_ordered))
-          return false;
-        if (this.ordered != that.ordered)
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetFunct()) ? 131071 : 524287);
-      if (isSetFunct())
-        hashCode = hashCode * 8191 + funct.hashCode();
-
-      hashCode = hashCode * 8191 + ((ordered) ? 131071 : 524287);
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(streamingMap_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetFunct()).compareTo(other.isSetFunct());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetFunct()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.funct, other.funct);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetOrdered()).compareTo(other.isSetOrdered());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetOrdered()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ordered, other.ordered);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-    }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("streamingMap_args(");
-      boolean first = true;
-
-      sb.append("funct:");
-      if (this.funct == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.funct);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("ordered:");
-      sb.append(this.ordered);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -1481,15 +1001,15 @@ public class IMapperModule {
       }
     }
 
-    private static class streamingMap_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public streamingMap_argsStandardScheme getScheme() {
-        return new streamingMap_argsStandardScheme();
+    private static class newInstance_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance_resultStandardScheme getScheme() {
+        return new newInstance_resultStandardScheme();
       }
     }
 
-    private static class streamingMap_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<streamingMap_args> {
+    private static class newInstance_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, streamingMap_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -1499,19 +1019,19 @@ public class IMapperModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // FUNCT
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.funct = new org.ignis.rpc.IFunction();
-                struct.funct.read(iprot);
-                struct.setFunctIsSet(true);
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.success = iprot.readI64();
+                struct.setSuccessIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // ORDERED
-              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
-                struct.ordered = iprot.readBool();
-                struct.setOrderedIsSet(true);
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IRemoteException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -1527,63 +1047,65 @@ public class IMapperModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, streamingMap_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.funct != null) {
-          oprot.writeFieldBegin(FUNCT_FIELD_DESC);
-          struct.funct.write(oprot);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeI64(struct.success);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(ORDERED_FIELD_DESC);
-        oprot.writeBool(struct.ordered);
-        oprot.writeFieldEnd();
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
 
     }
 
-    private static class streamingMap_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public streamingMap_argsTupleScheme getScheme() {
-        return new streamingMap_argsTupleScheme();
+    private static class newInstance_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance_resultTupleScheme getScheme() {
+        return new newInstance_resultTupleScheme();
       }
     }
 
-    private static class streamingMap_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<streamingMap_args> {
+    private static class newInstance_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, streamingMap_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetFunct()) {
+        if (struct.isSetSuccess()) {
           optionals.set(0);
         }
-        if (struct.isSetOrdered()) {
+        if (struct.isSetEx()) {
           optionals.set(1);
         }
         oprot.writeBitSet(optionals, 2);
-        if (struct.isSetFunct()) {
-          struct.funct.write(oprot);
+        if (struct.isSetSuccess()) {
+          oprot.writeI64(struct.success);
         }
-        if (struct.isSetOrdered()) {
-          oprot.writeBool(struct.ordered);
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
         }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, streamingMap_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
-          struct.funct = new org.ignis.rpc.IFunction();
-          struct.funct.read(iprot);
-          struct.setFunctIsSet(true);
+          struct.success = iprot.readI64();
+          struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ordered = iprot.readBool();
-          struct.setOrderedIsSet(true);
+          struct.ex = new org.ignis.rpc.IRemoteException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
         }
       }
     }
@@ -1593,13 +1115,371 @@ public class IMapperModule {
     }
   }
 
-  public static class streamingMap_result implements org.apache.thrift.TBase<streamingMap_result, streamingMap_result._Fields>, java.io.Serializable, Cloneable, Comparable<streamingMap_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("streamingMap_result");
+  public static class keep_args implements org.apache.thrift.TBase<keep_args, keep_args._Fields>, java.io.Serializable, Cloneable, Comparable<keep_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("keep_args");
+
+    private static final org.apache.thrift.protocol.TField CLUSTER_FIELD_DESC = new org.apache.thrift.protocol.TField("cluster", org.apache.thrift.protocol.TType.I64, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new keep_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new keep_argsTupleSchemeFactory();
+
+    private long cluster; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      CLUSTER((short)1, "cluster");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // CLUSTER
+            return CLUSTER;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __CLUSTER_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.CLUSTER, new org.apache.thrift.meta_data.FieldMetaData("cluster", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(keep_args.class, metaDataMap);
+    }
+
+    public keep_args() {
+    }
+
+    public keep_args(
+      long cluster)
+    {
+      this();
+      this.cluster = cluster;
+      setClusterIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public keep_args(keep_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.cluster = other.cluster;
+    }
+
+    public keep_args deepCopy() {
+      return new keep_args(this);
+    }
+
+    @Override
+    public void clear() {
+      setClusterIsSet(false);
+      this.cluster = 0;
+    }
+
+    public long getCluster() {
+      return this.cluster;
+    }
+
+    public keep_args setCluster(long cluster) {
+      this.cluster = cluster;
+      setClusterIsSet(true);
+      return this;
+    }
+
+    public void unsetCluster() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __CLUSTER_ISSET_ID);
+    }
+
+    /** Returns true if field cluster is set (has been assigned a value) and false otherwise */
+    public boolean isSetCluster() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __CLUSTER_ISSET_ID);
+    }
+
+    public void setClusterIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __CLUSTER_ISSET_ID, value);
+    }
+
+    public void setFieldValue(_Fields field, java.lang.Object value) {
+      switch (field) {
+      case CLUSTER:
+        if (value == null) {
+          unsetCluster();
+        } else {
+          setCluster((java.lang.Long)value);
+        }
+        break;
+
+      }
+    }
+
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case CLUSTER:
+        return getCluster();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case CLUSTER:
+        return isSetCluster();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof keep_args)
+        return this.equals((keep_args)that);
+      return false;
+    }
+
+    public boolean equals(keep_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_cluster = true;
+      boolean that_present_cluster = true;
+      if (this_present_cluster || that_present_cluster) {
+        if (!(this_present_cluster && that_present_cluster))
+          return false;
+        if (this.cluster != that.cluster)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(cluster);
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(keep_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetCluster()).compareTo(other.isSetCluster());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetCluster()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.cluster, other.cluster);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("keep_args(");
+      boolean first = true;
+
+      sb.append("cluster:");
+      sb.append(this.cluster);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class keep_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public keep_argsStandardScheme getScheme() {
+        return new keep_argsStandardScheme();
+      }
+    }
+
+    private static class keep_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<keep_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, keep_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // CLUSTER
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.cluster = iprot.readI64();
+                struct.setClusterIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, keep_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(CLUSTER_FIELD_DESC);
+        oprot.writeI64(struct.cluster);
+        oprot.writeFieldEnd();
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class keep_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public keep_argsTupleScheme getScheme() {
+        return new keep_argsTupleScheme();
+      }
+    }
+
+    private static class keep_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<keep_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, keep_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetCluster()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetCluster()) {
+          oprot.writeI64(struct.cluster);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, keep_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.cluster = iprot.readI64();
+          struct.setClusterIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class keep_result implements org.apache.thrift.TBase<keep_result, keep_result._Fields>, java.io.Serializable, Cloneable, Comparable<keep_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("keep_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new streamingMap_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new streamingMap_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new keep_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new keep_resultTupleSchemeFactory();
 
     private org.ignis.rpc.IRemoteException ex; // required
 
@@ -1668,13 +1548,13 @@ public class IMapperModule {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(streamingMap_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(keep_result.class, metaDataMap);
     }
 
-    public streamingMap_result() {
+    public keep_result() {
     }
 
-    public streamingMap_result(
+    public keep_result(
       org.ignis.rpc.IRemoteException ex)
     {
       this();
@@ -1684,14 +1564,14 @@ public class IMapperModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public streamingMap_result(streamingMap_result other) {
+    public keep_result(keep_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
-    public streamingMap_result deepCopy() {
-      return new streamingMap_result(this);
+    public keep_result deepCopy() {
+      return new keep_result(this);
     }
 
     @Override
@@ -1703,7 +1583,7 @@ public class IMapperModule {
       return this.ex;
     }
 
-    public streamingMap_result setEx(org.ignis.rpc.IRemoteException ex) {
+    public keep_result setEx(org.ignis.rpc.IRemoteException ex) {
       this.ex = ex;
       return this;
     }
@@ -1762,12 +1642,12 @@ public class IMapperModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof streamingMap_result)
-        return this.equals((streamingMap_result)that);
+      if (that instanceof keep_result)
+        return this.equals((keep_result)that);
       return false;
     }
 
-    public boolean equals(streamingMap_result that) {
+    public boolean equals(keep_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -1797,7 +1677,7 @@ public class IMapperModule {
     }
 
     @Override
-    public int compareTo(streamingMap_result other) {
+    public int compareTo(keep_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -1831,7 +1711,7 @@ public class IMapperModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("streamingMap_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("keep_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -1866,15 +1746,15 @@ public class IMapperModule {
       }
     }
 
-    private static class streamingMap_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public streamingMap_resultStandardScheme getScheme() {
-        return new streamingMap_resultStandardScheme();
+    private static class keep_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public keep_resultStandardScheme getScheme() {
+        return new keep_resultStandardScheme();
       }
     }
 
-    private static class streamingMap_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<streamingMap_result> {
+    private static class keep_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<keep_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, streamingMap_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, keep_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -1904,7 +1784,7 @@ public class IMapperModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, streamingMap_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, keep_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -1919,16 +1799,16 @@ public class IMapperModule {
 
     }
 
-    private static class streamingMap_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public streamingMap_resultTupleScheme getScheme() {
-        return new streamingMap_resultTupleScheme();
+    private static class keep_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public keep_resultTupleScheme getScheme() {
+        return new keep_resultTupleScheme();
       }
     }
 
-    private static class streamingMap_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<streamingMap_result> {
+    private static class keep_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<keep_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, streamingMap_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, keep_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -1941,7 +1821,7 @@ public class IMapperModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, streamingMap_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, keep_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {

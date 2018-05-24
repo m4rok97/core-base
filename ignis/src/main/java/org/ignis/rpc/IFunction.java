@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package org.ignis.rpc.executor;
+package org.ignis.rpc;
 
 @SuppressWarnings({"cast", "rawtypes", "serial", "unchecked", "unused"})
 public class IFunction extends org.apache.thrift.TUnion<IFunction, IFunction._Fields> {
