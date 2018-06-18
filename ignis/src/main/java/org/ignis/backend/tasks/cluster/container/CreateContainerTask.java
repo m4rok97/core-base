@@ -14,39 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster;
+package org.ignis.backend.tasks.cluster.container;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.ignis.backend.properties.IProperties;
+import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.tasks.ILock;
+import org.ignis.backend.tasks.Task;
 
 /**
  *
  * @author César Pomar
  */
-public class ICluster {
-
-    private final long id;
-    private final IProperties properties;
-    private final List<IContainer> containers;
-    private final List<IJob> jobs;
-
-    public ICluster(long id, IProperties properties) {
-        this.id = id;
-        this.properties = properties;
-        this.containers = new ArrayList<>();
-        this.jobs = new ArrayList<>();
+public class CreateContainerTask extends Task{
+    
+    public CreateContainerTask(IContainer container, ILock lock) {
+        super(lock);
     }
-
-    public IJob createJob(IProperties properties) {
-        IJob job = new IJob(jobs.size(), properties);
-        jobs.add(job);
-        return job;
-    }
-
-    public IJob createJob() {
-        return createJob(properties);
-    }
-
+    
 }

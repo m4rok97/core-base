@@ -24,6 +24,9 @@ import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.properties.IProperties;
+import org.ignis.backend.tasks.ILock;
+import org.ignis.backend.tasks.Task;
+import org.ignis.backend.tasks.cluster.container.CreateContainerTask;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.ignis.rpc.manager.IServerManager;
 
@@ -41,8 +44,9 @@ public class IContainer {
     private final IServerManager.Iface serverManager;
     private final IRegisterManager.Iface registerManager;
     private final List<IExecutor> executors;
+    private final Task task;
 
-    public IContainer(long seqId, IContainerStub stub, IProperties properties) {
+    public IContainer(long seqId, IContainerStub stub, IProperties properties, ILock lock) {
         this.seqId = seqId;
         this.stub = stub;
         this.transport = stub.getTransport();
@@ -51,6 +55,7 @@ public class IContainer {
         this.serverManager = new IServerManager.Client(protocol);
         this.registerManager = new IRegisterManager.Client(protocol);
         this.executors = new ArrayList<>();
+        this.task = new CreateContainerTask(this, lock);
     }
 
     public IExecutor createExecutor(IProperties properties) {
@@ -63,6 +68,10 @@ public class IContainer {
         return createExecutor(properties);
     }
 
+    public long getSeqId() {
+        return seqId;
+    }
+
     public IServerManager.Iface getServerManager() {
         return serverManager;
     }
@@ -71,4 +80,8 @@ public class IContainer {
         return registerManager;
     }
 
+    public Task getTask() {
+        return task;
+    }
+    
 }

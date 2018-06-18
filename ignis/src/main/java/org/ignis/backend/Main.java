@@ -16,8 +16,11 @@
  */
 package org.ignis.backend;
 
+
 import org.apache.thrift.TMultiplexedProcessor;
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropertiesKeys;
+import org.ignis.backend.properties.IPropertiesParser;
 import org.ignis.backend.services.IAttributes;
 import org.ignis.backend.services.IBackendServiceImpl;
 import org.ignis.backend.services.IClusterServiceImpl;
@@ -79,13 +82,19 @@ public class Main {
 
         IBackendServiceImpl backendService = new IBackendServiceImpl();
 
-        processor.registerProcessor("backend", new IBackendService.Processor(backendService));
-        processor.registerProcessor("cluster", new IClusterService.Processor(new IClusterServiceImpl()));
-        processor.registerProcessor("job", new IJobService.Processor(new IJobServiceImpl()));
-        processor.registerProcessor("data", new IDataService.Processor(new IDataServiceImpl()));
-        processor.registerProcessor("properties", new IPropertiesService.Processor(new IPropertiesServiceImpl()));
+        processor.registerProcessor("backend", new IBackendService.Processor<>(backendService));
+        processor.registerProcessor("cluster", new IClusterService.Processor<>(new IClusterServiceImpl()));
+        processor.registerProcessor("job", new IJobService.Processor<>(new IJobServiceImpl()));
+        processor.registerProcessor("data", new IDataService.Processor<>(new IDataServiceImpl()));
+        processor.registerProcessor("properties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl()));
 
-        backendService.start(processor, 0);
+        try {
+            backendService.start(processor, IPropertiesParser.getInteger(attributes.defaultProperties,
+                    IPropertiesKeys.IGNIS_BACKEND_SERVER_PORT));
+        } catch (IgnisException ex) {
+            LOGGER.error("Error parsing server port, aborting", ex);
+            return;
+        }
         LOGGER.info("Backend stopped");
     }
 

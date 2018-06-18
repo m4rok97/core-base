@@ -16,6 +16,8 @@
  */
 package org.ignis.backend.properties;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import org.ignis.backend.exception.IgnisException;
 
@@ -27,7 +29,14 @@ public class IProperties {
 
     private Map<String, String> properties;
 
+    public IProperties() {
+        properties = new HashMap<>();
+    }
+
     public String setProperty(String key, String value) {
+        if (value == null) {
+            value = "";
+        }
         return properties.put(key, value);
     }
 
@@ -44,11 +53,13 @@ public class IProperties {
     }
 
     public Map<String, String> toMap() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Collections.unmodifiableMap(properties);
     }
 
-    public void fromMap(Map<String, String> _map) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void fromMap(Map<String, String> map) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            setProperty(entry.getKey(), entry.getValue());
+        }
     }
 
     public void toFile(String path) {
