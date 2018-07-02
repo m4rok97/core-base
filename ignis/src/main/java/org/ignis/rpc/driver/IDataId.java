@@ -10,20 +10,20 @@ package org.ignis.rpc.driver;
 public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields>, java.io.Serializable, Cloneable, Comparable<IDataId> {
   private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("IDataId");
 
-  private static final org.apache.thrift.protocol.TField CONTAINER_FIELD_DESC = new org.apache.thrift.protocol.TField("container", org.apache.thrift.protocol.TType.I64, (short)1);
+  private static final org.apache.thrift.protocol.TField CLUSTER_FIELD_DESC = new org.apache.thrift.protocol.TField("cluster", org.apache.thrift.protocol.TType.I64, (short)1);
   private static final org.apache.thrift.protocol.TField JOB_FIELD_DESC = new org.apache.thrift.protocol.TField("job", org.apache.thrift.protocol.TType.I64, (short)2);
   private static final org.apache.thrift.protocol.TField DATA_FIELD_DESC = new org.apache.thrift.protocol.TField("data", org.apache.thrift.protocol.TType.I64, (short)3);
 
   private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new IDataIdStandardSchemeFactory();
   private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new IDataIdTupleSchemeFactory();
 
-  private long container; // required
+  private long cluster; // required
   private long job; // required
   private long data; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-    CONTAINER((short)1, "container"),
+    CLUSTER((short)1, "cluster"),
     JOB((short)2, "job"),
     DATA((short)3, "data");
 
@@ -40,8 +40,8 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
      */
     public static _Fields findByThriftId(int fieldId) {
       switch(fieldId) {
-        case 1: // CONTAINER
-          return CONTAINER;
+        case 1: // CLUSTER
+          return CLUSTER;
         case 2: // JOB
           return JOB;
         case 3: // DATA
@@ -86,14 +86,14 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
   }
 
   // isset id assignments
-  private static final int __CONTAINER_ISSET_ID = 0;
+  private static final int __CLUSTER_ISSET_ID = 0;
   private static final int __JOB_ISSET_ID = 1;
   private static final int __DATA_ISSET_ID = 2;
   private byte __isset_bitfield = 0;
   public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-    tmpMap.put(_Fields.CONTAINER, new org.apache.thrift.meta_data.FieldMetaData("container", org.apache.thrift.TFieldRequirementType.REQUIRED, 
+    tmpMap.put(_Fields.CLUSTER, new org.apache.thrift.meta_data.FieldMetaData("cluster", org.apache.thrift.TFieldRequirementType.REQUIRED, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     tmpMap.put(_Fields.JOB, new org.apache.thrift.meta_data.FieldMetaData("job", org.apache.thrift.TFieldRequirementType.REQUIRED, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
@@ -107,13 +107,13 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
   }
 
   public IDataId(
-    long container,
+    long cluster,
     long job,
     long data)
   {
     this();
-    this.container = container;
-    setContainerIsSet(true);
+    this.cluster = cluster;
+    setClusterIsSet(true);
     this.job = job;
     setJobIsSet(true);
     this.data = data;
@@ -125,7 +125,7 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
    */
   public IDataId(IDataId other) {
     __isset_bitfield = other.__isset_bitfield;
-    this.container = other.container;
+    this.cluster = other.cluster;
     this.job = other.job;
     this.data = other.data;
   }
@@ -136,35 +136,35 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
 
   @Override
   public void clear() {
-    setContainerIsSet(false);
-    this.container = 0;
+    setClusterIsSet(false);
+    this.cluster = 0;
     setJobIsSet(false);
     this.job = 0;
     setDataIsSet(false);
     this.data = 0;
   }
 
-  public long getContainer() {
-    return this.container;
+  public long getCluster() {
+    return this.cluster;
   }
 
-  public IDataId setContainer(long container) {
-    this.container = container;
-    setContainerIsSet(true);
+  public IDataId setCluster(long cluster) {
+    this.cluster = cluster;
+    setClusterIsSet(true);
     return this;
   }
 
-  public void unsetContainer() {
-    __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __CONTAINER_ISSET_ID);
+  public void unsetCluster() {
+    __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __CLUSTER_ISSET_ID);
   }
 
-  /** Returns true if field container is set (has been assigned a value) and false otherwise */
-  public boolean isSetContainer() {
-    return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __CONTAINER_ISSET_ID);
+  /** Returns true if field cluster is set (has been assigned a value) and false otherwise */
+  public boolean isSetCluster() {
+    return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __CLUSTER_ISSET_ID);
   }
 
-  public void setContainerIsSet(boolean value) {
-    __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __CONTAINER_ISSET_ID, value);
+  public void setClusterIsSet(boolean value) {
+    __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __CLUSTER_ISSET_ID, value);
   }
 
   public long getJob() {
@@ -215,11 +215,11 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
 
   public void setFieldValue(_Fields field, java.lang.Object value) {
     switch (field) {
-    case CONTAINER:
+    case CLUSTER:
       if (value == null) {
-        unsetContainer();
+        unsetCluster();
       } else {
-        setContainer((java.lang.Long)value);
+        setCluster((java.lang.Long)value);
       }
       break;
 
@@ -244,8 +244,8 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
 
   public java.lang.Object getFieldValue(_Fields field) {
     switch (field) {
-    case CONTAINER:
-      return getContainer();
+    case CLUSTER:
+      return getCluster();
 
     case JOB:
       return getJob();
@@ -264,8 +264,8 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
     }
 
     switch (field) {
-    case CONTAINER:
-      return isSetContainer();
+    case CLUSTER:
+      return isSetCluster();
     case JOB:
       return isSetJob();
     case DATA:
@@ -289,12 +289,12 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
     if (this == that)
       return true;
 
-    boolean this_present_container = true;
-    boolean that_present_container = true;
-    if (this_present_container || that_present_container) {
-      if (!(this_present_container && that_present_container))
+    boolean this_present_cluster = true;
+    boolean that_present_cluster = true;
+    if (this_present_cluster || that_present_cluster) {
+      if (!(this_present_cluster && that_present_cluster))
         return false;
-      if (this.container != that.container)
+      if (this.cluster != that.cluster)
         return false;
     }
 
@@ -323,7 +323,7 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
   public int hashCode() {
     int hashCode = 1;
 
-    hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(container);
+    hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(cluster);
 
     hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(job);
 
@@ -340,12 +340,12 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
 
     int lastComparison = 0;
 
-    lastComparison = java.lang.Boolean.valueOf(isSetContainer()).compareTo(other.isSetContainer());
+    lastComparison = java.lang.Boolean.valueOf(isSetCluster()).compareTo(other.isSetCluster());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    if (isSetContainer()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.container, other.container);
+    if (isSetCluster()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.cluster, other.cluster);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -390,8 +390,8 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
     java.lang.StringBuilder sb = new java.lang.StringBuilder("IDataId(");
     boolean first = true;
 
-    sb.append("container:");
-    sb.append(this.container);
+    sb.append("cluster:");
+    sb.append(this.cluster);
     first = false;
     if (!first) sb.append(", ");
     sb.append("job:");
@@ -407,7 +407,7 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
 
   public void validate() throws org.apache.thrift.TException {
     // check for required fields
-    // alas, we cannot check 'container' because it's a primitive and you chose the non-beans generator.
+    // alas, we cannot check 'cluster' because it's a primitive and you chose the non-beans generator.
     // alas, we cannot check 'job' because it's a primitive and you chose the non-beans generator.
     // alas, we cannot check 'data' because it's a primitive and you chose the non-beans generator.
     // check for sub-struct validity
@@ -449,10 +449,10 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
           break;
         }
         switch (schemeField.id) {
-          case 1: // CONTAINER
+          case 1: // CLUSTER
             if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-              struct.container = iprot.readI64();
-              struct.setContainerIsSet(true);
+              struct.cluster = iprot.readI64();
+              struct.setClusterIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -481,8 +481,8 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
       iprot.readStructEnd();
 
       // check for required fields of primitive type, which can't be checked in the validate method
-      if (!struct.isSetContainer()) {
-        throw new org.apache.thrift.protocol.TProtocolException("Required field 'container' was not found in serialized data! Struct: " + toString());
+      if (!struct.isSetCluster()) {
+        throw new org.apache.thrift.protocol.TProtocolException("Required field 'cluster' was not found in serialized data! Struct: " + toString());
       }
       if (!struct.isSetJob()) {
         throw new org.apache.thrift.protocol.TProtocolException("Required field 'job' was not found in serialized data! Struct: " + toString());
@@ -497,8 +497,8 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
-      oprot.writeFieldBegin(CONTAINER_FIELD_DESC);
-      oprot.writeI64(struct.container);
+      oprot.writeFieldBegin(CLUSTER_FIELD_DESC);
+      oprot.writeI64(struct.cluster);
       oprot.writeFieldEnd();
       oprot.writeFieldBegin(JOB_FIELD_DESC);
       oprot.writeI64(struct.job);
@@ -523,7 +523,7 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
     @Override
     public void write(org.apache.thrift.protocol.TProtocol prot, IDataId struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-      oprot.writeI64(struct.container);
+      oprot.writeI64(struct.cluster);
       oprot.writeI64(struct.job);
       oprot.writeI64(struct.data);
     }
@@ -531,8 +531,8 @@ public class IDataId implements org.apache.thrift.TBase<IDataId, IDataId._Fields
     @Override
     public void read(org.apache.thrift.protocol.TProtocol prot, IDataId struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-      struct.container = iprot.readI64();
-      struct.setContainerIsSet(true);
+      struct.cluster = iprot.readI64();
+      struct.setClusterIsSet(true);
       struct.job = iprot.readI64();
       struct.setJobIsSet(true);
       struct.data = iprot.readI64();

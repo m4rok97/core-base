@@ -17,6 +17,7 @@
 package org.ignis.backend.allocator;
 
 import org.apache.thrift.transport.TTransport;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
@@ -24,6 +25,9 @@ import org.apache.thrift.transport.TTransport;
  */
 public class IContainerStub {
 
+    public IContainerStub(IProperties properties) {
+        
+    }
     public TTransport getTransport() {
         return null;
     }

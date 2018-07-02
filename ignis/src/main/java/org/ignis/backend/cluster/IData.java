@@ -16,16 +16,47 @@
  */
 package org.ignis.backend.cluster;
 
+import org.ignis.backend.cluster.helpers.data.IDataMapHelper;
+import org.ignis.backend.cluster.helpers.data.IDataReduceHelper;
+import org.ignis.backend.properties.IProperties;
+import org.ignis.rpc.IFunction;
+
 /**
  *
  * @author César Pomar
  */
 public class IData {
-    
-    private final long id;
 
-    public IData(long id) {
+    private final long id;
+    private final IProperties properties;
+
+    public IData(long id, IProperties properties) {
         this.id = id;
+        this.properties = properties;
     }
-        
+
+    public long getId() {
+        return id;
+    }
+    
+    public void setKeep(int level){
+        //TODO
+    }
+
+    public IData map(IFunction function) {
+        return new IDataMapHelper(this, properties).map(function);
+    }
+
+    public IData streamingMap(IFunction function) {
+        return new IDataMapHelper(this, properties).streamingMap(function);
+    }
+
+    public IData reduceByKey(IFunction function) {
+        return new IDataReduceHelper(this, properties).reduceByKey(function);
+    }
+    
+    public void saveAsFile(String path, boolean join){
+        //TODO
+    }
+
 }

@@ -14,22 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.tasks;
+package org.ignis.backend.cluster.helpers.job;
+
+import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class Task {
+public abstract class IJobHelper extends IHelper{
+    
+    protected final IJob job;
 
-    protected final Task[] dependencies;
-    protected final ILock lock;
-
-    public Task(ILock lock, Task... dependencies) {
-        this.lock = lock;
-        this.dependencies = dependencies;
+    public IJobHelper(IJob job, IProperties properties) {
+        super(properties);
+        this.job = job;
     }
-
-    public void execute() {
-    }
+    
 }

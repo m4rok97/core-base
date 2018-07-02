@@ -16,6 +16,12 @@
  */
 package org.ignis.backend.cluster;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.ignis.backend.cluster.helpers.job.IJobCreateHelper;
+import org.ignis.backend.cluster.helpers.job.IJobImportDataHelper;
+import org.ignis.backend.cluster.helpers.job.IJobReadFileHelper;
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
 /**
@@ -26,10 +32,47 @@ public class IJob {
 
     private final long id;
     private final IProperties properties;
+    private final List<IExecutor> executors;
+    private final List<IData> datas;
+    private boolean keep;
 
-    public IJob(long id, IProperties properties) {
+    public IJob(long id, IProperties properties) throws IgnisException {
         this.id = id;
         this.properties = properties;
+        this.datas = new ArrayList<>();
+        this.executors = new IJobCreateHelper(this, properties).create();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public IProperties getProperties() {
+        return properties;
+    }
+
+    public boolean isKeep() {
+        return keep;
+    }
+
+    public void setKeep(boolean keep) {
+        this.keep = keep;
+    }
+
+    public IData getData(long id) throws IgnisException {
+        IData data = datas.get((int) id);
+        if (data == null) {
+            throw new IgnisException("Data doesn't exist");
+        }
+        return data;
+    }
+
+    public IData readFile(String path) {
+        return new IJobReadFileHelper(this, properties).readFile();
+    }
+
+    public IData importData(IData source) {
+        return new IJobImportDataHelper(this, properties).importData();
     }
 
 }

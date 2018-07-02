@@ -11,7 +11,7 @@ public class IClusterService {
 
   public interface Iface {
 
-    public long newInstance() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public long newInstance(long properties) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public void keep(long cluster) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -19,7 +19,7 @@ public class IClusterService {
 
   public interface AsyncIface {
 
-    public void newInstance(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void newInstance(long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
     public void keep(long cluster, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -45,15 +45,16 @@ public class IClusterService {
       super(iprot, oprot);
     }
 
-    public long newInstance() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public long newInstance(long properties) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_newInstance();
+      send_newInstance(properties);
       return recv_newInstance();
     }
 
-    public void send_newInstance() throws org.apache.thrift.TException
+    public void send_newInstance(long properties) throws org.apache.thrift.TException
     {
       newInstance_args args = new newInstance_args();
+      args.setProperties(properties);
       sendBase("newInstance", args);
     }
 
@@ -111,21 +112,24 @@ public class IClusterService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void newInstance(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void newInstance(long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      newInstance_call method_call = new newInstance_call(resultHandler, this, ___protocolFactory, ___transport);
+      newInstance_call method_call = new newInstance_call(properties, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class newInstance_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
-      public newInstance_call(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private long properties;
+      public newInstance_call(long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.properties = properties;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("newInstance", org.apache.thrift.protocol.TMessageType.CALL, 0));
         newInstance_args args = new newInstance_args();
+        args.setProperties(properties);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -211,7 +215,7 @@ public class IClusterService {
       public newInstance_result getResult(I iface, newInstance_args args) throws org.apache.thrift.TException {
         newInstance_result result = new newInstance_result();
         try {
-          result.success = iface.newInstance();
+          result.success = iface.newInstance(args.properties);
           result.setSuccessIsSet(true);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
@@ -329,7 +333,7 @@ public class IClusterService {
       }
 
       public void start(I iface, newInstance_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.newInstance(resultHandler);
+        iface.newInstance(args.properties,resultHandler);
       }
     }
 
@@ -402,14 +406,16 @@ public class IClusterService {
   public static class newInstance_args implements org.apache.thrift.TBase<newInstance_args, newInstance_args._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance_args");
 
+    private static final org.apache.thrift.protocol.TField PROPERTIES_FIELD_DESC = new org.apache.thrift.protocol.TField("properties", org.apache.thrift.protocol.TType.I64, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance_argsTupleSchemeFactory();
 
+    private long properties; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      PROPERTIES((short)1, "properties");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -424,6 +430,8 @@ public class IClusterService {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 1: // PROPERTIES
+            return PROPERTIES;
           default:
             return null;
         }
@@ -462,9 +470,15 @@ public class IClusterService {
         return _fieldName;
       }
     }
+
+    // isset id assignments
+    private static final int __PROPERTIES_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.PROPERTIES, new org.apache.thrift.meta_data.FieldMetaData("properties", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance_args.class, metaDataMap);
     }
@@ -472,10 +486,20 @@ public class IClusterService {
     public newInstance_args() {
     }
 
+    public newInstance_args(
+      long properties)
+    {
+      this();
+      this.properties = properties;
+      setPropertiesIsSet(true);
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public newInstance_args(newInstance_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.properties = other.properties;
     }
 
     public newInstance_args deepCopy() {
@@ -484,15 +508,51 @@ public class IClusterService {
 
     @Override
     public void clear() {
+      setPropertiesIsSet(false);
+      this.properties = 0;
+    }
+
+    public long getProperties() {
+      return this.properties;
+    }
+
+    public newInstance_args setProperties(long properties) {
+      this.properties = properties;
+      setPropertiesIsSet(true);
+      return this;
+    }
+
+    public void unsetProperties() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PROPERTIES_ISSET_ID);
+    }
+
+    /** Returns true if field properties is set (has been assigned a value) and false otherwise */
+    public boolean isSetProperties() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PROPERTIES_ISSET_ID);
+    }
+
+    public void setPropertiesIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PROPERTIES_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case PROPERTIES:
+        if (value == null) {
+          unsetProperties();
+        } else {
+          setProperties((java.lang.Long)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case PROPERTIES:
+        return getProperties();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -504,6 +564,8 @@ public class IClusterService {
       }
 
       switch (field) {
+      case PROPERTIES:
+        return isSetProperties();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -523,12 +585,23 @@ public class IClusterService {
       if (this == that)
         return true;
 
+      boolean this_present_properties = true;
+      boolean that_present_properties = true;
+      if (this_present_properties || that_present_properties) {
+        if (!(this_present_properties && that_present_properties))
+          return false;
+        if (this.properties != that.properties)
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(properties);
 
       return hashCode;
     }
@@ -541,6 +614,16 @@ public class IClusterService {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetProperties()).compareTo(other.isSetProperties());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetProperties()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.properties, other.properties);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -561,6 +644,9 @@ public class IClusterService {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance_args(");
       boolean first = true;
 
+      sb.append("properties:");
+      sb.append(this.properties);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -580,6 +666,8 @@ public class IClusterService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -604,6 +692,14 @@ public class IClusterService {
             break;
           }
           switch (schemeField.id) {
+            case 1: // PROPERTIES
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.properties = iprot.readI64();
+                struct.setPropertiesIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -619,6 +715,9 @@ public class IClusterService {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(PROPERTIES_FIELD_DESC);
+        oprot.writeI64(struct.properties);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -636,11 +735,24 @@ public class IClusterService {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, newInstance_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetProperties()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetProperties()) {
+          oprot.writeI64(struct.properties);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, newInstance_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.properties = iprot.readI64();
+          struct.setPropertiesIsSet(true);
+        }
       }
     }
 

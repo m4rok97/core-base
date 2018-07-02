@@ -24,9 +24,9 @@ import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.tasks.ILock;
-import org.ignis.backend.tasks.Task;
-import org.ignis.backend.tasks.cluster.container.CreateContainerTask;
+import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.Task;
+import org.ignis.backend.cluster.tasks.container.CreateContainerTask;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.ignis.rpc.manager.IServerManager;
 
@@ -83,5 +83,5 @@ public class IContainer {
     public Task getTask() {
         return task;
     }
-    
+
 }

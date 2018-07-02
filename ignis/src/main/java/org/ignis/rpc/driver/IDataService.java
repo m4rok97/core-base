@@ -13,13 +13,13 @@ public class IDataService {
 
     public void keep(IDataId data, byte level) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId _map(IDataId data, org.ignis.rpc.IFunction _function) throws org.apache.thrift.TException;
+    public IDataId _map(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function) throws org.apache.thrift.TException;
+    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId reduceByKey(IDataId data, org.ignis.rpc.IFunction _function) throws org.apache.thrift.TException;
+    public IDataId reduceByKey(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void saveAsFile(IDataId data, java.lang.String path, boolean join) throws org.apache.thrift.TException;
+    public void saveAsFile(IDataId data, java.lang.String path, boolean join) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
   }
 
@@ -81,7 +81,7 @@ public class IDataService {
       return;
     }
 
-    public IDataId _map(IDataId data, org.ignis.rpc.IFunction _function) throws org.apache.thrift.TException
+    public IDataId _map(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send__map(data, _function);
       return recv__map();
@@ -95,17 +95,20 @@ public class IDataService {
       sendBase("_map", args);
     }
 
-    public IDataId recv__map() throws org.apache.thrift.TException
+    public IDataId recv__map() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       _map_result result = new _map_result();
       receiveBase(result, "_map");
       if (result.isSetSuccess()) {
         return result.success;
       }
+      if (result.ex != null) {
+        throw result.ex;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "_map failed: unknown result");
     }
 
-    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function) throws org.apache.thrift.TException
+    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_streamingMap(data, _function);
       return recv_streamingMap();
@@ -119,17 +122,20 @@ public class IDataService {
       sendBase("streamingMap", args);
     }
 
-    public IDataId recv_streamingMap() throws org.apache.thrift.TException
+    public IDataId recv_streamingMap() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       streamingMap_result result = new streamingMap_result();
       receiveBase(result, "streamingMap");
       if (result.isSetSuccess()) {
         return result.success;
       }
+      if (result.ex != null) {
+        throw result.ex;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "streamingMap failed: unknown result");
     }
 
-    public IDataId reduceByKey(IDataId data, org.ignis.rpc.IFunction _function) throws org.apache.thrift.TException
+    public IDataId reduceByKey(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_reduceByKey(data, _function);
       return recv_reduceByKey();
@@ -143,17 +149,20 @@ public class IDataService {
       sendBase("reduceByKey", args);
     }
 
-    public IDataId recv_reduceByKey() throws org.apache.thrift.TException
+    public IDataId recv_reduceByKey() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       reduceByKey_result result = new reduceByKey_result();
       receiveBase(result, "reduceByKey");
       if (result.isSetSuccess()) {
         return result.success;
       }
+      if (result.ex != null) {
+        throw result.ex;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "reduceByKey failed: unknown result");
     }
 
-    public void saveAsFile(IDataId data, java.lang.String path, boolean join) throws org.apache.thrift.TException
+    public void saveAsFile(IDataId data, java.lang.String path, boolean join) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_saveAsFile(data, path, join);
       recv_saveAsFile();
@@ -168,10 +177,13 @@ public class IDataService {
       sendBase("saveAsFile", args);
     }
 
-    public void recv_saveAsFile() throws org.apache.thrift.TException
+    public void recv_saveAsFile() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       saveAsFile_result result = new saveAsFile_result();
       receiveBase(result, "saveAsFile");
+      if (result.ex != null) {
+        throw result.ex;
+      }
       return;
     }
 
@@ -253,7 +265,7 @@ public class IDataService {
         prot.writeMessageEnd();
       }
 
-      public IDataId getResult() throws org.apache.thrift.TException {
+      public IDataId getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -288,7 +300,7 @@ public class IDataService {
         prot.writeMessageEnd();
       }
 
-      public IDataId getResult() throws org.apache.thrift.TException {
+      public IDataId getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -323,7 +335,7 @@ public class IDataService {
         prot.writeMessageEnd();
       }
 
-      public IDataId getResult() throws org.apache.thrift.TException {
+      public IDataId getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -361,7 +373,7 @@ public class IDataService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -441,7 +453,11 @@ public class IDataService {
 
       public _map_result getResult(I iface, _map_args args) throws org.apache.thrift.TException {
         _map_result result = new _map_result();
-        result.success = iface._map(args.data, args._function);
+        try {
+          result.success = iface._map(args.data, args._function);
+        } catch (org.ignis.rpc.IRemoteException ex) {
+          result.ex = ex;
+        }
         return result;
       }
     }
@@ -466,7 +482,11 @@ public class IDataService {
 
       public streamingMap_result getResult(I iface, streamingMap_args args) throws org.apache.thrift.TException {
         streamingMap_result result = new streamingMap_result();
-        result.success = iface.streamingMap(args.data, args._function);
+        try {
+          result.success = iface.streamingMap(args.data, args._function);
+        } catch (org.ignis.rpc.IRemoteException ex) {
+          result.ex = ex;
+        }
         return result;
       }
     }
@@ -491,7 +511,11 @@ public class IDataService {
 
       public reduceByKey_result getResult(I iface, reduceByKey_args args) throws org.apache.thrift.TException {
         reduceByKey_result result = new reduceByKey_result();
-        result.success = iface.reduceByKey(args.data, args._function);
+        try {
+          result.success = iface.reduceByKey(args.data, args._function);
+        } catch (org.ignis.rpc.IRemoteException ex) {
+          result.ex = ex;
+        }
         return result;
       }
     }
@@ -516,7 +540,11 @@ public class IDataService {
 
       public saveAsFile_result getResult(I iface, saveAsFile_args args) throws org.apache.thrift.TException {
         saveAsFile_result result = new saveAsFile_result();
-        iface.saveAsFile(args.data, args.path, args.join);
+        try {
+          iface.saveAsFile(args.data, args.path, args.join);
+        } catch (org.ignis.rpc.IRemoteException ex) {
+          result.ex = ex;
+        }
         return result;
       }
     }
@@ -635,7 +663,11 @@ public class IDataService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             _map_result result = new _map_result();
-            if (e instanceof org.apache.thrift.transport.TTransportException) {
+            if (e instanceof org.ignis.rpc.IRemoteException) {
+              result.ex = (org.ignis.rpc.IRemoteException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
               _LOGGER.error("TTransportException inside handler", e);
               fb.close();
               return;
@@ -696,7 +728,11 @@ public class IDataService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             streamingMap_result result = new streamingMap_result();
-            if (e instanceof org.apache.thrift.transport.TTransportException) {
+            if (e instanceof org.ignis.rpc.IRemoteException) {
+              result.ex = (org.ignis.rpc.IRemoteException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
               _LOGGER.error("TTransportException inside handler", e);
               fb.close();
               return;
@@ -757,7 +793,11 @@ public class IDataService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             reduceByKey_result result = new reduceByKey_result();
-            if (e instanceof org.apache.thrift.transport.TTransportException) {
+            if (e instanceof org.ignis.rpc.IRemoteException) {
+              result.ex = (org.ignis.rpc.IRemoteException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
               _LOGGER.error("TTransportException inside handler", e);
               fb.close();
               return;
@@ -817,7 +857,11 @@ public class IDataService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             saveAsFile_result result = new saveAsFile_result();
-            if (e instanceof org.apache.thrift.transport.TTransportException) {
+            if (e instanceof org.ignis.rpc.IRemoteException) {
+              result.ex = (org.ignis.rpc.IRemoteException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
               _LOGGER.error("TTransportException inside handler", e);
               fb.close();
               return;
@@ -2159,15 +2203,18 @@ public class IDataService {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("_map_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new _map_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new _map_resultTupleSchemeFactory();
 
     private IDataId success; // required
+    private org.ignis.rpc.IRemoteException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success");
+      SUCCESS((short)0, "success"),
+      EX((short)1, "ex");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -2184,6 +2231,8 @@ public class IDataService {
         switch(fieldId) {
           case 0: // SUCCESS
             return SUCCESS;
+          case 1: // EX
+            return EX;
           default:
             return null;
         }
@@ -2229,6 +2278,8 @@ public class IDataService {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(_map_result.class, metaDataMap);
     }
@@ -2237,10 +2288,12 @@ public class IDataService {
     }
 
     public _map_result(
-      IDataId success)
+      IDataId success,
+      org.ignis.rpc.IRemoteException ex)
     {
       this();
       this.success = success;
+      this.ex = ex;
     }
 
     /**
@@ -2249,6 +2302,9 @@ public class IDataService {
     public _map_result(_map_result other) {
       if (other.isSetSuccess()) {
         this.success = new IDataId(other.success);
+      }
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
@@ -2259,6 +2315,7 @@ public class IDataService {
     @Override
     public void clear() {
       this.success = null;
+      this.ex = null;
     }
 
     public IDataId getSuccess() {
@@ -2285,6 +2342,30 @@ public class IDataService {
       }
     }
 
+    public org.ignis.rpc.IRemoteException getEx() {
+      return this.ex;
+    }
+
+    public _map_result setEx(org.ignis.rpc.IRemoteException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
       case SUCCESS:
@@ -2295,6 +2376,14 @@ public class IDataService {
         }
         break;
 
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IRemoteException)value);
+        }
+        break;
+
       }
     }
 
@@ -2302,6 +2391,9 @@ public class IDataService {
       switch (field) {
       case SUCCESS:
         return getSuccess();
+
+      case EX:
+        return getEx();
 
       }
       throw new java.lang.IllegalStateException();
@@ -2316,6 +2408,8 @@ public class IDataService {
       switch (field) {
       case SUCCESS:
         return isSetSuccess();
+      case EX:
+        return isSetEx();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2344,6 +2438,15 @@ public class IDataService {
           return false;
       }
 
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
       return true;
     }
 
@@ -2354,6 +2457,10 @@ public class IDataService {
       hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
       if (isSetSuccess())
         hashCode = hashCode * 8191 + success.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
 
       return hashCode;
     }
@@ -2372,6 +2479,16 @@ public class IDataService {
       }
       if (isSetSuccess()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -2401,6 +2518,14 @@ public class IDataService {
         sb.append("null");
       } else {
         sb.append(this.success);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
       }
       first = false;
       sb.append(")");
@@ -2458,6 +2583,15 @@ public class IDataService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IRemoteException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -2476,6 +2610,11 @@ public class IDataService {
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           struct.success.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -2499,20 +2638,31 @@ public class IDataService {
         if (struct.isSetSuccess()) {
           optionals.set(0);
         }
-        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetEx()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
+        }
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, _map_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
+        java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           struct.success = new IDataId();
           struct.success.read(iprot);
           struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.ex = new org.ignis.rpc.IRemoteException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
         }
       }
     }
@@ -2999,15 +3149,18 @@ public class IDataService {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("streamingMap_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new streamingMap_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new streamingMap_resultTupleSchemeFactory();
 
     private IDataId success; // required
+    private org.ignis.rpc.IRemoteException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success");
+      SUCCESS((short)0, "success"),
+      EX((short)1, "ex");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -3024,6 +3177,8 @@ public class IDataService {
         switch(fieldId) {
           case 0: // SUCCESS
             return SUCCESS;
+          case 1: // EX
+            return EX;
           default:
             return null;
         }
@@ -3069,6 +3224,8 @@ public class IDataService {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(streamingMap_result.class, metaDataMap);
     }
@@ -3077,10 +3234,12 @@ public class IDataService {
     }
 
     public streamingMap_result(
-      IDataId success)
+      IDataId success,
+      org.ignis.rpc.IRemoteException ex)
     {
       this();
       this.success = success;
+      this.ex = ex;
     }
 
     /**
@@ -3089,6 +3248,9 @@ public class IDataService {
     public streamingMap_result(streamingMap_result other) {
       if (other.isSetSuccess()) {
         this.success = new IDataId(other.success);
+      }
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
@@ -3099,6 +3261,7 @@ public class IDataService {
     @Override
     public void clear() {
       this.success = null;
+      this.ex = null;
     }
 
     public IDataId getSuccess() {
@@ -3125,6 +3288,30 @@ public class IDataService {
       }
     }
 
+    public org.ignis.rpc.IRemoteException getEx() {
+      return this.ex;
+    }
+
+    public streamingMap_result setEx(org.ignis.rpc.IRemoteException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
       case SUCCESS:
@@ -3135,6 +3322,14 @@ public class IDataService {
         }
         break;
 
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IRemoteException)value);
+        }
+        break;
+
       }
     }
 
@@ -3142,6 +3337,9 @@ public class IDataService {
       switch (field) {
       case SUCCESS:
         return getSuccess();
+
+      case EX:
+        return getEx();
 
       }
       throw new java.lang.IllegalStateException();
@@ -3156,6 +3354,8 @@ public class IDataService {
       switch (field) {
       case SUCCESS:
         return isSetSuccess();
+      case EX:
+        return isSetEx();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -3184,6 +3384,15 @@ public class IDataService {
           return false;
       }
 
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
       return true;
     }
 
@@ -3194,6 +3403,10 @@ public class IDataService {
       hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
       if (isSetSuccess())
         hashCode = hashCode * 8191 + success.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
 
       return hashCode;
     }
@@ -3212,6 +3425,16 @@ public class IDataService {
       }
       if (isSetSuccess()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -3241,6 +3464,14 @@ public class IDataService {
         sb.append("null");
       } else {
         sb.append(this.success);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
       }
       first = false;
       sb.append(")");
@@ -3298,6 +3529,15 @@ public class IDataService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IRemoteException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3316,6 +3556,11 @@ public class IDataService {
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           struct.success.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -3339,20 +3584,31 @@ public class IDataService {
         if (struct.isSetSuccess()) {
           optionals.set(0);
         }
-        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetEx()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
+        }
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, streamingMap_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
+        java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           struct.success = new IDataId();
           struct.success.read(iprot);
           struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.ex = new org.ignis.rpc.IRemoteException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
         }
       }
     }
@@ -3839,15 +4095,18 @@ public class IDataService {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("reduceByKey_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new reduceByKey_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new reduceByKey_resultTupleSchemeFactory();
 
     private IDataId success; // required
+    private org.ignis.rpc.IRemoteException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success");
+      SUCCESS((short)0, "success"),
+      EX((short)1, "ex");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -3864,6 +4123,8 @@ public class IDataService {
         switch(fieldId) {
           case 0: // SUCCESS
             return SUCCESS;
+          case 1: // EX
+            return EX;
           default:
             return null;
         }
@@ -3909,6 +4170,8 @@ public class IDataService {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(reduceByKey_result.class, metaDataMap);
     }
@@ -3917,10 +4180,12 @@ public class IDataService {
     }
 
     public reduceByKey_result(
-      IDataId success)
+      IDataId success,
+      org.ignis.rpc.IRemoteException ex)
     {
       this();
       this.success = success;
+      this.ex = ex;
     }
 
     /**
@@ -3929,6 +4194,9 @@ public class IDataService {
     public reduceByKey_result(reduceByKey_result other) {
       if (other.isSetSuccess()) {
         this.success = new IDataId(other.success);
+      }
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
@@ -3939,6 +4207,7 @@ public class IDataService {
     @Override
     public void clear() {
       this.success = null;
+      this.ex = null;
     }
 
     public IDataId getSuccess() {
@@ -3965,6 +4234,30 @@ public class IDataService {
       }
     }
 
+    public org.ignis.rpc.IRemoteException getEx() {
+      return this.ex;
+    }
+
+    public reduceByKey_result setEx(org.ignis.rpc.IRemoteException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
       case SUCCESS:
@@ -3975,6 +4268,14 @@ public class IDataService {
         }
         break;
 
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IRemoteException)value);
+        }
+        break;
+
       }
     }
 
@@ -3982,6 +4283,9 @@ public class IDataService {
       switch (field) {
       case SUCCESS:
         return getSuccess();
+
+      case EX:
+        return getEx();
 
       }
       throw new java.lang.IllegalStateException();
@@ -3996,6 +4300,8 @@ public class IDataService {
       switch (field) {
       case SUCCESS:
         return isSetSuccess();
+      case EX:
+        return isSetEx();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -4024,6 +4330,15 @@ public class IDataService {
           return false;
       }
 
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
       return true;
     }
 
@@ -4034,6 +4349,10 @@ public class IDataService {
       hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
       if (isSetSuccess())
         hashCode = hashCode * 8191 + success.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
 
       return hashCode;
     }
@@ -4052,6 +4371,16 @@ public class IDataService {
       }
       if (isSetSuccess()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -4081,6 +4410,14 @@ public class IDataService {
         sb.append("null");
       } else {
         sb.append(this.success);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
       }
       first = false;
       sb.append(")");
@@ -4138,6 +4475,15 @@ public class IDataService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IRemoteException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -4156,6 +4502,11 @@ public class IDataService {
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           struct.success.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -4179,20 +4530,31 @@ public class IDataService {
         if (struct.isSetSuccess()) {
           optionals.set(0);
         }
-        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetEx()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
+        }
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, reduceByKey_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
+        java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           struct.success = new IDataId();
           struct.success.read(iprot);
           struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.ex = new org.ignis.rpc.IRemoteException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
         }
       }
     }
@@ -4776,14 +5138,16 @@ public class IDataService {
   public static class saveAsFile_result implements org.apache.thrift.TBase<saveAsFile_result, saveAsFile_result._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsFile_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsFile_result");
 
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsFile_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsFile_resultTupleSchemeFactory();
 
+    private org.ignis.rpc.IRemoteException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      EX((short)1, "ex");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -4798,6 +5162,8 @@ public class IDataService {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 1: // EX
+            return EX;
           default:
             return null;
         }
@@ -4836,9 +5202,13 @@ public class IDataService {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsFile_result.class, metaDataMap);
     }
@@ -4846,10 +5216,20 @@ public class IDataService {
     public saveAsFile_result() {
     }
 
+    public saveAsFile_result(
+      org.ignis.rpc.IRemoteException ex)
+    {
+      this();
+      this.ex = ex;
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public saveAsFile_result(saveAsFile_result other) {
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IRemoteException(other.ex);
+      }
     }
 
     public saveAsFile_result deepCopy() {
@@ -4858,15 +5238,51 @@ public class IDataService {
 
     @Override
     public void clear() {
+      this.ex = null;
+    }
+
+    public org.ignis.rpc.IRemoteException getEx() {
+      return this.ex;
+    }
+
+    public saveAsFile_result setEx(org.ignis.rpc.IRemoteException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IRemoteException)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case EX:
+        return getEx();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -4878,6 +5294,8 @@ public class IDataService {
       }
 
       switch (field) {
+      case EX:
+        return isSetEx();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -4897,12 +5315,25 @@ public class IDataService {
       if (this == that)
         return true;
 
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
 
       return hashCode;
     }
@@ -4915,6 +5346,16 @@ public class IDataService {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -4935,6 +5376,13 @@ public class IDataService {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsFile_result(");
       boolean first = true;
 
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -4978,6 +5426,15 @@ public class IDataService {
             break;
           }
           switch (schemeField.id) {
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IRemoteException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -4993,6 +5450,11 @@ public class IDataService {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -5010,11 +5472,25 @@ public class IDataService {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, saveAsFile_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetEx()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, saveAsFile_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.ex = new org.ignis.rpc.IRemoteException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
       }
     }
 

@@ -14,12 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.tasks.cluster;
+package org.ignis.backend.cluster.helpers.data;
+
+import org.ignis.backend.cluster.IData;
+import org.ignis.backend.properties.IProperties;
+import org.ignis.rpc.IFunction;
 
 /**
  *
  * @author César Pomar
  */
-public class UpdateClusterTask {
-    
+public class IDataReduceHelper extends IDataHelper {
+
+    public IDataReduceHelper(IData data, IProperties properties) {
+        super(data, properties);
+    }
+
+    public IData reduceByKey(IFunction function) {
+        return null;
+    }
+
 }

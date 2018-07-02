@@ -17,6 +17,8 @@
 package org.ignis.backend.services;
 
 import org.apache.thrift.TException;
+import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.IJob;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IDataId;
 import org.ignis.rpc.driver.IJobId;
@@ -26,26 +28,40 @@ import org.ignis.rpc.driver.IJobService;
  *
  * @author César Pomar
  */
-public class IJobServiceImpl implements IJobService.Iface{
+public class IJobServiceImpl extends IService implements IJobService.Iface {
+
+    public IJobServiceImpl(IAttributes attributes) {
+        super(attributes);
+    }
 
     @Override
     public IJobId newInstance(long cluster, String type) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        IJob job = attributes.getCluster(cluster).createJob(type);
+        return new IJobId(cluster, job.getId());
+    }
+
+    @Override
+    public IJobId newInstance3(long cluster, String type, long properties) throws IRemoteException, TException {
+        IJob job = attributes.getCluster(cluster).createJob(type);
+        return new IJobId(cluster, job.getId());
     }
 
     @Override
     public void keep(IJobId job) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        attributes.getCluster(job.getCluster()).getJob(job.getJob()).setKeep(true);
     }
 
     @Override
-    public IDataId importJDD(IJobId job, IDataId data) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IDataId importData(IJobId job, IDataId data) throws IRemoteException, TException {
+        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
+        IData target = attributes.getCluster(job.getCluster()).getJob(job.getJob()).importData(source);
+        return new IDataId(job.getCluster(), job.getJob(), target.getId());
     }
 
     @Override
     public IDataId readFile(IJobId job, String path) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        IData data = attributes.getCluster(job.getCluster()).getJob(job.getJob()).readFile(path);
+        return new IDataId(job.getCluster(), job.getJob(), data.getId());
     }
-    
+
 }

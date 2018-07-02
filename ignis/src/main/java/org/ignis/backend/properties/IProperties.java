@@ -29,6 +29,11 @@ public class IProperties {
 
     private Map<String, String> properties;
 
+    
+    public IProperties(IProperties defaults){
+        this();
+    }
+    
     public IProperties() {
         properties = new HashMap<>();
     }
@@ -68,5 +73,9 @@ public class IProperties {
 
     public void fromFile(String path) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void reset(IProperties defaults){
+        
     }
 }

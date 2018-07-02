@@ -18,8 +18,10 @@ package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.tasks.ILock;
+import org.ignis.backend.cluster.tasks.ILock;
 
 /**
  *
@@ -31,22 +33,49 @@ public class ICluster {
     private final IProperties properties;
     private final List<IContainer> containers;
     private final List<IJob> jobs;
+    private final ILock lock;
+    private boolean keep;
 
-    public ICluster(long id, IProperties properties) {
+    public ICluster(long id, IProperties properties) throws IgnisException {
         this.id = id;
         this.properties = properties;
-        this.containers = new ArrayList<>();
         this.jobs = new ArrayList<>();
+        this.lock = new ILock();
+        this.containers = new IClusterCreateHelper(this,properties).create();
     }
 
-    public IJob createJob(IProperties properties) {
+    public long getId() {
+        return id;
+    }
+
+    public IProperties getProperties() {
+        return properties;
+    }
+
+    public IJob createJob(String type, IProperties properties) throws IgnisException {
         IJob job = new IJob(jobs.size(), properties);
         jobs.add(job);
         return job;
     }
 
-    public IJob createJob() {
-        return createJob(properties);
+    public IJob createJob(String type) throws IgnisException {
+        return createJob(type, properties);
+    }
+
+    public IJob getJob(long id) throws IgnisException {
+        IJob job = jobs.get((int) id);
+        if (job == null) {
+            throw new IgnisException("Job doesn't exist");
+        }
+        return job;
+    }
+
+    public boolean isKeep() {
+        return keep;
+    }
+
+    public void setKeep(boolean keep) {
+        this.keep = keep;
     }
 
 }

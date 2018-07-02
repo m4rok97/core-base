@@ -17,6 +17,7 @@
 package org.ignis.backend.services;
 
 import org.apache.thrift.TException;
+import org.ignis.backend.cluster.IData;
 import org.ignis.rpc.IFunction;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IDataId;
@@ -26,31 +27,42 @@ import org.ignis.rpc.driver.IDataService;
  *
  * @author César Pomar
  */
-public class IDataServiceImpl implements IDataService.Iface{
+public class IDataServiceImpl extends IService implements IDataService.Iface {
+
+    public IDataServiceImpl(IAttributes attributes) {
+        super(attributes);
+    }
 
     @Override
     public void keep(IDataId data, byte level) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData()).setKeep(level);
     }
 
     @Override
     public IDataId _map(IDataId data, IFunction _function) throws TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
+        IData target = source.map(_function);
+        return new IDataId(data.getCluster(), data.getJob(), target.getId());
     }
 
     @Override
     public IDataId streamingMap(IDataId data, IFunction _function) throws TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
+        IData target = source.streamingMap(_function);
+        return new IDataId(data.getCluster(), data.getJob(), target.getId());
     }
 
     @Override
     public IDataId reduceByKey(IDataId data, IFunction _function) throws TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
+        IData target = source.reduceByKey(_function);
+        return new IDataId(data.getCluster(), data.getJob(), target.getId());
     }
 
     @Override
     public void saveAsFile(IDataId data, String path, boolean join) throws TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
+        source.saveAsFile(path, join);
     }
-    
+
 }

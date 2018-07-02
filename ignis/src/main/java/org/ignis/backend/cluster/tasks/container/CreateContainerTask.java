@@ -14,18 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.properties;
+package org.ignis.backend.cluster.tasks.container;
+
+import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.Task;
 
 /**
  *
  * @author César Pomar
  */
-public class IPropertiesKeys {
-
-    public static final String HOME = "ignis.home";
-    public static final String DFS = "ignis.dfs";
-    public static final String ALLOCATOR_URL = "ignis.allocator.url";
-    public static final String BACKEND_SERVER_PORT = "ignis.backend.server.port";
-    public static final String EXECUTOR_INSTANCES = "ignis.executor.instances";
-
+public class CreateContainerTask extends Task{
+    
+    public CreateContainerTask(IContainer container, ILock lock) {
+        super(lock);
+    }
+    
 }

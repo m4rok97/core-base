@@ -16,31 +16,16 @@
  */
 package org.ignis.backend.services;
 
-import org.apache.thrift.TException;
-import org.ignis.backend.cluster.ICluster;
-import org.ignis.rpc.IRemoteException;
-import org.ignis.rpc.driver.IClusterService;
-
 /**
  *
  * @author César Pomar
  */
-public class IClusterServiceImpl extends IService implements IClusterService.Iface {
+public class IService {
+   
+    protected IAttributes attributes;
 
-    public IClusterServiceImpl(IAttributes attributes) {
-        super(attributes);
+    public IService(IAttributes attributes) {
+        this.attributes = attributes;
     }
-
-    @Override
-    public long newInstance(long properties) throws IRemoteException, TException {
-        long id = attributes.newIdCluster();
-        attributes.addCluster(new ICluster(id, attributes.getProperties(properties)));
-        return id;
-    }
-
-    @Override
-    public void keep(long cluster) throws IRemoteException, TException {
-        attributes.getCluster(cluster).setKeep(true);
-    }
-
+        
 }

@@ -18,6 +18,7 @@ package org.ignis.backend.services;
 
 import java.util.Map;
 import org.apache.thrift.TException;
+import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IPropertiesService;
 
@@ -25,56 +26,55 @@ import org.ignis.rpc.driver.IPropertiesService;
  *
  * @author César Pomar
  */
-public class IPropertiesServiceImpl implements IPropertiesService.Iface{
+public class IPropertiesServiceImpl extends IService implements IPropertiesService.Iface {
+
+    public IPropertiesServiceImpl(IAttributes attributes) {
+        super(attributes);
+    }
 
     @Override
     public long newInstance() throws TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return attributes.addProperties(new IProperties(attributes.defaultProperties));
     }
 
     @Override
     public String setProperty(long id, String key, String value) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return attributes.getProperties(id).setProperty(key, value);
     }
 
     @Override
     public String getProperty(long id, String key) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return attributes.getProperties(id).getProperty(key);
     }
 
     @Override
     public boolean isProperty(long id, String key) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return attributes.getProperties(id).isProperty(key);
     }
 
     @Override
     public Map<String, String> toMap(long id) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return attributes.getProperties(id).toMap();
     }
 
     @Override
     public void fromMap(long id, Map<String, String> _map) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        attributes.getProperties(id).fromMap(_map);
     }
 
     @Override
     public void toFile(long id, String path) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        attributes.getProperties(id).toFile(path);
     }
 
     @Override
     public void fromFile(long id, String path) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void destroy(long id) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        attributes.getProperties(id).fromFile(path);
     }
 
     @Override
     public void reset(long id) throws IRemoteException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        attributes.getProperties(id).reset(attributes.defaultProperties);
     }
-    
+
 }

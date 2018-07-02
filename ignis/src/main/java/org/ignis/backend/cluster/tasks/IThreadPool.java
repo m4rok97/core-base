@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.tasks;
+package org.ignis.backend.cluster.tasks;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;

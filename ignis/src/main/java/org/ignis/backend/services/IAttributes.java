@@ -30,33 +30,47 @@ import org.ignis.backend.properties.IProperties;
 public class IAttributes {
 
     public final IProperties defaultProperties;
-    public final AtomicLong idClusterGen;
-    public final AtomicLong idPropertiesGen;
-    public final Map<Long, ICluster> clusters;
-    public final Map<Long, IProperties> properties;
+    private final AtomicLong idClusterGen;
+    private final AtomicLong idPropertiesGen;
+    private final Map<Long, ICluster> clustersMap;
+    private final Map<Long, IProperties> propertiesMap;
 
     public IAttributes() {
         this.defaultProperties = new IProperties();
-        this.clusters = new ConcurrentHashMap<>();
-        this.properties = new ConcurrentHashMap<>();
+        this.clustersMap = new ConcurrentHashMap<>();
+        this.propertiesMap = new ConcurrentHashMap<>();
         this.idClusterGen = new AtomicLong();
         this.idPropertiesGen = new AtomicLong();
     }
 
     public IProperties getProperties(long id) throws IgnisException {
-        IProperties prop = properties.get(id);
-        if (prop == null) {
+        IProperties properties = propertiesMap.get(id);
+        if (properties == null) {
             throw new IgnisException("Properties doesn't exist");
         }
-        return prop;
+        return properties;
+    }
+
+    public long addProperties(IProperties properties) {
+        long id = idPropertiesGen.incrementAndGet();
+        propertiesMap.put(id, properties);
+        return id;
     }
 
     public ICluster getCluster(long id) throws IgnisException {
-        ICluster cluster = clusters.get(id);
+        ICluster cluster = clustersMap.get(id);
         if (cluster == null) {
-            throw new IgnisException("Properties doesn't exist");
+            throw new IgnisException("Cluster doesn't exist");
         }
         return cluster;
+    }
+    
+    public long newIdCluster(){
+        return idClusterGen.incrementAndGet();
+    }
+
+    public void addCluster(ICluster cluster) {
+        clustersMap.put(cluster.getId(), cluster);
     }
 
 }

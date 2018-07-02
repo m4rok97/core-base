@@ -14,33 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.services;
+package org.ignis.backend.cluster.helpers.cluster;
 
-import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
-import org.ignis.rpc.IRemoteException;
-import org.ignis.rpc.driver.IClusterService;
+import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class IClusterServiceImpl extends IService implements IClusterService.Iface {
+public class IClusterHelper extends IHelper{
+    
+    protected final ICluster cluster;
 
-    public IClusterServiceImpl(IAttributes attributes) {
-        super(attributes);
+    public IClusterHelper(ICluster cluster, IProperties properties) {
+        super(properties);
+        this.cluster = cluster;
     }
-
-    @Override
-    public long newInstance(long properties) throws IRemoteException, TException {
-        long id = attributes.newIdCluster();
-        attributes.addCluster(new ICluster(id, attributes.getProperties(properties)));
-        return id;
-    }
-
-    @Override
-    public void keep(long cluster) throws IRemoteException, TException {
-        attributes.getCluster(cluster).setKeep(true);
-    }
-
+    
 }

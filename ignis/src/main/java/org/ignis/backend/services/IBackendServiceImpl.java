@@ -34,12 +34,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class IBackendServiceImpl implements IBackendService.Iface {
+public class IBackendServiceImpl extends IService  implements IBackendService.Iface {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IBackendServiceImpl.class);
 
     private TServerTransport transport;
     private TServer server;
+
+    public IBackendServiceImpl(IAttributes attributes) {
+        super(attributes);
+    }
 
     public void start(TProcessor processor, int port) {
         LOGGER.info("Backend server started on port " + port);

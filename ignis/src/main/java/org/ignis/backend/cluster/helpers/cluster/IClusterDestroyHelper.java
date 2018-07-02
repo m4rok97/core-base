@@ -14,11 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.tasks;
+package org.ignis.backend.cluster.helpers.cluster;
+
+import org.ignis.backend.cluster.ICluster;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class ILock {   
+public class IClusterDestroyHelper extends IClusterHelper{
+    
+    public IClusterDestroyHelper(ICluster cluster, IProperties properties) {
+        super(cluster, properties);
+    }
+    
+
 }

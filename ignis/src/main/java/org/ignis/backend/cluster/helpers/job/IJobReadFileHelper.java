@@ -14,13 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.tasks.cluster;
+package org.ignis.backend.cluster.helpers.job;
+
+import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class CreateClusterTask {
-   
+public class IJobReadFileHelper extends IJobHelper{
+
+    public IJobReadFileHelper(IJob job, IProperties properties) {
+        super(job, properties);
+    }
+    
+    public IData readFile(){
+        return null;
+    }
     
 }

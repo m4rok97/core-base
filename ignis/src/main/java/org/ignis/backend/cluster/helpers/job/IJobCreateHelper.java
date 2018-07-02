@@ -14,18 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.properties;
+package org.ignis.backend.cluster.helpers.job;
+
+import java.util.List;
+import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class IPropertiesKeys {
+public class IJobCreateHelper extends IJobHelper {
 
-    public static final String HOME = "ignis.home";
-    public static final String DFS = "ignis.dfs";
-    public static final String ALLOCATOR_URL = "ignis.allocator.url";
-    public static final String BACKEND_SERVER_PORT = "ignis.backend.server.port";
-    public static final String EXECUTOR_INSTANCES = "ignis.executor.instances";
+    public IJobCreateHelper(IJob job, IProperties properties) {
+        super(job, properties);
+    }
+
+    public List<IExecutor> create() throws IgnisException {
+        return null;
+    }
 
 }

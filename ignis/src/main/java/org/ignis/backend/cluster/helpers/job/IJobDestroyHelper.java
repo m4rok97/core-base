@@ -14,12 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.tasks.cluster;
+package org.ignis.backend.cluster.helpers.job;
+
+import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class DestroyClusterTask {
+public class IJobDestroyHelper extends IJobHelper{
+    
+    public IJobDestroyHelper(IJob job, IProperties properties) {
+        super(job, properties);
+    }
     
 }

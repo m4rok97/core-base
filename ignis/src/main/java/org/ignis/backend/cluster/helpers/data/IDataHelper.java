@@ -14,20 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.tasks.cluster.container;
+package org.ignis.backend.cluster.helpers.data;
 
-import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.tasks.ILock;
-import org.ignis.backend.tasks.Task;
+import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class CreateContainerTask extends Task{
-    
-    public CreateContainerTask(IContainer container, ILock lock) {
-        super(lock);
+public abstract class IDataHelper extends IHelper {
+
+    protected final IData data;
+
+    public IDataHelper(IData data, IProperties properties) {
+        super(properties);
+        this.data = data;
     }
-    
+
 }

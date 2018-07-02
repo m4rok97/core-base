@@ -16,7 +16,6 @@
  */
 package org.ignis.backend;
 
-
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropertiesKeys;
@@ -61,14 +60,14 @@ public class Main {
             LOGGER.error("ANCORIS_URL not exists, aborting");
             return;
         }
-        attributes.defaultProperties.setProperty(IPropertiesKeys.IGNIS_ALLOCATOR_URL, allocator_url);
+        attributes.defaultProperties.setProperty(IPropertiesKeys.ALLOCATOR_URL, allocator_url);
 
         String dfs = System.getenv("IGNIS_DFS");
         if (dfs == null) {
             LOGGER.error("IGNIS_DFS not exist, aborting");
             return;
         }
-        attributes.defaultProperties.setProperty(IPropertiesKeys.IGNIS_DFS, dfs);
+        attributes.defaultProperties.setProperty(IPropertiesKeys.DFS, dfs);
 
         LOGGER.info("Loading configuration file");
         try {
@@ -80,17 +79,19 @@ public class Main {
 
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
 
-        IBackendServiceImpl backendService = new IBackendServiceImpl();
+        IBackendServiceImpl backendService = new IBackendServiceImpl(attributes);
 
         processor.registerProcessor("backend", new IBackendService.Processor<>(backendService));
-        processor.registerProcessor("cluster", new IClusterService.Processor<>(new IClusterServiceImpl()));
-        processor.registerProcessor("job", new IJobService.Processor<>(new IJobServiceImpl()));
-        processor.registerProcessor("data", new IDataService.Processor<>(new IDataServiceImpl()));
-        processor.registerProcessor("properties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl()));
+        processor.registerProcessor("cluster", new IClusterService.Processor<>(new IClusterServiceImpl(attributes)));
+        processor.registerProcessor("job", new IJobService.Processor<>(new IJobServiceImpl(attributes)));
+        processor.registerProcessor("data", new IDataService.Processor<>(new IDataServiceImpl(attributes)));
+        processor.registerProcessor("properties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(attributes)));
 
         try {
-            backendService.start(processor, IPropertiesParser.getInteger(attributes.defaultProperties,
-                    IPropertiesKeys.IGNIS_BACKEND_SERVER_PORT));
+            Integer port = IPropertiesParser.getInteger(attributes.defaultProperties,
+                    IPropertiesKeys.BACKEND_SERVER_PORT);
+            System.out.println(port);
+            backendService.start(processor, port);
         } catch (IgnisException ex) {
             LOGGER.error("Error parsing server port, aborting", ex);
             return;
