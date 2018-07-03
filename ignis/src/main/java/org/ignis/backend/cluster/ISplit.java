@@ -14,23 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.tasks;
+package org.ignis.backend.cluster;
 
-import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.cluster.tasks.Task;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class Task {
+public class ISplit {
 
-    protected final Task[] dependencies;
-    protected final ILock lock;
+    private final IExecutor executor;
+    private final Task task;
 
-    public Task(ILock lock, Task... dependencies) {
-        this.lock = lock;
-        this.dependencies = dependencies;
+    public ISplit(IExecutor executor, Task task) {
+        this.executor = executor;
+        this.task = task;
     }
 
-    public abstract void execute() throws IgnisException;
+    public IExecutor getExecutor() {
+        return executor;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
 }

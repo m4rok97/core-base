@@ -21,6 +21,7 @@ import java.util.List;
 import org.ignis.backend.cluster.helpers.job.IJobCreateHelper;
 import org.ignis.backend.cluster.helpers.job.IJobImportDataHelper;
 import org.ignis.backend.cluster.helpers.job.IJobReadFileHelper;
+import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
@@ -31,13 +32,15 @@ import org.ignis.backend.properties.IProperties;
 public class IJob {
 
     private final long id;
+    private final ICluster cluster;
     private final IProperties properties;
     private final List<IExecutor> executors;
     private final List<IData> datas;
     private boolean keep;
 
-    public IJob(long id, IProperties properties) throws IgnisException {
+    public IJob(long id, ICluster cluster, IProperties properties) throws IgnisException {
         this.id = id;
+        this.cluster = cluster;
         this.properties = properties;
         this.datas = new ArrayList<>();
         this.executors = new IJobCreateHelper(this, properties).create();
@@ -45,6 +48,18 @@ public class IJob {
 
     public long getId() {
         return id;
+    }
+
+    public ILock getLock() {
+        return cluster.getLock();
+    }
+
+    public List<IExecutor> getExecutors() {
+        return executors;
+    }
+
+    public ICluster getCluster() {
+        return cluster;
     }
 
     public IProperties getProperties() {
@@ -59,6 +74,10 @@ public class IJob {
         this.keep = keep;
     }
 
+    public int getDataSize() {
+        return datas.size();
+    }
+
     public IData getData(long id) throws IgnisException {
         IData data = datas.get((int) id);
         if (data == null) {
@@ -67,12 +86,12 @@ public class IJob {
         return data;
     }
 
-    public IData readFile(String path) {
-        return new IJobReadFileHelper(this, properties).readFile();
+    public IData readFile(String path) throws IgnisException {
+        return new IJobReadFileHelper(this, properties).readFile(path);
     }
 
-    public IData importData(IData source) {
-        return new IJobImportDataHelper(this, properties).importData();
+    public IData importData(IData source) throws IgnisException {
+        return new IJobImportDataHelper(this, properties).importData(source);
     }
 
 }

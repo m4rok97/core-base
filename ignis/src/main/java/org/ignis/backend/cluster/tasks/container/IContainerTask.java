@@ -24,10 +24,13 @@ import org.ignis.backend.cluster.tasks.Task;
  *
  * @author César Pomar
  */
-public class CreateContainerTask extends Task{
-    
-    public CreateContainerTask(IContainer container, ILock lock) {
+public abstract class IContainerTask extends Task {
+
+    protected final IContainer container;
+
+    public IContainerTask(IContainer container, ILock lock) {
         super(lock);
+        this.container = container;
     }
-    
+
 }

@@ -14,32 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.helpers.job;
+package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class IJobCreateHelper extends IJobHelper {
+public class IExecutorCreateTask extends IExecutorTask {
 
-    public IJobCreateHelper(IJob job, IProperties properties) {
-        super(job, properties);
+    public IExecutorCreateTask(IExecutor executor, ILock lock, Task... dependencies) {
+        super(executor, lock, dependencies);
     }
 
-    public List<IExecutor> create() throws IgnisException {
-        List<IExecutor> result = new ArrayList<>();
-        for(IContainer container : job.getCluster().getContainers()){
-            result.add(container.createExecutor(properties));
+    @Override
+    public void execute() throws IgnisException {
+        if (executor.getStub().isRunning()) {
+            try {
+                executor.getStub().test();
+            } catch (IgnisException ex) {
+                executor.getStub().create();
+            }
+        } else {
+            executor.getStub().create();
         }
-        return result;
     }
 
 }

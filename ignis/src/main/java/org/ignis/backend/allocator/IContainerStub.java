@@ -17,6 +17,7 @@
 package org.ignis.backend.allocator;
 
 import org.apache.thrift.transport.TTransport;
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
 /**
@@ -26,10 +27,27 @@ import org.ignis.backend.properties.IProperties;
 public class IContainerStub {
 
     public IContainerStub(IProperties properties) {
-        
+
     }
+
     public TTransport getTransport() {
         return null;
+    }
+
+    public boolean isRunning(){
+        return true;
+    }
+    
+    public void test() throws IgnisException {
+     
+    }
+
+    public void create() throws IgnisException {
+
+    }
+
+    public void destroy() throws IgnisException {
+
     }
 
 }

@@ -21,6 +21,7 @@ import java.util.List;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IPropertiesKeys;
@@ -36,12 +37,12 @@ public class IClusterCreateHelper extends IClusterHelper {
         super(cluster, properties);
     }
     
-    public List<IContainer> create() throws IgnisException {
+    public List<IContainer> create(ILock lock) throws IgnisException {
         int instances = IPropertiesParser.getInteger(properties, IPropertiesKeys.EXECUTOR_INSTANCES);
         List<IContainer> result = new ArrayList<>();
         for (int i = 0; i < instances; i++) {
             IContainerStub stub = new IContainerStub(properties);
-            result.add(new IContainer(i, stub, properties, null));
+            result.add(new IContainer(stub, properties, lock));
         }
         return result;
     }

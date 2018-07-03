@@ -41,19 +41,27 @@ public class ICluster {
         this.properties = properties;
         this.jobs = new ArrayList<>();
         this.lock = new ILock();
-        this.containers = new IClusterCreateHelper(this,properties).create();
+        this.containers = new IClusterCreateHelper(this, properties).create(lock);
     }
 
     public long getId() {
         return id;
     }
 
+    public ILock getLock(){
+        return lock;
+    }
+    
     public IProperties getProperties() {
         return properties;
     }
 
+    public List<IContainer> getContainers() {
+        return containers;
+    }
+
     public IJob createJob(String type, IProperties properties) throws IgnisException {
-        IJob job = new IJob(jobs.size(), properties);
+        IJob job = new IJob(jobs.size(), this, properties);
         jobs.add(job);
         return job;
     }

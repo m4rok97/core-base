@@ -16,10 +16,28 @@
  */
 package org.ignis.backend.allocator;
 
+import org.ignis.backend.exception.IgnisException;
+
 /**
  *
  * @author César Pomar
  */
 public class IExecutorStub {
+
+    public boolean isRunning() {
+        return true;
+    }
+
+    public void test() throws IgnisException {
+
+    }
+
+    public void create() throws IgnisException {
+
+    }
+
+    public void destroy() throws IgnisException {
+
+    }
 
 }

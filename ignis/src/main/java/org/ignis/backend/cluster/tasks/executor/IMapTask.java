@@ -14,32 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.helpers.job;
+package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.ignis.backend.cluster.IContainer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IProperties;
+import org.ignis.rpc.IFunction;
 
 /**
  *
  * @author César Pomar
  */
-public class IJobCreateHelper extends IJobHelper {
+public class IMapTask extends IExecutorTask {
 
-    public IJobCreateHelper(IJob job, IProperties properties) {
-        super(job, properties);
+    private final IFunction function;
+
+    public IMapTask(IExecutor executor, IFunction function, ILock lock, Task... dependencies) {
+        super(executor, lock, dependencies);
+        this.function = function;
     }
 
-    public List<IExecutor> create() throws IgnisException {
-        List<IExecutor> result = new ArrayList<>();
-        for(IContainer container : job.getCluster().getContainers()){
-            result.add(container.createExecutor(properties));
+    @Override
+    public void execute() throws IgnisException {
+        try {
+            executor.getMapperModule()._map(function);
+        } catch (TException ex) {
+            throw new IgnisException("Map fails", ex);
         }
-        return result;
     }
 
 }

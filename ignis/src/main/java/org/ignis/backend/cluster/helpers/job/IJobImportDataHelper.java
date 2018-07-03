@@ -30,7 +30,7 @@ public class IJobImportDataHelper extends IJobHelper{
         super(job, properties);
     }
     
-    public IData importData(){
+    public IData importData(IData source){
         return null;
     }
     

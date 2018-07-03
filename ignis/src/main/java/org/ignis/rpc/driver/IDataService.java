@@ -15,7 +15,7 @@ public class IDataService {
 
     public IDataId _map(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public IDataId reduceByKey(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -29,7 +29,7 @@ public class IDataService {
 
     public void _map(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void streamingMap(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
     public void reduceByKey(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
@@ -108,17 +108,18 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "_map failed: unknown result");
     }
 
-    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_streamingMap(data, _function);
+      send_streamingMap(data, _function, ordered);
       return recv_streamingMap();
     }
 
-    public void send_streamingMap(IDataId data, org.ignis.rpc.IFunction _function) throws org.apache.thrift.TException
+    public void send_streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered) throws org.apache.thrift.TException
     {
       streamingMap_args args = new streamingMap_args();
       args.setData(data);
       args.set_function(_function);
+      args.setOrdered(ordered);
       sendBase("streamingMap", args);
     }
 
@@ -275,9 +276,9 @@ public class IDataService {
       }
     }
 
-    public void streamingMap(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      streamingMap_call method_call = new streamingMap_call(data, _function, resultHandler, this, ___protocolFactory, ___transport);
+      streamingMap_call method_call = new streamingMap_call(data, _function, ordered, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -285,10 +286,12 @@ public class IDataService {
     public static class streamingMap_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
       private org.ignis.rpc.IFunction _function;
-      public streamingMap_call(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private boolean ordered;
+      public streamingMap_call(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
+        this.ordered = ordered;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -296,6 +299,7 @@ public class IDataService {
         streamingMap_args args = new streamingMap_args();
         args.setData(data);
         args.set_function(_function);
+        args.setOrdered(ordered);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -483,7 +487,7 @@ public class IDataService {
       public streamingMap_result getResult(I iface, streamingMap_args args) throws org.apache.thrift.TException {
         streamingMap_result result = new streamingMap_result();
         try {
-          result.success = iface.streamingMap(args.data, args._function);
+          result.success = iface.streamingMap(args.data, args._function, args.ordered);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -760,7 +764,7 @@ public class IDataService {
       }
 
       public void start(I iface, streamingMap_args args, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
-        iface.streamingMap(args.data, args._function,resultHandler);
+        iface.streamingMap(args.data, args._function, args.ordered,resultHandler);
       }
     }
 
@@ -2677,17 +2681,20 @@ public class IDataService {
 
     private static final org.apache.thrift.protocol.TField DATA_FIELD_DESC = new org.apache.thrift.protocol.TField("data", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField _FUNCTION_FIELD_DESC = new org.apache.thrift.protocol.TField("_function", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ORDERED_FIELD_DESC = new org.apache.thrift.protocol.TField("ordered", org.apache.thrift.protocol.TType.BOOL, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new streamingMap_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new streamingMap_argsTupleSchemeFactory();
 
     private IDataId data; // required
     private org.ignis.rpc.IFunction _function; // required
+    private boolean ordered; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       DATA((short)1, "data"),
-      _FUNCTION((short)2, "_function");
+      _FUNCTION((short)2, "_function"),
+      ORDERED((short)3, "ordered");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -2706,6 +2713,8 @@ public class IDataService {
             return DATA;
           case 2: // _FUNCTION
             return _FUNCTION;
+          case 3: // ORDERED
+            return ORDERED;
           default:
             return null;
         }
@@ -2746,6 +2755,8 @@ public class IDataService {
     }
 
     // isset id assignments
+    private static final int __ORDERED_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -2753,6 +2764,8 @@ public class IDataService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IFunction.class)));
+      tmpMap.put(_Fields.ORDERED, new org.apache.thrift.meta_data.FieldMetaData("ordered", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(streamingMap_args.class, metaDataMap);
     }
@@ -2762,23 +2775,28 @@ public class IDataService {
 
     public streamingMap_args(
       IDataId data,
-      org.ignis.rpc.IFunction _function)
+      org.ignis.rpc.IFunction _function,
+      boolean ordered)
     {
       this();
       this.data = data;
       this._function = _function;
+      this.ordered = ordered;
+      setOrderedIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public streamingMap_args(streamingMap_args other) {
+      __isset_bitfield = other.__isset_bitfield;
       if (other.isSetData()) {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
         this._function = new org.ignis.rpc.IFunction(other._function);
       }
+      this.ordered = other.ordered;
     }
 
     public streamingMap_args deepCopy() {
@@ -2789,6 +2807,8 @@ public class IDataService {
     public void clear() {
       this.data = null;
       this._function = null;
+      setOrderedIsSet(false);
+      this.ordered = false;
     }
 
     public IDataId getData() {
@@ -2839,6 +2859,29 @@ public class IDataService {
       }
     }
 
+    public boolean isOrdered() {
+      return this.ordered;
+    }
+
+    public streamingMap_args setOrdered(boolean ordered) {
+      this.ordered = ordered;
+      setOrderedIsSet(true);
+      return this;
+    }
+
+    public void unsetOrdered() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __ORDERED_ISSET_ID);
+    }
+
+    /** Returns true if field ordered is set (has been assigned a value) and false otherwise */
+    public boolean isSetOrdered() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __ORDERED_ISSET_ID);
+    }
+
+    public void setOrderedIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ORDERED_ISSET_ID, value);
+    }
+
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
       case DATA:
@@ -2857,6 +2900,14 @@ public class IDataService {
         }
         break;
 
+      case ORDERED:
+        if (value == null) {
+          unsetOrdered();
+        } else {
+          setOrdered((java.lang.Boolean)value);
+        }
+        break;
+
       }
     }
 
@@ -2867,6 +2918,9 @@ public class IDataService {
 
       case _FUNCTION:
         return get_function();
+
+      case ORDERED:
+        return isOrdered();
 
       }
       throw new java.lang.IllegalStateException();
@@ -2883,6 +2937,8 @@ public class IDataService {
         return isSetData();
       case _FUNCTION:
         return isSet_function();
+      case ORDERED:
+        return isSetOrdered();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2920,6 +2976,15 @@ public class IDataService {
           return false;
       }
 
+      boolean this_present_ordered = true;
+      boolean that_present_ordered = true;
+      if (this_present_ordered || that_present_ordered) {
+        if (!(this_present_ordered && that_present_ordered))
+          return false;
+        if (this.ordered != that.ordered)
+          return false;
+      }
+
       return true;
     }
 
@@ -2934,6 +2999,8 @@ public class IDataService {
       hashCode = hashCode * 8191 + ((isSet_function()) ? 131071 : 524287);
       if (isSet_function())
         hashCode = hashCode * 8191 + _function.hashCode();
+
+      hashCode = hashCode * 8191 + ((ordered) ? 131071 : 524287);
 
       return hashCode;
     }
@@ -2962,6 +3029,16 @@ public class IDataService {
       }
       if (isSet_function()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._function, other._function);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetOrdered()).compareTo(other.isSetOrdered());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetOrdered()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ordered, other.ordered);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -3001,6 +3078,10 @@ public class IDataService {
         sb.append(this._function);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("ordered:");
+      sb.append(this.ordered);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -3023,6 +3104,8 @@ public class IDataService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -3065,6 +3148,14 @@ public class IDataService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ORDERED
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.ordered = iprot.readBool();
+                struct.setOrderedIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3090,6 +3181,9 @@ public class IDataService {
           struct._function.write(oprot);
           oprot.writeFieldEnd();
         }
+        oprot.writeFieldBegin(ORDERED_FIELD_DESC);
+        oprot.writeBool(struct.ordered);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3114,19 +3208,25 @@ public class IDataService {
         if (struct.isSet_function()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetOrdered()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetData()) {
           struct.data.write(oprot);
         }
         if (struct.isSet_function()) {
           struct._function.write(oprot);
         }
+        if (struct.isSetOrdered()) {
+          oprot.writeBool(struct.ordered);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, streamingMap_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.data = new IDataId();
           struct.data.read(iprot);
@@ -3136,6 +3236,10 @@ public class IDataService {
           struct._function = new org.ignis.rpc.IFunction();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.ordered = iprot.readBool();
+          struct.setOrderedIsSet(true);
         }
       }
     }

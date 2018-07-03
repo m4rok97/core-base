@@ -46,9 +46,9 @@ public class IDataServiceImpl extends IService implements IDataService.Iface {
     }
 
     @Override
-    public IDataId streamingMap(IDataId data, IFunction _function) throws TException {
+    public IDataId streamingMap(IDataId data, IFunction _function, boolean ordered) throws TException {
         IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
-        IData target = source.streamingMap(_function);
+        IData target = source.streamingMap(_function, ordered);
         return new IDataId(data.getCluster(), data.getJob(), target.getId());
     }
 

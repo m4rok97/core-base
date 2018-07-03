@@ -16,7 +16,12 @@
  */
 package org.ignis.backend.cluster.helpers.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.ISplit;
+import org.ignis.backend.cluster.tasks.executor.IMapTask;
+import org.ignis.backend.cluster.tasks.executor.IStreamingMapTask;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.IFunction;
 
@@ -31,11 +36,23 @@ public class IDataMapHelper extends IDataHelper {
     }
 
     public IData map(IFunction function) {
-        return null;
+        List<ISplit> result = new ArrayList<>();
+        for (ISplit split : data.getSplits()) {
+            result.add(new ISplit(split.getExecutor(),
+                    new IMapTask(split.getExecutor(), function, data.getLock(), split.getTask()))
+            );
+        }
+        return new IData(data.getJob().getDataSize(), data.getJob(), result);
     }
 
-    public IData streamingMap(IFunction function) {
-        return null;
+    public IData streamingMap(IFunction function, boolean ordered) {
+        List<ISplit> result = new ArrayList<>();
+        for (ISplit split : data.getSplits()) {
+            result.add(new ISplit(split.getExecutor(),
+                    new IStreamingMapTask(split.getExecutor(), function, ordered, data.getLock(), split.getTask()))
+            );
+        }
+        return new IData(data.getJob().getDataSize(), data.getJob(), result);
     }
 
 }

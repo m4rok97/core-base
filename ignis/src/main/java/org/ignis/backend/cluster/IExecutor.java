@@ -33,7 +33,7 @@ import org.ignis.rpc.executor.IStorageModule;
  */
 public class IExecutor {
 
-    private final long seqId;
+    private final IContainer container;
     private final IExecutorStub stub;
     private final TProtocol protocol;
     private final IProperties properties;
@@ -45,8 +45,8 @@ public class IExecutor {
     private final ISortModule.Iface sortModule;
     private final IStorageModule.Iface storageModule;
 
-    public IExecutor(long seqId, IExecutorStub stub, TProtocol protocol, IProperties properties) {
-        this.seqId = seqId;
+    public IExecutor(IContainer container, IExecutorStub stub, TProtocol protocol, IProperties properties) {
+        this.container = container;
         this.stub = stub;
         this.protocol = protocol;
         this.properties = properties;
@@ -59,12 +59,16 @@ public class IExecutor {
         this.storageModule = new IStorageModule.Client(protocol);
     }
 
-    public long getSeqId() {
-        return seqId;
+    public IContainer getContainer() {
+        return container;
     }
 
     public TProtocol getProtocol() {
         return protocol;
+    }
+
+    public IExecutorStub getStub() {
+        return stub;
     }
 
     public IFilesModule.Iface getFilesModule() {

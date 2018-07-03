@@ -26,7 +26,7 @@ import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.Task;
-import org.ignis.backend.cluster.tasks.container.CreateContainerTask;
+import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.ignis.rpc.manager.IServerManager;
 
@@ -36,7 +36,6 @@ import org.ignis.rpc.manager.IServerManager;
  */
 public class IContainer {
 
-    private final long seqId;
     private final IContainerStub stub;
     private final TTransport transport;
     private final TProtocol protocol;
@@ -46,8 +45,7 @@ public class IContainer {
     private final List<IExecutor> executors;
     private final Task task;
 
-    public IContainer(long seqId, IContainerStub stub, IProperties properties, ILock lock) {
-        this.seqId = seqId;
+    public IContainer(IContainerStub stub, IProperties properties, ILock lock) {
         this.stub = stub;
         this.transport = stub.getTransport();
         this.protocol = new TCompactProtocol(new TZlibTransport(transport, 9));//TODO
@@ -55,21 +53,13 @@ public class IContainer {
         this.serverManager = new IServerManager.Client(protocol);
         this.registerManager = new IRegisterManager.Client(protocol);
         this.executors = new ArrayList<>();
-        this.task = new CreateContainerTask(this, lock);
+        this.task = new IContainerCreateTask(this, lock);
     }
 
     public IExecutor createExecutor(IProperties properties) {
-        IExecutor executor = new IExecutor(executors.size(), null, protocol, properties);
+        IExecutor executor = new IExecutor(this, null, protocol, properties);
         executors.add(executor);
         return executor;
-    }
-
-    public IExecutor createExecutor() {
-        return createExecutor(properties);
-    }
-
-    public long getSeqId() {
-        return seqId;
     }
 
     public IServerManager.Iface getServerManager() {
@@ -82,6 +72,14 @@ public class IContainer {
 
     public Task getTask() {
         return task;
+    }
+
+    public IContainerStub getStub() {
+        return stub;
+    }
+
+    public List<IExecutor> getExecutors() {
+        return executors;
     }
 
 }
