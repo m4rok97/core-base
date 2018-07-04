@@ -19,6 +19,7 @@ package org.ignis.backend.cluster.helpers.cluster;
 import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.allocator.IContainerStub;
+import org.ignis.backend.allocator.ancoris.IAncorisContainerStub;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.tasks.ILock;
@@ -41,7 +42,7 @@ public class IClusterCreateHelper extends IClusterHelper {
         int instances = IPropertiesParser.getInteger(properties, IPropertiesKeys.EXECUTOR_INSTANCES);
         List<IContainer> result = new ArrayList<>();
         for (int i = 0; i < instances; i++) {
-            IContainerStub stub = new IContainerStub(properties);
+            IContainerStub stub = new IAncorisContainerStub(properties);
             result.add(new IContainer(stub, properties, lock));
         }
         return result;

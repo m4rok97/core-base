@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
 
 /**
@@ -26,8 +27,8 @@ import org.ignis.backend.exception.IgnisException;
  */
 public class IContainerDestroyTask extends IContainerTask{
 
-    public IContainerDestroyTask(IContainer container, ILock lock) {
-        super(container, lock);
+    public IContainerDestroyTask(IContainer container, ILock lock, Task... dependencies) {
+        super(container, lock, dependencies);
     }
 
     @Override

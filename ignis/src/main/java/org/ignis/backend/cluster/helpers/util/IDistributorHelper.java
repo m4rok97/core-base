@@ -14,34 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.allocator;
+package org.ignis.backend.cluster.helpers.util;
 
-import org.apache.thrift.transport.TTransport;
-import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class IContainerStub {
+public class IDistributorHelper extends IHelper {
 
-    protected final IProperties properties;
-
-    public IContainerStub(IProperties properties) {
-        this.properties = properties;
+    public IDistributorHelper(IProperties properties) {
+        super(properties);
     }
 
-    public TTransport getTransport() {
-        return null;
+    public int[] distribute(int elemens, int boxs) {
+        int[] distribution = new int[boxs + 1];
+        distribution[0] = 0;
+        int size = elemens / boxs;
+        int mod = elemens % boxs;
+        for (int i = 0; i < boxs; i++) {
+            if (i < mod) {
+                distribution[i + 1] = distribution[i] + size + 1;
+            } else {
+                distribution[i + 1] = distribution[i] + size;
+            }
+        }
+        return distribution;
     }
-
-    public abstract boolean isRunning();
-
-    public abstract void test() throws IgnisException;
-
-    public abstract void create() throws IgnisException;
-
-    public abstract void destroy() throws IgnisException;
 
 }

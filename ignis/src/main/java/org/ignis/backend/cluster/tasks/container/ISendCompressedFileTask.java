@@ -16,21 +16,35 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
+import java.nio.ByteBuffer;
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.Task;
+import org.ignis.backend.exception.IgnisException;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class IContainerTask extends Task {
+public class ISendCompressedFileTask extends IContainerTask {
 
-    protected final IContainer container;
+    private final String path;
+    private final ByteBuffer bytes;
 
-    public IContainerTask(IContainer container, ILock lock, Task... dependencies) {
-        super(lock, dependencies);
-        this.container = container;
+    public ISendCompressedFileTask(IContainer container, String path, ByteBuffer bytes, ILock lock, Task... dependencies) {
+        super(container, lock, dependencies);
+        this.path = path;
+        this.bytes = bytes;
+    }
+
+    @Override
+    public void execute() throws IgnisException {
+        try {
+            container.getFileManager().sendFileAndExtract(path, bytes);
+        } catch (TException ex) {
+            throw new IgnisException("Fails to send " + path, ex);
+        }
     }
 
 }

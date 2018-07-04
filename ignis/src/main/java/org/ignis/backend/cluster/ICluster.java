@@ -19,6 +19,7 @@ package org.ignis.backend.cluster;
 import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
+import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.cluster.tasks.ILock;
@@ -40,7 +41,7 @@ public class ICluster {
         this.id = id;
         this.properties = properties;
         this.jobs = new ArrayList<>();
-        this.lock = new ILock();
+        this.lock = new ILock(id);
         this.containers = new IClusterCreateHelper(this, properties).create(lock);
     }
 
@@ -48,10 +49,10 @@ public class ICluster {
         return id;
     }
 
-    public ILock getLock(){
+    public ILock getLock() {
         return lock;
     }
-    
+
     public IProperties getProperties() {
         return properties;
     }
@@ -76,6 +77,14 @@ public class ICluster {
             throw new IgnisException("Job doesn't exist");
         }
         return job;
+    }
+
+    public int sendFiles(String source, String target) {
+        return new IClusterFileHelper(this, properties).sendFiles(source, target);
+    }
+
+    public int sendCompressedFile(String source, String target) {
+        return new IClusterFileHelper(this, properties).sendCompressedFile(source, target);
     }
 
     public boolean isKeep() {

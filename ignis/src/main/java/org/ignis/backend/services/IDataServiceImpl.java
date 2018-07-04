@@ -17,6 +17,7 @@
 package org.ignis.backend.services;
 
 import org.apache.thrift.TException;
+import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IData;
 import org.ignis.rpc.IFunction;
 import org.ignis.rpc.IRemoteException;
@@ -35,34 +36,49 @@ public class IDataServiceImpl extends IService implements IDataService.Iface {
 
     @Override
     public void keep(IDataId data, byte level) throws IRemoteException, TException {
-        attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData()).setKeep(level);
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            cluster.getJob(data.getJob()).getData(data.getData()).setKeep(level);
+        }
     }
 
     @Override
     public IDataId _map(IDataId data, IFunction _function) throws TException {
-        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
-        IData target = source.map(_function);
-        return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            IData target = source.map(_function);
+            return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        }
     }
 
     @Override
     public IDataId streamingMap(IDataId data, IFunction _function, boolean ordered) throws TException {
-        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
-        IData target = source.streamingMap(_function, ordered);
-        return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            IData target = source.streamingMap(_function, ordered);
+            return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        }
     }
 
     @Override
     public IDataId reduceByKey(IDataId data, IFunction _function) throws TException {
-        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
-        IData target = source.reduceByKey(_function);
-        return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            IData target = source.reduceByKey(_function);
+            return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        }
     }
 
     @Override
     public void saveAsFile(IDataId data, String path, boolean join) throws TException {
-        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
-        source.saveAsFile(path, join);
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            source.saveAsFile(path, join);
+        }
     }
 
 }

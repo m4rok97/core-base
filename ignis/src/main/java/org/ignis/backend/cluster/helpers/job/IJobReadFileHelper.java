@@ -26,6 +26,7 @@ import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
 import org.ignis.backend.cluster.ISplit;
+import org.ignis.backend.cluster.helpers.util.IDistributorHelper;
 import org.ignis.backend.cluster.tasks.executor.IReadFileTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -86,34 +87,17 @@ public class IJobReadFileHelper extends IJobHelper {
     public IData readFile(String path) throws IgnisException {
         List<Long> indices = parseIndex(path);
         int executors = job.getExecutors().size();
-        long size = indices.size() / executors;
-        long mod = indices.size() % executors;//TODO
-/*
+        int[] distribution = new IDistributorHelper(properties).distribute(indices.size(), executors);
+
         List<ISplit> result = new ArrayList<>();
         for (int i = 0; i < executors; i++) {
             IExecutor executor = job.getExecutors().get(i);
-            long offset = size * i + i < mod ? i : mod;
-            long length = size * (i + 1) + (i + 1) < mod ? (i + 1) : mod;
-            long lines = 0;
-
+            int lines = distribution[i + 1] - distribution[i];
+            long offset = indices.get(distribution[i]);
+            long length = indices.get(distribution[i + 1]) - offset;
             result.add(new ISplit(executor, new IReadFileTask(executor, path, offset, length, lines, job.getLock())));
         }
-        return new IData(job.getDataSize(), job, result);
-
-        int[] indexs = new int[executors + 1];
-        indexs[0] = 0;
-        int size = elems / executors;
-        int mod = elems % executors;
-        for (int i = 0; i < executors; i++) {
-            if (i < mod) {
-                indexs[i + 1] = indexs[i] + size + 1;
-            } else {
-                indexs[i + 1] = indexs[i] + size;
-            }
-        }
-        return indexs;*/
-
-        return null;
+         return new IData(job.getDataSize(), job, result);
     }
 
 }

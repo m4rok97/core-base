@@ -18,6 +18,7 @@ package org.ignis.backend.services;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
+import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IClusterService;
 
@@ -33,14 +34,38 @@ public class IClusterServiceImpl extends IService implements IClusterService.Ifa
 
     @Override
     public long newInstance(long properties) throws IRemoteException, TException {
+        IProperties propertiesObject = attributes.getProperties(properties);
+        IProperties propertiesCopy;
+        synchronized (propertiesObject) {
+            propertiesCopy = propertiesObject.copy();
+        }
         long id = attributes.newIdCluster();
-        attributes.addCluster(new ICluster(id, attributes.getProperties(properties)));
+        attributes.addCluster(new ICluster(id, propertiesCopy));
         return id;
     }
 
     @Override
     public void keep(long cluster) throws IRemoteException, TException {
-        attributes.getCluster(cluster).setKeep(true);
+        ICluster clusterObject = attributes.getCluster(cluster);
+        synchronized (clusterObject.getLock()) {
+            clusterObject.setKeep(true);
+        }
+    }
+
+    @Override
+    public int sendFiles(long cluster, String source, String target) throws IRemoteException, TException {
+        ICluster clusterObject = attributes.getCluster(cluster);
+        synchronized (clusterObject.getLock()) {
+            return clusterObject.sendFiles(source, target);
+        }
+    }
+
+    @Override
+    public int sendCompressedFile(long cluster, String source, String target) throws IRemoteException, TException {
+        ICluster clusterObject = attributes.getCluster(cluster);
+        synchronized (clusterObject.getLock()) {
+            return clusterObject.sendCompressedFile(source, target);
+        }
     }
 
 }

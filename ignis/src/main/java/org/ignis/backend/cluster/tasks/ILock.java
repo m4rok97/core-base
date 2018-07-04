@@ -20,5 +20,21 @@ package org.ignis.backend.cluster.tasks;
  *
  * @author César Pomar
  */
-public class ILock {   
+public class ILock implements Comparable<ILock> {
+
+    private final long id;
+
+    public ILock(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public int compareTo(ILock lock) {
+        return (int) (id - lock.id);
+    }
+
 }

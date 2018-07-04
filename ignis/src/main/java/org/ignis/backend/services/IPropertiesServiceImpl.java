@@ -39,42 +39,66 @@ public class IPropertiesServiceImpl extends IService implements IPropertiesServi
 
     @Override
     public String setProperty(long id, String key, String value) throws IRemoteException, TException {
-        return attributes.getProperties(id).setProperty(key, value);
+        IProperties properties = attributes.getProperties(id);
+        synchronized (properties) {
+            return properties.setProperty(key, value);
+        }
     }
 
     @Override
     public String getProperty(long id, String key) throws IRemoteException, TException {
-        return attributes.getProperties(id).getProperty(key);
+        IProperties properties = attributes.getProperties(id);
+        synchronized (properties) {
+            return properties.getProperty(key);
+        }
     }
 
     @Override
     public boolean isProperty(long id, String key) throws IRemoteException, TException {
-        return attributes.getProperties(id).isProperty(key);
+        IProperties properties = attributes.getProperties(id);
+        synchronized (properties) {
+            return properties.isProperty(key);
+        }
     }
 
     @Override
     public Map<String, String> toMap(long id) throws IRemoteException, TException {
-        return attributes.getProperties(id).toMap();
+        IProperties properties = attributes.getProperties(id);
+        synchronized (properties) {
+            return properties.toMap();
+        }
     }
 
     @Override
     public void fromMap(long id, Map<String, String> _map) throws IRemoteException, TException {
-        attributes.getProperties(id).fromMap(_map);
+        IProperties properties = attributes.getProperties(id);
+        synchronized (properties) {
+            properties.fromMap(_map);
+        }
     }
 
     @Override
     public void toFile(long id, String path) throws IRemoteException, TException {
-        attributes.getProperties(id).toFile(path);
+        IProperties properties = attributes.getProperties(id);
+        synchronized (properties) {
+            properties.toFile(path);
+        }
     }
 
     @Override
     public void fromFile(long id, String path) throws IRemoteException, TException {
-        attributes.getProperties(id).fromFile(path);
+        IProperties properties = attributes.getProperties(id);
+        synchronized (properties) {
+            properties.fromFile(path);
+        }
     }
 
     @Override
     public void reset(long id) throws IRemoteException, TException {
-        attributes.getProperties(id).reset(attributes.defaultProperties);
+        IProperties properties = attributes.getProperties(id);
+        synchronized (properties) {
+            properties.reset(attributes.defaultProperties);
+        }
     }
 
 }

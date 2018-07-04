@@ -17,27 +17,28 @@
 package org.ignis.backend.allocator;
 
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class IExecutorStub {
+public abstract class IExecutorStub {
 
-    public boolean isRunning() {
-        return true;
+    protected final IProperties properties;
+    protected final String type;
+
+    public IExecutorStub(IProperties properties, String type) {
+        this.properties = properties;
+        this.type = type;
     }
 
-    public void test() throws IgnisException {
+    public abstract boolean isRunning();
 
-    }
+    public abstract void test() throws IgnisException;
 
-    public void create() throws IgnisException {
+    public abstract void create() throws IgnisException;
 
-    }
-
-    public void destroy() throws IgnisException {
-
-    }
+    public abstract void destroy() throws IgnisException;
 
 }

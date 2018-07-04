@@ -17,8 +17,10 @@
 package org.ignis.backend.services;
 
 import org.apache.thrift.TException;
+import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IDataId;
 import org.ignis.rpc.driver.IJobId;
@@ -36,32 +38,57 @@ public class IJobServiceImpl extends IService implements IJobService.Iface {
 
     @Override
     public IJobId newInstance(long cluster, String type) throws IRemoteException, TException {
-        IJob job = attributes.getCluster(cluster).createJob(type);
-        return new IJobId(cluster, job.getId());
+        ICluster clusterObject = attributes.getCluster(cluster);
+        synchronized (clusterObject.getLock()) {
+            IJob job = clusterObject.createJob(type);
+            return new IJobId(cluster, job.getId());
+        }
     }
 
     @Override
     public IJobId newInstance3(long cluster, String type, long properties) throws IRemoteException, TException {
-        IJob job = attributes.getCluster(cluster).createJob(type);
-        return new IJobId(cluster, job.getId());
+        ICluster clusterObject = attributes.getCluster(cluster);
+        synchronized (clusterObject.getLock()) {
+            IJob job = clusterObject.createJob(type);
+            return new IJobId(cluster, job.getId());
+        }
     }
 
     @Override
     public void keep(IJobId job) throws IRemoteException, TException {
-        attributes.getCluster(job.getCluster()).getJob(job.getJob()).setKeep(true);
+        ICluster clusterObject = attributes.getCluster(job.getCluster());
+        synchronized (clusterObject.getLock()) {
+            clusterObject.getJob(job.getJob()).setKeep(true);
+        }
     }
 
     @Override
     public IDataId importData(IJobId job, IDataId data) throws IRemoteException, TException {
-        IData source = attributes.getCluster(data.getCluster()).getJob(data.getJob()).getData(data.getData());
-        IData target = attributes.getCluster(job.getCluster()).getJob(job.getJob()).importData(source);
-        return new IDataId(job.getCluster(), job.getJob(), target.getId());
+        ICluster clusterSource = attributes.getCluster(data.getCluster());
+        ICluster clusterTarget = attributes.getCluster(job.getCluster());
+        ILock lock1 = clusterSource.getLock();
+        ILock lock2 = clusterTarget.getLock();
+        if (lock1.compareTo(lock2) < 0) {
+            ILock tmp = lock1;
+            lock1 = lock2;
+            lock2 = tmp;
+        }
+        synchronized (lock1) {
+            synchronized (lock2) {
+                IData source = clusterSource.getJob(data.getJob()).getData(data.getData());
+                IData target = clusterTarget.getJob(job.getJob()).importData(source);
+                return new IDataId(job.getCluster(), job.getJob(), target.getId());
+            }
+        }
     }
 
     @Override
     public IDataId readFile(IJobId job, String path) throws IRemoteException, TException {
-        IData data = attributes.getCluster(job.getCluster()).getJob(job.getJob()).readFile(path);
-        return new IDataId(job.getCluster(), job.getJob(), data.getId());
+        ICluster clusterObject = attributes.getCluster(job.getCluster());
+        synchronized (clusterObject.getLock()) {
+            IData data = clusterObject.getJob(job.getJob()).readFile(path);
+            return new IDataId(job.getCluster(), job.getJob(), data.getId());
+        }
     }
 
 }

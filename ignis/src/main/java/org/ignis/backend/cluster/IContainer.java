@@ -27,6 +27,7 @@ import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
+import org.ignis.rpc.manager.IFileManager;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.ignis.rpc.manager.IServerManager;
 
@@ -42,8 +43,9 @@ public class IContainer {
     private final IProperties properties;
     private final IServerManager.Iface serverManager;
     private final IRegisterManager.Iface registerManager;
+    private final IFileManager.Iface fileManager;
     private final List<IExecutor> executors;
-    private final Task task;
+    private Task task;
 
     public IContainer(IContainerStub stub, IProperties properties, ILock lock) {
         this.stub = stub;
@@ -52,6 +54,7 @@ public class IContainer {
         this.properties = properties;
         this.serverManager = new IServerManager.Client(protocol);
         this.registerManager = new IRegisterManager.Client(protocol);
+        this.fileManager = new IFileManager.Client(protocol);
         this.executors = new ArrayList<>();
         this.task = new IContainerCreateTask(this, lock);
     }
@@ -68,6 +71,14 @@ public class IContainer {
 
     public IRegisterManager.Iface getRegisterManager() {
         return registerManager;
+    }
+
+    public IFileManager.Iface getFileManager() {
+        return fileManager;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     public Task getTask() {
