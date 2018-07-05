@@ -14,19 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.properties;
+package org.ignis.backend.cluster.tasks.executor;
+
+import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.Task;
+import org.ignis.backend.exception.IgnisException;
 
 /**
  *
  * @author César Pomar
  */
-public class IPropertiesKeys {
+public class ILocationMatchmakerTask extends IExecutorTask{
+    
+    public ILocationMatchmakerTask(IExecutor executor, ILock lock, Task... dependencies) {
+        super(executor, lock, dependencies);
+    }
 
-    public static final String HOME = "ignis.home";
-    public static final String DFS = "ignis.dfs";
-    public static final String ALLOCATOR_URL = "ignis.allocator.url";
-    public static final String BACKEND_SERVER_PORT = "ignis.backend.server.port";
-    public static final String EXECUTOR_INSTANCES = "ignis.executor.instances";
-    public static final String EXECUTOR_TRANSPORT_PORT = "ignis.executor.transport.port";
-
+    @Override
+    public void execute() throws IgnisException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 }

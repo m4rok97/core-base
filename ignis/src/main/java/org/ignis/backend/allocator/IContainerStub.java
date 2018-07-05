@@ -32,11 +32,13 @@ public abstract class IContainerStub {
         this.properties = properties;
     }
 
-    public TTransport getTransport() {
-        return null;
-    }
-
     public abstract boolean isRunning();
+    
+    public abstract String getHost();   
+    
+    public abstract int getPortAlias(int port);
+    
+    public abstract TTransport getTransport();
 
     public abstract void test() throws IgnisException;
 

@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.allocator.ancoris;
 
+import org.apache.thrift.transport.TTransport;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -36,6 +37,16 @@ public class IAncorisContainerStub extends IContainerStub{
     }
 
     @Override
+    public String getHost() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public TTransport getTransport() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public void test() throws IgnisException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -47,6 +58,11 @@ public class IAncorisContainerStub extends IContainerStub{
 
     @Override
     public void destroy() throws IgnisException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getPortAlias(int port) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

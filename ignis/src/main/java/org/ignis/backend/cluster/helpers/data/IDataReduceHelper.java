@@ -16,7 +16,12 @@
  */
 package org.ignis.backend.cluster.helpers.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.ISplit;
+import org.ignis.backend.cluster.tasks.IBarrier;
+import org.ignis.backend.cluster.tasks.executor.IReduceByKeyTask;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.IFunction;
 
@@ -28,10 +33,18 @@ public class IDataReduceHelper extends IDataHelper {
 
     public IDataReduceHelper(IData data, IProperties properties) {
         super(data, properties);
+
     }
 
     public IData reduceByKey(IFunction function) {
-        return null;
+        IBarrier barrier = new IBarrier(data.getSplitSize());
+        IReduceByKeyTask.KeyShared keyShared = new IReduceByKeyTask.KeyShared();
+        List<ISplit> result = new ArrayList<>();
+        for (ISplit split : data.getSplits()) {
+            result.add(new ISplit(split.getExecutor(), new IReduceByKeyTask(split.getExecutor(), function, barrier,
+                    keyShared, data.getLock(), split.getTask())));
+        }
+        return new IData(data.getJob().getDataSize(), data.getJob(), result);
     }
 
 }

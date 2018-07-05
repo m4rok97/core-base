@@ -43,6 +43,10 @@ public class IData {
         return splits;
     }
 
+    public int getSplitSize() {
+        return splits.size();
+    }
+
     public IJob getJob() {
         return job;
     }

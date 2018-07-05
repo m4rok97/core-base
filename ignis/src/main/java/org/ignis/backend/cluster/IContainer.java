@@ -89,8 +89,20 @@ public class IContainer {
         return stub;
     }
 
+    public String getHost() {
+        return stub.getHost();
+    }
+    
+    public int getPortAlias(int port){
+        return stub.getPortAlias(port);
+    }
+
     public List<IExecutor> getExecutors() {
         return executors;
+    }
+
+    public IProperties getProperties() {
+        return properties;
     }
 
 }
