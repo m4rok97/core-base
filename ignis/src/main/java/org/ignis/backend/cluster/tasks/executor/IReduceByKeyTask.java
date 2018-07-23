@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.IExecutor;
@@ -30,7 +31,7 @@ import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropertiesKeys;
 import org.ignis.backend.properties.IPropertiesParser;
-import org.ignis.rpc.IFunction;
+import org.ignis.rpc.ISourceFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ import org.slf4j.LoggerFactory;
 public class IReduceByKeyTask extends IExecutorTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IReduceByKeyTask.class);
-    
+
     public static class KeyShared {
 
         //Executor -> Key -> Count (Multiple Write, One Read)
@@ -52,11 +53,11 @@ public class IReduceByKeyTask extends IExecutorTask {
         private final Map<IExecutor, Long> ids = new HashMap<>();
     }
 
-    private final IFunction function;
+    private final ISourceFunction function;
     private final IBarrier barrier;
     private final KeyShared keyShared;
 
-    public IReduceByKeyTask(IExecutor executor, IFunction function, IBarrier barrier, KeyShared keyShared, ILock lock, Task... dependencies) {
+    public IReduceByKeyTask(IExecutor executor, ISourceFunction function, IBarrier barrier, KeyShared keyShared, ILock lock, Task... dependencies) {
         super(executor, lock, dependencies);
         this.function = function;
         this.barrier = barrier;
@@ -70,12 +71,11 @@ public class IReduceByKeyTask extends IExecutorTask {
     @Override
     public void execute() throws IgnisException {
         try {
-            Map<Long, Long> keys = executor.getReducerModule().getKeys(function, barrier.getParties() == 1);
+            Map<Long, Long> keys = executor.getKeysModule().getKeys(barrier.getParties() == 1);
             keyShared.count.put(executor, keys);
             if (barrier.await() == 0) {
                 keyDistribution();
             }
-            executor.getPostmanModule().start();
             barrier.await();
             Map<IExecutor, List<Long>> messages = new HashMap<>();
             for (Long key : keys.values()) {
@@ -90,14 +90,23 @@ public class IReduceByKeyTask extends IExecutorTask {
             }
 
             int port = IPropertiesParser.getInteger(executor.getContainer().getProperties(),
-                    IPropertiesKeys.EXECUTOR_TRANSPORT_PORT);
+                    IPropertiesKeys.TRANSPORT_PORT);
 
             for (Map.Entry<IExecutor, List<Long>> entry : messages.entrySet()) {
                 IContainer container = entry.getKey().getContainer();
-                executor.getReducerModule().setExecutorKeys(container.getHost(), container.getPortAlias(port),
+                executor.getKeysModule().sendPairs(container.getHost(), container.getPortAlias(port),
                         entry.getValue(), keyShared.ids.get(executor));
             }
-            executor.getPostmanModule().sendAll();
+            try {
+                executor.getPostmanModule().start();
+                barrier.await();
+                executor.getPostmanModule().sendAll();
+                barrier.await();
+            } finally {
+                executor.getPostmanModule().stop();
+            }
+            executor.getKeysModule().joinPairs(new ArrayList<>());//TODO
+            executor.getReducerModule().reduceByKey(function);
             barrier.await();
         } catch (IgnisException ex) {
             barrier.reset();
@@ -107,9 +116,9 @@ public class IReduceByKeyTask extends IExecutorTask {
             throw new IgnisException(ex.getMessage(), ex);
         } finally {
             try {
-                executor.getPostmanModule().stop();
+                executor.getKeysModule().reset();
             } catch (TException ex) {
-                //TODO
+                throw new IgnisException(ex.getMessage(), ex);
             }
         }
     }

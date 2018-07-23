@@ -18,6 +18,8 @@ package org.ignis.backend.cluster.helpers.job;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.ignis.backend.allocator.IExecutorStub;
+import org.ignis.backend.allocator.IManagerExecutorStub;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
@@ -34,10 +36,11 @@ public class IJobCreateHelper extends IJobHelper {
         super(job, properties);
     }
 
-    public List<IExecutor> create() throws IgnisException {
+    public List<IExecutor> create(long id, String type) throws IgnisException {
         List<IExecutor> result = new ArrayList<>();
-        for(IContainer container : job.getCluster().getContainers()){
-            result.add(container.createExecutor(properties));
+        for (IContainer container : job.getCluster().getContainers()) {
+            IExecutorStub stub = new IManagerExecutorStub(properties, job.getId(), type, container.getRegisterManager());
+            result.add(container.createExecutor(id, stub));
         }
         return result;
     }

@@ -20,36 +20,35 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.ISplit;
-import org.ignis.backend.cluster.tasks.executor.IMapTask;
-import org.ignis.backend.cluster.tasks.executor.IStreamingMapTask;
+import org.ignis.backend.cluster.tasks.executor.ISaveAsJsonFileTask;
+import org.ignis.backend.cluster.tasks.executor.ISaveAsTextFileTask;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.ISourceFunction;
 
 /**
  *
  * @author César Pomar
  */
-public class IDataMapHelper extends IDataHelper {
+public class IDataSaveHelper extends IDataHelper {
 
-    public IDataMapHelper(IData data, IProperties properties) {
+    public IDataSaveHelper(IData data, IProperties properties) {
         super(data, properties);
     }
 
-    public IData map(ISourceFunction function) {
+    public IData saveAsTextFile(String path, boolean joined) {
         List<ISplit> result = new ArrayList<>();
         for (ISplit split : data.getSplits()) {
             result.add(new ISplit(split.getExecutor(),
-                    new IMapTask(split.getExecutor(), function, data.getLock(), split.getTask()))
+                    new ISaveAsTextFileTask(split.getExecutor(), path, joined, data.getLock(), split.getTask()))
             );
         }
         return new IData(data.getJob().getDataSize(), data.getJob(), result);
     }
 
-    public IData streamingMap(ISourceFunction function, boolean ordered) {
+    public IData saveAsJsonFile(String path, boolean joined) {
         List<ISplit> result = new ArrayList<>();
         for (ISplit split : data.getSplits()) {
             result.add(new ISplit(split.getExecutor(),
-                    new IStreamingMapTask(split.getExecutor(), function, ordered, data.getLock(), split.getTask()))
+                    new ISaveAsJsonFileTask(split.getExecutor(), path, joined, data.getLock(), split.getTask()))
             );
         }
         return new IData(data.getJob().getDataSize(), data.getJob(), result);

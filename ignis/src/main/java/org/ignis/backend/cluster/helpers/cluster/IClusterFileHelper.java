@@ -67,7 +67,7 @@ public class IClusterFileHelper extends IClusterHelper {
             files.put(new File(target, file.getName()).getPath(), loadFile(file));
         }
         for (IContainer container : cluster.getContainers()) {
-            container.setTask(new ISendFilesTask(container, files, cluster.getLock(), container.getTask()));
+            container.pushTask(new ISendFilesTask(container, files, cluster.getLock(), container.getTask()));
         }
         return files.size();
     }
@@ -76,7 +76,7 @@ public class IClusterFileHelper extends IClusterHelper {
         File file = new File(source);
         ByteBuffer bytes = loadFile(file);
         for (IContainer container : cluster.getContainers()) {
-            container.setTask(new ISendCompressedFileTask(container,
+            container.pushTask(new ISendCompressedFileTask(container,
                     new File(target, file.getName()).getPath(), loadFile(file), cluster.getLock(), container.getTask())
             );
         }

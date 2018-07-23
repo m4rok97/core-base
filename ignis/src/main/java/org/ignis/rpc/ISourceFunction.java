@@ -7,8 +7,8 @@
 package org.ignis.rpc;
 
 @SuppressWarnings({"cast", "rawtypes", "serial", "unchecked", "unused"})
-public class IFunction extends org.apache.thrift.TUnion<IFunction, IFunction._Fields> {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("IFunction");
+public class ISourceFunction extends org.apache.thrift.TUnion<ISourceFunction, ISourceFunction._Fields> {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("ISourceFunction");
   private static final org.apache.thrift.protocol.TField NAME_FIELD_DESC = new org.apache.thrift.protocol.TField("name", org.apache.thrift.protocol.TType.STRING, (short)1);
   private static final org.apache.thrift.protocol.TField BYTES_FIELD_DESC = new org.apache.thrift.protocol.TField("bytes", org.apache.thrift.protocol.TType.STRING, (short)2);
 
@@ -81,38 +81,38 @@ public class IFunction extends org.apache.thrift.TUnion<IFunction, IFunction._Fi
     tmpMap.put(_Fields.BYTES, new org.apache.thrift.meta_data.FieldMetaData("bytes", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING        , true)));
     metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(IFunction.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(ISourceFunction.class, metaDataMap);
   }
 
-  public IFunction() {
+  public ISourceFunction() {
     super();
   }
 
-  public IFunction(_Fields setField, java.lang.Object value) {
+  public ISourceFunction(_Fields setField, java.lang.Object value) {
     super(setField, value);
   }
 
-  public IFunction(IFunction other) {
+  public ISourceFunction(ISourceFunction other) {
     super(other);
   }
-  public IFunction deepCopy() {
-    return new IFunction(this);
+  public ISourceFunction deepCopy() {
+    return new ISourceFunction(this);
   }
 
-  public static IFunction name(java.lang.String value) {
-    IFunction x = new IFunction();
+  public static ISourceFunction name(java.lang.String value) {
+    ISourceFunction x = new ISourceFunction();
     x.setName(value);
     return x;
   }
 
-  public static IFunction bytes(java.nio.ByteBuffer value) {
-    IFunction x = new IFunction();
+  public static ISourceFunction bytes(java.nio.ByteBuffer value) {
+    ISourceFunction x = new ISourceFunction();
     x.setBytes(value);
     return x;
   }
 
-  public static IFunction bytes(byte[] value) {
-    IFunction x = new IFunction();
+  public static ISourceFunction bytes(byte[] value) {
+    ISourceFunction x = new ISourceFunction();
     x.setBytes(java.nio.ByteBuffer.wrap(value.clone()));
     return x;
   }
@@ -297,19 +297,19 @@ public class IFunction extends org.apache.thrift.TUnion<IFunction, IFunction._Fi
 
 
   public boolean equals(java.lang.Object other) {
-    if (other instanceof IFunction) {
-      return equals((IFunction)other);
+    if (other instanceof ISourceFunction) {
+      return equals((ISourceFunction)other);
     } else {
       return false;
     }
   }
 
-  public boolean equals(IFunction other) {
+  public boolean equals(ISourceFunction other) {
     return other != null && getSetField() == other.getSetField() && getFieldValue().equals(other.getFieldValue());
   }
 
   @Override
-  public int compareTo(IFunction other) {
+  public int compareTo(ISourceFunction other) {
     int lastComparison = org.apache.thrift.TBaseHelper.compareTo(getSetField(), other.getSetField());
     if (lastComparison == 0) {
       return org.apache.thrift.TBaseHelper.compareTo(getFieldValue(), other.getFieldValue());

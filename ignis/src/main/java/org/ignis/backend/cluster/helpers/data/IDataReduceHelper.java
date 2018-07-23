@@ -23,7 +23,7 @@ import org.ignis.backend.cluster.ISplit;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.cluster.tasks.executor.IReduceByKeyTask;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.IFunction;
+import org.ignis.rpc.ISourceFunction;
 
 /**
  *
@@ -36,7 +36,7 @@ public class IDataReduceHelper extends IDataHelper {
 
     }
 
-    public IData reduceByKey(IFunction function) {
+    public IData reduceByKey(ISourceFunction function) {
         IBarrier barrier = new IBarrier(data.getSplitSize());
         IReduceByKeyTask.KeyShared keyShared = new IReduceByKeyTask.KeyShared();
         List<ISplit> result = new ArrayList<>();

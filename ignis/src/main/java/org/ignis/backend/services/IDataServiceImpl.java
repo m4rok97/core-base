@@ -19,7 +19,7 @@ package org.ignis.backend.services;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IData;
-import org.ignis.rpc.IFunction;
+import org.ignis.rpc.ISourceFunction;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IDataId;
 import org.ignis.rpc.driver.IDataService;
@@ -43,7 +43,7 @@ public class IDataServiceImpl extends IService implements IDataService.Iface {
     }
 
     @Override
-    public IDataId _map(IDataId data, IFunction _function) throws TException {
+    public IDataId _map(IDataId data, ISourceFunction _function) throws TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
@@ -53,7 +53,7 @@ public class IDataServiceImpl extends IService implements IDataService.Iface {
     }
 
     @Override
-    public IDataId streamingMap(IDataId data, IFunction _function, boolean ordered) throws TException {
+    public IDataId streamingMap(IDataId data, ISourceFunction _function, boolean ordered) throws TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
@@ -63,7 +63,7 @@ public class IDataServiceImpl extends IService implements IDataService.Iface {
     }
 
     @Override
-    public IDataId reduceByKey(IDataId data, IFunction _function) throws TException {
+    public IDataId reduceByKey(IDataId data, ISourceFunction _function) throws TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
@@ -73,11 +73,20 @@ public class IDataServiceImpl extends IService implements IDataService.Iface {
     }
 
     @Override
-    public void saveAsFile(IDataId data, String path, boolean join) throws TException {
+    public void saveAsTextFile(IDataId data, String path, boolean join) throws TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
-            source.saveAsFile(path, join);
+            source.saveAsTextFile(path, join);
+        }
+    }
+
+    @Override
+    public void saveAsJsonFile(IDataId data, String path, boolean join) throws TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            source.saveAsJsonFile(path, join);
         }
     }
 

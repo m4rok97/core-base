@@ -13,13 +13,15 @@ public class IDataService {
 
     public void keep(IDataId data, byte level) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId _map(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId _map(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId reduceByKey(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void saveAsFile(IDataId data, java.lang.String path, boolean join) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void saveAsTextFile(IDataId data, java.lang.String path, boolean join) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+
+    public void saveAsJsonFile(IDataId data, java.lang.String path, boolean join) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
   }
 
@@ -27,13 +29,15 @@ public class IDataService {
 
     public void keep(IDataId data, byte level, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void _map(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void _map(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void reduceByKey(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void saveAsFile(IDataId data, java.lang.String path, boolean join, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void saveAsTextFile(IDataId data, java.lang.String path, boolean join, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+
+    public void saveAsJsonFile(IDataId data, java.lang.String path, boolean join, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -81,13 +85,13 @@ public class IDataService {
       return;
     }
 
-    public IDataId _map(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId _map(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send__map(data, _function);
       return recv__map();
     }
 
-    public void send__map(IDataId data, org.ignis.rpc.IFunction _function) throws org.apache.thrift.TException
+    public void send__map(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.apache.thrift.TException
     {
       _map_args args = new _map_args();
       args.setData(data);
@@ -108,13 +112,13 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "_map failed: unknown result");
     }
 
-    public IDataId streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_streamingMap(data, _function, ordered);
       return recv_streamingMap();
     }
 
-    public void send_streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered) throws org.apache.thrift.TException
+    public void send_streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.apache.thrift.TException
     {
       streamingMap_args args = new streamingMap_args();
       args.setData(data);
@@ -136,13 +140,13 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "streamingMap failed: unknown result");
     }
 
-    public IDataId reduceByKey(IDataId data, org.ignis.rpc.IFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_reduceByKey(data, _function);
       return recv_reduceByKey();
     }
 
-    public void send_reduceByKey(IDataId data, org.ignis.rpc.IFunction _function) throws org.apache.thrift.TException
+    public void send_reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.apache.thrift.TException
     {
       reduceByKey_args args = new reduceByKey_args();
       args.setData(data);
@@ -163,25 +167,50 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "reduceByKey failed: unknown result");
     }
 
-    public void saveAsFile(IDataId data, java.lang.String path, boolean join) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void saveAsTextFile(IDataId data, java.lang.String path, boolean join) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_saveAsFile(data, path, join);
-      recv_saveAsFile();
+      send_saveAsTextFile(data, path, join);
+      recv_saveAsTextFile();
     }
 
-    public void send_saveAsFile(IDataId data, java.lang.String path, boolean join) throws org.apache.thrift.TException
+    public void send_saveAsTextFile(IDataId data, java.lang.String path, boolean join) throws org.apache.thrift.TException
     {
-      saveAsFile_args args = new saveAsFile_args();
+      saveAsTextFile_args args = new saveAsTextFile_args();
       args.setData(data);
       args.setPath(path);
       args.setJoin(join);
-      sendBase("saveAsFile", args);
+      sendBase("saveAsTextFile", args);
     }
 
-    public void recv_saveAsFile() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void recv_saveAsTextFile() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      saveAsFile_result result = new saveAsFile_result();
-      receiveBase(result, "saveAsFile");
+      saveAsTextFile_result result = new saveAsTextFile_result();
+      receiveBase(result, "saveAsTextFile");
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      return;
+    }
+
+    public void saveAsJsonFile(IDataId data, java.lang.String path, boolean join) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    {
+      send_saveAsJsonFile(data, path, join);
+      recv_saveAsJsonFile();
+    }
+
+    public void send_saveAsJsonFile(IDataId data, java.lang.String path, boolean join) throws org.apache.thrift.TException
+    {
+      saveAsJsonFile_args args = new saveAsJsonFile_args();
+      args.setData(data);
+      args.setPath(path);
+      args.setJoin(join);
+      sendBase("saveAsJsonFile", args);
+    }
+
+    public void recv_saveAsJsonFile() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    {
+      saveAsJsonFile_result result = new saveAsJsonFile_result();
+      receiveBase(result, "saveAsJsonFile");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -241,7 +270,7 @@ public class IDataService {
       }
     }
 
-    public void _map(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void _map(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       _map_call method_call = new _map_call(data, _function, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -250,8 +279,8 @@ public class IDataService {
 
     public static class _map_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.IFunction _function;
-      public _map_call(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISourceFunction _function;
+      public _map_call(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -276,7 +305,7 @@ public class IDataService {
       }
     }
 
-    public void streamingMap(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       streamingMap_call method_call = new streamingMap_call(data, _function, ordered, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -285,9 +314,9 @@ public class IDataService {
 
     public static class streamingMap_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.IFunction _function;
+      private org.ignis.rpc.ISourceFunction _function;
       private boolean ordered;
-      public streamingMap_call(IDataId data, org.ignis.rpc.IFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public streamingMap_call(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -314,7 +343,7 @@ public class IDataService {
       }
     }
 
-    public void reduceByKey(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       reduceByKey_call method_call = new reduceByKey_call(data, _function, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -323,8 +352,8 @@ public class IDataService {
 
     public static class reduceByKey_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.IFunction _function;
-      public reduceByKey_call(IDataId data, org.ignis.rpc.IFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISourceFunction _function;
+      public reduceByKey_call(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -349,18 +378,18 @@ public class IDataService {
       }
     }
 
-    public void saveAsFile(IDataId data, java.lang.String path, boolean join, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void saveAsTextFile(IDataId data, java.lang.String path, boolean join, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      saveAsFile_call method_call = new saveAsFile_call(data, path, join, resultHandler, this, ___protocolFactory, ___transport);
+      saveAsTextFile_call method_call = new saveAsTextFile_call(data, path, join, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class saveAsFile_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class saveAsTextFile_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private IDataId data;
       private java.lang.String path;
       private boolean join;
-      public saveAsFile_call(IDataId data, java.lang.String path, boolean join, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public saveAsTextFile_call(IDataId data, java.lang.String path, boolean join, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this.path = path;
@@ -368,8 +397,46 @@ public class IDataService {
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("saveAsFile", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        saveAsFile_args args = new saveAsFile_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("saveAsTextFile", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        saveAsTextFile_args args = new saveAsTextFile_args();
+        args.setData(data);
+        args.setPath(path);
+        args.setJoin(join);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public Void getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return null;
+      }
+    }
+
+    public void saveAsJsonFile(IDataId data, java.lang.String path, boolean join, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      saveAsJsonFile_call method_call = new saveAsJsonFile_call(data, path, join, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class saveAsJsonFile_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+      private IDataId data;
+      private java.lang.String path;
+      private boolean join;
+      public saveAsJsonFile_call(IDataId data, java.lang.String path, boolean join, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.data = data;
+        this.path = path;
+        this.join = join;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("saveAsJsonFile", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        saveAsJsonFile_args args = new saveAsJsonFile_args();
         args.setData(data);
         args.setPath(path);
         args.setJoin(join);
@@ -404,7 +471,8 @@ public class IDataService {
       processMap.put("_map", new _map());
       processMap.put("streamingMap", new streamingMap());
       processMap.put("reduceByKey", new reduceByKey());
-      processMap.put("saveAsFile", new saveAsFile());
+      processMap.put("saveAsTextFile", new saveAsTextFile());
+      processMap.put("saveAsJsonFile", new saveAsJsonFile());
       return processMap;
     }
 
@@ -524,13 +592,13 @@ public class IDataService {
       }
     }
 
-    public static class saveAsFile<I extends Iface> extends org.apache.thrift.ProcessFunction<I, saveAsFile_args> {
-      public saveAsFile() {
-        super("saveAsFile");
+    public static class saveAsTextFile<I extends Iface> extends org.apache.thrift.ProcessFunction<I, saveAsTextFile_args> {
+      public saveAsTextFile() {
+        super("saveAsTextFile");
       }
 
-      public saveAsFile_args getEmptyArgsInstance() {
-        return new saveAsFile_args();
+      public saveAsTextFile_args getEmptyArgsInstance() {
+        return new saveAsTextFile_args();
       }
 
       protected boolean isOneway() {
@@ -542,10 +610,39 @@ public class IDataService {
         return true;
       }
 
-      public saveAsFile_result getResult(I iface, saveAsFile_args args) throws org.apache.thrift.TException {
-        saveAsFile_result result = new saveAsFile_result();
+      public saveAsTextFile_result getResult(I iface, saveAsTextFile_args args) throws org.apache.thrift.TException {
+        saveAsTextFile_result result = new saveAsTextFile_result();
         try {
-          iface.saveAsFile(args.data, args.path, args.join);
+          iface.saveAsTextFile(args.data, args.path, args.join);
+        } catch (org.ignis.rpc.IRemoteException ex) {
+          result.ex = ex;
+        }
+        return result;
+      }
+    }
+
+    public static class saveAsJsonFile<I extends Iface> extends org.apache.thrift.ProcessFunction<I, saveAsJsonFile_args> {
+      public saveAsJsonFile() {
+        super("saveAsJsonFile");
+      }
+
+      public saveAsJsonFile_args getEmptyArgsInstance() {
+        return new saveAsJsonFile_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean handleRuntimeExceptions() {
+        return true;
+      }
+
+      public saveAsJsonFile_result getResult(I iface, saveAsJsonFile_args args) throws org.apache.thrift.TException {
+        saveAsJsonFile_result result = new saveAsJsonFile_result();
+        try {
+          iface.saveAsJsonFile(args.data, args.path, args.join);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -570,7 +667,8 @@ public class IDataService {
       processMap.put("_map", new _map());
       processMap.put("streamingMap", new streamingMap());
       processMap.put("reduceByKey", new reduceByKey());
-      processMap.put("saveAsFile", new saveAsFile());
+      processMap.put("saveAsTextFile", new saveAsTextFile());
+      processMap.put("saveAsJsonFile", new saveAsJsonFile());
       return processMap;
     }
 
@@ -833,20 +931,20 @@ public class IDataService {
       }
     }
 
-    public static class saveAsFile<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, saveAsFile_args, Void> {
-      public saveAsFile() {
-        super("saveAsFile");
+    public static class saveAsTextFile<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, saveAsTextFile_args, Void> {
+      public saveAsTextFile() {
+        super("saveAsTextFile");
       }
 
-      public saveAsFile_args getEmptyArgsInstance() {
-        return new saveAsFile_args();
+      public saveAsTextFile_args getEmptyArgsInstance() {
+        return new saveAsTextFile_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            saveAsFile_result result = new saveAsFile_result();
+            saveAsTextFile_result result = new saveAsTextFile_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -860,7 +958,7 @@ public class IDataService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            saveAsFile_result result = new saveAsFile_result();
+            saveAsTextFile_result result = new saveAsTextFile_result();
             if (e instanceof org.ignis.rpc.IRemoteException) {
               result.ex = (org.ignis.rpc.IRemoteException) e;
               result.setExIsSet(true);
@@ -892,8 +990,72 @@ public class IDataService {
         return false;
       }
 
-      public void start(I iface, saveAsFile_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.saveAsFile(args.data, args.path, args.join,resultHandler);
+      public void start(I iface, saveAsTextFile_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.saveAsTextFile(args.data, args.path, args.join,resultHandler);
+      }
+    }
+
+    public static class saveAsJsonFile<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, saveAsJsonFile_args, Void> {
+      public saveAsJsonFile() {
+        super("saveAsJsonFile");
+      }
+
+      public saveAsJsonFile_args getEmptyArgsInstance() {
+        return new saveAsJsonFile_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
+            saveAsJsonFile_result result = new saveAsJsonFile_result();
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            saveAsJsonFile_result result = new saveAsJsonFile_result();
+            if (e instanceof org.ignis.rpc.IRemoteException) {
+              result.ex = (org.ignis.rpc.IRemoteException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, saveAsJsonFile_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.saveAsJsonFile(args.data, args.path, args.join,resultHandler);
       }
     }
 
@@ -1740,7 +1902,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new _map_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.IFunction _function; // required
+    private org.ignis.rpc.ISourceFunction _function; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -1810,7 +1972,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(_map_args.class, metaDataMap);
     }
@@ -1820,7 +1982,7 @@ public class IDataService {
 
     public _map_args(
       IDataId data,
-      org.ignis.rpc.IFunction _function)
+      org.ignis.rpc.ISourceFunction _function)
     {
       this();
       this.data = data;
@@ -1835,7 +1997,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.IFunction(other._function);
+        this._function = new org.ignis.rpc.ISourceFunction(other._function);
       }
     }
 
@@ -1873,11 +2035,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.IFunction get_function() {
+    public org.ignis.rpc.ISourceFunction get_function() {
       return this._function;
     }
 
-    public _map_args set_function(org.ignis.rpc.IFunction _function) {
+    public _map_args set_function(org.ignis.rpc.ISourceFunction _function) {
       this._function = _function;
       return this;
     }
@@ -1911,7 +2073,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.IFunction)value);
+          set_function((org.ignis.rpc.ISourceFunction)value);
         }
         break;
 
@@ -2116,7 +2278,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.IFunction();
+                struct._function = new org.ignis.rpc.ISourceFunction();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -2191,7 +2353,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.IFunction();
+          struct._function = new org.ignis.rpc.ISourceFunction();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }
@@ -2687,7 +2849,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new streamingMap_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.IFunction _function; // required
+    private org.ignis.rpc.ISourceFunction _function; // required
     private boolean ordered; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -2763,7 +2925,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
       tmpMap.put(_Fields.ORDERED, new org.apache.thrift.meta_data.FieldMetaData("ordered", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
@@ -2775,7 +2937,7 @@ public class IDataService {
 
     public streamingMap_args(
       IDataId data,
-      org.ignis.rpc.IFunction _function,
+      org.ignis.rpc.ISourceFunction _function,
       boolean ordered)
     {
       this();
@@ -2794,7 +2956,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.IFunction(other._function);
+        this._function = new org.ignis.rpc.ISourceFunction(other._function);
       }
       this.ordered = other.ordered;
     }
@@ -2835,11 +2997,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.IFunction get_function() {
+    public org.ignis.rpc.ISourceFunction get_function() {
       return this._function;
     }
 
-    public streamingMap_args set_function(org.ignis.rpc.IFunction _function) {
+    public streamingMap_args set_function(org.ignis.rpc.ISourceFunction _function) {
       this._function = _function;
       return this;
     }
@@ -2896,7 +3058,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.IFunction)value);
+          set_function((org.ignis.rpc.ISourceFunction)value);
         }
         break;
 
@@ -3141,7 +3303,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.IFunction();
+                struct._function = new org.ignis.rpc.ISourceFunction();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -3233,7 +3395,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.IFunction();
+          struct._function = new org.ignis.rpc.ISourceFunction();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }
@@ -3732,7 +3894,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new reduceByKey_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.IFunction _function; // required
+    private org.ignis.rpc.ISourceFunction _function; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -3802,7 +3964,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(reduceByKey_args.class, metaDataMap);
     }
@@ -3812,7 +3974,7 @@ public class IDataService {
 
     public reduceByKey_args(
       IDataId data,
-      org.ignis.rpc.IFunction _function)
+      org.ignis.rpc.ISourceFunction _function)
     {
       this();
       this.data = data;
@@ -3827,7 +3989,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.IFunction(other._function);
+        this._function = new org.ignis.rpc.ISourceFunction(other._function);
       }
     }
 
@@ -3865,11 +4027,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.IFunction get_function() {
+    public org.ignis.rpc.ISourceFunction get_function() {
       return this._function;
     }
 
-    public reduceByKey_args set_function(org.ignis.rpc.IFunction _function) {
+    public reduceByKey_args set_function(org.ignis.rpc.ISourceFunction _function) {
       this._function = _function;
       return this;
     }
@@ -3903,7 +4065,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.IFunction)value);
+          set_function((org.ignis.rpc.ISourceFunction)value);
         }
         break;
 
@@ -4108,7 +4270,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.IFunction();
+                struct._function = new org.ignis.rpc.ISourceFunction();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -4183,7 +4345,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.IFunction();
+          struct._function = new org.ignis.rpc.ISourceFunction();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }
@@ -4668,15 +4830,15 @@ public class IDataService {
     }
   }
 
-  public static class saveAsFile_args implements org.apache.thrift.TBase<saveAsFile_args, saveAsFile_args._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsFile_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsFile_args");
+  public static class saveAsTextFile_args implements org.apache.thrift.TBase<saveAsTextFile_args, saveAsTextFile_args._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsTextFile_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsTextFile_args");
 
     private static final org.apache.thrift.protocol.TField DATA_FIELD_DESC = new org.apache.thrift.protocol.TField("data", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)2);
     private static final org.apache.thrift.protocol.TField JOIN_FIELD_DESC = new org.apache.thrift.protocol.TField("join", org.apache.thrift.protocol.TType.BOOL, (short)3);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsFile_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsFile_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsTextFile_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsTextFile_argsTupleSchemeFactory();
 
     private IDataId data; // required
     private java.lang.String path; // required
@@ -4759,13 +4921,13 @@ public class IDataService {
       tmpMap.put(_Fields.JOIN, new org.apache.thrift.meta_data.FieldMetaData("join", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsFile_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsTextFile_args.class, metaDataMap);
     }
 
-    public saveAsFile_args() {
+    public saveAsTextFile_args() {
     }
 
-    public saveAsFile_args(
+    public saveAsTextFile_args(
       IDataId data,
       java.lang.String path,
       boolean join)
@@ -4780,7 +4942,7 @@ public class IDataService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public saveAsFile_args(saveAsFile_args other) {
+    public saveAsTextFile_args(saveAsTextFile_args other) {
       __isset_bitfield = other.__isset_bitfield;
       if (other.isSetData()) {
         this.data = new IDataId(other.data);
@@ -4791,8 +4953,8 @@ public class IDataService {
       this.join = other.join;
     }
 
-    public saveAsFile_args deepCopy() {
-      return new saveAsFile_args(this);
+    public saveAsTextFile_args deepCopy() {
+      return new saveAsTextFile_args(this);
     }
 
     @Override
@@ -4807,7 +4969,7 @@ public class IDataService {
       return this.data;
     }
 
-    public saveAsFile_args setData(IDataId data) {
+    public saveAsTextFile_args setData(IDataId data) {
       this.data = data;
       return this;
     }
@@ -4831,7 +4993,7 @@ public class IDataService {
       return this.path;
     }
 
-    public saveAsFile_args setPath(java.lang.String path) {
+    public saveAsTextFile_args setPath(java.lang.String path) {
       this.path = path;
       return this;
     }
@@ -4855,7 +5017,7 @@ public class IDataService {
       return this.join;
     }
 
-    public saveAsFile_args setJoin(boolean join) {
+    public saveAsTextFile_args setJoin(boolean join) {
       this.join = join;
       setJoinIsSet(true);
       return this;
@@ -4939,12 +5101,12 @@ public class IDataService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof saveAsFile_args)
-        return this.equals((saveAsFile_args)that);
+      if (that instanceof saveAsTextFile_args)
+        return this.equals((saveAsTextFile_args)that);
       return false;
     }
 
-    public boolean equals(saveAsFile_args that) {
+    public boolean equals(saveAsTextFile_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -4998,7 +5160,7 @@ public class IDataService {
     }
 
     @Override
-    public int compareTo(saveAsFile_args other) {
+    public int compareTo(saveAsTextFile_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -5052,7 +5214,7 @@ public class IDataService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsFile_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsTextFile_args(");
       boolean first = true;
 
       sb.append("data:");
@@ -5104,15 +5266,15 @@ public class IDataService {
       }
     }
 
-    private static class saveAsFile_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public saveAsFile_argsStandardScheme getScheme() {
-        return new saveAsFile_argsStandardScheme();
+    private static class saveAsTextFile_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsTextFile_argsStandardScheme getScheme() {
+        return new saveAsTextFile_argsStandardScheme();
       }
     }
 
-    private static class saveAsFile_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsFile_args> {
+    private static class saveAsTextFile_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsTextFile_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsFile_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsTextFile_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -5158,7 +5320,7 @@ public class IDataService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsFile_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsTextFile_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -5181,16 +5343,16 @@ public class IDataService {
 
     }
 
-    private static class saveAsFile_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public saveAsFile_argsTupleScheme getScheme() {
-        return new saveAsFile_argsTupleScheme();
+    private static class saveAsTextFile_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsTextFile_argsTupleScheme getScheme() {
+        return new saveAsTextFile_argsTupleScheme();
       }
     }
 
-    private static class saveAsFile_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsFile_args> {
+    private static class saveAsTextFile_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsTextFile_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsFile_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsTextFile_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetData()) {
@@ -5215,7 +5377,7 @@ public class IDataService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsFile_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsTextFile_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
@@ -5239,13 +5401,13 @@ public class IDataService {
     }
   }
 
-  public static class saveAsFile_result implements org.apache.thrift.TBase<saveAsFile_result, saveAsFile_result._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsFile_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsFile_result");
+  public static class saveAsTextFile_result implements org.apache.thrift.TBase<saveAsTextFile_result, saveAsTextFile_result._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsTextFile_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsTextFile_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsFile_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsFile_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsTextFile_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsTextFile_resultTupleSchemeFactory();
 
     private org.ignis.rpc.IRemoteException ex; // required
 
@@ -5314,13 +5476,13 @@ public class IDataService {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsFile_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsTextFile_result.class, metaDataMap);
     }
 
-    public saveAsFile_result() {
+    public saveAsTextFile_result() {
     }
 
-    public saveAsFile_result(
+    public saveAsTextFile_result(
       org.ignis.rpc.IRemoteException ex)
     {
       this();
@@ -5330,14 +5492,14 @@ public class IDataService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public saveAsFile_result(saveAsFile_result other) {
+    public saveAsTextFile_result(saveAsTextFile_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
-    public saveAsFile_result deepCopy() {
-      return new saveAsFile_result(this);
+    public saveAsTextFile_result deepCopy() {
+      return new saveAsTextFile_result(this);
     }
 
     @Override
@@ -5349,7 +5511,7 @@ public class IDataService {
       return this.ex;
     }
 
-    public saveAsFile_result setEx(org.ignis.rpc.IRemoteException ex) {
+    public saveAsTextFile_result setEx(org.ignis.rpc.IRemoteException ex) {
       this.ex = ex;
       return this;
     }
@@ -5408,12 +5570,12 @@ public class IDataService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof saveAsFile_result)
-        return this.equals((saveAsFile_result)that);
+      if (that instanceof saveAsTextFile_result)
+        return this.equals((saveAsTextFile_result)that);
       return false;
     }
 
-    public boolean equals(saveAsFile_result that) {
+    public boolean equals(saveAsTextFile_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -5443,7 +5605,7 @@ public class IDataService {
     }
 
     @Override
-    public int compareTo(saveAsFile_result other) {
+    public int compareTo(saveAsTextFile_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -5477,7 +5639,7 @@ public class IDataService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsFile_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsTextFile_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -5512,15 +5674,15 @@ public class IDataService {
       }
     }
 
-    private static class saveAsFile_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public saveAsFile_resultStandardScheme getScheme() {
-        return new saveAsFile_resultStandardScheme();
+    private static class saveAsTextFile_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsTextFile_resultStandardScheme getScheme() {
+        return new saveAsTextFile_resultStandardScheme();
       }
     }
 
-    private static class saveAsFile_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsFile_result> {
+    private static class saveAsTextFile_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsTextFile_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsFile_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsTextFile_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -5550,7 +5712,7 @@ public class IDataService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsFile_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsTextFile_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -5565,16 +5727,16 @@ public class IDataService {
 
     }
 
-    private static class saveAsFile_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public saveAsFile_resultTupleScheme getScheme() {
-        return new saveAsFile_resultTupleScheme();
+    private static class saveAsTextFile_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsTextFile_resultTupleScheme getScheme() {
+        return new saveAsTextFile_resultTupleScheme();
       }
     }
 
-    private static class saveAsFile_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsFile_result> {
+    private static class saveAsTextFile_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsTextFile_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsFile_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsTextFile_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -5587,7 +5749,942 @@ public class IDataService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsFile_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsTextFile_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.ex = new org.ignis.rpc.IRemoteException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class saveAsJsonFile_args implements org.apache.thrift.TBase<saveAsJsonFile_args, saveAsJsonFile_args._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsJsonFile_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsJsonFile_args");
+
+    private static final org.apache.thrift.protocol.TField DATA_FIELD_DESC = new org.apache.thrift.protocol.TField("data", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)2);
+    private static final org.apache.thrift.protocol.TField JOIN_FIELD_DESC = new org.apache.thrift.protocol.TField("join", org.apache.thrift.protocol.TType.BOOL, (short)3);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsJsonFile_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsJsonFile_argsTupleSchemeFactory();
+
+    private IDataId data; // required
+    private java.lang.String path; // required
+    private boolean join; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      DATA((short)1, "data"),
+      PATH((short)2, "path"),
+      JOIN((short)3, "join");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // DATA
+            return DATA;
+          case 2: // PATH
+            return PATH;
+          case 3: // JOIN
+            return JOIN;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __JOIN_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
+      tmpMap.put(_Fields.PATH, new org.apache.thrift.meta_data.FieldMetaData("path", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.JOIN, new org.apache.thrift.meta_data.FieldMetaData("join", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsJsonFile_args.class, metaDataMap);
+    }
+
+    public saveAsJsonFile_args() {
+    }
+
+    public saveAsJsonFile_args(
+      IDataId data,
+      java.lang.String path,
+      boolean join)
+    {
+      this();
+      this.data = data;
+      this.path = path;
+      this.join = join;
+      setJoinIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public saveAsJsonFile_args(saveAsJsonFile_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      if (other.isSetData()) {
+        this.data = new IDataId(other.data);
+      }
+      if (other.isSetPath()) {
+        this.path = other.path;
+      }
+      this.join = other.join;
+    }
+
+    public saveAsJsonFile_args deepCopy() {
+      return new saveAsJsonFile_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.data = null;
+      this.path = null;
+      setJoinIsSet(false);
+      this.join = false;
+    }
+
+    public IDataId getData() {
+      return this.data;
+    }
+
+    public saveAsJsonFile_args setData(IDataId data) {
+      this.data = data;
+      return this;
+    }
+
+    public void unsetData() {
+      this.data = null;
+    }
+
+    /** Returns true if field data is set (has been assigned a value) and false otherwise */
+    public boolean isSetData() {
+      return this.data != null;
+    }
+
+    public void setDataIsSet(boolean value) {
+      if (!value) {
+        this.data = null;
+      }
+    }
+
+    public java.lang.String getPath() {
+      return this.path;
+    }
+
+    public saveAsJsonFile_args setPath(java.lang.String path) {
+      this.path = path;
+      return this;
+    }
+
+    public void unsetPath() {
+      this.path = null;
+    }
+
+    /** Returns true if field path is set (has been assigned a value) and false otherwise */
+    public boolean isSetPath() {
+      return this.path != null;
+    }
+
+    public void setPathIsSet(boolean value) {
+      if (!value) {
+        this.path = null;
+      }
+    }
+
+    public boolean isJoin() {
+      return this.join;
+    }
+
+    public saveAsJsonFile_args setJoin(boolean join) {
+      this.join = join;
+      setJoinIsSet(true);
+      return this;
+    }
+
+    public void unsetJoin() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __JOIN_ISSET_ID);
+    }
+
+    /** Returns true if field join is set (has been assigned a value) and false otherwise */
+    public boolean isSetJoin() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __JOIN_ISSET_ID);
+    }
+
+    public void setJoinIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __JOIN_ISSET_ID, value);
+    }
+
+    public void setFieldValue(_Fields field, java.lang.Object value) {
+      switch (field) {
+      case DATA:
+        if (value == null) {
+          unsetData();
+        } else {
+          setData((IDataId)value);
+        }
+        break;
+
+      case PATH:
+        if (value == null) {
+          unsetPath();
+        } else {
+          setPath((java.lang.String)value);
+        }
+        break;
+
+      case JOIN:
+        if (value == null) {
+          unsetJoin();
+        } else {
+          setJoin((java.lang.Boolean)value);
+        }
+        break;
+
+      }
+    }
+
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case DATA:
+        return getData();
+
+      case PATH:
+        return getPath();
+
+      case JOIN:
+        return isJoin();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case DATA:
+        return isSetData();
+      case PATH:
+        return isSetPath();
+      case JOIN:
+        return isSetJoin();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof saveAsJsonFile_args)
+        return this.equals((saveAsJsonFile_args)that);
+      return false;
+    }
+
+    public boolean equals(saveAsJsonFile_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_data = true && this.isSetData();
+      boolean that_present_data = true && that.isSetData();
+      if (this_present_data || that_present_data) {
+        if (!(this_present_data && that_present_data))
+          return false;
+        if (!this.data.equals(that.data))
+          return false;
+      }
+
+      boolean this_present_path = true && this.isSetPath();
+      boolean that_present_path = true && that.isSetPath();
+      if (this_present_path || that_present_path) {
+        if (!(this_present_path && that_present_path))
+          return false;
+        if (!this.path.equals(that.path))
+          return false;
+      }
+
+      boolean this_present_join = true;
+      boolean that_present_join = true;
+      if (this_present_join || that_present_join) {
+        if (!(this_present_join && that_present_join))
+          return false;
+        if (this.join != that.join)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetData()) ? 131071 : 524287);
+      if (isSetData())
+        hashCode = hashCode * 8191 + data.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetPath()) ? 131071 : 524287);
+      if (isSetPath())
+        hashCode = hashCode * 8191 + path.hashCode();
+
+      hashCode = hashCode * 8191 + ((join) ? 131071 : 524287);
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(saveAsJsonFile_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetData()).compareTo(other.isSetData());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetData()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.data, other.data);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetPath()).compareTo(other.isSetPath());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetPath()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.path, other.path);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetJoin()).compareTo(other.isSetJoin());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetJoin()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.join, other.join);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsJsonFile_args(");
+      boolean first = true;
+
+      sb.append("data:");
+      if (this.data == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.data);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("path:");
+      if (this.path == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.path);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("join:");
+      sb.append(this.join);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (data != null) {
+        data.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class saveAsJsonFile_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsJsonFile_argsStandardScheme getScheme() {
+        return new saveAsJsonFile_argsStandardScheme();
+      }
+    }
+
+    private static class saveAsJsonFile_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsJsonFile_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsJsonFile_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // DATA
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.data = new IDataId();
+                struct.data.read(iprot);
+                struct.setDataIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // PATH
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.path = iprot.readString();
+                struct.setPathIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // JOIN
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.join = iprot.readBool();
+                struct.setJoinIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsJsonFile_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.data != null) {
+          oprot.writeFieldBegin(DATA_FIELD_DESC);
+          struct.data.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.path != null) {
+          oprot.writeFieldBegin(PATH_FIELD_DESC);
+          oprot.writeString(struct.path);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldBegin(JOIN_FIELD_DESC);
+        oprot.writeBool(struct.join);
+        oprot.writeFieldEnd();
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class saveAsJsonFile_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsJsonFile_argsTupleScheme getScheme() {
+        return new saveAsJsonFile_argsTupleScheme();
+      }
+    }
+
+    private static class saveAsJsonFile_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsJsonFile_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsJsonFile_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetData()) {
+          optionals.set(0);
+        }
+        if (struct.isSetPath()) {
+          optionals.set(1);
+        }
+        if (struct.isSetJoin()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetData()) {
+          struct.data.write(oprot);
+        }
+        if (struct.isSetPath()) {
+          oprot.writeString(struct.path);
+        }
+        if (struct.isSetJoin()) {
+          oprot.writeBool(struct.join);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsJsonFile_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(3);
+        if (incoming.get(0)) {
+          struct.data = new IDataId();
+          struct.data.read(iprot);
+          struct.setDataIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.path = iprot.readString();
+          struct.setPathIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.join = iprot.readBool();
+          struct.setJoinIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class saveAsJsonFile_result implements org.apache.thrift.TBase<saveAsJsonFile_result, saveAsJsonFile_result._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsJsonFile_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsJsonFile_result");
+
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsJsonFile_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsJsonFile_resultTupleSchemeFactory();
+
+    private org.ignis.rpc.IRemoteException ex; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      EX((short)1, "ex");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // EX
+            return EX;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsJsonFile_result.class, metaDataMap);
+    }
+
+    public saveAsJsonFile_result() {
+    }
+
+    public saveAsJsonFile_result(
+      org.ignis.rpc.IRemoteException ex)
+    {
+      this();
+      this.ex = ex;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public saveAsJsonFile_result(saveAsJsonFile_result other) {
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IRemoteException(other.ex);
+      }
+    }
+
+    public saveAsJsonFile_result deepCopy() {
+      return new saveAsJsonFile_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.ex = null;
+    }
+
+    public org.ignis.rpc.IRemoteException getEx() {
+      return this.ex;
+    }
+
+    public saveAsJsonFile_result setEx(org.ignis.rpc.IRemoteException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, java.lang.Object value) {
+      switch (field) {
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IRemoteException)value);
+        }
+        break;
+
+      }
+    }
+
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case EX:
+        return getEx();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case EX:
+        return isSetEx();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof saveAsJsonFile_result)
+        return this.equals((saveAsJsonFile_result)that);
+      return false;
+    }
+
+    public boolean equals(saveAsJsonFile_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(saveAsJsonFile_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsJsonFile_result(");
+      boolean first = true;
+
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class saveAsJsonFile_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsJsonFile_resultStandardScheme getScheme() {
+        return new saveAsJsonFile_resultStandardScheme();
+      }
+    }
+
+    private static class saveAsJsonFile_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsJsonFile_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsJsonFile_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IRemoteException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsJsonFile_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class saveAsJsonFile_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsJsonFile_resultTupleScheme getScheme() {
+        return new saveAsJsonFile_resultTupleScheme();
+      }
+    }
+
+    private static class saveAsJsonFile_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsJsonFile_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsJsonFile_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetEx()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsJsonFile_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {

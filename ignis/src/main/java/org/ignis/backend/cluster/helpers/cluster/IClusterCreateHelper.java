@@ -37,7 +37,7 @@ public class IClusterCreateHelper extends IClusterHelper {
     public IClusterCreateHelper(ICluster cluster, IProperties properties) {
         super(cluster, properties);
     }
-    
+
     public List<IContainer> create(ILock lock) throws IgnisException {
         int instances = IPropertiesParser.getInteger(properties, IPropertiesKeys.EXECUTOR_INSTANCES);
         List<IContainer> result = new ArrayList<>();

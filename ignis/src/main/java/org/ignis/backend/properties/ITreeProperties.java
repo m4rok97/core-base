@@ -20,6 +20,6 @@ package org.ignis.backend.properties;
  *
  * @author César Pomar
  */
-public class iTreeProperties {
+public class ITreeProperties {
     
 }

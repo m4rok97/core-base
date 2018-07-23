@@ -16,10 +16,11 @@
  */
 package org.ignis.backend.cluster;
 
+import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.ignis.backend.allocator.IExecutorStub;
-import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.executor.IFilesModule;
+import org.ignis.rpc.executor.IKeysModule;
 import org.ignis.rpc.executor.IMapperModule;
 import org.ignis.rpc.executor.IPostmanModule;
 import org.ignis.rpc.executor.IReducerModule;
@@ -33,11 +34,12 @@ import org.ignis.rpc.executor.IStorageModule;
  */
 public class IExecutor {
 
+    private final long job;
     private final IContainer container;
     private final IExecutorStub stub;
     private final TProtocol protocol;
-    private final IProperties properties;
     private final IFilesModule.Iface filesModule;
+    private final IKeysModule.Iface keysModule;
     private final IMapperModule.Iface mapperModule;
     private final IPostmanModule.Iface postmanModule;
     private final IReducerModule.Iface reducerModule;
@@ -45,18 +47,23 @@ public class IExecutor {
     private final ISortModule.Iface sortModule;
     private final IStorageModule.Iface storageModule;
 
-    public IExecutor(IContainer container, IExecutorStub stub, TProtocol protocol, IProperties properties) {
+    public IExecutor(long job, IContainer container, IExecutorStub stub, TProtocol protocol) {
+        this.job = job;
         this.container = container;
         this.stub = stub;
         this.protocol = protocol;
-        this.properties = properties;
-        this.filesModule = new IFilesModule.Client(protocol);
-        this.mapperModule = new IMapperModule.Client(protocol);
-        this.postmanModule = new IPostmanModule.Client(protocol);
-        this.reducerModule = new IReducerModule.Client(protocol);
-        this.serverModule = new IServerModule.Client(protocol);
-        this.sortModule = new ISortModule.Client(protocol);
-        this.storageModule = new IStorageModule.Client(protocol);
+        this.filesModule = new IFilesModule.Client(new TMultiplexedProtocol(protocol, "files" + job));
+        this.keysModule = new IKeysModule.Client(new TMultiplexedProtocol(protocol, "keys" + job));
+        this.mapperModule = new IMapperModule.Client(new TMultiplexedProtocol(protocol, "mapper" + job));
+        this.postmanModule = new IPostmanModule.Client(new TMultiplexedProtocol(protocol, "postman" + job));
+        this.reducerModule = new IReducerModule.Client(new TMultiplexedProtocol(protocol, "reducer" + job));
+        this.serverModule = new IServerModule.Client(new TMultiplexedProtocol(protocol, "server" + job));
+        this.sortModule = new ISortModule.Client(new TMultiplexedProtocol(protocol, "sort" + job));
+        this.storageModule = new IStorageModule.Client(new TMultiplexedProtocol(protocol, "storage" + job));
+    }
+
+    public long getJob() {
+        return job;
     }
 
     public IContainer getContainer() {
@@ -73,6 +80,10 @@ public class IExecutor {
 
     public IFilesModule.Iface getFilesModule() {
         return filesModule;
+    }
+
+    public IKeysModule.Iface getKeysModule() {
+        return keysModule;
     }
 
     public IMapperModule.Iface getMapperModule() {

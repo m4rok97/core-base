@@ -67,7 +67,7 @@ public class Main {
             LOGGER.error("IGNIS_DFS not exist, aborting");
             return;
         }
-        attributes.defaultProperties.setProperty(IPropertiesKeys.DFS, dfs);
+        attributes.defaultProperties.setProperty(IPropertiesKeys.DFS_HOME, dfs);
 
         LOGGER.info("Loading configuration file");
         try {
@@ -89,7 +89,7 @@ public class Main {
 
         try {
             Integer port = IPropertiesParser.getInteger(attributes.defaultProperties,
-                    IPropertiesKeys.BACKEND_SERVER_PORT);
+                    IPropertiesKeys.DRIVER_RPC_PORT);
             System.out.println(port);
             backendService.start(processor, port);
         } catch (IgnisException ex) {

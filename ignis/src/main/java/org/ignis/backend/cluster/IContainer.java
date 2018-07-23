@@ -17,16 +17,22 @@
 package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.apache.thrift.protocol.TCompactProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.allocator.IContainerStub;
+import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
+import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IPropertiesKeys;
+import org.ignis.backend.properties.IPropertiesParser;
 import org.ignis.rpc.manager.IFileManager;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.ignis.rpc.manager.IServerManager;
@@ -38,31 +44,33 @@ import org.ignis.rpc.manager.IServerManager;
 public class IContainer {
 
     private final IContainerStub stub;
+    private final IProperties properties;
     private final TTransport transport;
     private final TProtocol protocol;
-    private final IProperties properties;
     private final IServerManager.Iface serverManager;
     private final IRegisterManager.Iface registerManager;
     private final IFileManager.Iface fileManager;
-    private final List<IExecutor> executors;
-    private Task task;
+    private final List<Task> tasks;
 
-    public IContainer(IContainerStub stub, IProperties properties, ILock lock) {
+    public IContainer(IContainerStub stub, IProperties properties, ILock lock) throws IgnisException {
         this.stub = stub;
-        this.transport = stub.getTransport();
-        this.protocol = new TCompactProtocol(new TZlibTransport(transport, 9));//TODO
         this.properties = properties;
-        this.serverManager = new IServerManager.Client(protocol);
-        this.registerManager = new IRegisterManager.Client(protocol);
-        this.fileManager = new IFileManager.Client(protocol);
-        this.executors = new ArrayList<>();
-        this.task = new IContainerCreateTask(this, lock);
+        this.transport = stub.getTransport();
+        this.protocol = new TCompactProtocol(new TZlibTransport(transport,
+                IPropertiesParser.getInteger(properties, IPropertiesKeys.MANAGER_RPC_COMPRESSION)));
+        this.serverManager = new IServerManager.Client(new TMultiplexedProtocol(protocol, "server"));
+        this.registerManager = new IRegisterManager.Client(new TMultiplexedProtocol(protocol, "register"));
+        this.fileManager = new IFileManager.Client(new TMultiplexedProtocol(protocol, "file"));
+        this.tasks = new ArrayList<>();
+        this.tasks.add(new IContainerCreateTask(this, lock));
     }
 
-    public IExecutor createExecutor(IProperties properties) {
-        IExecutor executor = new IExecutor(this, null, protocol, properties);
-        executors.add(executor);
-        return executor;
+    public IProperties getProperties() {
+        return properties;
+    }
+
+    public IExecutor createExecutor(long job, IExecutorStub stub) {
+        return new IExecutor(job, this, stub, protocol);
     }
 
     public IServerManager.Iface getServerManager() {
@@ -77,12 +85,18 @@ public class IContainer {
         return fileManager;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void pushTask(Task task) {
+        if (task != null) {
+            this.tasks.add(task);
+        }
+    }
+
+    public List<Task> getTasks() {
+        return Collections.unmodifiableList(tasks);
     }
 
     public Task getTask() {
-        return task;
+        return tasks.get(tasks.size() - 1);
     }
 
     public IContainerStub getStub() {
@@ -92,17 +106,9 @@ public class IContainer {
     public String getHost() {
         return stub.getHost();
     }
-    
-    public int getPortAlias(int port){
+
+    public int getPortAlias(int port) {
         return stub.getPortAlias(port);
-    }
-
-    public List<IExecutor> getExecutors() {
-        return executors;
-    }
-
-    public IProperties getProperties() {
-        return properties;
     }
 
 }

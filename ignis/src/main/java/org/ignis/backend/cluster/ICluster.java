@@ -62,7 +62,7 @@ public class ICluster {
     }
 
     public IJob createJob(String type, IProperties properties) throws IgnisException {
-        IJob job = new IJob(jobs.size(), this, properties);
+        IJob job = new IJob(jobs.size(), this, type, properties);
         jobs.add(job);
         return job;
     }

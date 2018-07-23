@@ -19,9 +19,9 @@ package org.ignis.backend.cluster;
 import java.util.List;
 import org.ignis.backend.cluster.helpers.data.IDataMapHelper;
 import org.ignis.backend.cluster.helpers.data.IDataReduceHelper;
+import org.ignis.backend.cluster.helpers.data.IDataSaveHelper;
 import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
-import org.ignis.rpc.IFunction;
+import org.ignis.rpc.ISourceFunction;
 
 /**
  *
@@ -63,20 +63,24 @@ public class IData {
         //TODO
     }
 
-    public IData map(IFunction function) {
+    public IData map(ISourceFunction function) {
         return new IDataMapHelper(this, job.getProperties()).map(function);
     }
 
-    public IData streamingMap(IFunction function, boolean ordered) {
+    public IData streamingMap(ISourceFunction function, boolean ordered) {
         return new IDataMapHelper(this, job.getProperties()).streamingMap(function, ordered);
     }
 
-    public IData reduceByKey(IFunction function) {
+    public IData reduceByKey(ISourceFunction function) {
         return new IDataReduceHelper(this, job.getProperties()).reduceByKey(function);
     }
 
-    public void saveAsFile(String path, boolean join) {
-        //TODO
+    public void saveAsTextFile(String path, boolean join) {
+        new IDataSaveHelper(this, job.getProperties()).saveAsTextFile(path, join);
+    }
+
+    public void saveAsJsonFile(String path, boolean join) {
+         new IDataSaveHelper(this, job.getProperties()).saveAsJsonFile(path, join);
     }
 
 }

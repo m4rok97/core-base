@@ -19,7 +19,6 @@ package org.ignis.backend.properties;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.ignis.backend.exception.IgnisException;
 
 /**
  *

@@ -21,29 +21,28 @@ import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.ISourceFunction;
 
 /**
  *
  * @author César Pomar
  */
-public class IStreamingMapTask extends IExecutorTask {
+public class ISaveAsJsonFileTask extends IExecutorTask {
 
-    private final ISourceFunction function;
-    private final boolean ordered;
-
-    public IStreamingMapTask(IExecutor executor, ISourceFunction function, boolean ordered, ILock lock, Task... dependencies) {
+    private final String path;
+    private final boolean joined;
+    
+    public ISaveAsJsonFileTask(IExecutor executor, String path, boolean joined, ILock lock, Task... dependencies) {
         super(executor, lock, dependencies);
-        this.function = function;
-        this.ordered = ordered;
+        this.path = path;
+        this.joined = joined;
     }
 
     @Override
     public void execute() throws IgnisException {
         try {
-            executor.getMapperModule().streamingMap(function, ordered);
+            executor.getFilesModule().saveJson(path, joined);
         } catch (TException ex) {
-            throw new IgnisException("Straming Map fails", ex);
+            throw new IgnisException("Save fails", ex);
         }
     }
 

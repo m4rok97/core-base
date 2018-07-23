@@ -16,14 +16,12 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.IFunction;
+import org.ignis.rpc.ISourceFunction;
 
 /**
  *
@@ -31,9 +29,9 @@ import org.ignis.rpc.IFunction;
  */
 public class IMapTask extends IExecutorTask {
 
-    private final IFunction function;
+    private final ISourceFunction function;
 
-    public IMapTask(IExecutor executor, IFunction function, ILock lock, Task... dependencies) {
+    public IMapTask(IExecutor executor, ISourceFunction function, ILock lock, Task... dependencies) {
         super(executor, lock, dependencies);
         this.function = function;
     }

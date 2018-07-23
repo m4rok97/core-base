@@ -33,17 +33,19 @@ public class IJob {
 
     private final long id;
     private final ICluster cluster;
+    private final String type;
     private final IProperties properties;
     private final List<IExecutor> executors;
     private final List<IData> datas;
     private boolean keep;
 
-    public IJob(long id, ICluster cluster, IProperties properties) throws IgnisException {
+    public IJob(long id, ICluster cluster, String type, IProperties properties) throws IgnisException {
         this.id = id;
         this.cluster = cluster;
+        this.type = type;
         this.properties = properties;
         this.datas = new ArrayList<>();
-        this.executors = new IJobCreateHelper(this, properties).create();
+        this.executors = new IJobCreateHelper(this, properties).create(id, type);
     }
 
     public long getId() {
@@ -60,6 +62,10 @@ public class IJob {
 
     public ICluster getCluster() {
         return cluster;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public IProperties getProperties() {
