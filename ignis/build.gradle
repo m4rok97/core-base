@@ -58,3 +58,8 @@ task copyToLib(type: Copy, description: 'Copy project dependencies.') {
     into "$buildDir/libs"
 }
 build.dependsOn(copyToLib)
+
+task jarAndLibs {
+    dependsOn 'jar'
+    dependsOn 'copyToLib'
+}
