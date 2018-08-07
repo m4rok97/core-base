@@ -13,9 +13,9 @@ public class IKeysModule {
 
     public java.util.Map<java.lang.Long,java.lang.Long> getKeys(boolean single) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, long msg_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void joinPairs(java.util.List<java.lang.Long> msg_ids) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void joinPairs() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public void reset() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -25,9 +25,9 @@ public class IKeysModule {
 
     public void getKeys(boolean single, org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler) throws org.apache.thrift.TException;
 
-    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, long msg_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void joinPairs(java.util.List<java.lang.Long> msg_ids, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void joinPairs(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void reset(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -79,19 +79,18 @@ public class IKeysModule {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getKeys failed: unknown result");
     }
 
-    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, long msg_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_sendPairs(host, port, keys_id, msg_id);
+      send_sendPairs(host, port, keys_id);
       recv_sendPairs();
     }
 
-    public void send_sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, long msg_id) throws org.apache.thrift.TException
+    public void send_sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id) throws org.apache.thrift.TException
     {
       sendPairs_args args = new sendPairs_args();
       args.setHost(host);
       args.setPort(port);
       args.setKeys_id(keys_id);
-      args.setMsg_id(msg_id);
       sendBase("sendPairs", args);
     }
 
@@ -105,16 +104,15 @@ public class IKeysModule {
       return;
     }
 
-    public void joinPairs(java.util.List<java.lang.Long> msg_ids) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void joinPairs() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_joinPairs(msg_ids);
+      send_joinPairs();
       recv_joinPairs();
     }
 
-    public void send_joinPairs(java.util.List<java.lang.Long> msg_ids) throws org.apache.thrift.TException
+    public void send_joinPairs() throws org.apache.thrift.TException
     {
       joinPairs_args args = new joinPairs_args();
-      args.setMsg_ids(msg_ids);
       sendBase("joinPairs", args);
     }
 
@@ -200,9 +198,9 @@ public class IKeysModule {
       }
     }
 
-    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, long msg_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      sendPairs_call method_call = new sendPairs_call(host, port, keys_id, msg_id, resultHandler, this, ___protocolFactory, ___transport);
+      sendPairs_call method_call = new sendPairs_call(host, port, keys_id, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -211,13 +209,11 @@ public class IKeysModule {
       private java.lang.String host;
       private int port;
       private java.util.List<java.lang.Long> keys_id;
-      private long msg_id;
-      public sendPairs_call(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, long msg_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public sendPairs_call(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.host = host;
         this.port = port;
         this.keys_id = keys_id;
-        this.msg_id = msg_id;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -226,7 +222,6 @@ public class IKeysModule {
         args.setHost(host);
         args.setPort(port);
         args.setKeys_id(keys_id);
-        args.setMsg_id(msg_id);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -241,24 +236,21 @@ public class IKeysModule {
       }
     }
 
-    public void joinPairs(java.util.List<java.lang.Long> msg_ids, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void joinPairs(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      joinPairs_call method_call = new joinPairs_call(msg_ids, resultHandler, this, ___protocolFactory, ___transport);
+      joinPairs_call method_call = new joinPairs_call(resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class joinPairs_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private java.util.List<java.lang.Long> msg_ids;
-      public joinPairs_call(java.util.List<java.lang.Long> msg_ids, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public joinPairs_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.msg_ids = msg_ids;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("joinPairs", org.apache.thrift.protocol.TMessageType.CALL, 0));
         joinPairs_args args = new joinPairs_args();
-        args.setMsg_ids(msg_ids);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -372,7 +364,7 @@ public class IKeysModule {
       public sendPairs_result getResult(I iface, sendPairs_args args) throws org.apache.thrift.TException {
         sendPairs_result result = new sendPairs_result();
         try {
-          iface.sendPairs(args.host, args.port, args.keys_id, args.msg_id);
+          iface.sendPairs(args.host, args.port, args.keys_id);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -401,7 +393,7 @@ public class IKeysModule {
       public joinPairs_result getResult(I iface, joinPairs_args args) throws org.apache.thrift.TException {
         joinPairs_result result = new joinPairs_result();
         try {
-          iface.joinPairs(args.msg_ids);
+          iface.joinPairs();
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -583,7 +575,7 @@ public class IKeysModule {
       }
 
       public void start(I iface, sendPairs_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.sendPairs(args.host, args.port, args.keys_id, args.msg_id,resultHandler);
+        iface.sendPairs(args.host, args.port, args.keys_id,resultHandler);
       }
     }
 
@@ -647,7 +639,7 @@ public class IKeysModule {
       }
 
       public void start(I iface, joinPairs_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.joinPairs(args.msg_ids,resultHandler);
+        iface.joinPairs(resultHandler);
       }
     }
 
@@ -1601,7 +1593,6 @@ public class IKeysModule {
     private static final org.apache.thrift.protocol.TField HOST_FIELD_DESC = new org.apache.thrift.protocol.TField("host", org.apache.thrift.protocol.TType.STRING, (short)1);
     private static final org.apache.thrift.protocol.TField PORT_FIELD_DESC = new org.apache.thrift.protocol.TField("port", org.apache.thrift.protocol.TType.I32, (short)2);
     private static final org.apache.thrift.protocol.TField KEYS_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("keys_id", org.apache.thrift.protocol.TType.LIST, (short)3);
-    private static final org.apache.thrift.protocol.TField MSG_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("msg_id", org.apache.thrift.protocol.TType.I64, (short)4);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new sendPairs_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sendPairs_argsTupleSchemeFactory();
@@ -1609,14 +1600,12 @@ public class IKeysModule {
     private java.lang.String host; // required
     private int port; // required
     private java.util.List<java.lang.Long> keys_id; // required
-    private long msg_id; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       HOST((short)1, "host"),
       PORT((short)2, "port"),
-      KEYS_ID((short)3, "keys_id"),
-      MSG_ID((short)4, "msg_id");
+      KEYS_ID((short)3, "keys_id");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -1637,8 +1626,6 @@ public class IKeysModule {
             return PORT;
           case 3: // KEYS_ID
             return KEYS_ID;
-          case 4: // MSG_ID
-            return MSG_ID;
           default:
             return null;
         }
@@ -1680,7 +1667,6 @@ public class IKeysModule {
 
     // isset id assignments
     private static final int __PORT_ISSET_ID = 0;
-    private static final int __MSG_ID_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
@@ -1692,8 +1678,6 @@ public class IKeysModule {
       tmpMap.put(_Fields.KEYS_ID, new org.apache.thrift.meta_data.FieldMetaData("keys_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64))));
-      tmpMap.put(_Fields.MSG_ID, new org.apache.thrift.meta_data.FieldMetaData("msg_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sendPairs_args.class, metaDataMap);
     }
@@ -1704,16 +1688,13 @@ public class IKeysModule {
     public sendPairs_args(
       java.lang.String host,
       int port,
-      java.util.List<java.lang.Long> keys_id,
-      long msg_id)
+      java.util.List<java.lang.Long> keys_id)
     {
       this();
       this.host = host;
       this.port = port;
       setPortIsSet(true);
       this.keys_id = keys_id;
-      this.msg_id = msg_id;
-      setMsg_idIsSet(true);
     }
 
     /**
@@ -1729,7 +1710,6 @@ public class IKeysModule {
         java.util.List<java.lang.Long> __this__keys_id = new java.util.ArrayList<java.lang.Long>(other.keys_id);
         this.keys_id = __this__keys_id;
       }
-      this.msg_id = other.msg_id;
     }
 
     public sendPairs_args deepCopy() {
@@ -1742,8 +1722,6 @@ public class IKeysModule {
       setPortIsSet(false);
       this.port = 0;
       this.keys_id = null;
-      setMsg_idIsSet(false);
-      this.msg_id = 0;
     }
 
     public java.lang.String getHost() {
@@ -1832,29 +1810,6 @@ public class IKeysModule {
       }
     }
 
-    public long getMsg_id() {
-      return this.msg_id;
-    }
-
-    public sendPairs_args setMsg_id(long msg_id) {
-      this.msg_id = msg_id;
-      setMsg_idIsSet(true);
-      return this;
-    }
-
-    public void unsetMsg_id() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __MSG_ID_ISSET_ID);
-    }
-
-    /** Returns true if field msg_id is set (has been assigned a value) and false otherwise */
-    public boolean isSetMsg_id() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __MSG_ID_ISSET_ID);
-    }
-
-    public void setMsg_idIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __MSG_ID_ISSET_ID, value);
-    }
-
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
       case HOST:
@@ -1881,14 +1836,6 @@ public class IKeysModule {
         }
         break;
 
-      case MSG_ID:
-        if (value == null) {
-          unsetMsg_id();
-        } else {
-          setMsg_id((java.lang.Long)value);
-        }
-        break;
-
       }
     }
 
@@ -1902,9 +1849,6 @@ public class IKeysModule {
 
       case KEYS_ID:
         return getKeys_id();
-
-      case MSG_ID:
-        return getMsg_id();
 
       }
       throw new java.lang.IllegalStateException();
@@ -1923,8 +1867,6 @@ public class IKeysModule {
         return isSetPort();
       case KEYS_ID:
         return isSetKeys_id();
-      case MSG_ID:
-        return isSetMsg_id();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1971,15 +1913,6 @@ public class IKeysModule {
           return false;
       }
 
-      boolean this_present_msg_id = true;
-      boolean that_present_msg_id = true;
-      if (this_present_msg_id || that_present_msg_id) {
-        if (!(this_present_msg_id && that_present_msg_id))
-          return false;
-        if (this.msg_id != that.msg_id)
-          return false;
-      }
-
       return true;
     }
 
@@ -1996,8 +1929,6 @@ public class IKeysModule {
       hashCode = hashCode * 8191 + ((isSetKeys_id()) ? 131071 : 524287);
       if (isSetKeys_id())
         hashCode = hashCode * 8191 + keys_id.hashCode();
-
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(msg_id);
 
       return hashCode;
     }
@@ -2040,16 +1971,6 @@ public class IKeysModule {
           return lastComparison;
         }
       }
-      lastComparison = java.lang.Boolean.valueOf(isSetMsg_id()).compareTo(other.isSetMsg_id());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetMsg_id()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.msg_id, other.msg_id);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
       return 0;
     }
 
@@ -2088,10 +2009,6 @@ public class IKeysModule {
       } else {
         sb.append(this.keys_id);
       }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("msg_id:");
-      sb.append(this.msg_id);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -2172,14 +2089,6 @@ public class IKeysModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 4: // MSG_ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.msg_id = iprot.readI64();
-                struct.setMsg_idIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -2215,9 +2124,6 @@ public class IKeysModule {
           }
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(MSG_ID_FIELD_DESC);
-        oprot.writeI64(struct.msg_id);
-        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -2245,10 +2151,7 @@ public class IKeysModule {
         if (struct.isSetKeys_id()) {
           optionals.set(2);
         }
-        if (struct.isSetMsg_id()) {
-          optionals.set(3);
-        }
-        oprot.writeBitSet(optionals, 4);
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetHost()) {
           oprot.writeString(struct.host);
         }
@@ -2264,15 +2167,12 @@ public class IKeysModule {
             }
           }
         }
-        if (struct.isSetMsg_id()) {
-          oprot.writeI64(struct.msg_id);
-        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, sendPairs_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(4);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.host = iprot.readString();
           struct.setHostIsSet(true);
@@ -2293,10 +2193,6 @@ public class IKeysModule {
             }
           }
           struct.setKeys_idIsSet(true);
-        }
-        if (incoming.get(3)) {
-          struct.msg_id = iprot.readI64();
-          struct.setMsg_idIsSet(true);
         }
       }
     }
@@ -2673,16 +2569,14 @@ public class IKeysModule {
   public static class joinPairs_args implements org.apache.thrift.TBase<joinPairs_args, joinPairs_args._Fields>, java.io.Serializable, Cloneable, Comparable<joinPairs_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinPairs_args");
 
-    private static final org.apache.thrift.protocol.TField MSG_IDS_FIELD_DESC = new org.apache.thrift.protocol.TField("msg_ids", org.apache.thrift.protocol.TType.LIST, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinPairs_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinPairs_argsTupleSchemeFactory();
 
-    private java.util.List<java.lang.Long> msg_ids; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      MSG_IDS((short)1, "msg_ids");
+;
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -2697,8 +2591,6 @@ public class IKeysModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // MSG_IDS
-            return MSG_IDS;
           default:
             return null;
         }
@@ -2737,14 +2629,9 @@ public class IKeysModule {
         return _fieldName;
       }
     }
-
-    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.MSG_IDS, new org.apache.thrift.meta_data.FieldMetaData("msg_ids", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
-              new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64))));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinPairs_args.class, metaDataMap);
     }
@@ -2752,21 +2639,10 @@ public class IKeysModule {
     public joinPairs_args() {
     }
 
-    public joinPairs_args(
-      java.util.List<java.lang.Long> msg_ids)
-    {
-      this();
-      this.msg_ids = msg_ids;
-    }
-
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public joinPairs_args(joinPairs_args other) {
-      if (other.isSetMsg_ids()) {
-        java.util.List<java.lang.Long> __this__msg_ids = new java.util.ArrayList<java.lang.Long>(other.msg_ids);
-        this.msg_ids = __this__msg_ids;
-      }
     }
 
     public joinPairs_args deepCopy() {
@@ -2775,66 +2651,15 @@ public class IKeysModule {
 
     @Override
     public void clear() {
-      this.msg_ids = null;
-    }
-
-    public int getMsg_idsSize() {
-      return (this.msg_ids == null) ? 0 : this.msg_ids.size();
-    }
-
-    public java.util.Iterator<java.lang.Long> getMsg_idsIterator() {
-      return (this.msg_ids == null) ? null : this.msg_ids.iterator();
-    }
-
-    public void addToMsg_ids(long elem) {
-      if (this.msg_ids == null) {
-        this.msg_ids = new java.util.ArrayList<java.lang.Long>();
-      }
-      this.msg_ids.add(elem);
-    }
-
-    public java.util.List<java.lang.Long> getMsg_ids() {
-      return this.msg_ids;
-    }
-
-    public joinPairs_args setMsg_ids(java.util.List<java.lang.Long> msg_ids) {
-      this.msg_ids = msg_ids;
-      return this;
-    }
-
-    public void unsetMsg_ids() {
-      this.msg_ids = null;
-    }
-
-    /** Returns true if field msg_ids is set (has been assigned a value) and false otherwise */
-    public boolean isSetMsg_ids() {
-      return this.msg_ids != null;
-    }
-
-    public void setMsg_idsIsSet(boolean value) {
-      if (!value) {
-        this.msg_ids = null;
-      }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
-      case MSG_IDS:
-        if (value == null) {
-          unsetMsg_ids();
-        } else {
-          setMsg_ids((java.util.List<java.lang.Long>)value);
-        }
-        break;
-
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
-      case MSG_IDS:
-        return getMsg_ids();
-
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2846,8 +2671,6 @@ public class IKeysModule {
       }
 
       switch (field) {
-      case MSG_IDS:
-        return isSetMsg_ids();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2867,25 +2690,12 @@ public class IKeysModule {
       if (this == that)
         return true;
 
-      boolean this_present_msg_ids = true && this.isSetMsg_ids();
-      boolean that_present_msg_ids = true && that.isSetMsg_ids();
-      if (this_present_msg_ids || that_present_msg_ids) {
-        if (!(this_present_msg_ids && that_present_msg_ids))
-          return false;
-        if (!this.msg_ids.equals(that.msg_ids))
-          return false;
-      }
-
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetMsg_ids()) ? 131071 : 524287);
-      if (isSetMsg_ids())
-        hashCode = hashCode * 8191 + msg_ids.hashCode();
 
       return hashCode;
     }
@@ -2898,16 +2708,6 @@ public class IKeysModule {
 
       int lastComparison = 0;
 
-      lastComparison = java.lang.Boolean.valueOf(isSetMsg_ids()).compareTo(other.isSetMsg_ids());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetMsg_ids()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.msg_ids, other.msg_ids);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
       return 0;
     }
 
@@ -2928,13 +2728,6 @@ public class IKeysModule {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("joinPairs_args(");
       boolean first = true;
 
-      sb.append("msg_ids:");
-      if (this.msg_ids == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.msg_ids);
-      }
-      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -2978,24 +2771,6 @@ public class IKeysModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // MSG_IDS
-              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
-                {
-                  org.apache.thrift.protocol.TList _list18 = iprot.readListBegin();
-                  struct.msg_ids = new java.util.ArrayList<java.lang.Long>(_list18.size);
-                  long _elem19;
-                  for (int _i20 = 0; _i20 < _list18.size; ++_i20)
-                  {
-                    _elem19 = iprot.readI64();
-                    struct.msg_ids.add(_elem19);
-                  }
-                  iprot.readListEnd();
-                }
-                struct.setMsg_idsIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3011,18 +2786,6 @@ public class IKeysModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.msg_ids != null) {
-          oprot.writeFieldBegin(MSG_IDS_FIELD_DESC);
-          {
-            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, struct.msg_ids.size()));
-            for (long _iter21 : struct.msg_ids)
-            {
-              oprot.writeI64(_iter21);
-            }
-            oprot.writeListEnd();
-          }
-          oprot.writeFieldEnd();
-        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3040,39 +2803,11 @@ public class IKeysModule {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, joinPairs_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetMsg_ids()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetMsg_ids()) {
-          {
-            oprot.writeI32(struct.msg_ids.size());
-            for (long _iter22 : struct.msg_ids)
-            {
-              oprot.writeI64(_iter22);
-            }
-          }
-        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, joinPairs_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          {
-            org.apache.thrift.protocol.TList _list23 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
-            struct.msg_ids = new java.util.ArrayList<java.lang.Long>(_list23.size);
-            long _elem24;
-            for (int _i25 = 0; _i25 < _list23.size; ++_i25)
-            {
-              _elem24 = iprot.readI64();
-              struct.msg_ids.add(_elem24);
-            }
-          }
-          struct.setMsg_idsIsSet(true);
-        }
       }
     }
 

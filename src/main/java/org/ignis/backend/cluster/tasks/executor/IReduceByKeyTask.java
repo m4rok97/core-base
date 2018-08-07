@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.IExecutor;
@@ -49,8 +48,6 @@ public class IReduceByKeyTask extends IExecutorTask {
         private final Map<IExecutor, Map<Long, Long>> count = new ConcurrentHashMap<>();
         //Key -> Executor (One write, Multiple read)
         private final Map<Long, IExecutor> distribution = new HashMap<>();
-        //Executor -> id (One write, Multiple read)
-        private final Map<IExecutor, Long> ids = new HashMap<>();
     }
 
     private final ISourceFunction function;
@@ -95,7 +92,7 @@ public class IReduceByKeyTask extends IExecutorTask {
             for (Map.Entry<IExecutor, List<Long>> entry : messages.entrySet()) {
                 IContainer container = entry.getKey().getContainer();
                 executor.getKeysModule().sendPairs(container.getHost(), container.getPortAlias(port),
-                        entry.getValue(), keyShared.ids.get(executor));
+                        entry.getValue());
             }
             try {
                 executor.getPostmanModule().start();
@@ -105,7 +102,7 @@ public class IReduceByKeyTask extends IExecutorTask {
             } finally {
                 executor.getPostmanModule().stop();
             }
-            executor.getKeysModule().joinPairs(new ArrayList<>());//TODO
+            executor.getKeysModule().joinPairs();
             executor.getReducerModule().reduceByKey(function);
             barrier.await();
         } catch (IgnisException ex) {
