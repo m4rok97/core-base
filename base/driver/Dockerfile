@@ -6,7 +6,6 @@ RUN \
 	mkdir -p /tmp/backend && \ 
 	cd /tmp/backend && \
 	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/backend.git src && \
-	cd src/ignis && \
 	gradle jarAndLibs && \
 	mv build/libs/* ${IGNIS_HOME}/backend && \
 	cd ${IGNIS_HOME} && \
