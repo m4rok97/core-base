@@ -23,6 +23,8 @@ import org.ignis.backend.allocator.ancoris.IAncorisContainerStub;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IPropertiesKeys;
@@ -38,13 +40,17 @@ public class IClusterCreateHelper extends IClusterHelper {
         super(cluster, properties);
     }
 
-    public List<IContainer> create(ILock lock) throws IgnisException {
+    public List<IContainer> create(IContainerStub.Factory factory) throws IgnisException {
         int instances = IPropertiesParser.getInteger(properties, IPropertiesKeys.EXECUTOR_INSTANCES);
         List<IContainer> result = new ArrayList<>();
+        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
         for (int i = 0; i < instances; i++) {
-            IContainerStub stub = new IAncorisContainerStub(properties);
-            result.add(new IContainer(stub, properties, lock));
+            IContainerStub stub = factory.getContainerStub(properties);
+            IContainer container = new IContainer(stub, properties );
+            shedulerBuilder.newTask(new IContainerCreateTask(container));
+            result.add(container);
         }
+        cluster.putScheduler(shedulerBuilder.build());
         return result;
     }
 

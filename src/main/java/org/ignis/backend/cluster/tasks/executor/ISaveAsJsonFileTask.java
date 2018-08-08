@@ -18,8 +18,6 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
 
 /**
@@ -31,8 +29,8 @@ public class ISaveAsJsonFileTask extends IExecutorTask {
     private final String path;
     private final boolean joined;
     
-    public ISaveAsJsonFileTask(IExecutor executor, String path, boolean joined, ILock lock, Task... dependencies) {
-        super(executor, lock, dependencies);
+    public ISaveAsJsonFileTask(IExecutor executor, String path, boolean joined) {
+        super(executor);
         this.path = path;
         this.joined = joined;
     }

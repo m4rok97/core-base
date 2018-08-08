@@ -18,9 +18,12 @@ package org.ignis.backend.cluster.helpers.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import static jdk.nashorn.internal.objects.NativeString.split;
 import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ISplit;
 import org.ignis.backend.cluster.tasks.IBarrier;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IReduceByKeyTask;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.ISourceFunction;
@@ -37,14 +40,15 @@ public class IDataReduceHelper extends IDataHelper {
     }
 
     public IData reduceByKey(ISourceFunction function) {
-        IBarrier barrier = new IBarrier(data.getSplitSize());
+        IBarrier barrier = new IBarrier(data.getPartitions());
         IReduceByKeyTask.KeyShared keyShared = new IReduceByKeyTask.KeyShared();
-        List<ISplit> result = new ArrayList<>();
-        for (ISplit split : data.getSplits()) {
-            result.add(new ISplit(split.getExecutor(), new IReduceByKeyTask(split.getExecutor(), function, barrier,
-                    keyShared, data.getLock(), split.getTask())));
+        List<IExecutor> result = new ArrayList<>();
+        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        shedulerBuilder.newDependency(data.getScheduler());
+        for (IExecutor executor : data.getExecutors()) {
+            shedulerBuilder.newTask(new IReduceByKeyTask(executor, function, barrier,keyShared));
         }
-        return new IData(data.getJob().getDataSize(), data.getJob(), result);
+        return data.getJob().newData(0, result, shedulerBuilder.build());
     }
 
 }

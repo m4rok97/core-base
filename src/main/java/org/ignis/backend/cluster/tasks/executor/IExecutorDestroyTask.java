@@ -16,24 +16,27 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
 
 /**
  *
  * @author César Pomar
  */
-public class IExecutorDestroyTask extends IExecutorTask{
+public class IExecutorDestroyTask extends IExecutorTask {
 
-    public IExecutorDestroyTask(IExecutor executor, ILock lock, Task... dependencies) {
-        super(executor, lock, dependencies);
+    public IExecutorDestroyTask(IExecutor executor) {
+        super(executor);
     }
 
     @Override
     public void execute() throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            executor.getContainer().getRegisterManager().destroy(executor.getJob());
+        } catch (TException ex) {
+            throw new IgnisException("Destroy executor fails", ex);
+        }
     }
-    
+
 }

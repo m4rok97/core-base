@@ -26,6 +26,12 @@ import org.ignis.backend.properties.IProperties;
  */
 public abstract class IContainerStub {
 
+    public static abstract class Factory {
+
+        public abstract IContainerStub getContainerStub(IProperties properties);
+        
+    }
+
     protected final IProperties properties;
 
     public IContainerStub(IProperties properties) {
@@ -33,11 +39,11 @@ public abstract class IContainerStub {
     }
 
     public abstract boolean isRunning();
-    
-    public abstract String getHost();   
-    
+
+    public abstract String getHost();
+
     public abstract int getPortAlias(int port);
-    
+
     public abstract TTransport getTransport();
 
     public abstract void test() throws IgnisException;

@@ -25,6 +25,7 @@ import org.ignis.rpc.executor.IMapperModule;
 import org.ignis.rpc.executor.IPostmanModule;
 import org.ignis.rpc.executor.IReducerModule;
 import org.ignis.rpc.executor.IServerModule;
+import org.ignis.rpc.executor.IShuffleModule;
 import org.ignis.rpc.executor.ISortModule;
 import org.ignis.rpc.executor.IStorageModule;
 
@@ -44,6 +45,7 @@ public class IExecutor {
     private final IPostmanModule.Iface postmanModule;
     private final IReducerModule.Iface reducerModule;
     private final IServerModule.Iface serverModule;
+    private final IShuffleModule.Iface shuffleModule;
     private final ISortModule.Iface sortModule;
     private final IStorageModule.Iface storageModule;
 
@@ -58,6 +60,7 @@ public class IExecutor {
         this.postmanModule = new IPostmanModule.Client(new TMultiplexedProtocol(protocol, "postman" + job));
         this.reducerModule = new IReducerModule.Client(new TMultiplexedProtocol(protocol, "reducer" + job));
         this.serverModule = new IServerModule.Client(new TMultiplexedProtocol(protocol, "server" + job));
+        this.shuffleModule = new IShuffleModule.Client(new TMultiplexedProtocol(protocol, "shuffle" + job));
         this.sortModule = new ISortModule.Client(new TMultiplexedProtocol(protocol, "sort" + job));
         this.storageModule = new IStorageModule.Client(new TMultiplexedProtocol(protocol, "storage" + job));
     }
@@ -104,6 +107,10 @@ public class IExecutor {
 
     public ISortModule.Iface getSortModule() {
         return sortModule;
+    }
+
+    public IShuffleModule.Iface getShuffleModule() {
+        return shuffleModule;
     }
 
     public IStorageModule.Iface getStorageModule() {

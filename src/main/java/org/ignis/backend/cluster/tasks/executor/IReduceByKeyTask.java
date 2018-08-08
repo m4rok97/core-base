@@ -54,8 +54,8 @@ public class IReduceByKeyTask extends IExecutorTask {
     private final IBarrier barrier;
     private final KeyShared keyShared;
 
-    public IReduceByKeyTask(IExecutor executor, ISourceFunction function, IBarrier barrier, KeyShared keyShared, ILock lock, Task... dependencies) {
-        super(executor, lock, dependencies);
+    public IReduceByKeyTask(IExecutor executor, ISourceFunction function, IBarrier barrier, KeyShared keyShared) {
+        super(executor);
         this.function = function;
         this.barrier = barrier;
         this.keyShared = keyShared;

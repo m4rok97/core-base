@@ -16,8 +16,6 @@
  */
 package org.ignis.backend.cluster;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
@@ -27,9 +25,7 @@ import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.Task;
-import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropertiesKeys;
 import org.ignis.backend.properties.IPropertiesParser;
@@ -50,9 +46,8 @@ public class IContainer {
     private final IServerManager.Iface serverManager;
     private final IRegisterManager.Iface registerManager;
     private final IFileManager.Iface fileManager;
-    private final List<Task> tasks;
 
-    public IContainer(IContainerStub stub, IProperties properties, ILock lock) throws IgnisException {
+    public IContainer(IContainerStub stub, IProperties properties) throws IgnisException {
         this.stub = stub;
         this.properties = properties;
         this.transport = stub.getTransport();
@@ -61,8 +56,6 @@ public class IContainer {
         this.serverManager = new IServerManager.Client(new TMultiplexedProtocol(protocol, "server"));
         this.registerManager = new IRegisterManager.Client(new TMultiplexedProtocol(protocol, "register"));
         this.fileManager = new IFileManager.Client(new TMultiplexedProtocol(protocol, "file"));
-        this.tasks = new ArrayList<>();
-        this.tasks.add(new IContainerCreateTask(this, lock));
     }
 
     public IProperties getProperties() {
@@ -83,20 +76,6 @@ public class IContainer {
 
     public IFileManager.Iface getFileManager() {
         return fileManager;
-    }
-
-    public void pushTask(Task task) {
-        if (task != null) {
-            this.tasks.add(task);
-        }
-    }
-
-    public List<Task> getTasks() {
-        return Collections.unmodifiableList(tasks);
-    }
-
-    public Task getTask() {
-        return tasks.get(tasks.size() - 1);
     }
 
     public IContainerStub getStub() {

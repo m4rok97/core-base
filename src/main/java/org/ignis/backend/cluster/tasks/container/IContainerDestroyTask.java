@@ -17,23 +17,21 @@
 package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
 
 /**
  *
  * @author César Pomar
  */
-public class IContainerDestroyTask extends IContainerTask{
+public class IContainerDestroyTask extends IContainerTask {
 
-    public IContainerDestroyTask(IContainer container, ILock lock, Task... dependencies) {
-        super(container, lock, dependencies);
+    public IContainerDestroyTask(IContainer container) {
+        super(container);
     }
 
     @Override
     public void execute() throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        container.getStub().destroy();
     }
-    
+
 }

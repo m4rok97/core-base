@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.allocator;
 
+import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
@@ -25,12 +26,19 @@ import org.ignis.backend.properties.IProperties;
  */
 public abstract class IExecutorStub {
 
-    protected final IProperties properties;
+    public static abstract class Factory {
+
+        public abstract IExecutorStub getExecutorStub(long id, String type, IContainer container);
+    }
+
+    protected final long id;
+    protected final IContainer container;
     protected final String type;
 
-    public IExecutorStub(IProperties properties, String type) {
-        this.properties = properties;
+    public IExecutorStub(long id, String type, IContainer container) {
+        this.id = id;
         this.type = type;
+        this.container = container;
     }
 
     public abstract boolean isRunning();

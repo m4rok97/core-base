@@ -25,7 +25,16 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public class IAncorisContainerStub extends IContainerStub{
+public class IAncorisContainerStub extends IContainerStub {
+
+    public static class Factory extends IContainerStub.Factory{
+
+        @Override
+        public IContainerStub getContainerStub(IProperties properties){
+            return new IAncorisContainerStub(properties);
+        }
+
+    }
 
     public IAncorisContainerStub(IProperties properties) {
         super(properties);
@@ -65,5 +74,5 @@ public class IAncorisContainerStub extends IContainerStub{
     public int getPortAlias(int port) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

@@ -18,9 +18,13 @@ package org.ignis.backend.cluster;
 
 import java.util.List;
 import org.ignis.backend.cluster.helpers.data.IDataMapHelper;
+import org.ignis.backend.cluster.helpers.data.IDataShuffleHelper;
 import org.ignis.backend.cluster.helpers.data.IDataReduceHelper;
 import org.ignis.backend.cluster.helpers.data.IDataSaveHelper;
 import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.IThreadPool;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISourceFunction;
 
 /**
@@ -31,20 +35,26 @@ public class IData {
 
     private final long id;
     private final IJob job;
-    private final List<ISplit> splits;
+    private final List<IExecutor> executors;
+    private final TaskScheduler scheduler;
 
-    public IData(long id, IJob job, List<ISplit> splits) {
+    public IData(long id, IJob job, List<IExecutor> executors, TaskScheduler scheduler) {
         this.id = id;
         this.job = job;
-        this.splits = splits;
+        this.executors = executors;
+        this.scheduler = scheduler;
     }
 
-    public List<ISplit> getSplits() {
-        return splits;
+    public List<IExecutor> getExecutors() {
+        return executors;
     }
 
-    public int getSplitSize() {
-        return splits.size();
+    public int getPartitions() {
+        return executors.size();
+    }
+
+    public TaskScheduler getScheduler() {
+        return scheduler;
     }
 
     public IJob getJob() {
@@ -53,6 +63,10 @@ public class IData {
 
     public ILock getLock() {
         return job.getLock();
+    }
+
+    public IThreadPool getPool() {
+        return job.getPool();
     }
 
     public long getId() {
@@ -75,12 +89,16 @@ public class IData {
         return new IDataReduceHelper(this, job.getProperties()).reduceByKey(function);
     }
 
-    public void saveAsTextFile(String path, boolean join) {
+    public IData shuffle() {
+        return new IDataShuffleHelper(this, job.getProperties()).shuffle();
+    }
+
+    public void saveAsTextFile(String path, boolean join) throws IgnisException {
         new IDataSaveHelper(this, job.getProperties()).saveAsTextFile(path, join);
     }
 
-    public void saveAsJsonFile(String path, boolean join) {
-         new IDataSaveHelper(this, job.getProperties()).saveAsJsonFile(path, join);
+    public void saveAsJsonFile(String path, boolean join) throws IgnisException {
+        new IDataSaveHelper(this, job.getProperties()).saveAsJsonFile(path, join);
     }
 
 }

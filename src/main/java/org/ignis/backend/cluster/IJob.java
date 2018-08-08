@@ -18,10 +18,13 @@ package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.cluster.helpers.job.IJobCreateHelper;
 import org.ignis.backend.cluster.helpers.job.IJobImportDataHelper;
 import org.ignis.backend.cluster.helpers.job.IJobReadFileHelper;
 import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.IThreadPool;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
@@ -37,15 +40,17 @@ public class IJob {
     private final IProperties properties;
     private final List<IExecutor> executors;
     private final List<IData> datas;
+    private final List<TaskScheduler> schedulers;
     private boolean keep;
 
-    public IJob(long id, ICluster cluster, String type, IProperties properties) throws IgnisException {
+    public IJob(long id, ICluster cluster, String type, IProperties properties, IExecutorStub.Factory factory) throws IgnisException {
         this.id = id;
         this.cluster = cluster;
         this.type = type;
         this.properties = properties;
         this.datas = new ArrayList<>();
-        this.executors = new IJobCreateHelper(this, properties).create(id, type);
+        this.schedulers = new ArrayList<>();
+        this.executors = new IJobCreateHelper(this, properties).create(id, type, factory);//Must be the last
     }
 
     public long getId() {
@@ -54,6 +59,20 @@ public class IJob {
 
     public ILock getLock() {
         return cluster.getLock();
+    }
+
+    public IThreadPool getPool() {
+        return cluster.getPool();
+    }
+
+    public void putScheduler(TaskScheduler scheduler) {
+        if (scheduler != null) {
+            schedulers.add(scheduler);
+        }
+    }
+
+    public TaskScheduler getScheduler() {
+        return schedulers.get(schedulers.size() - 1);
     }
 
     public List<IExecutor> getExecutors() {
@@ -82,6 +101,10 @@ public class IJob {
 
     public int getDataSize() {
         return datas.size();
+    }
+
+    public IData newData(long id, List<IExecutor> executors, TaskScheduler scheduler) {
+        return new IData(id, this, executors, scheduler);
     }
 
     public IData getData(long id) throws IgnisException {

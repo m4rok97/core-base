@@ -34,7 +34,9 @@ public class IPropertiesServiceImpl extends IService implements IPropertiesServi
 
     @Override
     public long newInstance() throws TException {
-        return attributes.addProperties(new IProperties(attributes.defaultProperties));
+        synchronized (attributes.defaultProperties) {
+            return attributes.addProperties(new IProperties(attributes.defaultProperties));
+        }
     }
 
     @Override

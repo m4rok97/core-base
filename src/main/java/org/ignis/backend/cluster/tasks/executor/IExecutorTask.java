@@ -17,19 +17,17 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.Task;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class IExecutorTask extends Task {
+public abstract class IExecutorTask implements Task {
 
     protected final IExecutor executor;
 
-    public IExecutorTask(IExecutor executor, ILock lock, Task... dependencies) {
-        super(lock, dependencies);
+    public IExecutorTask(IExecutor executor) {
         this.executor = executor;
     }
 

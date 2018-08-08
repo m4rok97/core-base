@@ -18,8 +18,6 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISourceFunction;
 
@@ -31,8 +29,8 @@ public class IMapTask extends IExecutorTask {
 
     private final ISourceFunction function;
 
-    public IMapTask(IExecutor executor, ISourceFunction function, ILock lock, Task... dependencies) {
-        super(executor, lock, dependencies);
+    public IMapTask(IExecutor executor, ISourceFunction function) {
+        super(executor);
         this.function = function;
     }
 

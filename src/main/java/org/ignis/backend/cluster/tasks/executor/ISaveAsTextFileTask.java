@@ -31,8 +31,8 @@ public class ISaveAsTextFileTask extends IExecutorTask {
     private final String path;
     private final boolean joined;
     
-    public ISaveAsTextFileTask(IExecutor executor, String path, boolean joined, ILock lock, Task... dependencies) {
-        super(executor, lock, dependencies);
+    public ISaveAsTextFileTask(IExecutor executor, String path, boolean joined) {
+        super(executor);
         this.path = path;
         this.joined = joined;
     }

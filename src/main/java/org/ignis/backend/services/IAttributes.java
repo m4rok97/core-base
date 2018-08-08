@@ -64,8 +64,8 @@ public class IAttributes {
         }
         return cluster;
     }
-    
-    public long newIdCluster(){
+
+    public long newIdCluster() {
         return idClusterGen.incrementAndGet();
     }
 

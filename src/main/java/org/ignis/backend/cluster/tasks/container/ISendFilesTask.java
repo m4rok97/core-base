@@ -20,8 +20,6 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
 
 /**
@@ -32,8 +30,8 @@ public class ISendFilesTask extends IContainerTask {
 
     private final Map<String, ByteBuffer> files;
 
-    public ISendFilesTask(IContainer container, Map<String, ByteBuffer> files, ILock lock, Task... dependencies) {
-        super(container, lock, dependencies);
+    public ISendFilesTask(IContainer container, Map<String, ByteBuffer> files) {
+        super(container);
         this.files = files;
     }
 

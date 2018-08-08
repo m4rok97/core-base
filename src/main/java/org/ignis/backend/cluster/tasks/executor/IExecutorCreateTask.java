@@ -17,8 +17,6 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
 
 /**
@@ -27,8 +25,8 @@ import org.ignis.backend.exception.IgnisException;
  */
 public class IExecutorCreateTask extends IExecutorTask {
 
-    public IExecutorCreateTask(IExecutor executor, ILock lock, Task... dependencies) {
-        super(executor, lock, dependencies);
+    public IExecutorCreateTask(IExecutor executor) {
+        super(executor);
     }
 
     @Override

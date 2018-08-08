@@ -16,12 +16,8 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
 
 /**
@@ -35,8 +31,8 @@ public class IReadFileTask extends IExecutorTask {
     private final long length;
     private final long lines;
 
-    public IReadFileTask(IExecutor executor, String path, long offset, long length, long lines, ILock lock, Task... dependencies) {
-        super(executor, lock, dependencies);
+    public IReadFileTask(IExecutor executor, String path, long offset, long length, long lines) {
+        super(executor);
         this.path = path;
         this.offset = offset;
         this.length = length;

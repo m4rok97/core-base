@@ -19,7 +19,9 @@ package org.ignis.backend.cluster.helpers.data;
 import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ISplit;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IMapTask;
 import org.ignis.backend.cluster.tasks.executor.IStreamingMapTask;
 import org.ignis.backend.properties.IProperties;
@@ -36,23 +38,23 @@ public class IDataMapHelper extends IDataHelper {
     }
 
     public IData map(ISourceFunction function) {
-        List<ISplit> result = new ArrayList<>();
-        for (ISplit split : data.getSplits()) {
-            result.add(new ISplit(split.getExecutor(),
-                    new IMapTask(split.getExecutor(), function, data.getLock(), split.getTask()))
-            );
+        List<IExecutor> result = new ArrayList<>();
+        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        shedulerBuilder.newDependency(data.getScheduler());
+        for (IExecutor executor : data.getExecutors()) {
+            shedulerBuilder.newTask(new IMapTask(executor, function));
         }
-        return new IData(data.getJob().getDataSize(), data.getJob(), result);
+        return data.getJob().newData(0, result, shedulerBuilder.build());
     }
 
     public IData streamingMap(ISourceFunction function, boolean ordered) {
-        List<ISplit> result = new ArrayList<>();
-        for (ISplit split : data.getSplits()) {
-            result.add(new ISplit(split.getExecutor(),
-                    new IStreamingMapTask(split.getExecutor(), function, ordered, data.getLock(), split.getTask()))
-            );
+        List<IExecutor> result = new ArrayList<>();
+        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        shedulerBuilder.newDependency(data.getScheduler());
+        for (IExecutor executor : data.getExecutors()) {
+            shedulerBuilder.newTask(new IStreamingMapTask(executor, function, ordered));
         }
-        return new IData(data.getJob().getDataSize(), data.getJob(), result);
+        return data.getJob().newData(0, result, shedulerBuilder.build());
     }
 
 }

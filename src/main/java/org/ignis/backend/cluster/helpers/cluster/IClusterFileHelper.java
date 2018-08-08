@@ -28,6 +28,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.container.ISendCompressedFileTask;
 import org.ignis.backend.cluster.tasks.container.ISendFilesTask;
 import org.ignis.backend.properties.IProperties;
@@ -66,20 +67,25 @@ public class IClusterFileHelper extends IClusterHelper {
         for (File file : wd.listFiles(fileFilter)) {
             files.put(new File(target, file.getName()).getPath(), loadFile(file));
         }
+        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
+        shedulerBuilder.newDependency(cluster.getScheduler());
         for (IContainer container : cluster.getContainers()) {
-            container.pushTask(new ISendFilesTask(container, files, cluster.getLock(), container.getTask()));
+            shedulerBuilder.newTask(new ISendFilesTask(container, files));
         }
+        cluster.putScheduler(shedulerBuilder.build());
         return files.size();
     }
 
     public int sendCompressedFile(String source, String target) {
         File file = new File(source);
-        ByteBuffer bytes = loadFile(file);
+        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
+        shedulerBuilder.newDependency(cluster.getScheduler());
         for (IContainer container : cluster.getContainers()) {
-            container.pushTask(new ISendCompressedFileTask(container,
-                    new File(target, file.getName()).getPath(), loadFile(file), cluster.getLock(), container.getTask())
+            shedulerBuilder.newTask(new ISendCompressedFileTask(container,
+                    new File(target, file.getName()).getPath(), loadFile(new File(source)))
             );
         }
+        cluster.putScheduler(shedulerBuilder.build());
         return 1;
     }
 

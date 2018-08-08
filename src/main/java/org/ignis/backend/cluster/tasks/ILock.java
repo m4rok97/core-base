@@ -28,10 +28,6 @@ public class ILock implements Comparable<ILock> {
         this.id = id;
     }
 
-    public long getId() {
-        return id;
-    }
-
     @Override
     public int compareTo(ILock lock) {
         return (int) (id - lock.id);

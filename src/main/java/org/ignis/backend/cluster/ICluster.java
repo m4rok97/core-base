@@ -18,11 +18,15 @@ package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.ignis.backend.allocator.IContainerStub;
+import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.IThreadPool;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
 
 /**
  *
@@ -31,18 +35,22 @@ import org.ignis.backend.cluster.tasks.ILock;
 public class ICluster {
 
     private final long id;
+    private final IThreadPool pool;
     private final IProperties properties;
     private final List<IContainer> containers;
     private final List<IJob> jobs;
     private final ILock lock;
+    private final List<TaskScheduler> schedulers;
     private boolean keep;
 
-    public ICluster(long id, IProperties properties) throws IgnisException {
+    public ICluster(long id, IProperties properties, IThreadPool pool, IContainerStub.Factory factory) throws IgnisException {
         this.id = id;
         this.properties = properties;
+        this.pool = pool;
         this.jobs = new ArrayList<>();
         this.lock = new ILock(id);
-        this.containers = new IClusterCreateHelper(this, properties).create(lock);
+        this.schedulers = new ArrayList<>();
+        this.containers = new IClusterCreateHelper(this, properties).create(factory);//Must be the last
     }
 
     public long getId() {
@@ -53,6 +61,20 @@ public class ICluster {
         return lock;
     }
 
+    public IThreadPool getPool() {
+        return pool;
+    }
+
+    public void putScheduler(TaskScheduler scheduler) {
+        if (scheduler != null) {
+            schedulers.add(scheduler);
+        }
+    }
+
+    public TaskScheduler getScheduler() {
+        return schedulers.get(schedulers.size() - 1);
+    }
+
     public IProperties getProperties() {
         return properties;
     }
@@ -61,14 +83,14 @@ public class ICluster {
         return containers;
     }
 
-    public IJob createJob(String type, IProperties properties) throws IgnisException {
-        IJob job = new IJob(jobs.size(), this, type, properties);
+    public IJob createJob(String type, IProperties properties, IExecutorStub.Factory factory) throws IgnisException {
+        IJob job = new IJob(jobs.size(), this, type, properties, factory);
         jobs.add(job);
         return job;
     }
 
-    public IJob createJob(String type) throws IgnisException {
-        return createJob(type, properties);
+    public IJob createJob(String type, IExecutorStub.Factory factory) throws IgnisException {
+        return createJob(type, properties, factory);
     }
 
     public IJob getJob(long id) throws IgnisException {

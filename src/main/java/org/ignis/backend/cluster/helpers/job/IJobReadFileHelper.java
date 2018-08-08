@@ -27,6 +27,7 @@ import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
 import org.ignis.backend.cluster.ISplit;
 import org.ignis.backend.cluster.helpers.util.IDistributorHelper;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IReadFileTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -89,15 +90,18 @@ public class IJobReadFileHelper extends IJobHelper {
         int executors = job.getExecutors().size();
         int[] distribution = new IDistributorHelper(properties).distribute(indices.size(), executors);
 
-        List<ISplit> result = new ArrayList<>();
+        List<IExecutor> result = new ArrayList<>();
+        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
+        shedulerBuilder.newDependency(job.getScheduler());
+
         for (int i = 0; i < executors; i++) {
             IExecutor executor = job.getExecutors().get(i);
             int lines = distribution[i + 1] - distribution[i];
             long offset = indices.get(distribution[i]);
             long length = indices.get(distribution[i + 1]) - offset;
-            result.add(new ISplit(executor, new IReadFileTask(executor, path, offset, length, lines, job.getLock())));
+            shedulerBuilder.newTask(new IReadFileTask(executor, path, offset, length, lines));
         }
-         return new IData(job.getDataSize(), job, result);
+        return job.newData(0, result, shedulerBuilder.build());
     }
 
 }

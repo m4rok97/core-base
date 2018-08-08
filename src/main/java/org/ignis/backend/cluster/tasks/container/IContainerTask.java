@@ -17,19 +17,17 @@
 package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.Task;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class IContainerTask extends Task {
+public abstract class IContainerTask implements Task {
 
     protected final IContainer container;
 
-    public IContainerTask(IContainer container, ILock lock, Task... dependencies) {
-        super(lock, dependencies);
+    public IContainerTask(IContainer container) {
         this.container = container;
     }
 

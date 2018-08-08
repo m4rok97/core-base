@@ -14,27 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.tasks.executor;
+package org.ignis.backend.cluster.helpers.data;
 
-import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
-import org.ignis.backend.exception.IgnisException;
+
+import org.ignis.backend.cluster.IData;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class ILocationMatchmakerTask extends IExecutorTask{
-    
-    public ILocationMatchmakerTask(IExecutor executor, ILock lock, Task... dependencies) {
-        super(executor, lock, dependencies);
+public class IDataShuffleHelper extends IDataHelper {
+
+    public IDataShuffleHelper(IData data, IProperties properties) {
+        super(data, properties);
     }
 
-    @Override
-    public void execute() throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IData shuffle() {/*
+        List<ISplit> result = new ArrayList<>();
+        for (ISplit split : data.getSplits()) {
+            result.add(new ISplit(split.getExecutor(),
+                    new IMapTask(split.getExecutor(), function, data.getLock(), split.getTask()))
+            );
+        }
+        return new IData(data.getJob().getDataSize(), data.getJob(), result);*/
+        return null;
     }
-    
-    
+
 }

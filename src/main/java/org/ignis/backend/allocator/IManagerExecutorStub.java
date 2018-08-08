@@ -17,6 +17,7 @@
 package org.ignis.backend.allocator;
 
 import org.apache.thrift.TException;
+import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.manager.IRegisterManager;
@@ -27,14 +28,20 @@ import org.ignis.rpc.manager.IRegisterManager;
  */
 public class IManagerExecutorStub extends IExecutorStub {
 
-    private final long id;
+    public static class Factory extends IExecutorStub.Factory {
+
+        @Override
+        public IExecutorStub getExecutorStub(long id, String type, IContainer container) {
+            return new IManagerExecutorStub(id, type, container);
+        }
+    }
+
     private final IRegisterManager.Iface manager;
     private boolean running;
 
-    public IManagerExecutorStub(IProperties properties, long id, String type, IRegisterManager.Iface manager) {
-        super(properties, type);
-        this.id = id;
-        this.manager = manager;
+    public IManagerExecutorStub(long id, String type, IContainer container) {
+        super(id, type, container);
+        this.manager = container.getRegisterManager();
     }
 
     @Override

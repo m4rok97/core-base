@@ -22,15 +22,7 @@ import org.ignis.backend.exception.IgnisException;
  *
  * @author César Pomar
  */
-public abstract class Task {
+public interface Task {
 
-    protected final Task[] dependencies;
-    protected final ILock lock;
-
-    public Task(ILock lock, Task... dependencies) {
-        this.lock = lock;
-        this.dependencies = dependencies;
-    }
-
-    public abstract void execute() throws IgnisException;
+    public void execute() throws IgnisException;
 }

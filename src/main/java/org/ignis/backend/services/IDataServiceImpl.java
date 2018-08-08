@@ -73,6 +73,16 @@ public class IDataServiceImpl extends IService implements IDataService.Iface {
     }
 
     @Override
+    public IDataId shuffle(IDataId data) throws IRemoteException, TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            IData target = source.shuffle();
+            return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        }
+    }
+
+    @Override
     public void saveAsTextFile(IDataId data, String path, boolean join) throws TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {

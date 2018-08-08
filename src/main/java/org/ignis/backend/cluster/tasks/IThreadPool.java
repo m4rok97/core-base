@@ -32,7 +32,7 @@ public final class IThreadPool {
 
     public IThreadPool(int threads, int shedulerTries) {
         pool = new ThreadPoolExecutor(1, Integer.MAX_VALUE, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
-        atLeastSize(threads);
+        pool.setCorePoolSize(threads);
         this.shedulerTries = shedulerTries;
     }
 
@@ -47,12 +47,6 @@ public final class IThreadPool {
 
     public synchronized void decrease(int threads) {
         increase(-threads);
-    }
-
-    public synchronized void atLeastSize(int threads) {
-        if (pool.getCorePoolSize() < threads + 1) {
-            pool.setCorePoolSize(threads + 1);
-        }
     }
 
     int getShedulerTries() {

@@ -16,22 +16,36 @@
  */
 package org.ignis.backend.cluster.helpers.job;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class IJobImportDataHelper extends IJobHelper{
+public class IJobImportDataHelper extends IJobHelper {
 
     public IJobImportDataHelper(IJob job, IProperties properties) {
         super(job, properties);
     }
-    
-    public IData importData(IData source){
-        return null;
+
+    public IData importData(IData source) {
+        List<IExecutor> result = new ArrayList<>();
+        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
+        shedulerBuilder.newDependency(source.getScheduler());
+        shedulerBuilder.newDependency(job.getScheduler());
+        for (IExecutor executor : source.getExecutors()) {
+            //shedulerBuilder.newTask();
+        }
+                for (IExecutor executor : job.getExecutors()) {
+            //shedulerBuilder.newTask();
+        }
+        return job.newData(0, result, shedulerBuilder.build());
     }
-    
+
 }

@@ -16,33 +16,36 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.tasks.IBarrier;
+import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.ISourceFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IStreamingMapTask extends IExecutorTask {
+public class IImportDataTask extends IExecutorTask {
 
-    private final ISourceFunction function;
-    private final boolean ordered;
+    private static final Logger LOGGER = LoggerFactory.getLogger(IImportDataTask.class);
 
-    public IStreamingMapTask(IExecutor executor, ISourceFunction function, boolean ordered) {
+    public static final boolean SEND = true;
+    public static final boolean RECEIVE = false;
+
+    public static class ImportDataShared {
+
+    }
+
+    public IImportDataTask(IExecutor executor, IBarrier barrier, IReduceByKeyTask.KeyShared keyShared, boolean type) {
         super(executor);
-        this.function = function;
-        this.ordered = ordered;
     }
 
     @Override
     public void execute() throws IgnisException {
-        try {
-            executor.getMapperModule().streamingMap(function, ordered);
-        } catch (TException ex) {
-            throw new IgnisException("Straming Map fails", ex);
-        }
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

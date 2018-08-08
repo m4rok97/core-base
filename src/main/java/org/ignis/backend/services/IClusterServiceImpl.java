@@ -17,6 +17,7 @@
 package org.ignis.backend.services;
 
 import org.apache.thrift.TException;
+import org.ignis.backend.allocator.ancoris.IAncorisContainerStub;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.IRemoteException;
@@ -40,7 +41,8 @@ public class IClusterServiceImpl extends IService implements IClusterService.Ifa
             propertiesCopy = propertiesObject.copy();
         }
         long id = attributes.newIdCluster();
-        attributes.addCluster(new ICluster(id, propertiesCopy));
+        //TODO thread pool
+        attributes.addCluster(new ICluster(id, propertiesCopy, null, new IAncorisContainerStub.Factory()));
         return id;
     }
 

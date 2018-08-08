@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.tasks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -33,41 +34,56 @@ public class TaskScheduler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskScheduler.class);
 
-    private final List<Task> tasks;
-    private final ILock lock;
+    public static class Builder {
 
-    public TaskScheduler(Task... tasks) {
-        this(Arrays.asList(tasks));
+        private final List<Task> tasks;
+        private final List<TaskScheduler> depencencies;
+        private final List<ILock> locks;
+
+        public Builder(ILock lock) {
+            this.tasks = new ArrayList<>();
+            this.depencencies = new ArrayList<>();
+            this.locks = new ArrayList<>();
+            this.locks.add(lock);
+        }
+
+        public Builder newTask(Task task) {
+            tasks.add(task);
+            return this;
+        }
+
+        public Builder newDependency(TaskScheduler scheduler) {
+            depencencies.add(scheduler);
+            return this;
+        }
+
+        public Builder newLock(ILock lock) {
+            locks.add(lock);
+            return this;
+        }
+
+        public TaskScheduler build() {
+            return new TaskScheduler(tasks, locks, depencencies);
+        }
+
     }
 
-    public TaskScheduler(List<Task> tasks) {
+    private final List<Task> tasks;
+    private final List<TaskScheduler> depencencies;
+    private final List<ILock> locks;
+
+    private TaskScheduler(List<Task> tasks, List<ILock> locks, List<TaskScheduler> depencencies) {
         this.tasks = tasks;
-        this.lock = tasks.isEmpty() ? null : tasks.get(0).lock;
+        this.locks = locks;
+        this.depencencies = depencencies;
+        locks.sort(Comparator.naturalOrder());
     }
 
     public void execute(IThreadPool pool) throws IgnisException {
         for (int _try = 0;; _try++) {
-            if (tasks.isEmpty()) {
-                return;
-            }
-            for (Task t : tasks) {
-                if (lock != t.lock) {
-                    throw new IgnisException("Internal Error");
-                }
-            }
             List<Future<TaskScheduler>> depFutures = new ArrayList<>();
-            for (int i = 0; true; i++) {
-                List<Task> depTasks = new ArrayList<>();
-                for (int j = 0; j < tasks.size(); j++) {
-                    if (tasks.get(j).dependencies.length > i) {
-                        depTasks.add(tasks.get(j).dependencies[i]);
-                    }
-                }
-                if (depTasks.isEmpty()) {
-                    break;
-                } else {
-                    depFutures.add(pool.submit(new TaskScheduler(depTasks)));
-                }
+            for (TaskScheduler dependency : depencencies) {
+                depFutures.add(pool.submit(dependency));
             }
             IgnisException error = null;
             for (int i = 0; i < depFutures.size(); i++) {
@@ -85,12 +101,11 @@ public class TaskScheduler {
             if (error != null) {
                 throw error;
             }
+            if (tasks.isEmpty()) {
+                return;
+            }
             try {
-                synchronized (lock) {
-                    for (Task task : tasks) {
-                        pool.submit(task).get();
-                    }
-                }
+                execute(pool, locks);
             } catch (InterruptedException | ExecutionException ex) {
                 if (_try == pool.getShedulerTries() - 1) {
                     throw new IgnisException("Execution failed", ex);
@@ -99,6 +114,33 @@ public class TaskScheduler {
                 continue;
             }
             break;
+        }
+    }
+
+    private void execute(IThreadPool pool, List<ILock> locks) throws InterruptedException, ExecutionException {
+        if (locks.isEmpty()) {
+            List<Future<Task>> futures = new ArrayList<>(tasks.size());
+            for (Task task : tasks) {
+                futures.add(pool.submit(task));
+            }
+            for (int i = 0; i < futures.size(); i++) {
+                try {
+                    futures.get(i).get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    for (int j = i + 1; j < futures.size(); j++) {
+                        try {
+                            futures.get(i).get();
+                        } catch (InterruptedException | ExecutionException ex2) {
+                            LOGGER.warn("Executor Fails", ex2);
+                        }
+                    }
+                    throw ex;
+                }
+            }
+        } else {
+            synchronized (locks.get(0)) {
+                execute(pool, locks.subList(1, locks.size()));
+            }
         }
     }
 

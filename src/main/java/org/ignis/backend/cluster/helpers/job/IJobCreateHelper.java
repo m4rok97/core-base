@@ -19,10 +19,11 @@ package org.ignis.backend.cluster.helpers.job;
 import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.allocator.IExecutorStub;
-import org.ignis.backend.allocator.IManagerExecutorStub;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.executor.IExecutorCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
@@ -36,12 +37,17 @@ public class IJobCreateHelper extends IJobHelper {
         super(job, properties);
     }
 
-    public List<IExecutor> create(long id, String type) throws IgnisException {
+    public List<IExecutor> create(long id, String type, IExecutorStub.Factory factory) throws IgnisException {
         List<IExecutor> result = new ArrayList<>();
+        TaskScheduler.Builder sheduleBuilder = new TaskScheduler.Builder(job.getLock());
         for (IContainer container : job.getCluster().getContainers()) {
-            IExecutorStub stub = new IManagerExecutorStub(properties, job.getId(), type, container.getRegisterManager());
-            result.add(container.createExecutor(id, stub));
+            IExecutorStub stub = factory.getExecutorStub(job.getId(), type, container);
+            IExecutor executor = container.createExecutor(id, stub);
+            sheduleBuilder.newTask(new IExecutorCreateTask(executor));
+            sheduleBuilder.newDependency(job.getCluster().getScheduler());
+            result.add(executor);
         }
+        job.putScheduler(sheduleBuilder.build());
         return result;
     }
 
