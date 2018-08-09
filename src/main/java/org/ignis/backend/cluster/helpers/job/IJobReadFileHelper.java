@@ -25,8 +25,6 @@ import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
-import org.ignis.backend.cluster.ISplit;
-import org.ignis.backend.cluster.helpers.util.IDistributorHelper;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IReadFileTask;
 import org.ignis.backend.exception.IgnisException;
@@ -37,12 +35,27 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class IJobReadFileHelper extends IJobHelper {
+public final class IJobReadFileHelper extends IJobHelper {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IJobReadFileHelper.class);
 
     public IJobReadFileHelper(IJob job, IProperties properties) {
         super(job, properties);
+    }
+
+    private int[] distribute(int elemens, int boxs) {
+        int[] distribution = new int[boxs + 1];
+        distribution[0] = 0;
+        int size = elemens / boxs;
+        int mod = elemens % boxs;
+        for (int i = 0; i < boxs; i++) {
+            if (i < mod) {
+                distribution[i + 1] = distribution[i] + size + 1;
+            } else {
+                distribution[i + 1] = distribution[i] + size;
+            }
+        }
+        return distribution;
     }
 
     private List<Long> parseIndex(String path) throws IgnisException {
@@ -88,7 +101,7 @@ public class IJobReadFileHelper extends IJobHelper {
     public IData readFile(String path) throws IgnisException {
         List<Long> indices = parseIndex(path);
         int executors = job.getExecutors().size();
-        int[] distribution = new IDistributorHelper(properties).distribute(indices.size(), executors);
+        int[] distribution = distribute(indices.size(), executors);
 
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
@@ -99,9 +112,9 @@ public class IJobReadFileHelper extends IJobHelper {
             int lines = distribution[i + 1] - distribution[i];
             long offset = indices.get(distribution[i]);
             long length = indices.get(distribution[i + 1]) - offset;
-            shedulerBuilder.newTask(new IReadFileTask(executor, path, offset, length, lines));
+            shedulerBuilder.newTask(new IReadFileTask(this, executor, path, offset, length, lines));
         }
-        return job.newData(0, result, shedulerBuilder.build());
+        return job.newData(result, shedulerBuilder.build());
     }
 
 }

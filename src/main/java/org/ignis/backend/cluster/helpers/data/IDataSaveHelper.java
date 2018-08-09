@@ -16,44 +16,45 @@
  */
 package org.ignis.backend.cluster.helpers.data;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.ISplit;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
-import org.ignis.backend.cluster.tasks.executor.IMapTask;
 import org.ignis.backend.cluster.tasks.executor.ISaveAsJsonFileTask;
 import org.ignis.backend.cluster.tasks.executor.ISaveAsTextFileTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IDataSaveHelper extends IDataHelper {
+public final class IDataSaveHelper extends IDataHelper {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IDataSaveHelper.class);
 
     public IDataSaveHelper(IData data, IProperties properties) {
         super(data, properties);
     }
 
     public void saveAsTextFile(String path, boolean joined) throws IgnisException {
+        LOGGER.info(log() + "Registering saveAsTextFile path: " + path + ", joined: " + joined);
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new ISaveAsTextFileTask(executor, path, joined));
+            shedulerBuilder.newTask(new ISaveAsTextFileTask(this, executor, path, joined));
         }
         shedulerBuilder.build().execute(data.getPool());
     }
 
-    public void saveAsJsonFile(String path, boolean joined) throws IgnisException{
+    public void saveAsJsonFile(String path, boolean joined) throws IgnisException {
+        LOGGER.info(log() + "Registering saveAsJsonFile path: " + path + ", joined: " + joined);
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new ISaveAsJsonFileTask(executor, path, joined));
+            shedulerBuilder.newTask(new ISaveAsJsonFileTask(this, executor, path, joined));
         }
-shedulerBuilder.build().execute(data.getPool());
+        shedulerBuilder.build().execute(data.getPool());
     }
 
 }

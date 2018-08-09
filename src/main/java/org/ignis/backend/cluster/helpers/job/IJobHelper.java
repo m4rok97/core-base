@@ -24,13 +24,18 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public abstract class IJobHelper extends IHelper{
-    
+public abstract class IJobHelper extends IHelper {
+
     protected final IJob job;
 
     public IJobHelper(IJob job, IProperties properties) {
         super(properties);
         this.job = job;
     }
-    
+
+    @Override
+    public String logHeader() {
+        return job.getName();
+    }
+
 }

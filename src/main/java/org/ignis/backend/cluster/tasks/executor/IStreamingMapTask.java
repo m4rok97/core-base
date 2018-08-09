@@ -18,20 +18,24 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISourceFunction;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IStreamingMapTask extends IExecutorTask {
+public final class IStreamingMapTask extends IExecutorTask {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IStreamingMapTask.class);
 
     private final ISourceFunction function;
     private final boolean ordered;
 
-    public IStreamingMapTask(IExecutor executor, ISourceFunction function, boolean ordered) {
-        super(executor);
+    public IStreamingMapTask(IHelper helper, IExecutor executor, ISourceFunction function, boolean ordered) {
+        super(helper, executor);
         this.function = function;
         this.ordered = ordered;
     }

@@ -19,35 +19,37 @@ package org.ignis.backend.cluster.helpers.cluster;
 import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.allocator.IContainerStub;
-import org.ignis.backend.allocator.ancoris.IAncorisContainerStub;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.properties.IPropertiesKeys;
-import org.ignis.backend.properties.IPropertiesParser;
+import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IPropsParser;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IClusterCreateHelper extends IClusterHelper {
+public final class IClusterCreateHelper extends IClusterHelper {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IClusterCreateHelper.class);
 
     public IClusterCreateHelper(ICluster cluster, IProperties properties) {
         super(cluster, properties);
     }
 
     public List<IContainer> create(IContainerStub.Factory factory) throws IgnisException {
-        int instances = IPropertiesParser.getInteger(properties, IPropertiesKeys.EXECUTOR_INSTANCES);
+        int instances = IPropsParser.getInteger(properties, IPropsKeys.EXECUTOR_INSTANCES);
         List<IContainer> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
+        LOGGER.info(log() + "Registering cluster with " + instances + " instances");
         for (int i = 0; i < instances; i++) {
             IContainerStub stub = factory.getContainerStub(properties);
-            IContainer container = new IContainer(stub, properties );
-            shedulerBuilder.newTask(new IContainerCreateTask(container));
+            IContainer container = new IContainer(i, stub, properties);
+            shedulerBuilder.newTask(new IContainerCreateTask(this, container));
             result.add(container);
         }
         cluster.putScheduler(shedulerBuilder.build());

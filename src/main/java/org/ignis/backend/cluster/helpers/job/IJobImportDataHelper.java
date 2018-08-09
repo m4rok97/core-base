@@ -21,14 +21,19 @@ import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.executor.IImportDataTask;
 import org.ignis.backend.properties.IProperties;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IJobImportDataHelper extends IJobHelper {
+public final class IJobImportDataHelper extends IJobHelper {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IJobImportDataHelper.class);
 
     public IJobImportDataHelper(IJob job, IProperties properties) {
         super(job, properties);
@@ -39,13 +44,18 @@ public class IJobImportDataHelper extends IJobHelper {
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
         shedulerBuilder.newDependency(source.getScheduler());
         shedulerBuilder.newDependency(job.getScheduler());
+        int senders = source.getExecutors().size();
+        int receivers = job.getExecutors().size();
+
+        IBarrier barrier = new IBarrier(senders + receivers);
+        IImportDataTask.Shared shared = new IImportDataTask.Shared();
         for (IExecutor executor : source.getExecutors()) {
-            //shedulerBuilder.newTask();
+            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.SEND, receivers));
         }
-                for (IExecutor executor : job.getExecutors()) {
-            //shedulerBuilder.newTask();
+        for (IExecutor executor : job.getExecutors()) {
+            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.RECEIVE, receivers));
         }
-        return job.newData(0, result, shedulerBuilder.build());
+        return job.newData(result, shedulerBuilder.build());
     }
 
 }

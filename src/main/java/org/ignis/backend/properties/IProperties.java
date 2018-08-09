@@ -24,7 +24,7 @@ import java.util.Map;
  *
  * @author César Pomar
  */
-public class IProperties {
+public final class IProperties {
 
     private Map<String, String> properties;
 

@@ -31,36 +31,35 @@ import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.container.ISendCompressedFileTask;
 import org.ignis.backend.cluster.tasks.container.ISendFilesTask;
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IClusterFileHelper extends IClusterHelper {
+public final class IClusterFileHelper extends IClusterHelper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IClusterFileHelper.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IClusterFileHelper.class);
 
     public IClusterFileHelper(ICluster cluster, IProperties properties) {
         super(cluster, properties);
     }
 
-    private ByteBuffer loadFile(File file) {
-        if (file.length() > 5 * 1024 * 1024) {// 5Mib
-            //TODO warning
-        }
+    private ByteBuffer loadFile(File file) throws IgnisException {
+        LOGGER.info(log() + "Loading " + file.getPath() + " " + file.length() + " bytes");
         ByteArrayOutputStream out = new ByteArrayOutputStream((int) file.length());
         try (FileInputStream in = new FileInputStream(file)) {
             IOUtils.copy(in, out);
         } catch (IOException ex) {
-            //TODO
+            throw new IgnisException(ex.getMessage(), ex);
         }
         return ByteBuffer.wrap(out.toByteArray());
     }
 
-    public int sendFiles(String source, String target) {
+    public int sendFiles(String source, String target) throws IgnisException {
+        LOGGER.info(log() + "Loading files from " + source + " to " + target);
         File wd = new File(".");
         FileFilter fileFilter = new WildcardFileFilter(source);
         Map<String, ByteBuffer> files = new HashMap<>();
@@ -70,18 +69,19 @@ public class IClusterFileHelper extends IClusterHelper {
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
         shedulerBuilder.newDependency(cluster.getScheduler());
         for (IContainer container : cluster.getContainers()) {
-            shedulerBuilder.newTask(new ISendFilesTask(container, files));
+            shedulerBuilder.newTask(new ISendFilesTask(this, container, files));
         }
         cluster.putScheduler(shedulerBuilder.build());
         return files.size();
     }
 
-    public int sendCompressedFile(String source, String target) {
+    public int sendCompressedFile(String source, String target) throws IgnisException {
+        LOGGER.info(log() + "Loading compressed file from " + source + " to " + target);
         File file = new File(source);
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
         shedulerBuilder.newDependency(cluster.getScheduler());
         for (IContainer container : cluster.getContainers()) {
-            shedulerBuilder.newTask(new ISendCompressedFileTask(container,
+            shedulerBuilder.newTask(new ISendCompressedFileTask(this, container,
                     new File(target, file.getName()).getPath(), loadFile(new File(source)))
             );
         }

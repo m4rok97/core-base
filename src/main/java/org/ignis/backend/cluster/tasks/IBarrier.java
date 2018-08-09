@@ -22,11 +22,11 @@ import java.util.concurrent.CyclicBarrier;
  *
  * @author César Pomar
  */
-public class IBarrier extends CyclicBarrier {
+public final class IBarrier extends CyclicBarrier {
 
     /**
-     * Creates a new {@code IBarrier} that will trip when the given number of parties (threads) are waiting upon
-     * it, and does not perform a predefined action when the barrier is tripped.
+     * Creates a new {@code IBarrier} that will trip when the given number of parties (threads) are waiting upon it, and
+     * does not perform a predefined action when the barrier is tripped.
      *
      * @param parties the number of threads that must invoke {@link #await} before the barrier is tripped
      * @throws IllegalArgumentException if {@code parties} is less than 1

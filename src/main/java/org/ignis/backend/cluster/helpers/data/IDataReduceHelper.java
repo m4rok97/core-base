@@ -18,37 +18,38 @@ package org.ignis.backend.cluster.helpers.data;
 
 import java.util.ArrayList;
 import java.util.List;
-import static jdk.nashorn.internal.objects.NativeString.split;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.ISplit;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IReduceByKeyTask;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.ISourceFunction;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IDataReduceHelper extends IDataHelper {
+public final class IDataReduceHelper extends IDataHelper {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IDataReduceHelper.class);
 
     public IDataReduceHelper(IData data, IProperties properties) {
         super(data, properties);
-
     }
 
     public IData reduceByKey(ISourceFunction function) {
+        LOGGER.info(log() + "Registering reduceByKey");
         IBarrier barrier = new IBarrier(data.getPartitions());
-        IReduceByKeyTask.KeyShared keyShared = new IReduceByKeyTask.KeyShared();
+        IReduceByKeyTask.Shared keyShared = new IReduceByKeyTask.Shared();
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new IReduceByKeyTask(executor, function, barrier,keyShared));
+            shedulerBuilder.newTask(new IReduceByKeyTask(this, executor, function, barrier, keyShared));
         }
-        return data.getJob().newData(0, result, shedulerBuilder.build());
+        return data.getJob().newData(result, shedulerBuilder.build());
     }
 
 }

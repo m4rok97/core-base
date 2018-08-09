@@ -26,12 +26,15 @@ import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IExecutorCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IJobCreateHelper extends IJobHelper {
+public final class IJobCreateHelper extends IJobHelper {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IJobCreateHelper.class);
 
     public IJobCreateHelper(IJob job, IProperties properties) {
         super(job, properties);
@@ -41,9 +44,9 @@ public class IJobCreateHelper extends IJobHelper {
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder sheduleBuilder = new TaskScheduler.Builder(job.getLock());
         for (IContainer container : job.getCluster().getContainers()) {
-            IExecutorStub stub = factory.getExecutorStub(job.getId(), type, container);
+            IExecutorStub stub = factory.getExecutorStub(job.getId(), type, container, properties);
             IExecutor executor = container.createExecutor(id, stub);
-            sheduleBuilder.newTask(new IExecutorCreateTask(executor));
+            sheduleBuilder.newTask(new IExecutorCreateTask(this, executor));
             sheduleBuilder.newDependency(job.getCluster().getScheduler());
             result.add(executor);
         }

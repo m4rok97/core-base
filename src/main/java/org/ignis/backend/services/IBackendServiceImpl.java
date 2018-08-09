@@ -27,16 +27,15 @@ import org.apache.thrift.transport.TTransportException;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IBackendService;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IBackendServiceImpl extends IService  implements IBackendService.Iface {
+public final class IBackendServiceImpl extends IService implements IBackendService.Iface {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IBackendServiceImpl.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IBackendServiceImpl.class);
 
     private TServerTransport transport;
     private TServer server;

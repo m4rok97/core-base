@@ -59,14 +59,12 @@ public final class ResourceRequest extends ResourceBase {
 
     @Override
     public List<VolumeRequest> getVolumes() {
-        return (List)volumes;
+        return (List) volumes;
     }
 
     @Override
     public List<DeviceRequest> getDevices() {
-        return (List)devices;
+        return (List) devices;
     }
-    
-    
 
 }

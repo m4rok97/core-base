@@ -27,7 +27,7 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public class IAttributes {
+public final class IAttributes {
 
     public final IProperties defaultProperties;
     private final AtomicLong idClusterGen;

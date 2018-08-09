@@ -20,7 +20,7 @@ package org.ignis.backend.cluster.tasks;
  *
  * @author César Pomar
  */
-public class ILock implements Comparable<ILock> {
+public final class ILock implements Comparable<ILock> {
 
     private final long id;
 

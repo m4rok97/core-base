@@ -17,18 +17,23 @@
 package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.Task;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class IContainerTask implements Task {
+public abstract class IContainerTask extends Task {
 
     protected final IContainer container;
 
-    public IContainerTask(IContainer container) {
+    public IContainerTask(IHelper helper, IContainer container) {
+        super(helper);
         this.container = container;
     }
 
+    protected String log() {
+        return helper + " " + container.getId() + ": ";
+    }
 }

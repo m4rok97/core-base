@@ -29,7 +29,7 @@ public abstract class IContainerStub {
     public static abstract class Factory {
 
         public abstract IContainerStub getContainerStub(IProperties properties);
-        
+
     }
 
     protected final IProperties properties;

@@ -25,12 +25,12 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public class IAncorisContainerStub extends IContainerStub {
+public final class IAncorisContainerStub extends IContainerStub {
 
-    public static class Factory extends IContainerStub.Factory{
+    public final static class Factory extends IContainerStub.Factory {
 
         @Override
-        public IContainerStub getContainerStub(IProperties properties){
+        public IContainerStub getContainerStub(IProperties properties) {
             return new IAncorisContainerStub(properties);
         }
 

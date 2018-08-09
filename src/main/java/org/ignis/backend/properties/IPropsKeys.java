@@ -20,7 +20,7 @@ package org.ignis.backend.properties;
  *
  * @author César Pomar
  */
-public class IPropertiesKeys {
+public final class IPropsKeys {
 
     public static final String ALLOCATOR_GROUP = "ignis.allocator.group";
     public static final String ALLOCATOR_URL = "ignis.allocator.url";

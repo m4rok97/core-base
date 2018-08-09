@@ -21,11 +21,11 @@ package org.ignis.backend.services;
  * @author César Pomar
  */
 public class IService {
-   
+
     protected IAttributes attributes;
 
     public IService(IAttributes attributes) {
         this.attributes = attributes;
     }
-        
+
 }

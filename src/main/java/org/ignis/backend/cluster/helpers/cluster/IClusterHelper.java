@@ -24,13 +24,18 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public class IClusterHelper extends IHelper{
-    
+public abstract class IClusterHelper extends IHelper {
+
     protected final ICluster cluster;
 
     public IClusterHelper(ICluster cluster, IProperties properties) {
         super(properties);
         this.cluster = cluster;
     }
-    
+
+    @Override
+    public String logHeader() {
+        return cluster.getName();
+    }
+
 }

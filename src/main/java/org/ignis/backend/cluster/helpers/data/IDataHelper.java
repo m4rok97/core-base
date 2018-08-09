@@ -33,4 +33,9 @@ public abstract class IDataHelper extends IHelper {
         this.data = data;
     }
 
+    @Override
+    public String logHeader() {
+        return data.getName();
+    }
+
 }

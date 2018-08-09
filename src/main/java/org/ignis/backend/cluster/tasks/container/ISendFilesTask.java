@@ -20,18 +20,22 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class ISendFilesTask extends IContainerTask {
+public final class ISendFilesTask extends IContainerTask {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISendFilesTask.class);
 
     private final Map<String, ByteBuffer> files;
 
-    public ISendFilesTask(IContainer container, Map<String, ByteBuffer> files) {
-        super(container);
+    public ISendFilesTask(IHelper helper, IContainer container, Map<String, ByteBuffer> files) {
+        super(helper, container);
         this.files = files;
     }
 

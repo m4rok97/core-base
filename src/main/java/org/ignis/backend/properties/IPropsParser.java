@@ -23,7 +23,7 @@ import org.ignis.backend.exception.IgnisException;
  *
  * @author César Pomar
  */
-public class IPropertiesParser {
+public class IPropsParser {
 
     private final static Pattern BOOLEAN = Pattern.compile("y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON");
 

@@ -32,12 +32,12 @@ import org.ignis.rpc.driver.IJobService;
  *
  * @author César Pomar
  */
-public class IJobServiceImpl extends IService implements IJobService.Iface {
-
+public final class IJobServiceImpl extends IService implements IJobService.Iface {
+    
     public IJobServiceImpl(IAttributes attributes) {
         super(attributes);
     }
-
+    
     @Override
     public IJobId newInstance(long cluster, String type) throws IRemoteException, TException {
         ICluster clusterObject = attributes.getCluster(cluster);
@@ -46,7 +46,7 @@ public class IJobServiceImpl extends IService implements IJobService.Iface {
             return new IJobId(cluster, job.getId());
         }
     }
-
+    
     @Override
     public IJobId newInstance3(long cluster, String type, long properties) throws IRemoteException, TException {
         ICluster clusterObject = attributes.getCluster(cluster);
@@ -60,7 +60,7 @@ public class IJobServiceImpl extends IService implements IJobService.Iface {
             return new IJobId(cluster, job.getId());
         }
     }
-
+    
     @Override
     public void keep(IJobId job) throws IRemoteException, TException {
         ICluster clusterObject = attributes.getCluster(job.getCluster());
@@ -68,7 +68,7 @@ public class IJobServiceImpl extends IService implements IJobService.Iface {
             clusterObject.getJob(job.getJob()).setKeep(true);
         }
     }
-
+    
     @Override
     public IDataId importData(IJobId job, IDataId data) throws IRemoteException, TException {
         ICluster clusterSource = attributes.getCluster(data.getCluster());
@@ -88,7 +88,7 @@ public class IJobServiceImpl extends IService implements IJobService.Iface {
             }
         }
     }
-
+    
     @Override
     public IDataId readFile(IJobId job, String path) throws IRemoteException, TException {
         ICluster clusterObject = attributes.getCluster(job.getCluster());
@@ -97,5 +97,13 @@ public class IJobServiceImpl extends IService implements IJobService.Iface {
             return new IDataId(job.getCluster(), job.getJob(), data.getId());
         }
     }
-
+    
+    @Override
+    public void setName(IJobId job, String name) throws IRemoteException, TException {
+        ICluster clusterObject = attributes.getCluster(job.getCluster());
+        synchronized (clusterObject.getLock()) {
+            clusterObject.getJob(job.getJob()).setName(name);
+        }
+    }
+    
 }

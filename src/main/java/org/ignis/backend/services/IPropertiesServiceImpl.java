@@ -26,7 +26,7 @@ import org.ignis.rpc.driver.IPropertiesService;
  *
  * @author César Pomar
  */
-public class IPropertiesServiceImpl extends IService implements IPropertiesService.Iface {
+public final class IPropertiesServiceImpl extends IService implements IPropertiesService.Iface {
 
     public IPropertiesServiceImpl(IAttributes attributes) {
         super(attributes);

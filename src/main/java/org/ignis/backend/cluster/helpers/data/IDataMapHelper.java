@@ -20,18 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.ISplit;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IMapTask;
 import org.ignis.backend.cluster.tasks.executor.IStreamingMapTask;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.ISourceFunction;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IDataMapHelper extends IDataHelper {
+public final class IDataMapHelper extends IDataHelper {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IDataMapHelper.class);
 
     public IDataMapHelper(IData data, IProperties properties) {
         super(data, properties);
@@ -42,9 +44,9 @@ public class IDataMapHelper extends IDataHelper {
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new IMapTask(executor, function));
+            shedulerBuilder.newTask(new IMapTask(this, executor, function));
         }
-        return data.getJob().newData(0, result, shedulerBuilder.build());
+        return data.getJob().newData(result, shedulerBuilder.build());
     }
 
     public IData streamingMap(ISourceFunction function, boolean ordered) {
@@ -52,9 +54,9 @@ public class IDataMapHelper extends IDataHelper {
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new IStreamingMapTask(executor, function, ordered));
+            shedulerBuilder.newTask(new IStreamingMapTask(this, executor, function, ordered));
         }
-        return data.getJob().newData(0, result, shedulerBuilder.build());
+        return data.getJob().newData(result, shedulerBuilder.build());
     }
 
 }

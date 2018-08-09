@@ -33,7 +33,7 @@ import org.ignis.rpc.executor.IStorageModule;
  *
  * @author César Pomar
  */
-public class IExecutor {
+public final class IExecutor {
 
     private final long job;
     private final IContainer container;
@@ -67,6 +67,10 @@ public class IExecutor {
 
     public long getJob() {
         return job;
+    }
+
+    public long getId() {
+        return container.getId();
     }
 
     public IContainer getContainer() {

@@ -19,19 +19,23 @@ package org.ignis.backend.cluster.tasks.container;
 import java.nio.ByteBuffer;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class ISendCompressedFileTask extends IContainerTask {
+public final class ISendCompressedFileTask extends IContainerTask {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISendCompressedFileTask.class);
 
     private final String path;
     private final ByteBuffer bytes;
 
-    public ISendCompressedFileTask(IContainer container, String path, ByteBuffer bytes) {
-        super(container);
+    public ISendCompressedFileTask(IHelper helper, IContainer container, String path, ByteBuffer bytes) {
+        super(helper, container);
         this.path = path;
         this.bytes = bytes;
     }

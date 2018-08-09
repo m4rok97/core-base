@@ -18,21 +18,25 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IReadFileTask extends IExecutorTask {
+public final class IReadFileTask extends IExecutorTask {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IReadFileTask.class);
 
     private final String path;
     private final long offset;
     private final long length;
     private final long lines;
 
-    public IReadFileTask(IExecutor executor, String path, long offset, long length, long lines) {
-        super(executor);
+    public IReadFileTask(IHelper helper, IExecutor executor, String path, long offset, long length, long lines) {
+        super(helper, executor);
         this.path = path;
         this.offset = offset;
         this.length = length;

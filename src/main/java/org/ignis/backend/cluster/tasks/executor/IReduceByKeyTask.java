@@ -24,25 +24,23 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IPropertiesKeys;
-import org.ignis.backend.properties.IPropertiesParser;
+import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IPropsParser;
 import org.ignis.rpc.ISourceFunction;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IReduceByKeyTask extends IExecutorTask {
+public final class IReduceByKeyTask extends IExecutorTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IReduceByKeyTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IReduceByKeyTask.class);
 
-    public static class KeyShared {
+    public static class Shared {
 
         //Executor -> Key -> Count (Multiple Write, One Read)
         private final Map<IExecutor, Map<Long, Long>> count = new ConcurrentHashMap<>();
@@ -52,10 +50,10 @@ public class IReduceByKeyTask extends IExecutorTask {
 
     private final ISourceFunction function;
     private final IBarrier barrier;
-    private final KeyShared keyShared;
+    private final Shared keyShared;
 
-    public IReduceByKeyTask(IExecutor executor, ISourceFunction function, IBarrier barrier, KeyShared keyShared) {
-        super(executor);
+    public IReduceByKeyTask(IHelper helper, IExecutor executor, ISourceFunction function, IBarrier barrier, Shared keyShared) {
+        super(helper, executor);
         this.function = function;
         this.barrier = barrier;
         this.keyShared = keyShared;
@@ -86,8 +84,8 @@ public class IReduceByKeyTask extends IExecutorTask {
                 }
             }
 
-            int port = IPropertiesParser.getInteger(executor.getContainer().getProperties(),
-                    IPropertiesKeys.TRANSPORT_PORT);
+            int port = IPropsParser.getInteger(executor.getContainer().getProperties(),
+                    IPropsKeys.TRANSPORT_PORT);
 
             for (Map.Entry<IExecutor, List<Long>> entry : messages.entrySet()) {
                 IContainer container = entry.getKey().getContainer();

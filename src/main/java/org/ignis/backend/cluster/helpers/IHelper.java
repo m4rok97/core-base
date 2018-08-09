@@ -23,11 +23,17 @@ import org.ignis.backend.properties.IProperties;
  * @author César Pomar
  */
 public abstract class IHelper {
-    
+
     protected final IProperties properties;
 
     public IHelper(IProperties properties) {
         this.properties = properties;
     }
-        
+
+    public abstract String logHeader();
+
+    public String log() {
+        return logHeader() + ": ";
+    }
+
 }

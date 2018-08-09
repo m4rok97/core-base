@@ -17,16 +17,20 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IExecutorCreateTask extends IExecutorTask {
+public final class IExecutorCreateTask extends IExecutorTask {
 
-    public IExecutorCreateTask(IExecutor executor) {
-        super(executor);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IExecutorCreateTask.class);
+
+    public IExecutorCreateTask(IHelper helper, IExecutor executor) {
+        super(helper, executor);
     }
 
     @Override

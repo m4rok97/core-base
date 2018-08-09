@@ -17,27 +17,31 @@
 package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IContainerCreateTask extends IContainerTask {
-    
-    public IContainerCreateTask(IContainer container) {
-        super(container);
+public final class IContainerCreateTask extends IContainerTask {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IContainerCreateTask.class);
+
+    public IContainerCreateTask(IHelper helper, IContainer container) {
+        super(helper, container);
     }
 
     @Override
     public void execute() throws IgnisException {
-        if(container.getStub().isRunning()){
-            try{
+        if (container.getStub().isRunning()) {
+            try {
                 container.getStub().test();
-            }catch(IgnisException ex){
+            } catch (IgnisException ex) {
                 container.getStub().create();
             }
-        }else{
+        } else {
             container.getStub().create();
         }
     }

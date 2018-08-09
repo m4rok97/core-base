@@ -14,7 +14,7 @@ public abstract class VolumeBase {
 
         static Type fromString(String value) {
             for (Type t : Type.values()) {
-                if(t.toString().toLowerCase().equals(value)){
+                if (t.toString().toLowerCase().equals(value)) {
                     return t;
                 }
             }

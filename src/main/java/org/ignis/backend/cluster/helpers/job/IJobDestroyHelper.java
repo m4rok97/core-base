@@ -18,15 +18,18 @@ package org.ignis.backend.cluster.helpers.job;
 
 import org.ignis.backend.cluster.IJob;
 import org.ignis.backend.properties.IProperties;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IJobDestroyHelper extends IJobHelper{
-    
+public final class IJobDestroyHelper extends IJobHelper {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IJobDestroyHelper.class);
+
     public IJobDestroyHelper(IJob job, IProperties properties) {
         super(job, properties);
     }
-    
+
 }

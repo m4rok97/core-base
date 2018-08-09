@@ -27,7 +27,7 @@ import org.ignis.rpc.driver.IClusterService;
  *
  * @author César Pomar
  */
-public class IClusterServiceImpl extends IService implements IClusterService.Iface {
+public final class IClusterServiceImpl extends IService implements IClusterService.Iface {
 
     public IClusterServiceImpl(IAttributes attributes) {
         super(attributes);
@@ -67,6 +67,14 @@ public class IClusterServiceImpl extends IService implements IClusterService.Ifa
         ICluster clusterObject = attributes.getCluster(cluster);
         synchronized (clusterObject.getLock()) {
             return clusterObject.sendCompressedFile(source, target);
+        }
+    }
+
+    @Override
+    public void setName(long cluster, String name) throws IRemoteException, TException {
+        ICluster clusterObject = attributes.getCluster(cluster);
+        synchronized (clusterObject.getLock()) {
+            clusterObject.setName(name);
         }
     }
 

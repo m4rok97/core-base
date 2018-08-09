@@ -18,8 +18,8 @@ package org.ignis.backend;
 
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IPropertiesKeys;
-import org.ignis.backend.properties.IPropertiesParser;
+import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IPropsParser;
 import org.ignis.backend.services.IAttributes;
 import org.ignis.backend.services.IBackendServiceImpl;
 import org.ignis.backend.services.IClusterServiceImpl;
@@ -31,16 +31,15 @@ import org.ignis.rpc.driver.IClusterService;
 import org.ignis.rpc.driver.IDataService;
 import org.ignis.rpc.driver.IJobService;
 import org.ignis.rpc.driver.IPropertiesService;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class Main {
+public final class Main {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     /**
      * @param args the command line arguments
@@ -60,14 +59,14 @@ public class Main {
             LOGGER.error("ANCORIS_URL not exists, aborting");
             return;
         }
-        attributes.defaultProperties.setProperty(IPropertiesKeys.ALLOCATOR_URL, allocator_url);
+        attributes.defaultProperties.setProperty(IPropsKeys.ALLOCATOR_URL, allocator_url);
 
         String dfs = System.getenv("IGNIS_DFS");
         if (dfs == null) {
             LOGGER.error("IGNIS_DFS not exist, aborting");
             return;
         }
-        attributes.defaultProperties.setProperty(IPropertiesKeys.DFS_HOME, dfs);
+        attributes.defaultProperties.setProperty(IPropsKeys.DFS_HOME, dfs);
 
         LOGGER.info("Loading configuration file");
         try {
@@ -88,8 +87,8 @@ public class Main {
         processor.registerProcessor("properties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(attributes)));
 
         try {
-            Integer port = IPropertiesParser.getInteger(attributes.defaultProperties,
-                    IPropertiesKeys.DRIVER_RPC_PORT);
+            Integer port = IPropsParser.getInteger(attributes.defaultProperties,
+                    IPropsKeys.DRIVER_RPC_PORT);
             System.out.println(port);
             backendService.start(processor, port);
         } catch (IgnisException ex) {

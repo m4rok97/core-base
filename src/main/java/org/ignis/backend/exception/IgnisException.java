@@ -24,7 +24,7 @@ import org.ignis.rpc.IRemoteException;
  *
  * @author César Pomar
  */
-public class IgnisException extends IRemoteException {
+public final class IgnisException extends IRemoteException {
 
     public IgnisException(String msg) {
         super(msg, "");

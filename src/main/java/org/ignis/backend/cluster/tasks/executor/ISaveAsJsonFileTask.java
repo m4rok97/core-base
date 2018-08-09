@@ -18,19 +18,23 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class ISaveAsJsonFileTask extends IExecutorTask {
+public final class ISaveAsJsonFileTask extends IExecutorTask {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsJsonFileTask.class);
 
     private final String path;
     private final boolean joined;
-    
-    public ISaveAsJsonFileTask(IExecutor executor, String path, boolean joined) {
-        super(executor);
+
+    public ISaveAsJsonFileTask(IHelper helper, IExecutor executor, String path, boolean joined) {
+        super(helper, executor);
         this.path = path;
         this.joined = joined;
     }

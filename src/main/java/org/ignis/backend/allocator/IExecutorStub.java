@@ -28,17 +28,23 @@ public abstract class IExecutorStub {
 
     public static abstract class Factory {
 
-        public abstract IExecutorStub getExecutorStub(long id, String type, IContainer container);
+        public abstract IExecutorStub getExecutorStub(long id, String type, IContainer container, IProperties properties);
     }
 
     protected final long id;
-    protected final IContainer container;
     protected final String type;
+    protected final IContainer container;
+    protected final IProperties properties;
 
-    public IExecutorStub(long id, String type, IContainer container) {
+    public IExecutorStub(long id, String type, IContainer container, IProperties properties) {
         this.id = id;
         this.type = type;
         this.container = container;
+        this.properties = properties;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public abstract boolean isRunning();

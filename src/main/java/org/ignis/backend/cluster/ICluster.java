@@ -22,17 +22,17 @@ import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
-import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IProperties;
 
 /**
  *
  * @author César Pomar
  */
-public class ICluster {
+public final class ICluster {
 
     private final long id;
     private final IThreadPool pool;
@@ -41,6 +41,7 @@ public class ICluster {
     private final List<IJob> jobs;
     private final ILock lock;
     private final List<TaskScheduler> schedulers;
+    private String name;
     private boolean keep;
 
     public ICluster(long id, IProperties properties, IThreadPool pool, IContainerStub.Factory factory) throws IgnisException {
@@ -50,6 +51,7 @@ public class ICluster {
         this.jobs = new ArrayList<>();
         this.lock = new ILock(id);
         this.schedulers = new ArrayList<>();
+        setName("");
         this.containers = new IClusterCreateHelper(this, properties).create(factory);//Must be the last
     }
 
@@ -63,6 +65,17 @@ public class ICluster {
 
     public IThreadPool getPool() {
         return pool;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (name.isEmpty()) {
+            name = "Cluster(" + id + ")";
+        }
+        this.name = name;
     }
 
     public void putScheduler(TaskScheduler scheduler) {
@@ -101,11 +114,11 @@ public class ICluster {
         return job;
     }
 
-    public int sendFiles(String source, String target) {
+    public int sendFiles(String source, String target) throws IgnisException {
         return new IClusterFileHelper(this, properties).sendFiles(source, target);
     }
 
-    public int sendCompressedFile(String source, String target) {
+    public int sendCompressedFile(String source, String target) throws IgnisException {
         return new IClusterFileHelper(this, properties).sendCompressedFile(source, target);
     }
 

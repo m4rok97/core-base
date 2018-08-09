@@ -16,13 +16,20 @@
  */
 package org.ignis.backend.cluster.tasks;
 
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 
 /**
  *
  * @author César Pomar
  */
-public interface Task {
+public abstract class Task {
 
-    public void execute() throws IgnisException;
+    protected final IHelper helper;
+
+    public Task(IHelper helper) {
+        this.helper = helper;
+    }
+      
+    public abstract void execute() throws IgnisException;
 }

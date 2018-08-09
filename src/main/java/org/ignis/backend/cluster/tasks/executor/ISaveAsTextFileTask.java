@@ -18,21 +18,23 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class ISaveAsTextFileTask extends IExecutorTask {
+public final class ISaveAsTextFileTask extends IExecutorTask {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsTextFileTask.class);
 
     private final String path;
     private final boolean joined;
-    
-    public ISaveAsTextFileTask(IExecutor executor, String path, boolean joined) {
-        super(executor);
+
+    public ISaveAsTextFileTask(IHelper helper, IExecutor executor, String path, boolean joined) {
+        super(helper, executor);
         this.path = path;
         this.joined = joined;
     }

@@ -18,9 +18,9 @@ package org.ignis.backend.cluster;
 
 import java.util.List;
 import org.ignis.backend.cluster.helpers.data.IDataMapHelper;
-import org.ignis.backend.cluster.helpers.data.IDataShuffleHelper;
 import org.ignis.backend.cluster.helpers.data.IDataReduceHelper;
 import org.ignis.backend.cluster.helpers.data.IDataSaveHelper;
+import org.ignis.backend.cluster.helpers.data.IDataShuffleHelper;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
@@ -31,18 +31,20 @@ import org.ignis.rpc.ISourceFunction;
  *
  * @author César Pomar
  */
-public class IData {
+public final class IData {
 
     private final long id;
     private final IJob job;
     private final List<IExecutor> executors;
     private final TaskScheduler scheduler;
+    private String name;
 
     public IData(long id, IJob job, List<IExecutor> executors, TaskScheduler scheduler) {
         this.id = id;
         this.job = job;
         this.executors = executors;
         this.scheduler = scheduler;
+        setName("");
     }
 
     public List<IExecutor> getExecutors() {
@@ -71,6 +73,17 @@ public class IData {
 
     public long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (name.isEmpty()) {
+            name = "Cluster(" + job.getCluster().getId() + "), Job(" + job.getId() + "), Data(" + getId() + ")";
+        }
+        this.name = name;
     }
 
     public void setKeep(int level) {

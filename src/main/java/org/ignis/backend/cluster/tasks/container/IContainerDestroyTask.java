@@ -17,16 +17,20 @@
 package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IContainerDestroyTask extends IContainerTask {
+public final class IContainerDestroyTask extends IContainerTask {
 
-    public IContainerDestroyTask(IContainer container) {
-        super(container);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IContainerDestroyTask.class);
+
+    public IContainerDestroyTask(IHelper helper, IContainer container) {
+        super(helper, container);
     }
 
     @Override

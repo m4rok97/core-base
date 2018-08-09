@@ -26,21 +26,21 @@ import org.ignis.rpc.manager.IRegisterManager;
  *
  * @author César Pomar
  */
-public class IManagerExecutorStub extends IExecutorStub {
+public final class IManagerExecutorStub extends IExecutorStub {
 
-    public static class Factory extends IExecutorStub.Factory {
+    public final static class Factory extends IExecutorStub.Factory {
 
         @Override
-        public IExecutorStub getExecutorStub(long id, String type, IContainer container) {
-            return new IManagerExecutorStub(id, type, container);
+        public IExecutorStub getExecutorStub(long id, String type, IContainer container, IProperties properties) {
+            return new IManagerExecutorStub(id, type, container, properties);
         }
     }
 
     private final IRegisterManager.Iface manager;
     private boolean running;
 
-    public IManagerExecutorStub(long id, String type, IContainer container) {
-        super(id, type, container);
+    public IManagerExecutorStub(long id, String type, IContainer container, IProperties properties) {
+        super(id, type, container, properties);
         this.manager = container.getRegisterManager();
     }
 

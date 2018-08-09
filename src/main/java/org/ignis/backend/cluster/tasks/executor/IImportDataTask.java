@@ -16,36 +16,109 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
-import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
-import org.slf4j.Logger;
+import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IPropsParser;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IImportDataTask extends IExecutorTask {
+public final class IImportDataTask extends IExecutorTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IImportDataTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IImportDataTask.class);
 
-    public static final boolean SEND = true;
-    public static final boolean RECEIVE = false;
+    public static final boolean SEND = false;
+    public static final boolean RECEIVE = true;
 
-    public static class ImportDataShared {
+    public static class Shared {
 
+        //Executor -> Count (Multiple Write, One Read)
+        private final Map<IExecutor, Long> count = new ConcurrentHashMap<>();
+
+        private final Set<IExecutor> target = ConcurrentHashMap.newKeySet();
+
+        //Source -> (Target -> Count) (One Write, Multiple Read)
+        private final Map<IExecutor, SortedMap<IExecutor, Long>> msgs = new HashMap<>();
     }
 
-    public IImportDataTask(IExecutor executor, IBarrier barrier, IReduceByKeyTask.KeyShared keyShared, boolean type) {
-        super(executor);
+    private final IBarrier barrier;
+    private final Shared keyShared;
+    private final boolean type;
+    private final long parts;
+
+    public IImportDataTask(IHelper helper, IExecutor executor, IBarrier barrier, Shared keyShared, boolean type, long parts) {
+        super(helper, executor);
+        this.barrier = barrier;
+        this.keyShared = keyShared;
+        this.type = type;
+        this.parts = parts;
+    }
+
+    private void distribution() {
+        //Algoritmo para decidir como se reparten los elementos TODO
     }
 
     @Override
     public void execute() throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            if (type == SEND) {
+                keyShared.count.put(executor, executor.getStorageModule().count());
+            } else {
+                keyShared.target.add(executor);
+            }
+            if (barrier.await() == 0) {
+                distribution();
+            }
+            barrier.await();
+            if (type == SEND) {
+                executor.getShuffleModule().createSplits();
+                for (Map.Entry<IExecutor, Long> msg : keyShared.msgs.get(executor).entrySet()) {
+                    IContainer container = msg.getKey().getContainer();
+                    int port = IPropsParser.getInteger(executor.getContainer().getProperties(), IPropsKeys.TRANSPORT_PORT);
+                    executor.getShuffleModule().nextSplit(container.getHost(), port, msg.getValue(), msg.getKey() == executor);
+                }
+                executor.getShuffleModule().finishSplits();
+            }
+            barrier.await();
+            try {
+                if (type == RECEIVE) {
+                    executor.getPostmanModule().start();
+                }
+                barrier.await();
+                if (type == SEND) {
+                    executor.getPostmanModule().sendAll();
+                }
+                barrier.await();
+            } finally {
+                if (type == RECEIVE) {
+                    executor.getPostmanModule().stop();
+                }
+            }
+            if (type == RECEIVE) {
+                List<Long> order = keyShared.msgs.get(executor).keySet().stream().map(e -> e.getJob()).collect(Collectors.toList());
+                executor.getShuffleModule().joinSplits(order);
+            }
+            barrier.await();
+        } catch (IgnisException ex) {
+            barrier.reset();
+            throw ex;
+        } catch (Exception ex) {
+            barrier.reset();
+            throw new IgnisException(ex.getMessage(), ex);
+        }
     }
 
 }

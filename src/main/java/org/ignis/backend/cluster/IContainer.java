@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.cluster;
 
-import java.util.List;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -24,11 +23,10 @@ import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.allocator.IExecutorStub;
-import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.cluster.tasks.Task;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IPropertiesKeys;
-import org.ignis.backend.properties.IPropertiesParser;
+import org.ignis.backend.properties.IProperties;
+import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IPropsParser;
 import org.ignis.rpc.manager.IFileManager;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.ignis.rpc.manager.IServerManager;
@@ -37,8 +35,9 @@ import org.ignis.rpc.manager.IServerManager;
  *
  * @author César Pomar
  */
-public class IContainer {
+public final class IContainer {
 
+    private final long id;
     private final IContainerStub stub;
     private final IProperties properties;
     private final TTransport transport;
@@ -47,15 +46,20 @@ public class IContainer {
     private final IRegisterManager.Iface registerManager;
     private final IFileManager.Iface fileManager;
 
-    public IContainer(IContainerStub stub, IProperties properties) throws IgnisException {
+    public IContainer(long id, IContainerStub stub, IProperties properties) throws IgnisException {
+        this.id = id;
         this.stub = stub;
         this.properties = properties;
         this.transport = stub.getTransport();
         this.protocol = new TCompactProtocol(new TZlibTransport(transport,
-                IPropertiesParser.getInteger(properties, IPropertiesKeys.MANAGER_RPC_COMPRESSION)));
+                IPropsParser.getInteger(properties, IPropsKeys.MANAGER_RPC_COMPRESSION)));
         this.serverManager = new IServerManager.Client(new TMultiplexedProtocol(protocol, "server"));
         this.registerManager = new IRegisterManager.Client(new TMultiplexedProtocol(protocol, "register"));
         this.fileManager = new IFileManager.Client(new TMultiplexedProtocol(protocol, "file"));
+    }
+
+    public long getId() {
+        return id;
     }
 
     public IProperties getProperties() {

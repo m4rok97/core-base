@@ -32,7 +32,7 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public class IJob {
+public final class IJob {
 
     private final long id;
     private final ICluster cluster;
@@ -41,6 +41,7 @@ public class IJob {
     private final List<IExecutor> executors;
     private final List<IData> datas;
     private final List<TaskScheduler> schedulers;
+    private String name;
     private boolean keep;
 
     public IJob(long id, ICluster cluster, String type, IProperties properties, IExecutorStub.Factory factory) throws IgnisException {
@@ -50,6 +51,7 @@ public class IJob {
         this.properties = properties;
         this.datas = new ArrayList<>();
         this.schedulers = new ArrayList<>();
+        setName("");
         this.executors = new IJobCreateHelper(this, properties).create(id, type, factory);//Must be the last
     }
 
@@ -69,6 +71,17 @@ public class IJob {
         if (scheduler != null) {
             schedulers.add(scheduler);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (name.isEmpty()) {
+            name = "Cluster(" + cluster.getId() + "), Job(" + id + ")";
+        }
+        this.name = name;
     }
 
     public TaskScheduler getScheduler() {
@@ -103,8 +116,10 @@ public class IJob {
         return datas.size();
     }
 
-    public IData newData(long id, List<IExecutor> executors, TaskScheduler scheduler) {
-        return new IData(id, this, executors, scheduler);
+    public IData newData(List<IExecutor> executors, TaskScheduler scheduler) {
+        IData data = new IData(datas.size(), this, executors, scheduler);
+        datas.add(data);
+        return data;
     }
 
     public IData getData(long id) throws IgnisException {
