@@ -13,7 +13,7 @@ public class IShuffleModule {
 
     public void createSplits() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void nextSplit(java.lang.String host, int port, long length, boolean local) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void nextSplit(java.lang.String addr, long length) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public void finishSplits() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -25,7 +25,7 @@ public class IShuffleModule {
 
     public void createSplits(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void nextSplit(java.lang.String host, int port, long length, boolean local, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void nextSplit(java.lang.String addr, long length, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void finishSplits(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -75,19 +75,17 @@ public class IShuffleModule {
       return;
     }
 
-    public void nextSplit(java.lang.String host, int port, long length, boolean local) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void nextSplit(java.lang.String addr, long length) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_nextSplit(host, port, length, local);
+      send_nextSplit(addr, length);
       recv_nextSplit();
     }
 
-    public void send_nextSplit(java.lang.String host, int port, long length, boolean local) throws org.apache.thrift.TException
+    public void send_nextSplit(java.lang.String addr, long length) throws org.apache.thrift.TException
     {
       nextSplit_args args = new nextSplit_args();
-      args.setHost(host);
-      args.setPort(port);
+      args.setAddr(addr);
       args.setLength(length);
-      args.setLocal(local);
       sendBase("nextSplit", args);
     }
 
@@ -193,33 +191,27 @@ public class IShuffleModule {
       }
     }
 
-    public void nextSplit(java.lang.String host, int port, long length, boolean local, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void nextSplit(java.lang.String addr, long length, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      nextSplit_call method_call = new nextSplit_call(host, port, length, local, resultHandler, this, ___protocolFactory, ___transport);
+      nextSplit_call method_call = new nextSplit_call(addr, length, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class nextSplit_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private java.lang.String host;
-      private int port;
+      private java.lang.String addr;
       private long length;
-      private boolean local;
-      public nextSplit_call(java.lang.String host, int port, long length, boolean local, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public nextSplit_call(java.lang.String addr, long length, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.host = host;
-        this.port = port;
+        this.addr = addr;
         this.length = length;
-        this.local = local;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("nextSplit", org.apache.thrift.protocol.TMessageType.CALL, 0));
         nextSplit_args args = new nextSplit_args();
-        args.setHost(host);
-        args.setPort(port);
+        args.setAddr(addr);
         args.setLength(length);
-        args.setLocal(local);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -365,7 +357,7 @@ public class IShuffleModule {
       public nextSplit_result getResult(I iface, nextSplit_args args) throws org.apache.thrift.TException {
         nextSplit_result result = new nextSplit_result();
         try {
-          iface.nextSplit(args.host, args.port, args.length, args.local);
+          iface.nextSplit(args.addr, args.length);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -575,7 +567,7 @@ public class IShuffleModule {
       }
 
       public void start(I iface, nextSplit_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.nextSplit(args.host, args.port, args.length, args.local,resultHandler);
+        iface.nextSplit(args.addr, args.length,resultHandler);
       }
     }
 
@@ -1326,25 +1318,19 @@ public class IShuffleModule {
   public static class nextSplit_args implements org.apache.thrift.TBase<nextSplit_args, nextSplit_args._Fields>, java.io.Serializable, Cloneable, Comparable<nextSplit_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("nextSplit_args");
 
-    private static final org.apache.thrift.protocol.TField HOST_FIELD_DESC = new org.apache.thrift.protocol.TField("host", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField PORT_FIELD_DESC = new org.apache.thrift.protocol.TField("port", org.apache.thrift.protocol.TType.I32, (short)2);
-    private static final org.apache.thrift.protocol.TField LENGTH_FIELD_DESC = new org.apache.thrift.protocol.TField("length", org.apache.thrift.protocol.TType.I64, (short)3);
-    private static final org.apache.thrift.protocol.TField LOCAL_FIELD_DESC = new org.apache.thrift.protocol.TField("local", org.apache.thrift.protocol.TType.BOOL, (short)4);
+    private static final org.apache.thrift.protocol.TField ADDR_FIELD_DESC = new org.apache.thrift.protocol.TField("addr", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField LENGTH_FIELD_DESC = new org.apache.thrift.protocol.TField("length", org.apache.thrift.protocol.TType.I64, (short)2);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new nextSplit_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new nextSplit_argsTupleSchemeFactory();
 
-    private java.lang.String host; // required
-    private int port; // required
+    private java.lang.String addr; // required
     private long length; // required
-    private boolean local; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      HOST((short)1, "host"),
-      PORT((short)2, "port"),
-      LENGTH((short)3, "length"),
-      LOCAL((short)4, "local");
+      ADDR((short)1, "addr"),
+      LENGTH((short)2, "length");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -1359,14 +1345,10 @@ public class IShuffleModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // HOST
-            return HOST;
-          case 2: // PORT
-            return PORT;
-          case 3: // LENGTH
+          case 1: // ADDR
+            return ADDR;
+          case 2: // LENGTH
             return LENGTH;
-          case 4: // LOCAL
-            return LOCAL;
           default:
             return null;
         }
@@ -1407,21 +1389,15 @@ public class IShuffleModule {
     }
 
     // isset id assignments
-    private static final int __PORT_ISSET_ID = 0;
-    private static final int __LENGTH_ISSET_ID = 1;
-    private static final int __LOCAL_ISSET_ID = 2;
+    private static final int __LENGTH_ISSET_ID = 0;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.HOST, new org.apache.thrift.meta_data.FieldMetaData("host", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.ADDR, new org.apache.thrift.meta_data.FieldMetaData("addr", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.PORT, new org.apache.thrift.meta_data.FieldMetaData("port", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
       tmpMap.put(_Fields.LENGTH, new org.apache.thrift.meta_data.FieldMetaData("length", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      tmpMap.put(_Fields.LOCAL, new org.apache.thrift.meta_data.FieldMetaData("local", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(nextSplit_args.class, metaDataMap);
     }
@@ -1430,19 +1406,13 @@ public class IShuffleModule {
     }
 
     public nextSplit_args(
-      java.lang.String host,
-      int port,
-      long length,
-      boolean local)
+      java.lang.String addr,
+      long length)
     {
       this();
-      this.host = host;
-      this.port = port;
-      setPortIsSet(true);
+      this.addr = addr;
       this.length = length;
       setLengthIsSet(true);
-      this.local = local;
-      setLocalIsSet(true);
     }
 
     /**
@@ -1450,12 +1420,10 @@ public class IShuffleModule {
      */
     public nextSplit_args(nextSplit_args other) {
       __isset_bitfield = other.__isset_bitfield;
-      if (other.isSetHost()) {
-        this.host = other.host;
+      if (other.isSetAddr()) {
+        this.addr = other.addr;
       }
-      this.port = other.port;
       this.length = other.length;
-      this.local = other.local;
     }
 
     public nextSplit_args deepCopy() {
@@ -1464,60 +1432,33 @@ public class IShuffleModule {
 
     @Override
     public void clear() {
-      this.host = null;
-      setPortIsSet(false);
-      this.port = 0;
+      this.addr = null;
       setLengthIsSet(false);
       this.length = 0;
-      setLocalIsSet(false);
-      this.local = false;
     }
 
-    public java.lang.String getHost() {
-      return this.host;
+    public java.lang.String getAddr() {
+      return this.addr;
     }
 
-    public nextSplit_args setHost(java.lang.String host) {
-      this.host = host;
+    public nextSplit_args setAddr(java.lang.String addr) {
+      this.addr = addr;
       return this;
     }
 
-    public void unsetHost() {
-      this.host = null;
+    public void unsetAddr() {
+      this.addr = null;
     }
 
-    /** Returns true if field host is set (has been assigned a value) and false otherwise */
-    public boolean isSetHost() {
-      return this.host != null;
+    /** Returns true if field addr is set (has been assigned a value) and false otherwise */
+    public boolean isSetAddr() {
+      return this.addr != null;
     }
 
-    public void setHostIsSet(boolean value) {
+    public void setAddrIsSet(boolean value) {
       if (!value) {
-        this.host = null;
+        this.addr = null;
       }
-    }
-
-    public int getPort() {
-      return this.port;
-    }
-
-    public nextSplit_args setPort(int port) {
-      this.port = port;
-      setPortIsSet(true);
-      return this;
-    }
-
-    public void unsetPort() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PORT_ISSET_ID);
-    }
-
-    /** Returns true if field port is set (has been assigned a value) and false otherwise */
-    public boolean isSetPort() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PORT_ISSET_ID);
-    }
-
-    public void setPortIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PORT_ISSET_ID, value);
     }
 
     public long getLength() {
@@ -1543,44 +1484,13 @@ public class IShuffleModule {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __LENGTH_ISSET_ID, value);
     }
 
-    public boolean isLocal() {
-      return this.local;
-    }
-
-    public nextSplit_args setLocal(boolean local) {
-      this.local = local;
-      setLocalIsSet(true);
-      return this;
-    }
-
-    public void unsetLocal() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __LOCAL_ISSET_ID);
-    }
-
-    /** Returns true if field local is set (has been assigned a value) and false otherwise */
-    public boolean isSetLocal() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __LOCAL_ISSET_ID);
-    }
-
-    public void setLocalIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __LOCAL_ISSET_ID, value);
-    }
-
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
-      case HOST:
+      case ADDR:
         if (value == null) {
-          unsetHost();
+          unsetAddr();
         } else {
-          setHost((java.lang.String)value);
-        }
-        break;
-
-      case PORT:
-        if (value == null) {
-          unsetPort();
-        } else {
-          setPort((java.lang.Integer)value);
+          setAddr((java.lang.String)value);
         }
         break;
 
@@ -1592,30 +1502,16 @@ public class IShuffleModule {
         }
         break;
 
-      case LOCAL:
-        if (value == null) {
-          unsetLocal();
-        } else {
-          setLocal((java.lang.Boolean)value);
-        }
-        break;
-
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
-      case HOST:
-        return getHost();
-
-      case PORT:
-        return getPort();
+      case ADDR:
+        return getAddr();
 
       case LENGTH:
         return getLength();
-
-      case LOCAL:
-        return isLocal();
 
       }
       throw new java.lang.IllegalStateException();
@@ -1628,14 +1524,10 @@ public class IShuffleModule {
       }
 
       switch (field) {
-      case HOST:
-        return isSetHost();
-      case PORT:
-        return isSetPort();
+      case ADDR:
+        return isSetAddr();
       case LENGTH:
         return isSetLength();
-      case LOCAL:
-        return isSetLocal();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1655,21 +1547,12 @@ public class IShuffleModule {
       if (this == that)
         return true;
 
-      boolean this_present_host = true && this.isSetHost();
-      boolean that_present_host = true && that.isSetHost();
-      if (this_present_host || that_present_host) {
-        if (!(this_present_host && that_present_host))
+      boolean this_present_addr = true && this.isSetAddr();
+      boolean that_present_addr = true && that.isSetAddr();
+      if (this_present_addr || that_present_addr) {
+        if (!(this_present_addr && that_present_addr))
           return false;
-        if (!this.host.equals(that.host))
-          return false;
-      }
-
-      boolean this_present_port = true;
-      boolean that_present_port = true;
-      if (this_present_port || that_present_port) {
-        if (!(this_present_port && that_present_port))
-          return false;
-        if (this.port != that.port)
+        if (!this.addr.equals(that.addr))
           return false;
       }
 
@@ -1682,15 +1565,6 @@ public class IShuffleModule {
           return false;
       }
 
-      boolean this_present_local = true;
-      boolean that_present_local = true;
-      if (this_present_local || that_present_local) {
-        if (!(this_present_local && that_present_local))
-          return false;
-        if (this.local != that.local)
-          return false;
-      }
-
       return true;
     }
 
@@ -1698,15 +1572,11 @@ public class IShuffleModule {
     public int hashCode() {
       int hashCode = 1;
 
-      hashCode = hashCode * 8191 + ((isSetHost()) ? 131071 : 524287);
-      if (isSetHost())
-        hashCode = hashCode * 8191 + host.hashCode();
-
-      hashCode = hashCode * 8191 + port;
+      hashCode = hashCode * 8191 + ((isSetAddr()) ? 131071 : 524287);
+      if (isSetAddr())
+        hashCode = hashCode * 8191 + addr.hashCode();
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(length);
-
-      hashCode = hashCode * 8191 + ((local) ? 131071 : 524287);
 
       return hashCode;
     }
@@ -1719,22 +1589,12 @@ public class IShuffleModule {
 
       int lastComparison = 0;
 
-      lastComparison = java.lang.Boolean.valueOf(isSetHost()).compareTo(other.isSetHost());
+      lastComparison = java.lang.Boolean.valueOf(isSetAddr()).compareTo(other.isSetAddr());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetHost()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.host, other.host);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetPort()).compareTo(other.isSetPort());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetPort()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.port, other.port);
+      if (isSetAddr()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.addr, other.addr);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1745,16 +1605,6 @@ public class IShuffleModule {
       }
       if (isSetLength()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.length, other.length);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetLocal()).compareTo(other.isSetLocal());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetLocal()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.local, other.local);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1779,24 +1629,16 @@ public class IShuffleModule {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("nextSplit_args(");
       boolean first = true;
 
-      sb.append("host:");
-      if (this.host == null) {
+      sb.append("addr:");
+      if (this.addr == null) {
         sb.append("null");
       } else {
-        sb.append(this.host);
+        sb.append(this.addr);
       }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("port:");
-      sb.append(this.port);
       first = false;
       if (!first) sb.append(", ");
       sb.append("length:");
       sb.append(this.length);
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("local:");
-      sb.append(this.local);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -1843,34 +1685,18 @@ public class IShuffleModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // HOST
+            case 1: // ADDR
               if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.host = iprot.readString();
-                struct.setHostIsSet(true);
+                struct.addr = iprot.readString();
+                struct.setAddrIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // PORT
-              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
-                struct.port = iprot.readI32();
-                struct.setPortIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 3: // LENGTH
+            case 2: // LENGTH
               if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
                 struct.length = iprot.readI64();
                 struct.setLengthIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 4: // LOCAL
-              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
-                struct.local = iprot.readBool();
-                struct.setLocalIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -1890,19 +1716,13 @@ public class IShuffleModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.host != null) {
-          oprot.writeFieldBegin(HOST_FIELD_DESC);
-          oprot.writeString(struct.host);
+        if (struct.addr != null) {
+          oprot.writeFieldBegin(ADDR_FIELD_DESC);
+          oprot.writeString(struct.addr);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(PORT_FIELD_DESC);
-        oprot.writeI32(struct.port);
-        oprot.writeFieldEnd();
         oprot.writeFieldBegin(LENGTH_FIELD_DESC);
         oprot.writeI64(struct.length);
-        oprot.writeFieldEnd();
-        oprot.writeFieldBegin(LOCAL_FIELD_DESC);
-        oprot.writeBool(struct.local);
         oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
@@ -1922,52 +1742,32 @@ public class IShuffleModule {
       public void write(org.apache.thrift.protocol.TProtocol prot, nextSplit_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetHost()) {
+        if (struct.isSetAddr()) {
           optionals.set(0);
         }
-        if (struct.isSetPort()) {
+        if (struct.isSetLength()) {
           optionals.set(1);
         }
-        if (struct.isSetLength()) {
-          optionals.set(2);
-        }
-        if (struct.isSetLocal()) {
-          optionals.set(3);
-        }
-        oprot.writeBitSet(optionals, 4);
-        if (struct.isSetHost()) {
-          oprot.writeString(struct.host);
-        }
-        if (struct.isSetPort()) {
-          oprot.writeI32(struct.port);
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetAddr()) {
+          oprot.writeString(struct.addr);
         }
         if (struct.isSetLength()) {
           oprot.writeI64(struct.length);
-        }
-        if (struct.isSetLocal()) {
-          oprot.writeBool(struct.local);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, nextSplit_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(4);
+        java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
-          struct.host = iprot.readString();
-          struct.setHostIsSet(true);
+          struct.addr = iprot.readString();
+          struct.setAddrIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.port = iprot.readI32();
-          struct.setPortIsSet(true);
-        }
-        if (incoming.get(2)) {
           struct.length = iprot.readI64();
           struct.setLengthIsSet(true);
-        }
-        if (incoming.get(3)) {
-          struct.local = iprot.readBool();
-          struct.setLocalIsSet(true);
         }
       }
     }

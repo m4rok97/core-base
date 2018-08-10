@@ -90,11 +90,19 @@ public final class IImportDataTask extends IExecutorTask {
                 LOGGER.info(log() + "Creating " + keyShared.msgs.get(executor).size() + " partitions");
                 executor.getShuffleModule().createSplits();
                 int i = 1;
+                int port = IPropsParser.getInteger(executor.getContainer().getProperties(), IPropsKeys.TRANSPORT_PORT);
+                StringBuilder addr = new StringBuilder();
                 for (Map.Entry<IExecutor, Long> msg : keyShared.msgs.get(executor).entrySet()) {
-                    LOGGER.info(log() + "Partition  " + (i++) + "-> " + msg.getValue() + " elements");
-                    IContainer container = msg.getKey().getContainer();
-                    int port = IPropsParser.getInteger(executor.getContainer().getProperties(), IPropsKeys.TRANSPORT_PORT);
-                    executor.getShuffleModule().nextSplit(container.getHost(), port, msg.getValue(), msg.getKey() == executor);
+                    addr.setLength(0);
+                    //TODO shared memory
+                    if (msg.getKey() == executor) {
+                        addr.append("local");
+                    } else {
+                        IContainer container = msg.getKey().getContainer();
+                        addr.append("socket!").append(container.getHost()).append("!").append(port);
+                    }
+                    executor.getShuffleModule().nextSplit(addr.toString(), msg.getValue());
+                    LOGGER.info(log() + "Partition  " + (i++) + "with " + msg.getValue() + " elements to " + addr.toString());
                 }
                 executor.getShuffleModule().finishSplits();
                 LOGGER.info(log() + "Partitions created");

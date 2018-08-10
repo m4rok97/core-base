@@ -39,20 +39,18 @@ public final class IContainer {
 
     private final long id;
     private final IContainerStub stub;
-    private final IProperties properties;
     private final TTransport transport;
     private final TProtocol protocol;
     private final IServerManager.Iface serverManager;
     private final IRegisterManager.Iface registerManager;
     private final IFileManager.Iface fileManager;
 
-    public IContainer(long id, IContainerStub stub, IProperties properties) throws IgnisException {
+    public IContainer(long id, IContainerStub stub) throws IgnisException {
         this.id = id;
         this.stub = stub;
-        this.properties = properties;
         this.transport = stub.getTransport();
         this.protocol = new TCompactProtocol(new TZlibTransport(transport,
-                IPropsParser.getInteger(properties, IPropsKeys.MANAGER_RPC_COMPRESSION)));
+                IPropsParser.getInteger(stub.getProperties(), IPropsKeys.MANAGER_RPC_COMPRESSION)));
         this.serverManager = new IServerManager.Client(new TMultiplexedProtocol(protocol, "server"));
         this.registerManager = new IRegisterManager.Client(new TMultiplexedProtocol(protocol, "register"));
         this.fileManager = new IFileManager.Client(new TMultiplexedProtocol(protocol, "file"));
@@ -60,10 +58,6 @@ public final class IContainer {
 
     public long getId() {
         return id;
-    }
-
-    public IProperties getProperties() {
-        return properties;
     }
 
     public IExecutor createExecutor(long job, IExecutorStub stub) {
@@ -86,12 +80,16 @@ public final class IContainer {
         return stub;
     }
 
+    public IProperties getProperties() {
+        return stub.getProperties();
+    }
+
     public String getHost() {
         return stub.getHost();
     }
 
-    public int getPortAlias(int port) {
-        return stub.getPortAlias(port);
+    public int getExposePort(int port) {
+        return stub.getExposePort(port);
     }
 
 }

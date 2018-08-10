@@ -72,6 +72,7 @@ public final class IManagerExecutorStub extends IExecutorStub {
     public void destroy() throws IgnisException {
         try {
             manager.destroy(id);
+            running = false;
         } catch (TException ex) {
             throw new IgnisException("Fails to destroy container", ex);
         }

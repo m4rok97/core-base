@@ -48,7 +48,7 @@ public final class IClusterCreateHelper extends IClusterHelper {
         LOGGER.info(log() + "Registering cluster with " + instances + " containers");
         for (int i = 0; i < instances; i++) {
             IContainerStub stub = factory.getContainerStub(properties);
-            IContainer container = new IContainer(i, stub, properties);
+            IContainer container = new IContainer(i, stub);
             shedulerBuilder.newTask(new IContainerCreateTask(this, container));
             result.add(container);
         }

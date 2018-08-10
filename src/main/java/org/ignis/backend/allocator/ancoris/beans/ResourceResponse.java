@@ -54,11 +54,13 @@ public final class ResourceResponse extends ResourceBase {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<VolumeResponse> getVolumes() {
         return (List) volumes;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<DeviceResponse> getDevices() {
         return (List) devices;
     }

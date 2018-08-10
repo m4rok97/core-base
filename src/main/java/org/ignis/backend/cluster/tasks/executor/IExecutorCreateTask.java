@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
@@ -41,10 +42,16 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 LOGGER.info(log() + "Executor already running");
                 return;
             } catch (IgnisException ex) {
-                LOGGER.warn(log() + "Executor dead");
+                LOGGER.warn(log() + "Executor dead " + ex);
             }
             LOGGER.info(log() + "Starting new executor");
             executor.getStub().create();
+            try {
+                executor.getServerModule().setContext(executor.getContainer().getId(), executor.getProperties().toMap());
+            } catch (TException ex) {
+                throw new IgnisException(ex.getMessage(), ex);
+            }
+
         }
     }
 

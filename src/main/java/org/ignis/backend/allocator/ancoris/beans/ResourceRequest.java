@@ -1,6 +1,7 @@
 package org.ignis.backend.allocator.ancoris.beans;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -58,11 +59,13 @@ public final class ResourceRequest extends ResourceBase {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<VolumeRequest> getVolumes() {
         return (List) volumes;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<DeviceRequest> getDevices() {
         return (List) devices;
     }

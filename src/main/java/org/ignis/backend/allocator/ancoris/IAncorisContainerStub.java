@@ -71,7 +71,7 @@ public final class IAncorisContainerStub extends IContainerStub {
     }
 
     @Override
-    public int getPortAlias(int port) {
+    public int getExposePort(int port) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -38,11 +38,15 @@ public abstract class IContainerStub {
         this.properties = properties;
     }
 
+    public IProperties getProperties() {
+        return properties;
+    }
+
     public abstract boolean isRunning();
 
     public abstract String getHost();
 
-    public abstract int getPortAlias(int port);
+    public abstract int getExposePort(int port);
 
     public abstract TTransport getTransport();
 

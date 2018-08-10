@@ -16,9 +16,12 @@
  */
 package org.ignis.backend.properties;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.ignis.backend.exception.IgnisException;
 
 /**
  *
@@ -30,6 +33,7 @@ public final class IProperties {
 
     public IProperties(IProperties defaults) {
         this();
+        fromMap(defaults.properties);
     }
 
     public IProperties() {
@@ -40,11 +44,11 @@ public final class IProperties {
         if (value == null) {
             value = "";
         }
-        return properties.put(key, value);
+        return properties.put(fixKey(key), value);
     }
 
     public String getProperty(String key) {
-        String value = properties.get(key);
+        String value = properties.get(fixKey(key));
         if (value == null) {
             return "";
         }
@@ -52,7 +56,7 @@ public final class IProperties {
     }
 
     public boolean isProperty(String key) {
-        return properties.containsKey(key);
+        return properties.containsKey(fixKey(key));
     }
 
     public Map<String, String> toMap() {
@@ -65,19 +69,51 @@ public final class IProperties {
         }
     }
 
-    public void toFile(String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void toFile(String path) throws IgnisException {
+        try {
+            toTree().save(new File(path));
+        } catch (IOException ex) {
+            throw new IgnisException("Fails to save properties", ex);
+        }
     }
 
-    public void fromFile(String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void fromFile(String path) throws IgnisException {
+        try {
+            ITreeProperties tree = new ITreeProperties();
+            tree.load(new File(path));
+            tree.toMap(properties);
+        } catch (IOException ex) {
+           throw new IgnisException("Fails to load properties", ex);
+        }
+    }
+
+    public ITreeProperties.Entry getEntry(String key) {
+        return toTree().getEntry(key);
+    }
+
+    public ITreeProperties.Entry getRootEntry() {
+        return toTree().getRoot();
     }
 
     public void reset(IProperties defaults) {
-
+        properties.clear();
+        fromMap(properties);
     }
 
     public IProperties copy() {
-        return null;
+        return new IProperties(this);
+    }
+
+    private String fixKey(String key) {
+        if (key.equals("value")) {
+            return "";
+        }
+        return key.replace(".value", "");
+    }
+
+    private ITreeProperties toTree() {
+        ITreeProperties tree = new ITreeProperties();
+        tree.fromMap(properties);
+        return tree;
     }
 }

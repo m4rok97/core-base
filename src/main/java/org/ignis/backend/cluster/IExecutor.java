@@ -19,6 +19,7 @@ package org.ignis.backend.cluster;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.ignis.backend.allocator.IExecutorStub;
+import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.executor.IFilesModule;
 import org.ignis.rpc.executor.IKeysModule;
 import org.ignis.rpc.executor.IMapperModule;
@@ -75,6 +76,10 @@ public final class IExecutor {
 
     public IContainer getContainer() {
         return container;
+    }
+
+    public IProperties getProperties() {
+        return stub.getProperties();
     }
 
     public TProtocol getProtocol() {

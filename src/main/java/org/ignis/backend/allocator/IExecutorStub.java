@@ -47,6 +47,10 @@ public abstract class IExecutorStub {
         return type;
     }
 
+    public IProperties getProperties() {
+        return properties;
+    }
+
     public abstract boolean isRunning();
 
     public abstract void test() throws IgnisException;

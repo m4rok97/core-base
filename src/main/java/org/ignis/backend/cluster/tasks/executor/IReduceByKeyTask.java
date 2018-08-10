@@ -96,16 +96,18 @@ public final class IReduceByKeyTask extends IExecutorTask {
                     }
                 }
 
-                int port = IPropsParser.getInteger(executor.getContainer().getProperties(),
-                        IPropsKeys.TRANSPORT_PORT);
+                int port = IPropsParser.getInteger(executor.getContainer().getProperties(), IPropsKeys.TRANSPORT_PORT);
 
                 LOGGER.info(log() + "Preparing keys to send to " + messages.size() + " executors");
                 int i = 1;
-                for (Map.Entry<IExecutor, List<Long>> entry : messages.entrySet()) {
-                    LOGGER.info(log() + (i++) + " prepared with " + entry.getValue().size() + " keys");
+                StringBuilder addr = new StringBuilder();
+                for (Map.Entry<IExecutor, List<Long>> entry : messages.entrySet()) {                 
+                    addr.setLength(0);
+                    //TODO shared memory
                     IContainer container = entry.getKey().getContainer();
-                    executor.getKeysModule().sendPairs(container.getHost(), container.getPortAlias(port),
-                            entry.getValue());
+                    addr.append("socket!").append(container.getHost()).append("!").append(port);
+                    executor.getKeysModule().sendPairs(addr.toString(), entry.getValue());
+                    LOGGER.info(log() + (i++) + " prepared with " + entry.getValue().size() + " keys to " + addr.toString());
                 }
                 try {
                     LOGGER.info(log() + "Preparing to recive keys");

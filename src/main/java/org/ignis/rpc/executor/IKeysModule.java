@@ -13,7 +13,7 @@ public class IKeysModule {
 
     public java.util.Map<java.lang.Long,java.lang.Long> getKeys(boolean single) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public void joinPairs() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -25,7 +25,7 @@ public class IKeysModule {
 
     public void getKeys(boolean single, org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler) throws org.apache.thrift.TException;
 
-    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void joinPairs(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -79,17 +79,16 @@ public class IKeysModule {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getKeys failed: unknown result");
     }
 
-    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_sendPairs(host, port, keys_id);
+      send_sendPairs(addr, keys_id);
       recv_sendPairs();
     }
 
-    public void send_sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id) throws org.apache.thrift.TException
+    public void send_sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id) throws org.apache.thrift.TException
     {
       sendPairs_args args = new sendPairs_args();
-      args.setHost(host);
-      args.setPort(port);
+      args.setAddr(addr);
       args.setKeys_id(keys_id);
       sendBase("sendPairs", args);
     }
@@ -198,29 +197,26 @@ public class IKeysModule {
       }
     }
 
-    public void sendPairs(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      sendPairs_call method_call = new sendPairs_call(host, port, keys_id, resultHandler, this, ___protocolFactory, ___transport);
+      sendPairs_call method_call = new sendPairs_call(addr, keys_id, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class sendPairs_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private java.lang.String host;
-      private int port;
+      private java.lang.String addr;
       private java.util.List<java.lang.Long> keys_id;
-      public sendPairs_call(java.lang.String host, int port, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public sendPairs_call(java.lang.String addr, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.host = host;
-        this.port = port;
+        this.addr = addr;
         this.keys_id = keys_id;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendPairs", org.apache.thrift.protocol.TMessageType.CALL, 0));
         sendPairs_args args = new sendPairs_args();
-        args.setHost(host);
-        args.setPort(port);
+        args.setAddr(addr);
         args.setKeys_id(keys_id);
         args.write(prot);
         prot.writeMessageEnd();
@@ -364,7 +360,7 @@ public class IKeysModule {
       public sendPairs_result getResult(I iface, sendPairs_args args) throws org.apache.thrift.TException {
         sendPairs_result result = new sendPairs_result();
         try {
-          iface.sendPairs(args.host, args.port, args.keys_id);
+          iface.sendPairs(args.addr, args.keys_id);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -575,7 +571,7 @@ public class IKeysModule {
       }
 
       public void start(I iface, sendPairs_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.sendPairs(args.host, args.port, args.keys_id,resultHandler);
+        iface.sendPairs(args.addr, args.keys_id,resultHandler);
       }
     }
 
@@ -1590,22 +1586,19 @@ public class IKeysModule {
   public static class sendPairs_args implements org.apache.thrift.TBase<sendPairs_args, sendPairs_args._Fields>, java.io.Serializable, Cloneable, Comparable<sendPairs_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("sendPairs_args");
 
-    private static final org.apache.thrift.protocol.TField HOST_FIELD_DESC = new org.apache.thrift.protocol.TField("host", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField PORT_FIELD_DESC = new org.apache.thrift.protocol.TField("port", org.apache.thrift.protocol.TType.I32, (short)2);
-    private static final org.apache.thrift.protocol.TField KEYS_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("keys_id", org.apache.thrift.protocol.TType.LIST, (short)3);
+    private static final org.apache.thrift.protocol.TField ADDR_FIELD_DESC = new org.apache.thrift.protocol.TField("addr", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField KEYS_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("keys_id", org.apache.thrift.protocol.TType.LIST, (short)2);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new sendPairs_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sendPairs_argsTupleSchemeFactory();
 
-    private java.lang.String host; // required
-    private int port; // required
+    private java.lang.String addr; // required
     private java.util.List<java.lang.Long> keys_id; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      HOST((short)1, "host"),
-      PORT((short)2, "port"),
-      KEYS_ID((short)3, "keys_id");
+      ADDR((short)1, "addr"),
+      KEYS_ID((short)2, "keys_id");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -1620,11 +1613,9 @@ public class IKeysModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // HOST
-            return HOST;
-          case 2: // PORT
-            return PORT;
-          case 3: // KEYS_ID
+          case 1: // ADDR
+            return ADDR;
+          case 2: // KEYS_ID
             return KEYS_ID;
           default:
             return null;
@@ -1666,15 +1657,11 @@ public class IKeysModule {
     }
 
     // isset id assignments
-    private static final int __PORT_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.HOST, new org.apache.thrift.meta_data.FieldMetaData("host", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.ADDR, new org.apache.thrift.meta_data.FieldMetaData("addr", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.PORT, new org.apache.thrift.meta_data.FieldMetaData("port", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
       tmpMap.put(_Fields.KEYS_ID, new org.apache.thrift.meta_data.FieldMetaData("keys_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64))));
@@ -1686,14 +1673,11 @@ public class IKeysModule {
     }
 
     public sendPairs_args(
-      java.lang.String host,
-      int port,
+      java.lang.String addr,
       java.util.List<java.lang.Long> keys_id)
     {
       this();
-      this.host = host;
-      this.port = port;
-      setPortIsSet(true);
+      this.addr = addr;
       this.keys_id = keys_id;
     }
 
@@ -1701,11 +1685,9 @@ public class IKeysModule {
      * Performs a deep copy on <i>other</i>.
      */
     public sendPairs_args(sendPairs_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      if (other.isSetHost()) {
-        this.host = other.host;
+      if (other.isSetAddr()) {
+        this.addr = other.addr;
       }
-      this.port = other.port;
       if (other.isSetKeys_id()) {
         java.util.List<java.lang.Long> __this__keys_id = new java.util.ArrayList<java.lang.Long>(other.keys_id);
         this.keys_id = __this__keys_id;
@@ -1718,57 +1700,32 @@ public class IKeysModule {
 
     @Override
     public void clear() {
-      this.host = null;
-      setPortIsSet(false);
-      this.port = 0;
+      this.addr = null;
       this.keys_id = null;
     }
 
-    public java.lang.String getHost() {
-      return this.host;
+    public java.lang.String getAddr() {
+      return this.addr;
     }
 
-    public sendPairs_args setHost(java.lang.String host) {
-      this.host = host;
+    public sendPairs_args setAddr(java.lang.String addr) {
+      this.addr = addr;
       return this;
     }
 
-    public void unsetHost() {
-      this.host = null;
+    public void unsetAddr() {
+      this.addr = null;
     }
 
-    /** Returns true if field host is set (has been assigned a value) and false otherwise */
-    public boolean isSetHost() {
-      return this.host != null;
+    /** Returns true if field addr is set (has been assigned a value) and false otherwise */
+    public boolean isSetAddr() {
+      return this.addr != null;
     }
 
-    public void setHostIsSet(boolean value) {
+    public void setAddrIsSet(boolean value) {
       if (!value) {
-        this.host = null;
+        this.addr = null;
       }
-    }
-
-    public int getPort() {
-      return this.port;
-    }
-
-    public sendPairs_args setPort(int port) {
-      this.port = port;
-      setPortIsSet(true);
-      return this;
-    }
-
-    public void unsetPort() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PORT_ISSET_ID);
-    }
-
-    /** Returns true if field port is set (has been assigned a value) and false otherwise */
-    public boolean isSetPort() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PORT_ISSET_ID);
-    }
-
-    public void setPortIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PORT_ISSET_ID, value);
     }
 
     public int getKeys_idSize() {
@@ -1812,19 +1769,11 @@ public class IKeysModule {
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
-      case HOST:
+      case ADDR:
         if (value == null) {
-          unsetHost();
+          unsetAddr();
         } else {
-          setHost((java.lang.String)value);
-        }
-        break;
-
-      case PORT:
-        if (value == null) {
-          unsetPort();
-        } else {
-          setPort((java.lang.Integer)value);
+          setAddr((java.lang.String)value);
         }
         break;
 
@@ -1841,11 +1790,8 @@ public class IKeysModule {
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
-      case HOST:
-        return getHost();
-
-      case PORT:
-        return getPort();
+      case ADDR:
+        return getAddr();
 
       case KEYS_ID:
         return getKeys_id();
@@ -1861,10 +1807,8 @@ public class IKeysModule {
       }
 
       switch (field) {
-      case HOST:
-        return isSetHost();
-      case PORT:
-        return isSetPort();
+      case ADDR:
+        return isSetAddr();
       case KEYS_ID:
         return isSetKeys_id();
       }
@@ -1886,21 +1830,12 @@ public class IKeysModule {
       if (this == that)
         return true;
 
-      boolean this_present_host = true && this.isSetHost();
-      boolean that_present_host = true && that.isSetHost();
-      if (this_present_host || that_present_host) {
-        if (!(this_present_host && that_present_host))
+      boolean this_present_addr = true && this.isSetAddr();
+      boolean that_present_addr = true && that.isSetAddr();
+      if (this_present_addr || that_present_addr) {
+        if (!(this_present_addr && that_present_addr))
           return false;
-        if (!this.host.equals(that.host))
-          return false;
-      }
-
-      boolean this_present_port = true;
-      boolean that_present_port = true;
-      if (this_present_port || that_present_port) {
-        if (!(this_present_port && that_present_port))
-          return false;
-        if (this.port != that.port)
+        if (!this.addr.equals(that.addr))
           return false;
       }
 
@@ -1920,11 +1855,9 @@ public class IKeysModule {
     public int hashCode() {
       int hashCode = 1;
 
-      hashCode = hashCode * 8191 + ((isSetHost()) ? 131071 : 524287);
-      if (isSetHost())
-        hashCode = hashCode * 8191 + host.hashCode();
-
-      hashCode = hashCode * 8191 + port;
+      hashCode = hashCode * 8191 + ((isSetAddr()) ? 131071 : 524287);
+      if (isSetAddr())
+        hashCode = hashCode * 8191 + addr.hashCode();
 
       hashCode = hashCode * 8191 + ((isSetKeys_id()) ? 131071 : 524287);
       if (isSetKeys_id())
@@ -1941,22 +1874,12 @@ public class IKeysModule {
 
       int lastComparison = 0;
 
-      lastComparison = java.lang.Boolean.valueOf(isSetHost()).compareTo(other.isSetHost());
+      lastComparison = java.lang.Boolean.valueOf(isSetAddr()).compareTo(other.isSetAddr());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetHost()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.host, other.host);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetPort()).compareTo(other.isSetPort());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetPort()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.port, other.port);
+      if (isSetAddr()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.addr, other.addr);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1991,16 +1914,12 @@ public class IKeysModule {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("sendPairs_args(");
       boolean first = true;
 
-      sb.append("host:");
-      if (this.host == null) {
+      sb.append("addr:");
+      if (this.addr == null) {
         sb.append("null");
       } else {
-        sb.append(this.host);
+        sb.append(this.addr);
       }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("port:");
-      sb.append(this.port);
       first = false;
       if (!first) sb.append(", ");
       sb.append("keys_id:");
@@ -2029,8 +1948,6 @@ public class IKeysModule {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -2055,23 +1972,15 @@ public class IKeysModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // HOST
+            case 1: // ADDR
               if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.host = iprot.readString();
-                struct.setHostIsSet(true);
+                struct.addr = iprot.readString();
+                struct.setAddrIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // PORT
-              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
-                struct.port = iprot.readI32();
-                struct.setPortIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 3: // KEYS_ID
+            case 2: // KEYS_ID
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
                   org.apache.thrift.protocol.TList _list10 = iprot.readListBegin();
@@ -2104,14 +2013,11 @@ public class IKeysModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.host != null) {
-          oprot.writeFieldBegin(HOST_FIELD_DESC);
-          oprot.writeString(struct.host);
+        if (struct.addr != null) {
+          oprot.writeFieldBegin(ADDR_FIELD_DESC);
+          oprot.writeString(struct.addr);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(PORT_FIELD_DESC);
-        oprot.writeI32(struct.port);
-        oprot.writeFieldEnd();
         if (struct.keys_id != null) {
           oprot.writeFieldBegin(KEYS_ID_FIELD_DESC);
           {
@@ -2142,21 +2048,15 @@ public class IKeysModule {
       public void write(org.apache.thrift.protocol.TProtocol prot, sendPairs_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetHost()) {
+        if (struct.isSetAddr()) {
           optionals.set(0);
         }
-        if (struct.isSetPort()) {
+        if (struct.isSetKeys_id()) {
           optionals.set(1);
         }
-        if (struct.isSetKeys_id()) {
-          optionals.set(2);
-        }
-        oprot.writeBitSet(optionals, 3);
-        if (struct.isSetHost()) {
-          oprot.writeString(struct.host);
-        }
-        if (struct.isSetPort()) {
-          oprot.writeI32(struct.port);
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetAddr()) {
+          oprot.writeString(struct.addr);
         }
         if (struct.isSetKeys_id()) {
           {
@@ -2172,16 +2072,12 @@ public class IKeysModule {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, sendPairs_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
+        java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
-          struct.host = iprot.readString();
-          struct.setHostIsSet(true);
+          struct.addr = iprot.readString();
+          struct.setAddrIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.port = iprot.readI32();
-          struct.setPortIsSet(true);
-        }
-        if (incoming.get(2)) {
           {
             org.apache.thrift.protocol.TList _list15 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
             struct.keys_id = new java.util.ArrayList<java.lang.Long>(_list15.size);
