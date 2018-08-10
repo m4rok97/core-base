@@ -75,31 +75,41 @@ public final class IImportDataTask extends IExecutorTask {
     public void execute() throws IgnisException {
         try {
             if (type == SEND) {
+                LOGGER.info(log() + "Counting elements");
                 keyShared.count.put(executor, executor.getStorageModule().count());
+                LOGGER.info(log() + keyShared.count.get(executor) + " elements");
             } else {
                 keyShared.target.add(executor);
             }
             if (barrier.await() == 0) {
+                LOGGER.info(log() + "Calculating element distribution");
                 distribution();
             }
             barrier.await();
             if (type == SEND) {
+                LOGGER.info(log() + "Creating " + keyShared.msgs.get(executor).size() + " partitions");
                 executor.getShuffleModule().createSplits();
+                int i = 1;
                 for (Map.Entry<IExecutor, Long> msg : keyShared.msgs.get(executor).entrySet()) {
+                    LOGGER.info(log() + "Partition  " + (i++) + "-> " + msg.getValue() + " elements");
                     IContainer container = msg.getKey().getContainer();
                     int port = IPropsParser.getInteger(executor.getContainer().getProperties(), IPropsKeys.TRANSPORT_PORT);
                     executor.getShuffleModule().nextSplit(container.getHost(), port, msg.getValue(), msg.getKey() == executor);
                 }
                 executor.getShuffleModule().finishSplits();
+                LOGGER.info(log() + "Partitions created");
             }
             barrier.await();
             try {
                 if (type == RECEIVE) {
+                    LOGGER.info(log() + "Preparing to recive partitions");
                     executor.getPostmanModule().start();
                 }
                 barrier.await();
                 if (type == SEND) {
+                    LOGGER.info(log() + "Preparing to send partitions");
                     executor.getPostmanModule().sendAll();
+                    LOGGER.info(log() + "Partitions sent");
                 }
                 barrier.await();
             } finally {
@@ -109,7 +119,9 @@ public final class IImportDataTask extends IExecutorTask {
             }
             if (type == RECEIVE) {
                 List<Long> order = keyShared.msgs.get(executor).keySet().stream().map(e -> e.getJob()).collect(Collectors.toList());
+                LOGGER.info(log() + "Joining partitions");
                 executor.getShuffleModule().joinSplits(order);
+                LOGGER.info(log() + "Partitions joined");
             }
             barrier.await();
         } catch (IgnisException ex) {

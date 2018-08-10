@@ -45,7 +45,7 @@ public final class IClusterCreateHelper extends IClusterHelper {
         int instances = IPropsParser.getInteger(properties, IPropsKeys.EXECUTOR_INSTANCES);
         List<IContainer> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
-        LOGGER.info(log() + "Registering cluster with " + instances + " instances");
+        LOGGER.info(log() + "Registering cluster with " + instances + " containers");
         for (int i = 0; i < instances; i++) {
             IContainerStub stub = factory.getContainerStub(properties);
             IContainer container = new IContainer(i, stub, properties);

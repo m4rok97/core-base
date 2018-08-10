@@ -35,7 +35,9 @@ public final class IContainerDestroyTask extends IContainerTask {
 
     @Override
     public void execute() throws IgnisException {
+        LOGGER.info(log() + "Destroying container");
         container.getStub().destroy();
+        LOGGER.info(log() + "Container destroyed");
     }
 
 }

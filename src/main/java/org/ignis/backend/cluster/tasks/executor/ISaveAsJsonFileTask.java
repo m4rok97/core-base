@@ -41,11 +41,13 @@ public final class ISaveAsJsonFileTask extends IExecutorTask {
 
     @Override
     public void execute() throws IgnisException {
+        LOGGER.info(log() + "Saving json file");
         try {
             executor.getFilesModule().saveJson(path, joined);
         } catch (TException ex) {
-            throw new IgnisException("Save fails", ex);
+            throw new IgnisException(ex.getMessage(), ex);
         }
+        LOGGER.info(log() + "File saved");
     }
 
 }

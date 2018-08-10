@@ -55,7 +55,9 @@ public final class IJobImportDataHelper extends IJobHelper {
         for (IExecutor executor : job.getExecutors()) {
             shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.RECEIVE, receivers));
         }
-        return job.newData(result, shedulerBuilder.build());
+        IData target = job.newData(result, shedulerBuilder.build());
+        LOGGER.info(log() + "Registering importData -> " + target.toString());
+        return target;
     }
 
 }

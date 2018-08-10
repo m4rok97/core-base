@@ -40,11 +40,13 @@ public final class IMapTask extends IExecutorTask {
 
     @Override
     public void execute() throws IgnisException {
+        LOGGER.info(log() + "Executing map");
         try {
             executor.getMapperModule()._map(function);
         } catch (TException ex) {
-            throw new IgnisException("Map fails", ex);
+            throw new IgnisException(ex.getMessage(), ex);
         }
+        LOGGER.info(log() + "Map executed");
     }
 
 }

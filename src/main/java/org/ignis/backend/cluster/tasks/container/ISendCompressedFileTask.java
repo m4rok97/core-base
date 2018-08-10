@@ -42,11 +42,13 @@ public final class ISendCompressedFileTask extends IContainerTask {
 
     @Override
     public void execute() throws IgnisException {
+        LOGGER.info(log() + "Sending compressed file");
         try {
             container.getFileManager().sendFileAndExtract(path, bytes);
         } catch (TException ex) {
-            throw new IgnisException("Fails to send " + path, ex);
+            throw new IgnisException(ex.getMessage(), ex);
         }
+        LOGGER.info(log() + "File sent");
     }
 
 }

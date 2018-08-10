@@ -45,6 +45,7 @@ public final class IDataSaveHelper extends IDataHelper {
             shedulerBuilder.newTask(new ISaveAsTextFileTask(this, executor, path, joined));
         }
         shedulerBuilder.build().execute(data.getPool());
+        LOGGER.info(log() + "saveAsTextFile Done");
     }
 
     public void saveAsJsonFile(String path, boolean joined) throws IgnisException {
@@ -55,6 +56,7 @@ public final class IDataSaveHelper extends IDataHelper {
             shedulerBuilder.newTask(new ISaveAsJsonFileTask(this, executor, path, joined));
         }
         shedulerBuilder.build().execute(data.getPool());
+        LOGGER.info(log() + "saveAsJsonFile Done");
     }
 
 }

@@ -41,13 +41,17 @@ public final class ISendFilesTask extends IContainerTask {
 
     @Override
     public void execute() throws IgnisException {
+        LOGGER.info(log() + "Sending files");
+        int i = 1;
         for (Map.Entry<String, ByteBuffer> entry : files.entrySet()) {
+            LOGGER.info(log() + "Sending file " + (i++) + " of " + files.size());
             try {
                 container.getFileManager().sendFile(entry.getKey(), entry.getValue());
             } catch (TException ex) {
                 throw new IgnisException("Fails to send " + entry.getKey(), ex);
             }
         }
+        LOGGER.info(log() + "Files sent");
     }
 
 }

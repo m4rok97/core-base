@@ -42,11 +42,13 @@ public final class IStreamingMapTask extends IExecutorTask {
 
     @Override
     public void execute() throws IgnisException {
+        LOGGER.info(log() + "Executing StreamingMap");
         try {
             executor.getMapperModule().streamingMap(function, ordered);
         } catch (TException ex) {
             throw new IgnisException("Straming Map fails", ex);
         }
+        LOGGER.info(log() + "StreamingMap executed");
     }
 
 }

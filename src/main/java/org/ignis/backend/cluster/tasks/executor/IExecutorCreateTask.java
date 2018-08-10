@@ -38,10 +38,12 @@ public final class IExecutorCreateTask extends IExecutorTask {
         if (executor.getStub().isRunning()) {
             try {
                 executor.getStub().test();
+                LOGGER.info(log() + "Executor already running");
+                return;
             } catch (IgnisException ex) {
-                executor.getStub().create();
+                LOGGER.warn(log() + "Executor dead");
             }
-        } else {
+            LOGGER.info(log() + "Starting new executor");
             executor.getStub().create();
         }
     }

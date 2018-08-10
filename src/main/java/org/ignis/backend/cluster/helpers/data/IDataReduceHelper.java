@@ -40,7 +40,6 @@ public final class IDataReduceHelper extends IDataHelper {
     }
 
     public IData reduceByKey(ISourceFunction function) {
-        LOGGER.info(log() + "Registering reduceByKey");
         IBarrier barrier = new IBarrier(data.getPartitions());
         IReduceByKeyTask.Shared keyShared = new IReduceByKeyTask.Shared();
         List<IExecutor> result = new ArrayList<>();
@@ -49,7 +48,9 @@ public final class IDataReduceHelper extends IDataHelper {
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IReduceByKeyTask(this, executor, function, barrier, keyShared));
         }
-        return data.getJob().newData(result, shedulerBuilder.build());
+        IData target = data.getJob().newData(result, shedulerBuilder.build());
+        LOGGER.info(log() + "Registering reduceByKey -> " + target.toString());
+        return target;
     }
 
 }

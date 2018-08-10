@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.cluster.helpers.job.IJobCreateHelper;
+import org.ignis.backend.cluster.helpers.job.IJobDestroyHelper;
 import org.ignis.backend.cluster.helpers.job.IJobImportDataHelper;
 import org.ignis.backend.cluster.helpers.job.IJobReadFileHelper;
 import org.ignis.backend.cluster.tasks.ILock;
@@ -79,7 +80,7 @@ public final class IJob {
 
     public void setName(String name) {
         if (name.isEmpty()) {
-            name = "Cluster(" + cluster.getId() + "), Job(" + id + ")";
+            name = cluster.getName() + ", Job(" + id + ")";
         }
         this.name = name;
     }
@@ -136,6 +137,10 @@ public final class IJob {
 
     public IData importData(IData source) throws IgnisException {
         return new IJobImportDataHelper(this, properties).importData(source);
+    }
+
+    public void destroy() throws IgnisException {
+        new IJobDestroyHelper(this, properties).destroy();
     }
 
 }

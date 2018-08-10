@@ -16,7 +16,11 @@
  */
 package org.ignis.backend.cluster.helpers.job;
 
+import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.executor.IExecutorDestroyTask;
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +34,23 @@ public final class IJobDestroyHelper extends IJobHelper {
 
     public IJobDestroyHelper(IJob job, IProperties properties) {
         super(job, properties);
+    }
+
+    public void destroy() throws IgnisException {
+        LOGGER.info(log() + "Preparing cluster to destroy");
+        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
+        int instances = 0;
+        for (IExecutor executor : job.getExecutors()) {
+            if (executor.getStub().isRunning()) {
+                instances++;
+                shedulerBuilder.newTask(new IExecutorDestroyTask(this, executor));
+            }
+        }
+        if (instances > 0) {
+            LOGGER.info(log() + "Destroying " + instances + " instances");
+            shedulerBuilder.build().execute(job.getPool());
+        }
+        LOGGER.info(log() + "Cluster destroyed");
     }
 
 }

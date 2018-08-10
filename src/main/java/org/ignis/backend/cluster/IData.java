@@ -81,7 +81,7 @@ public final class IData {
 
     public void setName(String name) {
         if (name.isEmpty()) {
-            name = "Cluster(" + job.getCluster().getId() + "), Job(" + job.getId() + "), Data(" + getId() + ")";
+            name = job.getName() + ", Data(" + getId() + ")";
         }
         this.name = name;
     }

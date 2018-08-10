@@ -21,6 +21,7 @@ import java.util.List;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
+import org.ignis.backend.cluster.helpers.cluster.IClusterDestroyHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.IThreadPool;
@@ -120,6 +121,10 @@ public final class ICluster {
 
     public int sendCompressedFile(String source, String target) throws IgnisException {
         return new IClusterFileHelper(this, properties).sendCompressedFile(source, target);
+    }
+    
+    public void destroy() throws IgnisException{
+        new IClusterDestroyHelper(this, properties).destroy();
     }
 
     public boolean isKeep() {

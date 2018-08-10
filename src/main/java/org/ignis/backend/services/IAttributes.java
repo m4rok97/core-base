@@ -16,8 +16,8 @@
  */
 package org.ignis.backend.services;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.exception.IgnisException;
@@ -37,14 +37,17 @@ public final class IAttributes {
 
     public IAttributes() {
         this.defaultProperties = new IProperties();
-        this.clustersMap = new ConcurrentHashMap<>();
-        this.propertiesMap = new ConcurrentHashMap<>();
+        this.clustersMap = new HashMap<>();
+        this.propertiesMap = new HashMap<>();
         this.idClusterGen = new AtomicLong();
         this.idPropertiesGen = new AtomicLong();
     }
 
     public IProperties getProperties(long id) throws IgnisException {
-        IProperties properties = propertiesMap.get(id);
+        IProperties properties;
+        synchronized (propertiesMap) {
+            properties = propertiesMap.get(id);
+        }
         if (properties == null) {
             throw new IgnisException("Properties doesn't exist");
         }
@@ -53,12 +56,17 @@ public final class IAttributes {
 
     public long addProperties(IProperties properties) {
         long id = idPropertiesGen.incrementAndGet();
-        propertiesMap.put(id, properties);
+        synchronized (propertiesMap) {
+            propertiesMap.put(id, properties);
+        }
         return id;
     }
 
     public ICluster getCluster(long id) throws IgnisException {
-        ICluster cluster = clustersMap.get(id);
+        ICluster cluster;
+        synchronized (clustersMap) {
+            cluster = clustersMap.get(id);
+        }
         if (cluster == null) {
             throw new IgnisException("Cluster doesn't exist");
         }
@@ -70,7 +78,21 @@ public final class IAttributes {
     }
 
     public void addCluster(ICluster cluster) {
-        clustersMap.put(cluster.getId(), cluster);
+        synchronized (clustersMap) {
+            clustersMap.put(cluster.getId(), cluster);
+        }
+    }
+
+    public void destroyClusters() {
+        synchronized (clustersMap) {
+            for (ICluster cluster : clustersMap.values()) {
+                try {
+                    cluster.destroy();
+                } catch (IgnisException ex) {
+                }
+            }
+            clustersMap.clear();
+        }
     }
 
 }

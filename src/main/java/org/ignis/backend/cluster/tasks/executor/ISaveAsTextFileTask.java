@@ -41,11 +41,13 @@ public final class ISaveAsTextFileTask extends IExecutorTask {
 
     @Override
     public void execute() throws IgnisException {
+        LOGGER.info(log() + "Saving text file");
         try {
             executor.getFilesModule().saveFile(path, joined);
         } catch (TException ex) {
-            throw new IgnisException("Save fails", ex);
+            throw new IgnisException(ex.getMessage(), ex);
         }
+        LOGGER.info(log() + "File saved");
     }
 
 }

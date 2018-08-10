@@ -51,7 +51,9 @@ public final class IDataShuffleHelper extends IDataHelper {
             shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.SEND, executors));
             shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.RECEIVE, executors));
         }
-        return data.getJob().newData(result, shedulerBuilder.build());
+        IData target = data.getJob().newData(result, shedulerBuilder.build());
+        LOGGER.info(log() + "Registering shuffle -> " + target.toString());
+        return target;
     }
 
 }

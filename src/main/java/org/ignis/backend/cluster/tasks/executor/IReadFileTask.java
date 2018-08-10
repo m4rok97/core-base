@@ -45,11 +45,13 @@ public final class IReadFileTask extends IExecutorTask {
 
     @Override
     public void execute() throws IgnisException {
+        LOGGER.info(log() + "Reading file");
         try {
             executor.getFilesModule().readFile(path, offset, length, lines);
         } catch (TException ex) {
-            throw new IgnisException("Read file fails", ex);
+            throw new IgnisException(ex.getMessage(), ex);
         }
+        LOGGER.info(log() + "File read");
     }
 
 }

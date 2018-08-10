@@ -16,6 +16,8 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
@@ -36,11 +38,13 @@ public final class IExecutorDestroyTask extends IExecutorTask {
 
     @Override
     public void execute() throws IgnisException {
+        LOGGER.info(log() + "Destroying executor");
         try {
             executor.getContainer().getRegisterManager().destroy(executor.getJob());
         } catch (TException ex) {
-            throw new IgnisException("Destroy executor fails", ex);
+            throw new IgnisException(ex.getMessage(), ex);
         }
+        LOGGER.info(log() + "Executor destroyed");
     }
 
 }

@@ -114,7 +114,9 @@ public final class IJobReadFileHelper extends IJobHelper {
             long length = indices.get(distribution[i + 1]) - offset;
             shedulerBuilder.newTask(new IReadFileTask(this, executor, path, offset, length, lines));
         }
-        return job.newData(result, shedulerBuilder.build());
+        IData target = job.newData(result, shedulerBuilder.build());
+        LOGGER.info(log() + "Registering readFile path: " + path + " -> " + target.toString());
+        return target;
     }
 
 }

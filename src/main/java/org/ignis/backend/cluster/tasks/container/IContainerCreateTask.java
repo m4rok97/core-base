@@ -38,12 +38,14 @@ public final class IContainerCreateTask extends IContainerTask {
         if (container.getStub().isRunning()) {
             try {
                 container.getStub().test();
+                LOGGER.info(log() + "Container already running");
+                return;
             } catch (IgnisException ex) {
-                container.getStub().create();
+                LOGGER.warn(log() + "Container dead");
             }
-        } else {
+            LOGGER.info(log() + "Starting new container");
             container.getStub().create();
         }
-    }
 
+    }
 }

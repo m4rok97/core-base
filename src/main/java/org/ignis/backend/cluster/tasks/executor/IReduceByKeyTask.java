@@ -51,12 +51,14 @@ public final class IReduceByKeyTask extends IExecutorTask {
     private final ISourceFunction function;
     private final IBarrier barrier;
     private final Shared keyShared;
+    private final boolean single;
 
     public IReduceByKeyTask(IHelper helper, IExecutor executor, ISourceFunction function, IBarrier barrier, Shared keyShared) {
         super(helper, executor);
         this.function = function;
         this.barrier = barrier;
         this.keyShared = keyShared;
+        this.single = barrier.getParties() == 1;
     }
 
     private void keyDistribution() {
@@ -66,42 +68,62 @@ public final class IReduceByKeyTask extends IExecutorTask {
     @Override
     public void execute() throws IgnisException {
         try {
-            Map<Long, Long> keys = executor.getKeysModule().getKeys(barrier.getParties() == 1);
-            keyShared.count.put(executor, keys);
-            if (barrier.await() == 0) {
-                keyDistribution();
-            }
+            LOGGER.info(log() + "Reducing executor keys");
+            executor.getReducerModule().reduceByKey(function);
+            LOGGER.info(log() + "Executor keys reduced");
             barrier.await();
-            Map<IExecutor, List<Long>> messages = new HashMap<>();
-            for (Long key : keys.values()) {
-                IExecutor to = keyShared.distribution.get(key);
-                if (to != null) {
-                    List<Long> toKeys = messages.get(to);
-                    if (toKeys == null) {
-                        messages.put(to, toKeys = new ArrayList<>());
+            LOGGER.info(log() + "Preparing keys");
+            Map<Long, Long> keys = executor.getKeysModule().getKeys(single);
+            LOGGER.info(log() + "Keys ready");
+            if (single) {
+                LOGGER.info(log() + "Avoiding key exchange");
+            } else {
+                keyShared.count.put(executor, keys);
+                if (barrier.await() == 0) {
+                    LOGGER.info(log() + "Calculating key distribution");
+                    keyDistribution();
+                }
+                barrier.await();
+                Map<IExecutor, List<Long>> messages = new HashMap<>();
+                for (Long key : keys.values()) {
+                    IExecutor to = keyShared.distribution.get(key);
+                    if (to != null) {
+                        List<Long> toKeys = messages.get(to);
+                        if (toKeys == null) {
+                            messages.put(to, toKeys = new ArrayList<>());
+                        }
+                        toKeys.add(key);
                     }
-                    toKeys.add(key);
+                }
+
+                int port = IPropsParser.getInteger(executor.getContainer().getProperties(),
+                        IPropsKeys.TRANSPORT_PORT);
+
+                LOGGER.info(log() + "Preparing keys to send to " + messages.size() + " executors");
+                int i = 1;
+                for (Map.Entry<IExecutor, List<Long>> entry : messages.entrySet()) {
+                    LOGGER.info(log() + (i++) + " prepared with " + entry.getValue().size() + " keys");
+                    IContainer container = entry.getKey().getContainer();
+                    executor.getKeysModule().sendPairs(container.getHost(), container.getPortAlias(port),
+                            entry.getValue());
+                }
+                try {
+                    LOGGER.info(log() + "Preparing to recive keys");
+                    executor.getPostmanModule().start();
+                    barrier.await();
+                    LOGGER.info(log() + "Preparing to send keys");
+                    executor.getPostmanModule().sendAll();
+                    LOGGER.info(log() + "Keys sent");
+                    barrier.await();
+                } finally {
+                    executor.getPostmanModule().stop();
                 }
             }
-
-            int port = IPropsParser.getInteger(executor.getContainer().getProperties(),
-                    IPropsKeys.TRANSPORT_PORT);
-
-            for (Map.Entry<IExecutor, List<Long>> entry : messages.entrySet()) {
-                IContainer container = entry.getKey().getContainer();
-                executor.getKeysModule().sendPairs(container.getHost(), container.getPortAlias(port),
-                        entry.getValue());
-            }
-            try {
-                executor.getPostmanModule().start();
-                barrier.await();
-                executor.getPostmanModule().sendAll();
-                barrier.await();
-            } finally {
-                executor.getPostmanModule().stop();
-            }
+            LOGGER.info(log() + "Joining keys");
             executor.getKeysModule().joinPairs();
+            LOGGER.info(log() + "Reducing keys");
             executor.getReducerModule().reduceByKey(function);
+            LOGGER.info(log() + "Keys Reduced");
             barrier.await();
         } catch (IgnisException ex) {
             barrier.reset();
