@@ -13,7 +13,7 @@ RUN \
 	{ \
 		echo '#!/bin/bash'; \
 		echo 'java -cp "${IGNIS_HOME}/backend/*" org.ignis.backend.Main "$@"'; \
-	} > bin/ignis-backend  && chmod +x bin/ignis-backend
+	} > bin/ignis-backend  && chmod +x bin/ignisbackend
 
 
 FROM ignisframework/base-skel
