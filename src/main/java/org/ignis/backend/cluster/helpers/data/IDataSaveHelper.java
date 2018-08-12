@@ -38,7 +38,7 @@ public final class IDataSaveHelper extends IDataHelper {
     }
 
     public void saveAsTextFile(String path, boolean joined) throws IgnisException {
-        LOGGER.info(log() + "Registering saveAsTextFile path: " + path + ", joined: " + joined);
+        LOGGER.info(log() + "SaveAsTextFile path: " + path + ", joined: " + joined);
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
@@ -49,7 +49,7 @@ public final class IDataSaveHelper extends IDataHelper {
     }
 
     public void saveAsJsonFile(String path, boolean joined) throws IgnisException {
-        LOGGER.info(log() + "Registering saveAsJsonFile path: " + path + ", joined: " + joined);
+        LOGGER.info(log() + "SaveAsJsonFile path: " + path + ", joined: " + joined);
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {

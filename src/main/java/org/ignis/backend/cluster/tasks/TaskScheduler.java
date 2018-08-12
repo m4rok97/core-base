@@ -105,7 +105,7 @@ public final class TaskScheduler {
             try {
                 execute(pool, locks);
             } catch (InterruptedException | ExecutionException ex) {
-                if (_try == pool.getShedulerTries() - 1) {
+                if (_try == pool.getMaxFailures() - 1) {
                     throw new IgnisException("Execution failed", ex);
                 }
                 LOGGER.error("Failed execution attempt " + _try + ", retrying", ex);

@@ -40,6 +40,7 @@ public final class IJobImportDataHelper extends IJobHelper {
     }
 
     public IData importData(IData source) {
+        LOGGER.info(log() + "Preparing importData");
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
         shedulerBuilder.newDependency(source.getScheduler());
@@ -56,7 +57,7 @@ public final class IJobImportDataHelper extends IJobHelper {
             shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.RECEIVE, receivers));
         }
         IData target = job.newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "Registering importData -> " + target.toString());
+        LOGGER.info(log() + "ImportData -> " + target.toString());
         return target;
     }
 

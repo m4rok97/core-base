@@ -152,7 +152,7 @@ public class ITreeProperties {
         public Entry deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
             JavaType string = TypeFactory.defaultInstance().constructType(String.class);
             if (p.getCurrentToken().isStructStart()) {
-                JavaType entry = TypeFactory.defaultInstance().constructType(String.class);
+                JavaType entry = TypeFactory.defaultInstance().constructType(Entry.class);
                 MapType map = TypeFactory.defaultInstance().constructMapType(HashMap.class, string, entry);
                 return new Entry(p.getCodec().<Map<String, Entry>>readValue(p, map));
             } else {

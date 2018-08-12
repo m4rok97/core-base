@@ -47,7 +47,7 @@ public final class IDataMapHelper extends IDataHelper {
             shedulerBuilder.newTask(new IMapTask(this, executor, function));
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "Registering map -> " + target.toString());
+        LOGGER.info(log() + "Map -> " + target.toString());
         return target;
     }
 
@@ -59,7 +59,7 @@ public final class IDataMapHelper extends IDataHelper {
             shedulerBuilder.newTask(new IStreamingMapTask(this, executor, function, ordered));
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "Registering streamingMap " + (ordered ? "ordered " : "") + "-> " + target.toString());
+        LOGGER.info(log() + "StreamingMap " + (ordered ? "ordered " : "") + "-> " + target.toString());
         return target;
     }
 

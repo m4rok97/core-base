@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.exception;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.ignis.rpc.IRemoteException;
@@ -26,13 +27,17 @@ import org.ignis.rpc.IRemoteException;
  */
 public final class IgnisException extends IRemoteException {
 
+    private final Throwable cause;
+    
     public IgnisException(String msg) {
         super(msg, "");
+        cause = this;
         setStack(stackToString(this));
     }
 
-    public IgnisException(String msg, Throwable ex) {
-        super(msg, stackToString(ex));
+    public IgnisException(String msg, Throwable cause) {
+        super(msg, stackToString(cause));
+        this.cause = cause;
     }
 
     private static String stackToString(Throwable ex) {
@@ -40,4 +45,10 @@ public final class IgnisException extends IRemoteException {
         ex.printStackTrace(new PrintWriter(writer));
         return writer.toString();
     }
+
+    @Override
+    public Throwable getCause() {
+        return cause;
+    }
+
 }

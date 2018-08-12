@@ -28,12 +28,12 @@ import java.util.concurrent.TimeUnit;
 public final class IThreadPool {
 
     private final ThreadPoolExecutor pool;
-    private final int shedulerTries;
+    private final int maxFailures;
 
-    public IThreadPool(int threads, int shedulerTries) {
+    public IThreadPool(int threads, int maxFailures) {
         pool = new ThreadPoolExecutor(1, Integer.MAX_VALUE, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         pool.setCorePoolSize(threads);
-        this.shedulerTries = shedulerTries;
+        this.maxFailures = maxFailures;
     }
 
     public synchronized void increase(int threads) {
@@ -49,8 +49,8 @@ public final class IThreadPool {
         increase(-threads);
     }
 
-    int getShedulerTries() {
-        return shedulerTries;
+    int getMaxFailures() {
+        return maxFailures;
     }
 
     Future<TaskScheduler> submit(TaskScheduler scheduler) {

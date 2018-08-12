@@ -40,6 +40,14 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     }
 
     @Override
+    public long newInstance2(long id) throws TException {
+        IProperties properties = attributes.getProperties(id);
+        synchronized (properties) {
+            return attributes.addProperties(new IProperties(properties));
+        }
+    }
+
+    @Override
     public String setProperty(long id, String key, String value) throws IRemoteException, TException {
         IProperties properties = attributes.getProperties(id);
         synchronized (properties) {

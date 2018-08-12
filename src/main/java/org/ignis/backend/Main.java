@@ -16,6 +16,7 @@
  */
 package org.ignis.backend;
 
+import java.io.File;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropsKeys;
@@ -55,7 +56,7 @@ public final class Main {
         }
 
         String allocator_url = System.getenv("ANCORIS_URL");
-        if (allocator_url != null) {
+        if (allocator_url == null) {
             LOGGER.error("ANCORIS_URL not exists, aborting");
             return;
         }
@@ -70,27 +71,30 @@ public final class Main {
 
         LOGGER.info("Loading configuration file");
         try {
-            attributes.defaultProperties.fromFile("ignis.yaml");
-        } catch (Exception ex) {
+            attributes.defaultProperties.fromFile(new File(home, "etc/ignis.yaml").getPath());
+        } catch (IgnisException ex) {
             LOGGER.error("Error loading ignis.yaml, aborting", ex);
             return;
         }
-
+        
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
-
-        IBackendServiceImpl backendService = new IBackendServiceImpl(attributes);
-
-        processor.registerProcessor("backend", new IBackendService.Processor<>(backendService));
-        processor.registerProcessor("cluster", new IClusterService.Processor<>(new IClusterServiceImpl(attributes)));
-        processor.registerProcessor("job", new IJobService.Processor<>(new IJobServiceImpl(attributes)));
-        processor.registerProcessor("data", new IDataService.Processor<>(new IDataServiceImpl(attributes)));
-        processor.registerProcessor("properties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(attributes)));
+        IBackendServiceImpl backend;
+        try {
+            processor.registerProcessor("backend", new IBackendService.Processor<>(backend = new IBackendServiceImpl(attributes)));
+            processor.registerProcessor("cluster", new IClusterService.Processor<>(new IClusterServiceImpl(attributes)));
+            processor.registerProcessor("job", new IJobService.Processor<>(new IJobServiceImpl(attributes)));
+            processor.registerProcessor("data", new IDataService.Processor<>(new IDataServiceImpl(attributes)));
+            processor.registerProcessor("properties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(attributes)));
+        } catch (IgnisException ex) {
+            LOGGER.error("Error starting services, aborting", ex);
+            return;
+        }
 
         try {
             Integer port = IPropsParser.getInteger(attributes.defaultProperties,
                     IPropsKeys.DRIVER_RPC_PORT);
             System.out.println(port);
-            backendService.start(processor, port);
+            backend.start(processor, port);
         } catch (IgnisException ex) {
             LOGGER.error("Error parsing server port, aborting", ex);
             return;

@@ -32,6 +32,8 @@ public final class IPropsKeys {
     public static final String DRIVER_RPC_PORT = "ignis.driver.rpc.port";
     public static final String DRIVER_SWAP = "ignis.driver.swap";
     public static final String DRIVER_SWAPPINESS = "ignis.driver.swappiness";
+    public static final String DRIVER_TASK_MAX_FAILURES = "ignis.driver.task.maxFailures";
+    public static final String DRIVER_TASK_MIN_WORKERS = "ignis.driver.task.minWorkers";
     public static final String EXECUTOR_CORES_BUFFER = "ignis.executor.cores.buffer";
     public static final String EXECUTOR_CORES = "ignis.executor.cores";
     public static final String EXECUTOR_IMAGE = "ignis.executor.image";

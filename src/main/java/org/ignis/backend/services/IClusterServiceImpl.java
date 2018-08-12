@@ -19,7 +19,11 @@ package org.ignis.backend.services;
 import org.apache.thrift.TException;
 import org.ignis.backend.allocator.ancoris.IAncorisContainerStub;
 import org.ignis.backend.cluster.ICluster;
+import org.ignis.backend.cluster.tasks.IThreadPool;
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
+import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IPropsParser;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IClusterService;
 
@@ -29,8 +33,13 @@ import org.ignis.rpc.driver.IClusterService;
  */
 public final class IClusterServiceImpl extends IService implements IClusterService.Iface {
 
-    public IClusterServiceImpl(IAttributes attributes) {
+    private final IThreadPool threadPool;
+    
+    public IClusterServiceImpl(IAttributes attributes) throws IgnisException {
         super(attributes);
+        int minWorkers = IPropsParser.getInteger(attributes.defaultProperties, IPropsKeys.DRIVER_TASK_MIN_WORKERS);
+        int maxFailures = IPropsParser.getInteger(attributes.defaultProperties, IPropsKeys.DRIVER_TASK_MAX_FAILURES);
+        threadPool = new IThreadPool(minWorkers, maxFailures);
     }
 
     @Override
@@ -41,8 +50,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
             propertiesCopy = propertiesObject.copy();
         }
         long id = attributes.newIdCluster();
-        //TODO thread pool
-        attributes.addCluster(new ICluster(id, propertiesCopy, null, new IAncorisContainerStub.Factory()));
+        attributes.addCluster(new ICluster(id, propertiesCopy, threadPool, new IAncorisContainerStub.Factory()));
         return id;
     }
 

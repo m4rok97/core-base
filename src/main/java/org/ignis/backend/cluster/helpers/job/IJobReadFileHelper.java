@@ -99,6 +99,7 @@ public final class IJobReadFileHelper extends IJobHelper {
     }
 
     public IData readFile(String path) throws IgnisException {
+        LOGGER.info(log() + "Preparing readFile");
         List<Long> indices = parseIndex(path);
         int executors = job.getExecutors().size();
         int[] distribution = distribute(indices.size(), executors);
@@ -113,9 +114,10 @@ public final class IJobReadFileHelper extends IJobHelper {
             long offset = indices.get(distribution[i]);
             long length = indices.get(distribution[i + 1]) - offset;
             shedulerBuilder.newTask(new IReadFileTask(this, executor, path, offset, length, lines));
+            LOGGER.info(log() + "Partition " + i + " lines:" + lines + ", offset: " + offset + ", length: " + length);
         }
         IData target = job.newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "Registering readFile path: " + path + " -> " + target.toString());
+        LOGGER.info(log() + "ReadFile path: " + path + " -> " + target.toString());
         return target;
     }
 

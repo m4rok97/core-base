@@ -39,7 +39,7 @@ public final class IDataShuffleHelper extends IDataHelper {
     }
 
     public IData shuffle() {
-        LOGGER.info(log() + "Registering shuffle");
+        LOGGER.info(log() + "Preparing shuffle");
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
@@ -52,7 +52,7 @@ public final class IDataShuffleHelper extends IDataHelper {
             shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.RECEIVE, executors));
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "Registering shuffle -> " + target.toString());
+        LOGGER.info(log() + "Shuffle -> " + target.toString());
         return target;
     }
 
