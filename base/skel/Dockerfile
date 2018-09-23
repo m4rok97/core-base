@@ -11,5 +11,6 @@ RUN mkdir -p \
 	${IGNIS_HOME}/core \
 	${IGNIS_HOME}/backend \
 	${IGNIS_HOME}/manager \
+	${IGNIS_HOME}/submitter \
 	${IGNIS_HOME}/etc && \
 	echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && ldconfig
