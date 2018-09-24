@@ -3,7 +3,7 @@ FROM ignisframework/base-full
 
 COPY --from=ignisframework/cpp-executor ${IGNIS_HOME} ${IGNIS_HOME}
 
-COPY --from=builder /root/jsoncpp /root/jsoncpp
+COPY --from=ignisframework/cpp-builder /root/jsoncpp /root/jsoncpp
 
 RUN \
 	yum -y install libgomp && \
