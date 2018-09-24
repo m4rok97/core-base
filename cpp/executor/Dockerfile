@@ -12,7 +12,12 @@ RUN \
 	chmod +x igniscpp && \
 	mv igniscpp ${IGNIS_HOME}/bin && \
 	mkdir -p ${IGNIS_HOME}/core/cpp && \
-	make install DESTDIR=${IGNIS_HOME}/core/cpp
+	make install DESTDIR=${IGNIS_HOME}/core/cpp && \
+	mv igniscpp ${IGNIS_HOME}/bin/ignis-cpp && \
+	cd / && \
+	rm -fR /tmp/core-cpp
+
+RUN 
 
 
 FROM ignisframework/base-executor
