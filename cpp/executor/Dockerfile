@@ -13,11 +13,9 @@ RUN \
 	mv igniscpp ${IGNIS_HOME}/bin && \
 	mkdir -p ${IGNIS_HOME}/core/cpp && \
 	make install DESTDIR=${IGNIS_HOME}/core/cpp && \
-	mv igniscpp ${IGNIS_HOME}/bin/ignis-cpp && \
+	mv igniscpp ${IGNIS_HOME}/core/cpp/ignis-cpp && \
 	cd / && \
 	rm -fR /tmp/core-cpp
-
-RUN 
 
 
 FROM ignisframework/base-executor
@@ -32,4 +30,5 @@ RUN \
 	cd /root/jsoncpp && \
 	./install && \
 	ldconfig && \
-	rm -fr /root/jsoncpp
+	rm -fr /root/jsoncpp && \
+	cp ${IGNIS_HOME}/core/cpp/ignis-cpp ${IGNIS_HOME}/bin
