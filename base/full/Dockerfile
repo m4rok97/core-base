@@ -1,5 +1,5 @@
 
 FROM ignisframework/base-executor
 
-RUN yum -y install java-1.8.0-openjdk
+RUN yum -y install java-1.8.0-openjdk openssl
 COPY --from=ignisframework/base-driver ${IGNIS_HOME} ${IGNIS_HOME}
