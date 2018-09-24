@@ -23,7 +23,7 @@ RUN \
 	make && \
 	mv /tmp/utils/line-indexing/ii ${IGNIS_HOME}/bin/ && \
 	mv /tmp/utils/line-indexing/icp ${IGNIS_HOME}/bin/ && \
-	mv /tmp/utils/line-indexing/libignisindex.so.so ${IGNIS_HOME}/bin/ && \
+	mv /tmp/utils/line-indexing/libignisindex.so ${IGNIS_HOME}/bin/ && \
 	cd /tmp/utils/remote-client && \
 	cmake . && \
 	make && \
