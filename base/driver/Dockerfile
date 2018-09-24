@@ -19,13 +19,13 @@ RUN \
 	mkdir -p /tmp/utils && \ 
 	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/utils.git /tmp/utils && \
 	cd /tmp/utils/line-indexing && \
-	cmake3 . && \
+	cmake . && \
 	make && \
 	mv /tmp/utils/line-indexing/ii ${IGNIS_HOME}/bin/ && \
 	mv /tmp/utils/line-indexing/icp ${IGNIS_HOME}/bin/ && \
 	mv /tmp/utils/line-indexing/ignisindex.so ${IGNIS_HOME}/bin/ && \
 	cd /tmp/utils/remote-client && \
-	cmake3 . && \
+	cmake . && \
 	make && \
 	mv /tmp/utils/remote-client/irc ${IGNIS_HOME}/bin/ && \
 	cd / && \
