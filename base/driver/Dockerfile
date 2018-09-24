@@ -18,12 +18,12 @@ RUN \
 RUN \
 	mkdir -p /tmp/utils && \ 
 	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/utils.git /tmp/utils && \
-	cd /tmp/utils/indexed && \
+	cd /tmp/utils/line-indexing && \
 	cmake3 . && \
 	make && \
-	mv /tmp/utils/indexed/ii ${IGNIS_HOME}/bin/ && \
-	mv /tmp/utils/indexed/icp ${IGNIS_HOME}/bin/ && \
-	mv /tmp/utils/indexed/ignisindex.so ${IGNIS_HOME}/bin/ && \
+	mv /tmp/utils/line-indexing/ii ${IGNIS_HOME}/bin/ && \
+	mv /tmp/utils/line-indexing/icp ${IGNIS_HOME}/bin/ && \
+	mv /tmp/utils/line-indexing/ignisindex.so ${IGNIS_HOME}/bin/ && \
 	cd /tmp/utils/remote-client && \
 	cmake3 . && \
 	make && \
@@ -38,9 +38,6 @@ COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 
 COPY --from=builder /root/boost /root/boost
 COPY --from=builder /root/thrift /root/thrift
-COPY --from=builder /root/framework/indexed/ii ${IGNIS_HOME}/bin/
-COPY --from=builder /root/framework/indexed/shared_lib/icp ${IGNIS_HOME}/bin/
-COPY --from=builder /root/framework/indexed/shared_lib/libindex.so ${IGNIS_HOME}/bin/
 
 RUN \
 	cd /root/boost && \
