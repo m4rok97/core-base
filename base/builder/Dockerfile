@@ -84,6 +84,7 @@ RUN \
 		echo '#!/bin/bash'; \
 		echo 'cd "$(dirname "$0")"'; \
 		echo 'cp -R build/* /'; \
+		echo 'ldconfig'; \
 	} > /root/boost/install && \
 	chmod +x /root/boost/install && \
 	/root/boost/install
@@ -104,6 +105,7 @@ RUN \
 		echo '#!/bin/bash'; \
 		echo 'cd "$(dirname "$0")"'; \
 		echo 'cp -R build/* /'; \
+		echo 'ldconfig'; \
 	} > /root/thrift/install && \
 	chmod +x /root/thrift/install && \
 	/root/thrift/install

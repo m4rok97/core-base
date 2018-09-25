@@ -19,6 +19,7 @@ RUN \
 		echo '#!/bin/bash'; \
 		echo 'cd "$(dirname "$0")"'; \
 		echo 'cp -R build/* /'; \
+		echo 'ldconfig'; \
 	} > /root/jsoncpp/install && \
 	chmod +x /root/jsoncpp/install && \
 	/root/jsoncpp/install
