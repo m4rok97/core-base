@@ -101,8 +101,6 @@ RUN \
 	make && \
 	mkdir -p /root/thrift/build && \
 	make install DESTDIR=/root/thrift/build && \
-	cd / && \
-	rm -fr /tmp/thrift && \
 	{ \
 		echo '#!/bin/bash'; \
 		echo 'cd "$(dirname "$0")"'; \
