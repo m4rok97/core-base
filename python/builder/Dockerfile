@@ -1,7 +1,7 @@
 
 FROM ignisframework/base-builder
 
-PYTHON JSON_VERSION=3.7.0
+ENV PY_VERSION=3.6.4
 RUN \
 	mkdir -p /tmp/python3 && \
 	cd /tmp/python3 && \
@@ -21,3 +21,7 @@ RUN \
 	} > /root/python3/install && \
 	chmod +x /root/python3/install && \
 	/root/python3/install
+
+RUN \
+	cp -R /tmp/thrift/lib/py /root/pythrift && \
+	

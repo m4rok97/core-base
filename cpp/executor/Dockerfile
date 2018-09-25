@@ -5,8 +5,7 @@ ARG SOURCE_CACHE=1
 RUN \
 	mkdir -p /tmp/core-cpp && \ 
 	cd /tmp/core-cpp && \
-	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/core-cpp.git src && \
-	cd src && \
+	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/core-cpp.git /tmp/core-cpp && \
 	cmake . && \
 	make && \
 	chmod +x igniscpp && \
