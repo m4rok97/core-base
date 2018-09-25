@@ -24,4 +24,12 @@ RUN \
 
 RUN \
 	cp -R /tmp/thrift/lib/py /root/pythrift && \
-	
+	cd /root/pythrift && \
+	python3 setup.py build && \
+	{ \
+		echo '#!/bin/bash'; \
+		echo 'cd "$(dirname "$0")"'; \
+		echo 'python3 setup.py install'; \
+	} > /root/pythrift/install && \
+	chmod +x /root/pythrift/install && \
+	/root/pythrift/install

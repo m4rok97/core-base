@@ -1,4 +1,10 @@
 
+FROM ignisframework/base-builder as builder
+
+ARG SOURCE_CACHE=1
+RUN git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/utils.git /tmp/utils && \
+	mv /tmp/utils/submit ${IGNIS_HOME}/submitter
+
 FROM ignisframework/base-skel
 
 RUN yum update -y && \
@@ -24,13 +30,14 @@ RUN echo "source /etc/environment" >> /etc/profile && \
 	
 
 COPY --from=ignisframework/python-builder /root/python3 /root/python3
+COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 
-RUN /root/python3/install && rm -fr /root/python3
+RUN /root/python3/install && \
+	rm -fr /root/python3 && \
+	curl https://bootstrap.pypa.io/get-pip.py | python3 && \
+	pip3 install setuptools --upgrade
 
-ARG SOURCE_CACHE=1
-RUN cd ${IGNIS_HOME} && \
-	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/submitter.git submitter && \
-	{ \
+RUN { \
 		echo '#!/bin/bash'; \
-		echo 'python3 ${IGNIS_HOME}/submitter/src/ISubmit.py "$@"'; \
+		echo 'python3 ${IGNIS_HOME}/submitter/ignis/submit/Submit.py "$@"'; \
 	} > bin/ignis-submit  && chmod +x bin/ignis-submit

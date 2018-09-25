@@ -1,9 +1,10 @@
+
 FROM ignisframework/base-full
 
 COPY --from=ignisframework/python-executor ${IGNIS_HOME} ${IGNIS_HOME}
 
-COPY --from=ignisframework/python-builder/root/python3 /tmp/python3
-COPY --from=ignisframework/python-builder/root/pythrift /tmp/pythrift
+COPY --from=ignisframework/python-builder /root/python3 /tmp/python3
+COPY --from=ignisframework/python-builder /root/pythrift /tmp/pythrift
 
 RUN cd /tmp/python3 && \
 	./install && \
