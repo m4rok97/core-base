@@ -44,4 +44,4 @@ RUN /tmp/python3/install && \
 RUN { \
 		echo '#!/bin/bash'; \
 		echo 'python3 ${IGNIS_HOME}/submitter/ignis/submit/Submit.py "$@"'; \
-	} > bin/ignis-submit  && chmod +x bin/ignis-submit
+	} > ${IGNIS_HOME}/bin/ignis-submit  && chmod +x ${IGNIS_HOME}/bin/ignis-submit
