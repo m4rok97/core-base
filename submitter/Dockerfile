@@ -3,7 +3,7 @@ FROM ignisframework/base-builder as builder
 
 ARG SOURCE_CACHE=1
 RUN git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/utils.git /tmp/utils && \
-	mv /tmp/utils/submit ${IGNIS_HOME}/submitter
+	mv /tmp/utils/submit/* ${IGNIS_HOME}/submitter
 
 FROM ignisframework/base-skel
 
@@ -29,13 +29,17 @@ RUN echo "source /etc/environment" >> /etc/profile && \
 	} > ${IGNIS_HOME}/bin/submitter && chmod +x ${IGNIS_HOME}/bin/submitter
 	
 
-COPY --from=ignisframework/python-builder /root/python3 /root/python3
+COPY --from=ignisframework/python-builder /root/python3 /tmp/python3
+COPY --from=ignisframework/python-builder /root/pythrift /tmp/pythrift
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 
-RUN /root/python3/install && \
-	rm -fr /root/python3 && \
+RUN /tmp/python3/install && \
+	rm -fr /tmp/python3 && \
 	curl https://bootstrap.pypa.io/get-pip.py | python3 && \
-	pip3 install setuptools --upgrade
+	pip3 install setuptools --upgrade && \
+	pip3 install requests && \
+	/tmp/pythrift/install && \
+	rm -fr /tmp/pythrift
 
 RUN { \
 		echo '#!/bin/bash'; \

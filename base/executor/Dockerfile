@@ -22,10 +22,6 @@ COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 COPY --from=builder /root/boost /root/boost
 COPY --from=builder /root/thrift /root/thrift
 
-RUN \
-	cd /root/boost && \
-	./install && \
-	cd /root/thrift && \
-	./install && \
-	cd / && \
+RUN /root/boost/install && \
+	/root/thrift/install && \
 	rm -fr /root/boost /root/thrift

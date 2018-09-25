@@ -8,8 +8,7 @@ COPY --from=ignisframework/cpp-builder /root/jsoncpp /root/jsoncpp
 RUN \
 	yum -y install libgomp && \
 	cp -R ${IGNIS_HOME}/core/cpp/* / && \
-	cd /root/jsoncpp && \
-	./install && \
-	ldconfig && \
+	/root/jsoncpp/install && \
 	rm -fr /root/jsoncpp && \
+	ldconfig && \
 	cp ${IGNIS_HOME}/core/cpp/ignis-cpp ${IGNIS_HOME}/bin
