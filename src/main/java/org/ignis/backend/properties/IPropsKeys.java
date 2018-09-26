@@ -22,8 +22,9 @@ package org.ignis.backend.properties;
  */
 public final class IPropsKeys {
 
-    public static final String ALLOCATOR_GROUP = "ignis.allocator.group";
     public static final String ALLOCATOR_URL = "ignis.allocator.url";
+    public static final String ALLOCATOR_TYPE = "ignis.allocator.type";
+    public static final String DFS_ID = "ignis.dfs.id";
     public static final String DFS_HOME = "ignis.dfs.home";
     public static final String DRIVER_CORES = "ignis.driver.cores";
     public static final String DRIVER_IMAGE = "ignis.driver.image";

@@ -18,6 +18,7 @@ package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
@@ -45,7 +46,7 @@ public final class ICluster {
     private String name;
     private boolean keep;
 
-    public ICluster(long id, IProperties properties, IThreadPool pool, IContainerStub.Factory factory) throws IgnisException {
+    public ICluster(long id, IProperties properties, IThreadPool pool, IAllocator allocator) throws IgnisException {
         this.id = id;
         this.properties = properties;
         this.pool = pool;
@@ -53,7 +54,7 @@ public final class ICluster {
         this.lock = new ILock(id);
         this.schedulers = new ArrayList<>();
         setName("");
-        this.containers = new IClusterCreateHelper(this, properties).create(factory);//Must be the last
+        this.containers = new IClusterCreateHelper(this, properties).create(allocator);//Must be the last
     }
 
     public long getId() {

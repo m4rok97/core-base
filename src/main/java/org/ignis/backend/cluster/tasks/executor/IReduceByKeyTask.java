@@ -28,7 +28,6 @@ import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropsKeys;
-import org.ignis.backend.properties.IPropsParser;
 import org.ignis.rpc.ISourceFunction;
 import org.slf4j.LoggerFactory;
 
@@ -96,7 +95,7 @@ public final class IReduceByKeyTask extends IExecutorTask {
                     }
                 }
 
-                int port = IPropsParser.getInteger(executor.getContainer().getProperties(), IPropsKeys.TRANSPORT_PORT);
+                int port = executor.getContainer().getProperties().getInteger(IPropsKeys.TRANSPORT_PORT);
 
                 LOGGER.info(log() + "Preparing keys to send to " + messages.size() + " executors");
                 int i = 1;

@@ -26,7 +26,6 @@ import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IPropsKeys;
-import org.ignis.backend.properties.IPropsParser;
 import org.ignis.rpc.manager.IFileManager;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.ignis.rpc.manager.IServerManager;
@@ -50,7 +49,7 @@ public final class IContainer {
         this.stub = stub;
         this.transport = stub.getTransport();
         this.protocol = new TCompactProtocol(new TZlibTransport(transport,
-                IPropsParser.getInteger(stub.getProperties(), IPropsKeys.MANAGER_RPC_COMPRESSION)));
+                stub.getProperties().getInteger(IPropsKeys.MANAGER_RPC_COMPRESSION)));
         this.serverManager = new IServerManager.Client(new TMultiplexedProtocol(protocol, "server"));
         this.registerManager = new IRegisterManager.Client(new TMultiplexedProtocol(protocol, "register"));
         this.fileManager = new IFileManager.Client(new TMultiplexedProtocol(protocol, "file"));

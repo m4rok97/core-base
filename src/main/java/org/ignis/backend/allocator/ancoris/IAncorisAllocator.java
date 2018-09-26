@@ -16,7 +16,7 @@
  */
 package org.ignis.backend.allocator.ancoris;
 
-import org.apache.thrift.transport.TTransport;
+import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -25,45 +25,29 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public final class IAncorisContainerStub extends IContainerStub {
+public class IAncorisAllocator implements IAllocator {
 
-     public IAncorisContainerStub(IProperties properties) {
-        super(properties);
+    private final String url;
+
+    public IAncorisAllocator(String url) {
+        this.url = url;
     }
 
     @Override
-    public boolean isRunning() {
-        return false;
+    public void ping() throws IgnisException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String getHost() {
-        return "TODO";
+    public String getName() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public TTransport getTransport() {
-        return null;
+    public IContainerStub getContainer(IProperties prop) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void test() throws IgnisException {
-       
-    }
 
-    @Override
-    public void create() throws IgnisException {
-        
-    }
-
-    @Override
-    public void destroy() throws IgnisException {
-       
-    }
-
-    @Override
-    public int getExposePort(int port) {
-        return 0;
-    }
 
 }

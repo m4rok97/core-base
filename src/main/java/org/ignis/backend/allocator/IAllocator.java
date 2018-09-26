@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.allocator;
 
-import org.apache.thrift.transport.TTransport;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
@@ -24,30 +23,12 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public abstract class IContainerStub {
-
-    protected final IProperties properties;
-
-    public IContainerStub(IProperties properties) {
-        this.properties = properties;
-    }
-
-    public IProperties getProperties() {
-        return properties;
-    }
-
-    public abstract boolean isRunning();
-
-    public abstract String getHost();
-
-    public abstract int getExposePort(int port);
-
-    public abstract TTransport getTransport();
-
-    public abstract void test() throws IgnisException;
-
-    public abstract void create() throws IgnisException;
-
-    public abstract void destroy() throws IgnisException;
-
+public interface IAllocator {
+    
+    public void ping() throws IgnisException;
+    
+    public String getName();
+    
+    public IContainerStub getContainer(IProperties prop);
+    
 }

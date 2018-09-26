@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.helpers.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
@@ -26,7 +27,6 @@ import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IPropsKeys;
-import org.ignis.backend.properties.IPropsParser;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -41,13 +41,13 @@ public final class IClusterCreateHelper extends IClusterHelper {
         super(cluster, properties);
     }
 
-    public List<IContainer> create(IContainerStub.Factory factory) throws IgnisException {
-        int instances = IPropsParser.getInteger(properties, IPropsKeys.EXECUTOR_INSTANCES);
+    public List<IContainer> create(IAllocator allocator) throws IgnisException {
+        int instances = properties.getInteger(IPropsKeys.EXECUTOR_INSTANCES);
         List<IContainer> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
         LOGGER.info(log() + "Registering cluster with " + instances + " containers");
         for (int i = 0; i < instances; i++) {
-            IContainerStub stub = factory.getContainerStub(properties);
+            IContainerStub stub = allocator.getContainer(properties);
             IContainer container = new IContainer(i, stub);
             shedulerBuilder.newTask(new IContainerCreateTask(this, container));
             result.add(container);

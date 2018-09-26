@@ -29,7 +29,6 @@ import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropsKeys;
-import org.ignis.backend.properties.IPropsParser;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -90,7 +89,7 @@ public final class IImportDataTask extends IExecutorTask {
                 LOGGER.info(log() + "Creating " + keyShared.msgs.get(executor).size() + " partitions");
                 executor.getShuffleModule().createSplits();
                 int i = 1;
-                int port = IPropsParser.getInteger(executor.getContainer().getProperties(), IPropsKeys.TRANSPORT_PORT);
+                int port = executor.getContainer().getProperties().getInteger(IPropsKeys.TRANSPORT_PORT);
                 StringBuilder addr = new StringBuilder();
                 for (Map.Entry<IExecutor, Long> msg : keyShared.msgs.get(executor).entrySet()) {
                     addr.setLength(0);

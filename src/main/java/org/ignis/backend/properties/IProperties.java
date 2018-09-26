@@ -55,6 +55,22 @@ public final class IProperties {
         return value;
     }
 
+    public boolean getBoolean(String key) throws IgnisException {
+        return IPropertyParser.getBoolean(this, key);
+    }
+
+    public int getInteger(String key) throws IgnisException {
+        return IPropertyParser.getInteger(this, key);
+    }
+
+    public long getLong(String key) throws IgnisException {
+        return IPropertyParser.getLong(this, key);
+    }
+
+    public long getSILong(String key) throws IgnisException {
+        return IPropertyParser.getSILong(this, key);
+    }
+
     public boolean isProperty(String key) {
         return properties.containsKey(fixKey(key));
     }
@@ -83,7 +99,7 @@ public final class IProperties {
             tree.load(new File(path));
             tree.toMap(properties);
         } catch (IOException ex) {
-           throw new IgnisException("Fails to load properties", ex);
+            throw new IgnisException("Fails to load properties", ex);
         }
     }
 

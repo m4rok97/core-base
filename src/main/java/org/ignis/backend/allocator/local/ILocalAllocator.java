@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.allocator.ancoris;
+package org.ignis.backend.allocator.local;
 
-import org.apache.thrift.transport.TTransport;
+import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -25,45 +25,23 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public final class IAncorisContainerStub extends IContainerStub {
+public class ILocalAllocator implements IAllocator{
 
-     public IAncorisContainerStub(IProperties properties) {
-        super(properties);
+    @Override
+    public void ping() throws IgnisException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean isRunning() {
-        return false;
+    public String getName() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String getHost() {
-        return "TODO";
+    public IContainerStub getContainer(IProperties prop) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public TTransport getTransport() {
-        return null;
-    }
-
-    @Override
-    public void test() throws IgnisException {
-       
-    }
-
-    @Override
-    public void create() throws IgnisException {
-        
-    }
-
-    @Override
-    public void destroy() throws IgnisException {
-       
-    }
-
-    @Override
-    public int getExposePort(int port) {
-        return 0;
-    }
-
+   
+    
 }
