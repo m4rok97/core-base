@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,6 +43,7 @@ public final class IAncorisContainerStub extends IContainerStub {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private final String url;
+    private final String group;
     private final OkHttpClient client;
     private final JSONObject requestJSON;
     private JSONObject responseJSON;
@@ -54,44 +53,51 @@ public final class IAncorisContainerStub extends IContainerStub {
         this.url = url;
         this.client = client;
         this.requestJSON = new JSONObject();
+        group = System.getenv("GROUP_ID");
+        if (group == null) {
+            throw new IgnisException("GROUP_ID not exists, aborting");
+        }
         parseRequest();
     }
 
     private void parseRequest() throws IgnisException {
         requestJSON.put("image", properties.getProperty(IPropsKeys.EXECUTOR_IMAGE));
-        //  RESOURCES
+        requestJSON.put("group", group);
+        //RESOURCES
         JSONObject resources = new JSONObject();
         resources.put("cores", properties.getInteger(IPropsKeys.EXECUTOR_CORES));
         resources.put("swap", properties.getProperty(IPropsKeys.EXECUTOR_CORES));
         JSONArray volumes = new JSONArray();
-        //    VOLUMES
+        //  VOLUMES
         JSONObject dfs = new JSONObject();
         dfs.put("id", properties.getProperty(IPropsKeys.DFS_ID));
         dfs.put("mode", "rw");
         dfs.put("path", properties.getProperty(IPropsKeys.DFS_HOME));
         volumes.add(dfs);
         resources.put("volumes", volumes);
+        //  DEVICES
+        resources.put("devices", new JSONArray());
         requestJSON.put("resources", resources);
-        //    PORTS
+        //PORTS
         JSONArray ports = new JSONArray();
         ports.add(properties.getInteger(IPropsKeys.TRANSPORT_PORT));
         ports.add(properties.getInteger(IPropsKeys.MANAGER_RPC_PORT));
         requestJSON.put("ports", ports);
-        //  OPTIONS
+        //OPTIONS
         JSONObject opts = new JSONObject();
         opts.put("swappiness", properties.getProperty(IPropsKeys.EXECUTOR_SWAPPINESS));
         requestJSON.put("opts", opts);
-        //  ENVIRONMENT
+        //ENVIRONMENT
         JSONObject environment = new JSONObject();
         requestJSON.put("environment", environment);
-        //  EVENTS
+        //EVENTS
         JSONObject events = new JSONObject();
         JSONObject on_exit = new JSONObject();
         on_exit.put("restart", false);
         on_exit.put("destroy", true);
         requestJSON.put("on_exit", on_exit);
         requestJSON.put("events", events);
-        //  ARGUMENTS
+        //ARGUMENTS
         JSONArray args = new JSONArray();
         args.add("ignis-manager");
         args.add(properties.getProperty(IPropsKeys.MANAGER_RPC_PORT));
@@ -114,7 +120,7 @@ public final class IAncorisContainerStub extends IContainerStub {
 
     @Override
     public String getHost() {
-        if (isRunning() ) {
+        if (isRunning()) {
             return (String) responseJSON.get("host");
         }
         return null;
