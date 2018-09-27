@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.allocator;
 
+import java.util.Map;
 import org.apache.thrift.transport.TTransport;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -40,13 +41,13 @@ public abstract class IContainerStub {
 
     public abstract String getHost();
 
-    public abstract int getExposePort(int port);
-
-    public abstract TTransport getTransport();
-
-    public abstract void test() throws IgnisException;
-
-    public abstract void create() throws IgnisException;
+    public final Integer getHostPort(int port){
+        return getPorts().get(port);
+    }
+    
+    public abstract Map<Integer,Integer> getPorts();
+    
+    public abstract void request() throws IgnisException;
 
     public abstract void destroy() throws IgnisException;
 

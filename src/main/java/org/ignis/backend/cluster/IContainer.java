@@ -47,7 +47,7 @@ public final class IContainer {
     public IContainer(long id, IContainerStub stub) throws IgnisException {
         this.id = id;
         this.stub = stub;
-        this.transport = stub.getTransport();
+        this.transport = null;//stub.getTransport();
         this.protocol = new TCompactProtocol(new TZlibTransport(transport,
                 stub.getProperties().getInteger(IPropsKeys.MANAGER_RPC_COMPRESSION)));
         this.serverManager = new IServerManager.Client(new TMultiplexedProtocol(protocol, "server"));
@@ -57,6 +57,10 @@ public final class IContainer {
 
     public long getId() {
         return id;
+    }
+    
+    public void connect() throws IgnisException{
+        //TODO
     }
 
     public IExecutor createExecutor(long job, IExecutorStub stub) {
@@ -88,7 +92,7 @@ public final class IContainer {
     }
 
     public int getExposePort(int port) {
-        return stub.getExposePort(port);
+        return stub.getHostPort(port);
     }
 
 }

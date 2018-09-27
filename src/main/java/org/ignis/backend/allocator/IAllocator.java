@@ -29,6 +29,6 @@ public interface IAllocator {
     
     public String getName();
     
-    public IContainerStub getContainer(IProperties prop);
+    public IContainerStub getContainer(IProperties prop) throws IgnisException;
     
 }

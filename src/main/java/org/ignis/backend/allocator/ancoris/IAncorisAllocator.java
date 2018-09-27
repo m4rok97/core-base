@@ -16,6 +16,11 @@
  */
 package org.ignis.backend.allocator.ancoris;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.exception.IgnisException;
@@ -28,26 +33,39 @@ import org.ignis.backend.properties.IProperties;
 public class IAncorisAllocator implements IAllocator {
 
     private final String url;
+    private final OkHttpClient client;
 
     public IAncorisAllocator(String url) {
         this.url = url;
+        this.client = new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
     }
 
     @Override
     public void ping() throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Request request = new Request.Builder()
+                .url(url + "/status")
+                .get()
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IgnisException(response.message());
+            }
+        } catch (IOException ex) {
+            throw new IgnisException(ex.getMessage(), ex);
+        }
     }
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "ancoris";
     }
 
     @Override
-    public IContainerStub getContainer(IProperties prop) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IContainerStub getContainer(IProperties prop) throws IgnisException {
+        return new IAncorisContainerStub(prop, url, client);
     }
-
-
 
 }

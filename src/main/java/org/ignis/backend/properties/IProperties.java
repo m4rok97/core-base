@@ -54,7 +54,7 @@ public final class IProperties {
         }
         return value;
     }
-
+    
     public boolean getBoolean(String key) throws IgnisException {
         return IPropertyParser.getBoolean(this, key);
     }

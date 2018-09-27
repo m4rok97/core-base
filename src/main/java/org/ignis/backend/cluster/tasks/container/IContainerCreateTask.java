@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
@@ -37,14 +38,16 @@ public final class IContainerCreateTask extends IContainerTask {
     public void execute() throws IgnisException {
         if (container.getStub().isRunning()) {
             try {
-                container.getStub().test();
+                container.getServerManager().test();
                 LOGGER.info(log() + "Container already running");
                 return;
-            } catch (IgnisException ex) {
+            } catch (TException ex) {
                 LOGGER.warn(log() + "Container dead");
             }
             LOGGER.info(log() + "Starting new container");
-            container.getStub().create();
+            container.getStub().request();
+            LOGGER.info(log() + "Connecting to the container");
+            container.connect();
         }
 
     }
