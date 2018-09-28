@@ -19,7 +19,8 @@ package org.ignis.backend.cluster;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransportException;
 import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.allocator.IExecutorStub;
@@ -38,7 +39,7 @@ public final class IContainer {
 
     private final long id;
     private final IContainerStub stub;
-    private final TTransport transport;
+    private final ITransportDecorator transport;
     private final TProtocol protocol;
     private final IServerManager.Iface serverManager;
     private final IRegisterManager.Iface registerManager;
@@ -47,7 +48,7 @@ public final class IContainer {
     public IContainer(long id, IContainerStub stub) throws IgnisException {
         this.id = id;
         this.stub = stub;
-        this.transport = null;//stub.getTransport();
+        this.transport = new ITransportDecorator(null);// null before connect
         this.protocol = new TCompactProtocol(new TZlibTransport(transport,
                 stub.getProperties().getInteger(IPropsKeys.MANAGER_RPC_COMPRESSION)));
         this.serverManager = new IServerManager.Client(new TMultiplexedProtocol(protocol, "server"));
@@ -58,9 +59,27 @@ public final class IContainer {
     public long getId() {
         return id;
     }
-    
-    public void connect() throws IgnisException{
-        //TODO
+
+    public void connect() throws IgnisException {
+        TSocket socket = new TSocket(
+                stub.getHost(), stub.getHostPort(stub.getProperties().getInteger(IPropsKeys.MANAGER_RPC_PORT)));
+        transport.setTransport(new TZlibTransport(
+                socket, stub.getProperties().getInteger(IPropsKeys.MANAGER_RPC_COMPRESSION)));
+
+        for (int i = 0; i < 10; i++) {
+            try {
+                socket.open();
+            } catch (TTransportException ex) {
+                if (i == 9) {
+                    throw new IgnisException(ex.getMessage(), ex);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    throw new IgnisException(ex.getMessage(), ex);
+                }
+            }
+        }
     }
 
     public IExecutor createExecutor(long job, IExecutorStub stub) {

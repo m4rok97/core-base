@@ -17,7 +17,6 @@
 package org.ignis.backend.services;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.allocator.IManagerExecutorStub;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IJob;
@@ -42,7 +41,7 @@ public final class IJobServiceImpl extends IService implements IJobService.Iface
     public IJobId newInstance(long cluster, String type) throws IRemoteException, TException {
         ICluster clusterObject = attributes.getCluster(cluster);
         synchronized (clusterObject.getLock()) {
-            IJob job = clusterObject.createJob(type, new IManagerExecutorStub.Factory());
+            IJob job = clusterObject.createJob(type);
             return new IJobId(cluster, job.getId());
         }
     }
@@ -56,7 +55,7 @@ public final class IJobServiceImpl extends IService implements IJobService.Iface
             propertiesCopy = propertiesObject.copy();
         }
         synchronized (clusterObject.getLock()) {
-            IJob job = clusterObject.createJob(type, propertiesCopy, new IManagerExecutorStub.Factory());
+            IJob job = clusterObject.createJob(type, propertiesCopy);
             return new IJobId(cluster, job.getId());
         }
     }

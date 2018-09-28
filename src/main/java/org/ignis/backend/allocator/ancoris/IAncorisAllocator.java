@@ -30,7 +30,7 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public class IAncorisAllocator implements IAllocator {
+public final class IAncorisAllocator implements IAllocator {
 
     private final String url;
     private final OkHttpClient client;

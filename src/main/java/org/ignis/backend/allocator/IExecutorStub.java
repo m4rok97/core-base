@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.allocator;
 
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -24,17 +25,13 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public abstract class IExecutorStub {
+public final class IExecutorStub {
 
-    public static abstract class Factory {
-
-        public abstract IExecutorStub getExecutorStub(long id, String type, IContainer container, IProperties properties);
-    }
-
-    protected final long id;
-    protected final String type;
-    protected final IContainer container;
-    protected final IProperties properties;
+    private final long id;
+    private final String type;
+    private final IContainer container;
+    private final IProperties properties;
+    private boolean running;
 
     public IExecutorStub(long id, String type, IContainer container, IProperties properties) {
         this.id = id;
@@ -51,12 +48,34 @@ public abstract class IExecutorStub {
         return properties;
     }
 
-    public abstract boolean isRunning();
+    public boolean isRunning() {
+        return running;
+    }
 
-    public abstract void test() throws IgnisException;
+    public void test() throws IgnisException {
+        try {
+            container.getRegisterManager().test(id);
+        } catch (TException ex) {
+            throw new IgnisException("Fails to test container", ex);
+        }
+    }
 
-    public abstract void create() throws IgnisException;
+    public void create() throws IgnisException {
+        try {
+            container.getRegisterManager().execute(id, type);
+            running = true;
+        } catch (TException ex) {
+            throw new IgnisException("Fails to create container", ex);
+        }
+    }
 
-    public abstract void destroy() throws IgnisException;
+    public void destroy() throws IgnisException {
+        try {
+            container.getRegisterManager().destroy(id);
+            running = false;
+        } catch (TException ex) {
+            throw new IgnisException("Fails to destroy container", ex);
+        }
+    }
 
 }

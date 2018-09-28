@@ -29,17 +29,17 @@ public class ILocalAllocator implements IAllocator{
 
     @Override
     public void ping() throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Same machine
     }
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "local";
     }
 
     @Override
-    public IContainerStub getContainer(IProperties prop) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IContainerStub getContainer(IProperties prop) throws IgnisException {
+        return new ILocalContainerStub(prop);
     }
 
    

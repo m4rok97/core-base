@@ -38,6 +38,7 @@ import org.json.simple.parser.ParseException;
  *
  * @author César Pomar
  */
+@SuppressWarnings("unchecked")
 public final class IAncorisContainerStub extends IContainerStub {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -66,7 +67,7 @@ public final class IAncorisContainerStub extends IContainerStub {
         //RESOURCES
         JSONObject resources = new JSONObject();
         resources.put("cores", properties.getInteger(IPropsKeys.EXECUTOR_CORES));
-        resources.put("swap", properties.getProperty(IPropsKeys.EXECUTOR_CORES));
+        resources.put("swap", properties.getProperty(IPropsKeys.EXECUTOR_SWAP));
         JSONArray volumes = new JSONArray();
         //  VOLUMES
         JSONObject dfs = new JSONObject();

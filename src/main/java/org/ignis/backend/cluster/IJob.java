@@ -18,7 +18,6 @@ package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.cluster.helpers.job.IJobCreateHelper;
 import org.ignis.backend.cluster.helpers.job.IJobDestroyHelper;
 import org.ignis.backend.cluster.helpers.job.IJobImportDataHelper;
@@ -45,7 +44,7 @@ public final class IJob {
     private String name;
     private boolean keep;
 
-    public IJob(long id, ICluster cluster, String type, IProperties properties, IExecutorStub.Factory factory) throws IgnisException {
+    public IJob(long id, ICluster cluster, String type, IProperties properties) throws IgnisException {
         this.id = id;
         this.cluster = cluster;
         this.type = type;
@@ -53,7 +52,7 @@ public final class IJob {
         this.datas = new ArrayList<>();
         this.schedulers = new ArrayList<>();
         setName("");
-        this.executors = new IJobCreateHelper(this, properties).create(id, type, factory);//Must be the last
+        this.executors = new IJobCreateHelper(this, properties).create(id, type);//Must be the last
     }
 
     public long getId() {

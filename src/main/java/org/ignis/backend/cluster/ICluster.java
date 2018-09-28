@@ -19,8 +19,6 @@ package org.ignis.backend.cluster;
 import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.allocator.IAllocator;
-import org.ignis.backend.allocator.IContainerStub;
-import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterDestroyHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
@@ -98,14 +96,14 @@ public final class ICluster {
         return containers;
     }
 
-    public IJob createJob(String type, IProperties properties, IExecutorStub.Factory factory) throws IgnisException {
-        IJob job = new IJob(jobs.size(), this, type, properties, factory);
+    public IJob createJob(String type, IProperties properties) throws IgnisException {
+        IJob job = new IJob(jobs.size(), this, type, properties);
         jobs.add(job);
         return job;
     }
 
-    public IJob createJob(String type, IExecutorStub.Factory factory) throws IgnisException {
-        return createJob(type, properties, factory);
+    public IJob createJob(String type) throws IgnisException {
+        return createJob(type, properties);
     }
 
     public IJob getJob(long id) throws IgnisException {
