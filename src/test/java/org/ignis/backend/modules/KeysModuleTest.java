@@ -16,10 +16,20 @@
  */
 package org.ignis.backend.modules;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author César Pomar
  */
 public class KeysModuleTest extends BackendTest{
+    
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(KeysModuleTest.class);
+    
+        @BeforeAll 
+    public static  void info() {
+        LOGGER.info("----|----|----|----KeysModuleTest----|----|----|----");
+    } 
     
 }

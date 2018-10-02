@@ -18,7 +18,7 @@ package org.ignis.backend.cluster.tasks;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +33,7 @@ public final class IThreadPool {
     private final int maxFailures;
 
     public IThreadPool(int threads, int maxFailures) {
-        pool = new ThreadPoolExecutor(threads, Integer.MAX_VALUE, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new DaemonThreadFactory());
+        pool = new ThreadPoolExecutor(threads, Integer.MAX_VALUE, 10, TimeUnit.SECONDS, new SynchronousQueue<>(), new DaemonThreadFactory());
         this.maxFailures = maxFailures;
     }
 

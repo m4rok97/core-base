@@ -26,14 +26,23 @@ import org.ignis.rpc.executor.IFilesModule;
 import org.ignis.rpc.executor.IMapperModule;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
 public class MapperModuleTest extends BackendTest {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapperModuleTest.class);
+
+    @BeforeAll
+    public static void info() {
+        LOGGER.info("----|----|----|----MapperModuleTest----|----|----|----");
+    }
 
     public void testMap(int instances) {
         try {
@@ -205,61 +214,73 @@ public class MapperModuleTest extends BackendTest {
 
     @Test
     public void testMapOneInstance() {
+        LOGGER.info("----|----testMapOneInstance----|----");
         testMap(1);
     }
 
     @Test
     public void testMapMultipleInstance() {
+        LOGGER.info("----|----testMapMultipleInstance----|----");
         testMap(10);
     }
 
     @Test
     public void testStreamingMapOneInstance() {
+        LOGGER.info("----|----testStreamingMapOneInstance----|----");
         testStreamingMap(1);
     }
 
     @Test
     public void testStreamingMapMultipleInstance() {
+        LOGGER.info("----|----testStreamingMapMultipleInstance----|----");
         testStreamingMap(10);
     }
 
     @Test
     public void testFlatmapOneInstance() {
+        LOGGER.info("----|----testFlatmapOneInstance----|----");
         testFlatmap(1);
     }
 
     @Test
     public void testFlatmapMultipleInstance() {
+        LOGGER.info("----|----testFlatmapMultipleInstance----|----");
         testFlatmap(10);
     }
 
     @Test
     public void testStreamingFlatmapOneInstance() {
+        LOGGER.info("----|----testStreamingFlatmapOneInstance----|----");
         testStreamingFlatmap(1);
     }
 
     @Test
     public void testStreamingFlatmapMultipleInstance() {
+        LOGGER.info("----|----testStreamingFlatmapMultipleInstance----|----");
         testStreamingFlatmap(10);
     }
 
     @Test
     public void testFilterOneInstance() {
+        LOGGER.info("----|----testFilterOneInstance----|----");
         testFilter(1);
     }
 
     @Test
     public void testFilterMultipleInstance() {
+        LOGGER.info("----|----testFilterMultipleInstance----|----");
         testFilter(10);
     }
 
     @Test
     public void testStreamingFilterOneInstance() {
+        LOGGER.info("----|----testStreamingFilterOneInstance----|----");
         testStreamingFilter(1);
     }
 
     @Test
     public void testStreamingFilterMultipleInstance() {
+        LOGGER.info("----|----testStreamingFilterMultipleInstance----|----");
         testStreamingFilter(10);
     }
 }

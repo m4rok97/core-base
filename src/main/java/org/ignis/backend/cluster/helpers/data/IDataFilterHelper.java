@@ -45,6 +45,7 @@ public final class IDataFilterHelper extends IDataHelper {
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IFilterTask(this, executor, function));
+            result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
         LOGGER.info(log() + "Filter -> " + target.toString());
@@ -57,6 +58,7 @@ public final class IDataFilterHelper extends IDataHelper {
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IStreamingFilterTask(this, executor, function, ordered));
+            result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
         LOGGER.info(log() + "StreamingFilter " + (ordered ? "ordered " : "") + "-> " + target.toString());

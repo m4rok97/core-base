@@ -51,10 +51,13 @@ public final class IJobImportDataHelper extends IJobHelper {
         IBarrier barrier = new IBarrier(senders + receivers);
         IImportDataTask.Shared shared = new IImportDataTask.Shared();
         for (IExecutor executor : source.getExecutors()) {
-            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.SEND, receivers));
+            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.SEND,
+                    source.getExecutors(), result));
         }
         for (IExecutor executor : job.getExecutors()) {
-            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.RECEIVE, receivers));
+            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.RECEIVE,
+                    source.getExecutors(), result));
+            result.add(executor);
         }
         IData target = job.newData(result, shedulerBuilder.build());
         LOGGER.info(log() + "ImportData -> " + target.toString());

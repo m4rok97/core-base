@@ -16,13 +16,17 @@
  */
 package org.ignis.backend.cluster.tasks;
 
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
  * @author César Pomar
  */
 public final class IBarrier extends CyclicBarrier {
+
+    private AtomicBoolean fails;
 
     /**
      * Creates a new {@code IBarrier} that will trip when the given number of parties (threads) are waiting upon it, and
@@ -33,6 +37,25 @@ public final class IBarrier extends CyclicBarrier {
      */
     public IBarrier(int parties) {
         super(parties);
+        fails = new AtomicBoolean(false);
+    }
+
+    @Override
+    public int await() throws InterruptedException, BrokenBarrierException {
+        int r = super.await();
+        if (fails.get()) {
+            throw new BrokenBarrierException();
+        }
+        return r;
+    }
+
+    public int fails() {
+        fails.set(true);
+        try {
+            return await();
+        } catch (InterruptedException | BrokenBarrierException ex) {
+            return 0;
+        }
     }
 
 }

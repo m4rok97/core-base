@@ -16,16 +16,22 @@
  */
 package org.ignis.backend.modules;
 
+import java.util.Arrays;
 import org.ignis.backend.properties.IPropsKeys;
 import org.ignis.backend.rpc.MockClusterServices;
 import org.ignis.backend.rpc.MockJobServices;
 import org.ignis.rpc.driver.IDataId;
 import org.ignis.rpc.driver.IJobId;
 import org.ignis.rpc.executor.IFilesModule;
+import org.ignis.rpc.executor.IPostmanModule;
+import org.ignis.rpc.executor.IShuffleModule;
+import org.ignis.rpc.executor.IStorageModule;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -33,7 +39,14 @@ import org.mockito.Mockito;
  */
 public class ShuffleModuleTest extends BackendTest {
 
-    public void testShuffle(int instances, int[] count) {
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ShuffleModuleTest.class);
+    
+    @BeforeAll
+    public static void info() {
+        LOGGER.info("----|----|----|----ShuffleModuleTest----|----|----|----");
+    }
+
+    public void testShuffle(int instances, Long[] count) {
         try {
             long prop = propertiesService.newInstance();
             attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
@@ -49,23 +62,63 @@ public class ShuffleModuleTest extends BackendTest {
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            mockJob.setShuffleModule(Mockito.mock(IShuffleModule.Iface.class, a -> null));
+            mockJob.setPostmanModule(Mockito.mock(IPostmanModule.Iface.class, a -> null));
+            mockJob.setStorageModule(Mockito.mock(IStorageModule.Iface.class));
+            Mockito.when(mockJob.getStorageModule().count()).thenReturn(count[0], Arrays.copyOfRange(count, 1, count.length));
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
-            dataService.saveAsTextFile(read, "src/test/salida.txt", true);
+            IDataId shuffle = dataService.shuffle(read);
+            dataService.saveAsTextFile(shuffle, "src/test/salida.txt", true);
         } catch (Exception ex) {
             Assert.fail(ex.toString());
         }
     }
 
-    @Test
-    public void testOneInstance() {
-        testShuffle(1, new int[]{100});
+    public void testImport(int from, int to) {
+
     }
 
     @Test
-    public void testMultipleInstance() {
-        testShuffle(10, new int[]{10, 100, 20, 25, 0, 30, 28, 20, 20, 50});
+    public void testShuffleOneInstance() {
+        LOGGER.info("----|----testShuffleOneInstance----|----");
+        testShuffle(1, new Long[]{100l});
+    }
+
+    @Test
+    public void testShuffleMultipleInstance() {
+        LOGGER.info("----|----testShuffleMultipleInstance----|----");
+        testShuffle(10, new Long[]{10l, 100l, 20l, 25l, 0l, 30l, 28l, 20l, 20l, 50l});
+    }
+
+    //@Test
+    public void testImportOnetoOne() {
+        LOGGER.info("----|----testImportOnetoOne----|----");
+        testImport(1, 1);
+    }
+
+    //@Test
+    public void testImportOnetoMultiple() {
+        LOGGER.info("----|----testImportOnetoMultiple----|----");
+        testImport(1, 10);
+    }
+
+    //@Test
+    public void testImportMultipletoOne() {
+        LOGGER.info("----|----testImportMultipletoOne----|----");
+        testImport(10, 1);
+    }
+
+    //@Test
+    public void testImportMultipletoSameMultiple() {
+        LOGGER.info("----|----testImportMultipletoSameMultiple----|----");
+        testImport(10, 10);
+    }
+
+    public void testImportMultipletoDiferentMultiple() {
+        LOGGER.info("----|----testImportMultipletoDiferentMultiple----|----");
+        testImport(7, 5);
     }
 
 }

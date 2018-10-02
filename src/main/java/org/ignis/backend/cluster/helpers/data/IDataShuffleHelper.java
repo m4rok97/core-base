@@ -48,8 +48,9 @@ public final class IDataShuffleHelper extends IDataHelper {
         IBarrier barrier = new IBarrier(executors);
         IImportDataTask.Shared shared = new IImportDataTask.Shared();
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.SEND, executors));
-            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.RECEIVE, executors));
+            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.SHUFFLE, 
+                    data.getExecutors(), result));
+            result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
         LOGGER.info(log() + "Shuffle -> " + target.toString());

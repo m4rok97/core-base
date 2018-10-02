@@ -24,26 +24,35 @@ import org.ignis.rpc.driver.IJobId;
 import org.ignis.rpc.executor.IFilesModule;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
 public class FilesModuleTest extends BackendTest {
-    
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(FilesModuleTest.class);
+
+    @BeforeAll
+    public static void info() {
+        LOGGER.info("----|----|----|----FilesModuleTest----|----|----|----");
+    }
+
     public void testReadAndWrite(int instances) {
         try {
             long prop = propertiesService.newInstance();
             attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
-            
+
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));
             mockCluster.setRegisterManager(Mockito.mock(IRegisterManager.Iface.class));
             Mockito.doAnswer(a -> null).when(mockCluster.getRegisterManager()).execute(Mockito.anyInt(), Mockito.any());
-            mockCluster.mock();            
-            
+            mockCluster.mock();
+
             IJobId job = jobService.newInstance(cluster, "none");
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
@@ -60,11 +69,13 @@ public class FilesModuleTest extends BackendTest {
 
     @Test
     public void testOneInstance() {
+        LOGGER.info("----|----testOneInstance----|----");
         testReadAndWrite(1);
     }
 
     @Test
     public void testMultipleInstance() {
+        LOGGER.info("----|----testMultipleInstance----|----");
         testReadAndWrite(10);
     }
 

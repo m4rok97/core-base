@@ -47,6 +47,7 @@ public final class IDataReduceHelper extends IDataHelper {
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IReduceByKeyTask(this, executor, function, barrier, keyShared));
+            result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
         LOGGER.info(log() + "ReduceByKey -> " + target.toString());

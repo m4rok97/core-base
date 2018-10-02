@@ -45,6 +45,7 @@ public final class IDataMapHelper extends IDataHelper {
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IMapTask(this, executor, function));
+            result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
         LOGGER.info(log() + "Map -> " + target.toString());
@@ -57,6 +58,7 @@ public final class IDataMapHelper extends IDataHelper {
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IStreamingMapTask(this, executor, function, ordered));
+            result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
         LOGGER.info(log() + "StreamingMap " + (ordered ? "ordered " : "") + "-> " + target.toString());

@@ -20,7 +20,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -28,8 +30,16 @@ import org.junit.jupiter.api.Test;
  */
 public class IPropertiesServiceTest {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPropertiesServiceTest.class);
+
+    @BeforeAll 
+    public static  void info() {
+        LOGGER.info("----|----|----|----IPropertiesServiceTest----|----|----|----");
+    }        
+    
     @Test
     public void newInstance() throws Exception {
+        LOGGER.info("----|----newInstance----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
 
@@ -40,6 +50,7 @@ public class IPropertiesServiceTest {
 
     @Test
     public void newInstance2() throws Exception {
+        LOGGER.info("----|----newInstance2----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
 
@@ -53,6 +64,7 @@ public class IPropertiesServiceTest {
 
     @Test
     public void setProperty() throws Exception {
+        LOGGER.info("----|----setProperty----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
 
@@ -78,6 +90,7 @@ public class IPropertiesServiceTest {
 
     @Test
     public void getProperty() throws Exception {
+        LOGGER.info("----|----getProperty----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
 
@@ -90,6 +103,7 @@ public class IPropertiesServiceTest {
 
     @Test
     public void isProperty() throws Exception {
+        LOGGER.info("----|----isProperty----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
 
@@ -102,6 +116,7 @@ public class IPropertiesServiceTest {
 
     @Test
     public void toMap() throws Exception {
+        LOGGER.info("----|----toMap----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
 
@@ -122,6 +137,7 @@ public class IPropertiesServiceTest {
 
     @Test
     public void fromMap() throws Exception {
+        LOGGER.info("----|----fromMap----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
 
@@ -142,6 +158,7 @@ public class IPropertiesServiceTest {
 
     @Test
     public void fromFileToFile() throws Exception {
+        LOGGER.info("----|----fromFileToFile----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
         File tmp = File.createTempFile("test", null);
@@ -167,6 +184,7 @@ public class IPropertiesServiceTest {
 
     @Test
     public void reset() throws Exception {
+        LOGGER.info("----|----reset----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
 

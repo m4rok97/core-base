@@ -85,16 +85,15 @@ public final class TaskScheduler {
             }
             IgnisException error = null;
             for (int i = 0; i < depFutures.size(); i++) {
-                if (error == null) {
-                    try {
-                        depFutures.get(i).get();
-                    } catch (InterruptedException | ExecutionException ex) {
+                try {
+                    depFutures.get(i).get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    if (error == null) {
                         error = new IgnisException("Dependency execution failed", ex);
+                    } else {
+                        LOGGER.warn("Dependency execution failed", ex);
                     }
-                } else {
-                    depFutures.get(i).cancel(true);
                 }
-
             }
             if (error != null) {
                 throw error;
