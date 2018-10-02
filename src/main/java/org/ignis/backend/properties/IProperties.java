@@ -41,20 +41,15 @@ public final class IProperties {
     }
 
     public String setProperty(String key, String value) {
-        if (value == null) {
-            value = "";
-        }
-        return properties.put(fixKey(key), value);
+        String oldValue = properties.put(fixKey(key), value == null ? "" : value);
+        return oldValue == null ? "" : oldValue;
     }
 
     public String getProperty(String key) {
         String value = properties.get(fixKey(key));
-        if (value == null) {
-            return "";
-        }
-        return value;
+        return value == null ? "" : value;
     }
-    
+
     public boolean getBoolean(String key) throws IgnisException {
         return IPropertyParser.getBoolean(this, key);
     }
@@ -121,8 +116,11 @@ public final class IProperties {
     }
 
     private String fixKey(String key) {
-        if (key.equals("value")) {
-            return "";
+        if (key.startsWith("value")) {
+            if(key.length() == 5){
+                return "";
+            }
+            key = key.substring(6);
         }
         return key.replace(".value", "");
     }

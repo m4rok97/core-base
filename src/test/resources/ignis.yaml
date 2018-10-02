@@ -1,0 +1,22 @@
+ignis:
+    driver:
+        task:
+            maxFailures : 5
+            minWorkers: 4
+        rpc:
+            port: 2005
+            compression: 0
+    manager:
+        rpc:
+            port: 2013
+            compression: 9
+        executors:
+            port: 5000
+    transport:
+        port: 1963
+        compression: 9
+        buffer: 50MiB
+        serialization: ignis
+    executor:
+        instances: 1
+        memory: 1GB

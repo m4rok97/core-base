@@ -14,32 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.tasks.container;
+package org.ignis.backend.cluster.tasks;
 
-import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
+ * @param <T>
  */
-public final class IContainerDestroyTask extends IContainerTask {
+public interface Lazy<T> {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IContainerDestroyTask.class);
-
-    public IContainerDestroyTask(IHelper helper, IContainer container) {
-        super(helper, container);
-    }
-
-    @Override
-    public void execute() throws IgnisException {
-        LOGGER.info(log() + "Destroying container");
-        if(container.getStub().isRunning()){
-            container.getStub().destroy();
-        }
-        LOGGER.info(log() + "Container destroyed");
-    }
+    T execute() throws IgnisException;
 
 }

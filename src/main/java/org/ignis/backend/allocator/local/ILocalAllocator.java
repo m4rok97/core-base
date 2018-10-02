@@ -25,7 +25,7 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public class ILocalAllocator implements IAllocator{
+public final class ILocalAllocator implements IAllocator{
 
     @Override
     public void ping() throws IgnisException {

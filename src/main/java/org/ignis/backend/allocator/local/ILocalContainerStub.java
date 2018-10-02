@@ -45,7 +45,7 @@ public final class ILocalContainerStub extends IContainerStub {
 
     @Override
     public boolean isRunning() {
-        return true;
+        return manager != null;
     }
 
     @Override
@@ -73,6 +73,7 @@ public final class ILocalContainerStub extends IContainerStub {
     @Override
     public void destroy() throws IgnisException {
         manager.destroyForcibly();
+        manager = null;
     }
 
 }

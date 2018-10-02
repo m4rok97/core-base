@@ -44,11 +44,10 @@ public final class IContainerCreateTask extends IContainerTask {
             } catch (TException ex) {
                 LOGGER.warn(log() + "Container dead");
             }
-            LOGGER.info(log() + "Starting new container");
-            container.getStub().request();
-            LOGGER.info(log() + "Connecting to the container");
-            container.connect();
         }
-
+        LOGGER.info(log() + "Starting new container");
+        container.getStub().request();
+        LOGGER.info(log() + "Connecting to the container");
+        container.connect();
     }
 }

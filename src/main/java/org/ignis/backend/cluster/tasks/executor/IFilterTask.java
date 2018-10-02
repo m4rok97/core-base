@@ -14,32 +14,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.tasks.container;
+package org.ignis.backend.cluster.tasks.executor;
 
-import org.ignis.backend.cluster.IContainer;
+import org.apache.thrift.TException;
+import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.ISourceFunction;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public final class IContainerDestroyTask extends IContainerTask {
+public final class IFilterTask extends IExecutorTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IContainerDestroyTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IFilterTask.class);
 
-    public IContainerDestroyTask(IHelper helper, IContainer container) {
-        super(helper, container);
+    private final ISourceFunction function;
+
+    public IFilterTask(IHelper helper, IExecutor executor, ISourceFunction function) {
+        super(helper, executor);
+        this.function = function;
     }
 
     @Override
     public void execute() throws IgnisException {
-        LOGGER.info(log() + "Destroying container");
-        if(container.getStub().isRunning()){
-            container.getStub().destroy();
+        LOGGER.info(log() + "Executing filter");
+        try {
+            executor.getMapperModule().filter(function);
+        } catch (TException ex) {
+            throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Container destroyed");
+        LOGGER.info(log() + "Filter executed");
     }
 
 }

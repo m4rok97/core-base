@@ -108,16 +108,19 @@ public final class IJobReadFileHelper extends IJobHelper {
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
         shedulerBuilder.newDependency(job.getScheduler());
 
+        long last = 0;
         for (int i = 0; i < executors; i++) {
             IExecutor executor = job.getExecutors().get(i);
             int lines = distribution[i + 1] - distribution[i];
-            long offset = indices.get(distribution[i]);
-            long length = indices.get(distribution[i + 1]) - offset;
+            long offset = last;
+            last = indices.get(distribution[i + 1] - 1);
+            long length = last - offset;
             shedulerBuilder.newTask(new IReadFileTask(this, executor, path, offset, length, lines));
+            result.add(executor);
             LOGGER.info(log() + "Partition " + i + " lines:" + lines + ", offset: " + offset + ", length: " + length);
         }
         IData target = job.newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "ReadFile path: " + path + " -> " + target.toString());
+        LOGGER.info(log() + "ReadFile path: " + path + " -> " + target.getName());
         return target;
     }
 

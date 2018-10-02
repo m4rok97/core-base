@@ -16,54 +16,51 @@
  */
 package org.ignis.backend.cluster.helpers.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.Lazy;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
-import org.ignis.backend.cluster.tasks.executor.ISaveAsJsonFileTask;
-import org.ignis.backend.cluster.tasks.executor.ISaveAsTextFileTask;
-import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.cluster.tasks.executor.IFlatmapTask;
+import org.ignis.backend.cluster.tasks.executor.IStreamingFlatmapTask;
 import org.ignis.backend.properties.IProperties;
+import org.ignis.rpc.ISourceFunction;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public final class IDataSaveHelper extends IDataHelper {
+public final class IDataFlatmapHelper extends IDataHelper {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IDataSaveHelper.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IDataFlatmapHelper.class);
 
-    public IDataSaveHelper(IData data, IProperties properties) {
+    public IDataFlatmapHelper(IData data, IProperties properties) {
         super(data, properties);
     }
 
-    public Lazy<Void> saveAsTextFile(String path, boolean joined) throws IgnisException {
-        LOGGER.info(log() + "SaveAsTextFile path: " + path + ", joined: " + joined);
+    public IData flatmap(ISourceFunction function) {
+        List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new ISaveAsTextFileTask(this, executor, path, joined));
+            shedulerBuilder.newTask(new IFlatmapTask(this, executor, function));
         }
-        return () -> {
-            shedulerBuilder.build().execute(data.getPool());
-            LOGGER.info(log() + "saveAsTextFile Done");
-            return null;
-        };
+        IData target = data.getJob().newData(result, shedulerBuilder.build());
+        LOGGER.info(log() + "Flatmap -> " + target.toString());
+        return target;
     }
 
-    public Lazy<Void> saveAsJsonFile(String path, boolean joined) throws IgnisException {
-        LOGGER.info(log() + "SaveAsJsonFile path: " + path + ", joined: " + joined);
+    public IData streamingFlatmap(ISourceFunction function, boolean ordered) {
+        List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new ISaveAsJsonFileTask(this, executor, path, joined));
+            shedulerBuilder.newTask(new IStreamingFlatmapTask(this, executor, function, ordered));
         }
-        return () -> {
-            shedulerBuilder.build().execute(data.getPool());
-            LOGGER.info(log() + "saveAsJsonFile Done");
-            return null;
-        };
+        IData target = data.getJob().newData(result, shedulerBuilder.build());
+        LOGGER.info(log() + "StreamingFlatmap " + (ordered ? "ordered " : "") + "-> " + target.toString());
+        return target;
     }
 
 }

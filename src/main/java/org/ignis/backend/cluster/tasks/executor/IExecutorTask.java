@@ -34,7 +34,7 @@ public abstract class IExecutorTask extends Task {
     }
 
     protected String log() {
-        return helper + " " + executor.getId() + ": ";
+        return helper.logHeader() + " " + executor.getId() + ": ";
     }
 
 }

@@ -14,32 +14,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.tasks.container;
+package org.ignis.backend.cluster.tasks.executor;
 
-import org.ignis.backend.cluster.IContainer;
+import org.apache.thrift.TException;
+import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.ISourceFunction;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public final class IContainerDestroyTask extends IContainerTask {
+public final class IStreamingFlatmapTask extends IExecutorTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IContainerDestroyTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IStreamingFlatmapTask.class);
 
-    public IContainerDestroyTask(IHelper helper, IContainer container) {
-        super(helper, container);
+    private final ISourceFunction function;
+    private final boolean ordered;
+
+    public IStreamingFlatmapTask(IHelper helper, IExecutor executor, ISourceFunction function, boolean ordered) {
+        super(helper, executor);
+        this.function = function;
+        this.ordered = ordered;
     }
 
     @Override
     public void execute() throws IgnisException {
-        LOGGER.info(log() + "Destroying container");
-        if(container.getStub().isRunning()){
-            container.getStub().destroy();
+        LOGGER.info(log() + "Executing StreamingFlatmap");
+        try {
+            executor.getMapperModule().streamingFlatmap(function, ordered);
+        } catch (TException ex) {
+            throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Container destroyed");
+        LOGGER.info(log() + "StreamingFlatmap executed");
     }
 
 }

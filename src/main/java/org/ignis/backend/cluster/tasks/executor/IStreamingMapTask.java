@@ -46,7 +46,7 @@ public final class IStreamingMapTask extends IExecutorTask {
         try {
             executor.getMapperModule().streamingMap(function, ordered);
         } catch (TException ex) {
-            throw new IgnisException("Straming Map fails", ex);
+            throw new IgnisException(ex.getMessage(), ex);
         }
         LOGGER.info(log() + "StreamingMap executed");
     }

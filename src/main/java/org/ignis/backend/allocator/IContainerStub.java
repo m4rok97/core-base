@@ -17,7 +17,6 @@
 package org.ignis.backend.allocator;
 
 import java.util.Map;
-import org.apache.thrift.transport.TTransport;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 

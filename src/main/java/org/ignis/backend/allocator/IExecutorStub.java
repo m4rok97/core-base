@@ -25,7 +25,7 @@ import org.ignis.backend.properties.IProperties;
  *
  * @author César Pomar
  */
-public final class IExecutorStub {
+public final class IExecutorStub{
 
     private final long id;
     private final String type;

@@ -44,14 +44,17 @@ public final class IExecutorCreateTask extends IExecutorTask {
             } catch (IgnisException ex) {
                 LOGGER.warn(log() + "Executor dead " + ex);
             }
-            LOGGER.info(log() + "Starting new executor");
-            executor.getStub().create();
+        }
+        LOGGER.info(log() + "Starting new executor");
+        executor.getStub().create();
+        try {
+            executor.getServerModule().setContext(executor.getContainer().getId(), executor.getProperties().toMap());
+        } catch (TException ex) {
             try {
-                executor.getServerModule().setContext(executor.getContainer().getId(), executor.getProperties().toMap());
-            } catch (TException ex) {
-                throw new IgnisException(ex.getMessage(), ex);
+                executor.getStub().destroy();
+            } catch (TException ex2) {
             }
-
+            throw new IgnisException(ex.getMessage(), ex);
         }
     }
 

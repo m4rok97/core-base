@@ -18,7 +18,6 @@ package org.ignis.backend.services;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.allocator.IAllocator;
-import org.ignis.backend.allocator.ancoris.IAncorisContainerStub;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;

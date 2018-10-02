@@ -17,12 +17,15 @@
 package org.ignis.backend.cluster;
 
 import java.util.List;
+import org.ignis.backend.cluster.helpers.data.IDataFilterHelper;
+import org.ignis.backend.cluster.helpers.data.IDataFlatmapHelper;
 import org.ignis.backend.cluster.helpers.data.IDataMapHelper;
 import org.ignis.backend.cluster.helpers.data.IDataReduceHelper;
 import org.ignis.backend.cluster.helpers.data.IDataSaveHelper;
 import org.ignis.backend.cluster.helpers.data.IDataShuffleHelper;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.IThreadPool;
+import org.ignis.backend.cluster.tasks.Lazy;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISourceFunction;
@@ -98,6 +101,22 @@ public final class IData {
         return new IDataMapHelper(this, job.getProperties()).streamingMap(function, ordered);
     }
 
+    public IData flatmap(ISourceFunction function) {
+        return new IDataFlatmapHelper(this, job.getProperties()).flatmap(function);
+    }
+
+    public IData streamingFlatmap(ISourceFunction function, boolean ordered) {
+        return new IDataFlatmapHelper(this, job.getProperties()).streamingFlatmap(function, ordered);
+    }
+
+    public IData filter(ISourceFunction function) {
+        return new IDataFilterHelper(this, job.getProperties()).filter(function);
+    }
+
+    public IData streamingFilter(ISourceFunction function, boolean ordered) {
+        return new IDataFilterHelper(this, job.getProperties()).streamingFilter(function, ordered);
+    }
+
     public IData reduceByKey(ISourceFunction function) {
         return new IDataReduceHelper(this, job.getProperties()).reduceByKey(function);
     }
@@ -106,12 +125,12 @@ public final class IData {
         return new IDataShuffleHelper(this, job.getProperties()).shuffle();
     }
 
-    public void saveAsTextFile(String path, boolean join) throws IgnisException {
-        new IDataSaveHelper(this, job.getProperties()).saveAsTextFile(path, join);
+    public Lazy<Void> saveAsTextFile(String path, boolean join) throws IgnisException {
+        return new IDataSaveHelper(this, job.getProperties()).saveAsTextFile(path, join);
     }
 
-    public void saveAsJsonFile(String path, boolean join) throws IgnisException {
-        new IDataSaveHelper(this, job.getProperties()).saveAsJsonFile(path, join);
+    public Lazy<Void> saveAsJsonFile(String path, boolean join) throws IgnisException {
+        return new IDataSaveHelper(this, job.getProperties()).saveAsJsonFile(path, join);
     }
 
 }
