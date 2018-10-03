@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public final class IBarrier extends CyclicBarrier {
 
-    private AtomicBoolean fails;
+    private final AtomicBoolean fails;
 
     /**
      * Creates a new {@code IBarrier} that will trip when the given number of parties (threads) are waiting upon it, and
@@ -49,13 +49,21 @@ public final class IBarrier extends CyclicBarrier {
         return r;
     }
 
+    @Override
+    public void reset() {
+        fails.set(false);
+        super.reset();
+    }
+
     public int fails() {
         fails.set(true);
+        int r = 0;
         try {
-            return await();
+            r = await();
         } catch (InterruptedException | BrokenBarrierException ex) {
-            return 0;
         }
+        fails.set(false);
+        return r;
     }
 
 }

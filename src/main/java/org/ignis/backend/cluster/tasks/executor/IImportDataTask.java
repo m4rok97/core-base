@@ -122,7 +122,7 @@ public final class IImportDataTask extends IExecutorTask {
             while (elements > 0) {
                 if (actualTarget == null) {
                     //if the current executor provides less elements than the next
-                    if (splits[j] - elements <= 0 || splits[j] - 2 * elements <= 0 || i < sources.size() - 1) {
+                    if (splits[j] - elements <= 0 || splits[j] - 2 * elements <= 0) {
                         actualTarget = nextHostExecutor(remainingTargets, source);
                     } else {
                         actualTarget = nextHostExecutor(remainingTargets, sources.get(i + 1));
@@ -136,7 +136,7 @@ public final class IImportDataTask extends IExecutorTask {
                     elements = 0;
                 } else {
                     elements -= splits[j];
-                    keyShared.msgs.get(source).put(actualTarget, splits[i]);
+                    keyShared.msgs.get(source).put(actualTarget, splits[j]);
                     splits[j] = 0;
                     actualTarget = null;
                     j++;
@@ -151,6 +151,11 @@ public final class IImportDataTask extends IExecutorTask {
     @Override
     public void execute() throws IgnisException {
         try {
+            if (barrier.await() == 0) {
+                keyShared.count.clear();
+                keyShared.msgs.clear();
+            }
+            barrier.await();
             if (type == SEND || type == SHUFFLE) {
                 LOGGER.info(log() + "Counting elements");
                 keyShared.count.put(executor, executor.getStorageModule().count());
@@ -184,7 +189,7 @@ public final class IImportDataTask extends IExecutorTask {
                         addr.append("socket!").append(container.getHost()).append("!").append(port);
                     }
                     executor.getShuffleModule().nextSplit(addr.toString(), msg.getValue());
-                    LOGGER.info(log() + "Partition  " + (i++) + " with " + msg.getValue() + " elements to " + addr.toString());
+                    LOGGER.info(log() + "Partition " + (i++) + " with " + msg.getValue() + " elements to " + addr.toString());
                 }
                 executor.getShuffleModule().finishSplits();
                 LOGGER.info(log() + "Partitions created");
@@ -205,10 +210,11 @@ public final class IImportDataTask extends IExecutorTask {
             } finally {
                 if (type == RECEIVE || type == SHUFFLE) {
                     executor.getPostmanModule().stop();
+                    LOGGER.info(log() + "Partitions received");
                 }
             }
             if (type == RECEIVE || type == SHUFFLE) {
-                List<Long> order = keyShared.msgs.get(executor).keySet().stream().map(e -> e.getJob()).collect(Collectors.toList());
+                List<Long> order = sources.stream().map(e -> e.getJob()).collect(Collectors.toList());
                 LOGGER.info(log() + "Joining partitions");
                 executor.getShuffleModule().joinSplits(order);
                 LOGGER.info(log() + "Partitions joined");
@@ -218,7 +224,7 @@ public final class IImportDataTask extends IExecutorTask {
             barrier.fails();
             throw ex;
         } catch (BrokenBarrierException ex) {
-            throw new IgnisException("Other Task has failed", ex);
+            //Other Task has failed
         } catch (Exception ex) {
             barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);

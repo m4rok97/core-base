@@ -74,7 +74,7 @@ public final class IAttributes {
     }
 
     public long newIdCluster() {
-        return idClusterGen.incrementAndGet();
+        return idClusterGen.getAndIncrement();
     }
 
     public void addCluster(ICluster cluster) {
