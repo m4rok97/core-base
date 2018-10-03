@@ -1,7 +1,7 @@
 ignis:
     driver:
         task:
-            maxFailures : 5
+            maxFailures : 1
             minWorkers: 4
         rpc:
             port: 2005
