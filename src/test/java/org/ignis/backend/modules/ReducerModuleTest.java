@@ -17,7 +17,6 @@
 package org.ignis.backend.modules;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +58,8 @@ public class ReducerModuleTest extends BackendTest {
         List<Map<Long, Long>> keys = new ArrayList<>();
         for (int i = 0; i < instances; i++) {
             keys.add(new HashMap<>());
-            for (int j = 0; j < 5; j++) {
-                keys.get(i).put((Long) (long) random.nextInt(10), (Long) (long) random.nextInt(100));
+            for (int j = 0; j < 10; j++) {
+                keys.get(i).put((Long) (long) random.nextInt(20), 1l);
             }
         }
 
@@ -95,7 +94,7 @@ public class ReducerModuleTest extends BackendTest {
         }
     }
 
-    //@Test
+    @Test
     public void testOneInstance() {
         LOGGER.info("----|----testOneInstance----|----");
         testReduceByKey(1);

@@ -45,7 +45,7 @@ public final class IReduceByKeyTask extends IExecutorTask {
         //Executor -> Key -> Count (Multiple Write, One Read)
         private final Map<IExecutor, Map<Long, Long>> count = new ConcurrentHashMap<>();
         //Key -> Executor (One write, Multiple read)
-        private final Map<Long, IExecutor> msgs = new HashMap<>();
+        private final Map<IExecutor, Map<IExecutor, List<Long>>> msgs = new HashMap<>();
     }
 
     private final ISourceFunction function;
@@ -62,10 +62,44 @@ public final class IReduceByKeyTask extends IExecutorTask {
     }
 
     private void keyDistribution() {
-        //TODO
-        
-        
-        //Algotimo para decidir quien se queda con cada clave TODO
+        long total = keyShared.count.values().stream().map(m -> m.size()).reduce(0, (a, b) -> a + b);
+
+        Map<Long, List<IExecutor>> keys = new HashMap<>();
+        Map<IExecutor, Long> load = new HashMap<>();
+        for (Map.Entry<IExecutor, Map<Long, Long>> values : keyShared.count.entrySet()) {
+            for (long key : values.getValue().keySet()) {
+                List<IExecutor> list = keys.get(key);
+                if (list == null) {
+                    keys.put(key, list = new ArrayList<>());
+                }
+                list.add(values.getKey());
+            }
+            load.put(values.getKey(), 0l);
+            keyShared.msgs.put(values.getKey(), new HashMap<>());
+        }
+
+        for (Map.Entry<Long, List<IExecutor>> values : keys.entrySet()) {
+            long maxKeys = 0;
+            for (IExecutor target : values.getValue()) {
+                maxKeys += keyShared.count.get(target).size();
+            }
+            maxKeys /= values.getValue().size();
+            for (IExecutor target : values.getValue()) {
+                long eload = load.get(target);
+                if (eload <= maxKeys) {
+                    Map<IExecutor, List<Long>> emsgs = keyShared.msgs.get(target);
+                    for (IExecutor source : values.getValue()) {
+                        List<Long> list = emsgs.get(source);
+                        if (list == null) {
+                            emsgs.put(source, list = new ArrayList<>());
+                        }
+                        list.add(values.getKey());
+                    }
+                    load.put(target, eload + 1);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -89,30 +123,22 @@ public final class IReduceByKeyTask extends IExecutorTask {
                         keyDistribution();
                     }
                     barrier.await();
-                    Map<IExecutor, List<Long>> messages = new HashMap<>();
-                    for (Long key : keys.values()) {
-                        IExecutor to = keyShared.msgs.get(key);
-                        if (to != null) {
-                            List<Long> toKeys = messages.get(to);
-                            if (toKeys == null) {
-                                messages.put(to, toKeys = new ArrayList<>());
-                            }
-                            toKeys.add(key);
-                        }
-                    }
 
                     int port = executor.getContainer().getProperties().getInteger(IPropsKeys.TRANSPORT_PORT);
 
-                    LOGGER.info(log() + "Preparing keys to send to " + messages.size() + " executors");
-                    int i = 1;
+                    LOGGER.info(log() + "Preparing keys to send to " + keyShared.msgs.size() + " executors");
                     StringBuilder addr = new StringBuilder();
-                    for (Map.Entry<IExecutor, List<Long>> entry : messages.entrySet()) {
+                    for (Map.Entry<IExecutor, List<Long>> entry : keyShared.msgs.get(executor).entrySet()) {
                         addr.setLength(0);
                         //TODO shared memory
-                        IContainer container = entry.getKey().getContainer();
-                        addr.append("socket!").append(container.getHost()).append("!").append(port);
+                        if (entry.getKey() == executor) {
+                            addr.append("local");
+                        } else {
+                            IContainer container = entry.getKey().getContainer();
+                            addr.append("socket!").append(container.getHost()).append("!").append(port);
+                        }
                         executor.getKeysModule().sendPairs(addr.toString(), entry.getValue());
-                        LOGGER.info(log() + (i++) + " prepared with " + entry.getValue().size() + " keys to " + addr.toString());
+                        LOGGER.info(log() + entry.getValue().size() + " keys prepared to" + addr.toString());
                     }
                     try {
                         LOGGER.info(log() + "Preparing to recive keys");
