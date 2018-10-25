@@ -7,12 +7,12 @@ RUN \
 	cd /tmp/jsoncpp && \
 	git clone --branch ${JSON_VERSION} https://github.com/open-source-parsers/jsoncpp src && \
 	cd src && \
-	cmake . && \
+	cmake -DBUILD_STATIC_LIBS=OFF -DBUILD_SHARED_LIBS=ON -DJSONCPP_WITH_TESTS=OFF . && \
 	make && \
 	mkdir -p /root/jsoncpp/build/usr/include/jsoncpp && \
 	mkdir -p /root/jsoncpp/build/usr/lib && \
 	mv include/json /root/jsoncpp/build/usr/include/jsoncpp && \
-	mv src/lib_json/libjsoncpp.a /root/jsoncpp/build/usr/lib && \
+	mv src/lib_json/libjsoncpp* /root/jsoncpp/build/usr/lib && \
 	cd / && \
 	rm -fr /tmp/jsoncpp && \
 	{ \
