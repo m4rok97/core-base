@@ -31,19 +31,21 @@ public final class ISaveAsJsonFileTask extends IExecutorTask {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsJsonFileTask.class);
 
     private final String path;
-    private final boolean joined;
+    private final boolean arrayStart;
+    private final boolean arrayEnd;
 
-    public ISaveAsJsonFileTask(IHelper helper, IExecutor executor, String path, boolean joined) {
+    public ISaveAsJsonFileTask(IHelper helper, IExecutor executor, String path, boolean arrayStart, boolean arrayEnd) {
         super(helper, executor);
         this.path = path;
-        this.joined = joined;
+        this.arrayStart = arrayStart;
+        this.arrayEnd = arrayEnd;
     }
 
     @Override
     public void execute() throws IgnisException {
         LOGGER.info(log() + "Saving json file");
         try {
-            executor.getFilesModule().saveJson(path, joined);
+            executor.getFilesModule().saveJson(path, arrayStart, arrayEnd);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }

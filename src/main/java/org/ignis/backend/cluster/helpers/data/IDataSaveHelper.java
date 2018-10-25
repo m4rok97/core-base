@@ -42,8 +42,10 @@ public final class IDataSaveHelper extends IDataHelper {
         LOGGER.info(log() + "SaveAsTextFile path: " + path + ", joined: " + joined);
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
-        for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new ISaveAsTextFileTask(this, executor, path, joined));
+        int size = data.getExecutors().size();
+        for (int i = 0; i < size; i++) {
+            String ePath = joined ? path : path + "_part" + i;
+            shedulerBuilder.newTask(new ISaveAsTextFileTask(this, data.getExecutors().get(i), ePath, !joined, i != size - 1));
         }
         return () -> {
             shedulerBuilder.build().execute(data.getPool());
@@ -56,8 +58,10 @@ public final class IDataSaveHelper extends IDataHelper {
         LOGGER.info(log() + "SaveAsJsonFile path: " + path + ", joined: " + joined);
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
-        for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new ISaveAsJsonFileTask(this, executor, path, joined));
+        int size = data.getExecutors().size();
+        for (int i = 0; i < size; i++) {
+            String ePath = joined ? path : path + "_part" + i;
+            shedulerBuilder.newTask(new ISaveAsJsonFileTask(this, data.getExecutors().get(i), ePath, i == 0, i == size - 1));
         }
         return () -> {
             shedulerBuilder.build().execute(data.getPool());

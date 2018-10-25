@@ -28,7 +28,7 @@ import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.cluster.tasks.Lazy;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.ISourceFunction;
+import org.ignis.rpc.ISource;
 
 /**
  *
@@ -93,31 +93,31 @@ public final class IData {
         //TODO
     }
 
-    public IData map(ISourceFunction function) {
+    public IData map(ISource function) {
         return new IDataMapHelper(this, job.getProperties()).map(function);
     }
 
-    public IData streamingMap(ISourceFunction function, boolean ordered) {
+    public IData streamingMap(ISource function, boolean ordered) {
         return new IDataMapHelper(this, job.getProperties()).streamingMap(function, ordered);
     }
 
-    public IData flatmap(ISourceFunction function) {
+    public IData flatmap(ISource function) {
         return new IDataFlatmapHelper(this, job.getProperties()).flatmap(function);
     }
 
-    public IData streamingFlatmap(ISourceFunction function, boolean ordered) {
+    public IData streamingFlatmap(ISource function, boolean ordered) {
         return new IDataFlatmapHelper(this, job.getProperties()).streamingFlatmap(function, ordered);
     }
 
-    public IData filter(ISourceFunction function) {
+    public IData filter(ISource function) {
         return new IDataFilterHelper(this, job.getProperties()).filter(function);
     }
 
-    public IData streamingFilter(ISourceFunction function, boolean ordered) {
+    public IData streamingFilter(ISource function, boolean ordered) {
         return new IDataFilterHelper(this, job.getProperties()).streamingFilter(function, ordered);
     }
 
-    public IData reduceByKey(ISourceFunction function) {
+    public IData reduceByKey(ISource function) {
         return new IDataReduceHelper(this, job.getProperties()).reduceByKey(function);
     }
 

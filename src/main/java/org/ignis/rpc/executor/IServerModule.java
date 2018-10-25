@@ -11,7 +11,7 @@ public class IServerModule {
 
   public interface Iface {
 
-    public void setContext(long id, java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void updateProperties(java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public void stop() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -21,7 +21,7 @@ public class IServerModule {
 
   public interface AsyncIface {
 
-    public void setContext(long id, java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void updateProperties(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void stop(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -49,24 +49,23 @@ public class IServerModule {
       super(iprot, oprot);
     }
 
-    public void setContext(long id, java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void updateProperties(java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_setContext(id, properties);
-      recv_setContext();
+      send_updateProperties(properties);
+      recv_updateProperties();
     }
 
-    public void send_setContext(long id, java.util.Map<java.lang.String,java.lang.String> properties) throws org.apache.thrift.TException
+    public void send_updateProperties(java.util.Map<java.lang.String,java.lang.String> properties) throws org.apache.thrift.TException
     {
-      setContext_args args = new setContext_args();
-      args.setId(id);
+      updateProperties_args args = new updateProperties_args();
       args.setProperties(properties);
-      sendBase("setContext", args);
+      sendBase("updateProperties", args);
     }
 
-    public void recv_setContext() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void recv_updateProperties() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      setContext_result result = new setContext_result();
-      receiveBase(result, "setContext");
+      updateProperties_result result = new updateProperties_result();
+      receiveBase(result, "updateProperties");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -138,26 +137,23 @@ public class IServerModule {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void setContext(long id, java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void updateProperties(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      setContext_call method_call = new setContext_call(id, properties, resultHandler, this, ___protocolFactory, ___transport);
+      updateProperties_call method_call = new updateProperties_call(properties, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class setContext_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private long id;
+    public static class updateProperties_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private java.util.Map<java.lang.String,java.lang.String> properties;
-      public setContext_call(long id, java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public updateProperties_call(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.id = id;
         this.properties = properties;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("setContext", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        setContext_args args = new setContext_args();
-        args.setId(id);
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("updateProperties", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        updateProperties_args args = new updateProperties_args();
         args.setProperties(properties);
         args.write(prot);
         prot.writeMessageEnd();
@@ -244,19 +240,19 @@ public class IServerModule {
     }
 
     private static <I extends Iface> java.util.Map<java.lang.String,  org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> getProcessMap(java.util.Map<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
-      processMap.put("setContext", new setContext());
+      processMap.put("updateProperties", new updateProperties());
       processMap.put("stop", new stop());
       processMap.put("test", new test());
       return processMap;
     }
 
-    public static class setContext<I extends Iface> extends org.apache.thrift.ProcessFunction<I, setContext_args> {
-      public setContext() {
-        super("setContext");
+    public static class updateProperties<I extends Iface> extends org.apache.thrift.ProcessFunction<I, updateProperties_args> {
+      public updateProperties() {
+        super("updateProperties");
       }
 
-      public setContext_args getEmptyArgsInstance() {
-        return new setContext_args();
+      public updateProperties_args getEmptyArgsInstance() {
+        return new updateProperties_args();
       }
 
       protected boolean isOneway() {
@@ -268,10 +264,10 @@ public class IServerModule {
         return true;
       }
 
-      public setContext_result getResult(I iface, setContext_args args) throws org.apache.thrift.TException {
-        setContext_result result = new setContext_result();
+      public updateProperties_result getResult(I iface, updateProperties_args args) throws org.apache.thrift.TException {
+        updateProperties_result result = new updateProperties_result();
         try {
-          iface.setContext(args.id, args.properties);
+          iface.updateProperties(args.properties);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -351,26 +347,26 @@ public class IServerModule {
     }
 
     private static <I extends AsyncIface> java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
-      processMap.put("setContext", new setContext());
+      processMap.put("updateProperties", new updateProperties());
       processMap.put("stop", new stop());
       processMap.put("test", new test());
       return processMap;
     }
 
-    public static class setContext<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, setContext_args, Void> {
-      public setContext() {
-        super("setContext");
+    public static class updateProperties<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, updateProperties_args, Void> {
+      public updateProperties() {
+        super("updateProperties");
       }
 
-      public setContext_args getEmptyArgsInstance() {
-        return new setContext_args();
+      public updateProperties_args getEmptyArgsInstance() {
+        return new updateProperties_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            setContext_result result = new setContext_result();
+            updateProperties_result result = new updateProperties_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -384,7 +380,7 @@ public class IServerModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            setContext_result result = new setContext_result();
+            updateProperties_result result = new updateProperties_result();
             if (e instanceof org.ignis.rpc.IRemoteException) {
               result.ex = (org.ignis.rpc.IRemoteException) e;
               result.setExIsSet(true);
@@ -416,8 +412,8 @@ public class IServerModule {
         return false;
       }
 
-      public void start(I iface, setContext_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.setContext(args.id, args.properties,resultHandler);
+      public void start(I iface, updateProperties_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.updateProperties(args.properties,resultHandler);
       }
     }
 
@@ -553,22 +549,19 @@ public class IServerModule {
 
   }
 
-  public static class setContext_args implements org.apache.thrift.TBase<setContext_args, setContext_args._Fields>, java.io.Serializable, Cloneable, Comparable<setContext_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("setContext_args");
+  public static class updateProperties_args implements org.apache.thrift.TBase<updateProperties_args, updateProperties_args._Fields>, java.io.Serializable, Cloneable, Comparable<updateProperties_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateProperties_args");
 
-    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)1);
-    private static final org.apache.thrift.protocol.TField PROPERTIES_FIELD_DESC = new org.apache.thrift.protocol.TField("properties", org.apache.thrift.protocol.TType.MAP, (short)2);
+    private static final org.apache.thrift.protocol.TField PROPERTIES_FIELD_DESC = new org.apache.thrift.protocol.TField("properties", org.apache.thrift.protocol.TType.MAP, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new setContext_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new setContext_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new updateProperties_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new updateProperties_argsTupleSchemeFactory();
 
-    private long id; // required
     private java.util.Map<java.lang.String,java.lang.String> properties; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      ID((short)1, "id"),
-      PROPERTIES((short)2, "properties");
+      PROPERTIES((short)1, "properties");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -583,9 +576,7 @@ public class IServerModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // ID
-            return ID;
-          case 2: // PROPERTIES
+          case 1: // PROPERTIES
             return PROPERTIES;
           default:
             return null;
@@ -627,78 +618,44 @@ public class IServerModule {
     }
 
     // isset id assignments
-    private static final int __ID_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.PROPERTIES, new org.apache.thrift.meta_data.FieldMetaData("properties", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING), 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING))));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(setContext_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateProperties_args.class, metaDataMap);
     }
 
-    public setContext_args() {
+    public updateProperties_args() {
     }
 
-    public setContext_args(
-      long id,
+    public updateProperties_args(
       java.util.Map<java.lang.String,java.lang.String> properties)
     {
       this();
-      this.id = id;
-      setIdIsSet(true);
       this.properties = properties;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public setContext_args(setContext_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.id = other.id;
+    public updateProperties_args(updateProperties_args other) {
       if (other.isSetProperties()) {
         java.util.Map<java.lang.String,java.lang.String> __this__properties = new java.util.HashMap<java.lang.String,java.lang.String>(other.properties);
         this.properties = __this__properties;
       }
     }
 
-    public setContext_args deepCopy() {
-      return new setContext_args(this);
+    public updateProperties_args deepCopy() {
+      return new updateProperties_args(this);
     }
 
     @Override
     public void clear() {
-      setIdIsSet(false);
-      this.id = 0;
       this.properties = null;
-    }
-
-    public long getId() {
-      return this.id;
-    }
-
-    public setContext_args setId(long id) {
-      this.id = id;
-      setIdIsSet(true);
-      return this;
-    }
-
-    public void unsetId() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __ID_ISSET_ID);
-    }
-
-    /** Returns true if field id is set (has been assigned a value) and false otherwise */
-    public boolean isSetId() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __ID_ISSET_ID);
-    }
-
-    public void setIdIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
     }
 
     public int getPropertiesSize() {
@@ -716,7 +673,7 @@ public class IServerModule {
       return this.properties;
     }
 
-    public setContext_args setProperties(java.util.Map<java.lang.String,java.lang.String> properties) {
+    public updateProperties_args setProperties(java.util.Map<java.lang.String,java.lang.String> properties) {
       this.properties = properties;
       return this;
     }
@@ -738,14 +695,6 @@ public class IServerModule {
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
-      case ID:
-        if (value == null) {
-          unsetId();
-        } else {
-          setId((java.lang.Long)value);
-        }
-        break;
-
       case PROPERTIES:
         if (value == null) {
           unsetProperties();
@@ -759,9 +708,6 @@ public class IServerModule {
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
-      case ID:
-        return getId();
-
       case PROPERTIES:
         return getProperties();
 
@@ -776,8 +722,6 @@ public class IServerModule {
       }
 
       switch (field) {
-      case ID:
-        return isSetId();
       case PROPERTIES:
         return isSetProperties();
       }
@@ -788,25 +732,16 @@ public class IServerModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof setContext_args)
-        return this.equals((setContext_args)that);
+      if (that instanceof updateProperties_args)
+        return this.equals((updateProperties_args)that);
       return false;
     }
 
-    public boolean equals(setContext_args that) {
+    public boolean equals(updateProperties_args that) {
       if (that == null)
         return false;
       if (this == that)
         return true;
-
-      boolean this_present_id = true;
-      boolean that_present_id = true;
-      if (this_present_id || that_present_id) {
-        if (!(this_present_id && that_present_id))
-          return false;
-        if (this.id != that.id)
-          return false;
-      }
 
       boolean this_present_properties = true && this.isSetProperties();
       boolean that_present_properties = true && that.isSetProperties();
@@ -824,8 +759,6 @@ public class IServerModule {
     public int hashCode() {
       int hashCode = 1;
 
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(id);
-
       hashCode = hashCode * 8191 + ((isSetProperties()) ? 131071 : 524287);
       if (isSetProperties())
         hashCode = hashCode * 8191 + properties.hashCode();
@@ -834,23 +767,13 @@ public class IServerModule {
     }
 
     @Override
-    public int compareTo(setContext_args other) {
+    public int compareTo(updateProperties_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
 
-      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetId()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
       lastComparison = java.lang.Boolean.valueOf(isSetProperties()).compareTo(other.isSetProperties());
       if (lastComparison != 0) {
         return lastComparison;
@@ -878,13 +801,9 @@ public class IServerModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("setContext_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("updateProperties_args(");
       boolean first = true;
 
-      sb.append("id:");
-      sb.append(this.id);
-      first = false;
-      if (!first) sb.append(", ");
       sb.append("properties:");
       if (this.properties == null) {
         sb.append("null");
@@ -911,23 +830,21 @@ public class IServerModule {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
       }
     }
 
-    private static class setContext_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public setContext_argsStandardScheme getScheme() {
-        return new setContext_argsStandardScheme();
+    private static class updateProperties_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public updateProperties_argsStandardScheme getScheme() {
+        return new updateProperties_argsStandardScheme();
       }
     }
 
-    private static class setContext_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<setContext_args> {
+    private static class updateProperties_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<updateProperties_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, setContext_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, updateProperties_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -937,15 +854,7 @@ public class IServerModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.id = iprot.readI64();
-                struct.setIdIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 2: // PROPERTIES
+            case 1: // PROPERTIES
               if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
                 {
                   org.apache.thrift.protocol.TMap _map0 = iprot.readMapBegin();
@@ -976,13 +885,10 @@ public class IServerModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, setContext_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, updateProperties_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(ID_FIELD_DESC);
-        oprot.writeI64(struct.id);
-        oprot.writeFieldEnd();
         if (struct.properties != null) {
           oprot.writeFieldBegin(PROPERTIES_FIELD_DESC);
           {
@@ -1002,28 +908,22 @@ public class IServerModule {
 
     }
 
-    private static class setContext_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public setContext_argsTupleScheme getScheme() {
-        return new setContext_argsTupleScheme();
+    private static class updateProperties_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public updateProperties_argsTupleScheme getScheme() {
+        return new updateProperties_argsTupleScheme();
       }
     }
 
-    private static class setContext_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<setContext_args> {
+    private static class updateProperties_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<updateProperties_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, setContext_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, updateProperties_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetId()) {
+        if (struct.isSetProperties()) {
           optionals.set(0);
         }
-        if (struct.isSetProperties()) {
-          optionals.set(1);
-        }
-        oprot.writeBitSet(optionals, 2);
-        if (struct.isSetId()) {
-          oprot.writeI64(struct.id);
-        }
+        oprot.writeBitSet(optionals, 1);
         if (struct.isSetProperties()) {
           {
             oprot.writeI32(struct.properties.size());
@@ -1037,14 +937,10 @@ public class IServerModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, setContext_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, updateProperties_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.id = iprot.readI64();
-          struct.setIdIsSet(true);
-        }
-        if (incoming.get(1)) {
           {
             org.apache.thrift.protocol.TMap _map6 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, iprot.readI32());
             struct.properties = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map6.size);
@@ -1067,13 +963,13 @@ public class IServerModule {
     }
   }
 
-  public static class setContext_result implements org.apache.thrift.TBase<setContext_result, setContext_result._Fields>, java.io.Serializable, Cloneable, Comparable<setContext_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("setContext_result");
+  public static class updateProperties_result implements org.apache.thrift.TBase<updateProperties_result, updateProperties_result._Fields>, java.io.Serializable, Cloneable, Comparable<updateProperties_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateProperties_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new setContext_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new setContext_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new updateProperties_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new updateProperties_resultTupleSchemeFactory();
 
     private org.ignis.rpc.IRemoteException ex; // required
 
@@ -1142,13 +1038,13 @@ public class IServerModule {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(setContext_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateProperties_result.class, metaDataMap);
     }
 
-    public setContext_result() {
+    public updateProperties_result() {
     }
 
-    public setContext_result(
+    public updateProperties_result(
       org.ignis.rpc.IRemoteException ex)
     {
       this();
@@ -1158,14 +1054,14 @@ public class IServerModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public setContext_result(setContext_result other) {
+    public updateProperties_result(updateProperties_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
-    public setContext_result deepCopy() {
-      return new setContext_result(this);
+    public updateProperties_result deepCopy() {
+      return new updateProperties_result(this);
     }
 
     @Override
@@ -1177,7 +1073,7 @@ public class IServerModule {
       return this.ex;
     }
 
-    public setContext_result setEx(org.ignis.rpc.IRemoteException ex) {
+    public updateProperties_result setEx(org.ignis.rpc.IRemoteException ex) {
       this.ex = ex;
       return this;
     }
@@ -1236,12 +1132,12 @@ public class IServerModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof setContext_result)
-        return this.equals((setContext_result)that);
+      if (that instanceof updateProperties_result)
+        return this.equals((updateProperties_result)that);
       return false;
     }
 
-    public boolean equals(setContext_result that) {
+    public boolean equals(updateProperties_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -1271,7 +1167,7 @@ public class IServerModule {
     }
 
     @Override
-    public int compareTo(setContext_result other) {
+    public int compareTo(updateProperties_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -1305,7 +1201,7 @@ public class IServerModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("setContext_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("updateProperties_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -1340,15 +1236,15 @@ public class IServerModule {
       }
     }
 
-    private static class setContext_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public setContext_resultStandardScheme getScheme() {
-        return new setContext_resultStandardScheme();
+    private static class updateProperties_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public updateProperties_resultStandardScheme getScheme() {
+        return new updateProperties_resultStandardScheme();
       }
     }
 
-    private static class setContext_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<setContext_result> {
+    private static class updateProperties_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<updateProperties_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, setContext_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, updateProperties_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -1378,7 +1274,7 @@ public class IServerModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, setContext_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, updateProperties_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -1393,16 +1289,16 @@ public class IServerModule {
 
     }
 
-    private static class setContext_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public setContext_resultTupleScheme getScheme() {
-        return new setContext_resultTupleScheme();
+    private static class updateProperties_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public updateProperties_resultTupleScheme getScheme() {
+        return new updateProperties_resultTupleScheme();
       }
     }
 
-    private static class setContext_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<setContext_result> {
+    private static class updateProperties_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<updateProperties_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, setContext_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, updateProperties_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -1415,7 +1311,7 @@ public class IServerModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, setContext_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, updateProperties_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {

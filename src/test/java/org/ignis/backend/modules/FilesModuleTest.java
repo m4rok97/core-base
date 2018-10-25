@@ -57,7 +57,7 @@ public class FilesModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");

@@ -29,8 +29,9 @@ import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropsKeys;
-import org.ignis.rpc.ISourceFunction;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
+import org.ignis.rpc.executor.IExecutorKeys;
 
 /**
  *
@@ -43,17 +44,17 @@ public final class IReduceByKeyTask extends IExecutorTask {
     public static class Shared {
 
         //Executor -> Key -> Count (Multiple Write, One Read)
-        private final Map<IExecutor, Map<Long, Long>> count = new ConcurrentHashMap<>();
+        private final Map<IExecutor, List<Long>> count = new ConcurrentHashMap<>();
         //Key -> Executor (One write, Multiple read)
         private final Map<IExecutor, Map<IExecutor, List<Long>>> msgs = new HashMap<>();
     }
 
-    private final ISourceFunction function;
+    private final ISource function;
     private final IBarrier barrier;
     private final Shared keyShared;
     private final boolean single;
 
-    public IReduceByKeyTask(IHelper helper, IExecutor executor, ISourceFunction function, IBarrier barrier, Shared keyShared) {
+    public IReduceByKeyTask(IHelper helper, IExecutor executor, ISource function, IBarrier barrier, Shared keyShared) {
         super(helper, executor);
         this.function = function;
         this.barrier = barrier;
@@ -66,8 +67,8 @@ public final class IReduceByKeyTask extends IExecutorTask {
 
         Map<Long, List<IExecutor>> keys = new HashMap<>();
         Map<IExecutor, Long> load = new HashMap<>();
-        for (Map.Entry<IExecutor, Map<Long, Long>> values : keyShared.count.entrySet()) {
-            for (long key : values.getValue().keySet()) {
+        for (Map.Entry<IExecutor, List<Long>> values : keyShared.count.entrySet()) {
+            for (long key : values.getValue()) {
                 List<IExecutor> list = keys.get(key);
                 if (list == null) {
                     keys.put(key, list = new ArrayList<>());
@@ -105,65 +106,59 @@ public final class IReduceByKeyTask extends IExecutorTask {
     @Override
     public void execute() throws IgnisException {
         try {
-            try {
-                LOGGER.info(log() + "Reducing executor keys");
-                executor.getReducerModule().reduceByKey(function);
-                LOGGER.info(log() + "Executor keys reduced");
-                barrier.await();
+            LOGGER.info(log() + "Reducing executor keys");
+            executor.getKeysModule().reduceByKey(function);
+            LOGGER.info(log() + "Executor keys reduced");
+            barrier.await();
+            if (single) {
+                LOGGER.info(log() + "Avoiding key exchange");
+            } else {
                 LOGGER.info(log() + "Preparing keys");
-                Map<Long, Long> keys = executor.getKeysModule().getKeys(single);
+                List<Long> keys = executor.getKeysModule().getKeys();
                 LOGGER.info(log() + "Keys ready");
-                if (single) {
-                    LOGGER.info(log() + "Avoiding key exchange");
-                } else {
-                    keyShared.count.put(executor, keys);
-                    LOGGER.info(log() + keys.size() + " keys");
-                    if (barrier.await() == 0) {
-                        LOGGER.info(log() + "Calculating key distribution");
-                        keyDistribution();
-                    }
-                    barrier.await();
-
-                    int port = executor.getContainer().getProperties().getInteger(IPropsKeys.TRANSPORT_PORT);
-
-                    LOGGER.info(log() + "Preparing keys to send to " + keyShared.msgs.size() + " executors");
-                    StringBuilder addr = new StringBuilder();
-                    for (Map.Entry<IExecutor, List<Long>> entry : keyShared.msgs.get(executor).entrySet()) {
-                        addr.setLength(0);
-                        //TODO shared memory
-                        if (entry.getKey() == executor) {
-                            addr.append("local");
-                        } else {
-                            IContainer container = entry.getKey().getContainer();
-                            addr.append("socket!").append(container.getHost()).append("!").append(port);
-                        }
-                        executor.getKeysModule().sendPairs(addr.toString(), entry.getValue());
-                        LOGGER.info(log() + entry.getValue().size() + " keys prepared to" + addr.toString());
-                    }
-                    try {
-                        LOGGER.info(log() + "Preparing to recive keys");
-                        executor.getPostmanModule().start();
-                        barrier.await();
-                        LOGGER.info(log() + "Preparing to send keys");
-                        executor.getPostmanModule().sendAll();
-                        LOGGER.info(log() + "Keys sent");
-                        barrier.await();
-                    } finally {
-                        executor.getPostmanModule().stop();
-                    }
-                    LOGGER.info(log() + "Joining keys");
-                    executor.getKeysModule().joinPairs();
-                    LOGGER.info(log() + "Reducing keys");
-                    executor.getReducerModule().reduceByKey(function);
+                keyShared.count.put(executor, keys);
+                LOGGER.info(log() + keys.size() + " keys");
+                if (barrier.await() == 0) {
+                    LOGGER.info(log() + "Calculating key distribution");
+                    keyDistribution();
                 }
-                LOGGER.info(log() + "Keys Reduced");
-            } finally {
+                barrier.await();
+
+                int port = executor.getContainer().getProperties().getInteger(IPropsKeys.TRANSPORT_PORT);
+
+                LOGGER.info(log() + "Preparing keys to send to " + keyShared.msgs.size() + " executors");
+                StringBuilder addr = new StringBuilder();
+                List<IExecutorKeys> executorKeys = new ArrayList<>();
+                for (Map.Entry<IExecutor, List<Long>> entry : keyShared.msgs.get(executor).entrySet()) {
+                    addr.setLength(0);
+                    //TODO shared memory
+                    if (entry.getKey() == executor) {
+                        addr.append("local");
+                    } else {
+                        IContainer container = entry.getKey().getContainer();
+                        addr.append("socket!").append(container.getHost()).append("!").append(port);
+                    }
+                    executorKeys.add(new IExecutorKeys(executor.getId(), addr.toString(), entry.getValue()));
+                    LOGGER.info(log() + entry.getValue().size() + " keys prepared to" + addr.toString());
+                }
+                executor.getKeysModule().prepareKeys(executorKeys);
                 try {
-                    executor.getKeysModule().reset();
-                } catch (TException ex) {
-                    throw new IgnisException(ex.getMessage(), ex);
+                    LOGGER.info(log() + "Preparing to recive keys");
+                    executor.getPostmanModule().start();
+                    barrier.await();
+                    LOGGER.info(log() + "Preparing to send keys");
+                    executor.getPostmanModule().sendAll();
+                    LOGGER.info(log() + "Keys sent");
+                    barrier.await();
+                } finally {
+                    executor.getPostmanModule().stop();
                 }
+                LOGGER.info(log() + "Joining keys");
+                executor.getKeysModule().collectKeys();
+                LOGGER.info(log() + "Reducing keys");
+                executor.getKeysModule().reduceByKey(function);
             }
+            LOGGER.info(log() + "Keys Reduced");
             barrier.await();
         } catch (IgnisException ex) {
             barrier.fails();

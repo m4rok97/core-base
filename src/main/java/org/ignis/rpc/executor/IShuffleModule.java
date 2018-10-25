@@ -11,11 +11,7 @@ public class IShuffleModule {
 
   public interface Iface {
 
-    public void createSplits() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
-
-    public void nextSplit(java.lang.String addr, long length) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
-
-    public void finishSplits() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void createSplits(java.util.List<ISplit> splits) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public void joinSplits(java.util.List<java.lang.Long> order) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -23,11 +19,7 @@ public class IShuffleModule {
 
   public interface AsyncIface {
 
-    public void createSplits(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
-
-    public void nextSplit(java.lang.String addr, long length, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
-
-    public void finishSplits(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void createSplits(java.util.List<ISplit> splits, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void joinSplits(java.util.List<java.lang.Long> order, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -53,15 +45,16 @@ public class IShuffleModule {
       super(iprot, oprot);
     }
 
-    public void createSplits() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void createSplits(java.util.List<ISplit> splits) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_createSplits();
+      send_createSplits(splits);
       recv_createSplits();
     }
 
-    public void send_createSplits() throws org.apache.thrift.TException
+    public void send_createSplits(java.util.List<ISplit> splits) throws org.apache.thrift.TException
     {
       createSplits_args args = new createSplits_args();
+      args.setSplits(splits);
       sendBase("createSplits", args);
     }
 
@@ -69,52 +62,6 @@ public class IShuffleModule {
     {
       createSplits_result result = new createSplits_result();
       receiveBase(result, "createSplits");
-      if (result.ex != null) {
-        throw result.ex;
-      }
-      return;
-    }
-
-    public void nextSplit(java.lang.String addr, long length) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
-    {
-      send_nextSplit(addr, length);
-      recv_nextSplit();
-    }
-
-    public void send_nextSplit(java.lang.String addr, long length) throws org.apache.thrift.TException
-    {
-      nextSplit_args args = new nextSplit_args();
-      args.setAddr(addr);
-      args.setLength(length);
-      sendBase("nextSplit", args);
-    }
-
-    public void recv_nextSplit() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
-    {
-      nextSplit_result result = new nextSplit_result();
-      receiveBase(result, "nextSplit");
-      if (result.ex != null) {
-        throw result.ex;
-      }
-      return;
-    }
-
-    public void finishSplits() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
-    {
-      send_finishSplits();
-      recv_finishSplits();
-    }
-
-    public void send_finishSplits() throws org.apache.thrift.TException
-    {
-      finishSplits_args args = new finishSplits_args();
-      sendBase("finishSplits", args);
-    }
-
-    public void recv_finishSplits() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
-    {
-      finishSplits_result result = new finishSplits_result();
-      receiveBase(result, "finishSplits");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -162,85 +109,24 @@ public class IShuffleModule {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void createSplits(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void createSplits(java.util.List<ISplit> splits, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      createSplits_call method_call = new createSplits_call(resultHandler, this, ___protocolFactory, ___transport);
+      createSplits_call method_call = new createSplits_call(splits, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createSplits_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      public createSplits_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private java.util.List<ISplit> splits;
+      public createSplits_call(java.util.List<ISplit> splits, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.splits = splits;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("createSplits", org.apache.thrift.protocol.TMessageType.CALL, 0));
         createSplits_args args = new createSplits_args();
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public Void getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new java.lang.IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
-      }
-    }
-
-    public void nextSplit(java.lang.String addr, long length, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      nextSplit_call method_call = new nextSplit_call(addr, length, resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class nextSplit_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private java.lang.String addr;
-      private long length;
-      public nextSplit_call(java.lang.String addr, long length, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-        this.addr = addr;
-        this.length = length;
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("nextSplit", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        nextSplit_args args = new nextSplit_args();
-        args.setAddr(addr);
-        args.setLength(length);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public Void getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new java.lang.IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
-      }
-    }
-
-    public void finishSplits(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      finishSplits_call method_call = new finishSplits_call(resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class finishSplits_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      public finishSplits_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("finishSplits", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        finishSplits_args args = new finishSplits_args();
+        args.setSplits(splits);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -301,8 +187,6 @@ public class IShuffleModule {
 
     private static <I extends Iface> java.util.Map<java.lang.String,  org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> getProcessMap(java.util.Map<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
       processMap.put("createSplits", new createSplits());
-      processMap.put("nextSplit", new nextSplit());
-      processMap.put("finishSplits", new finishSplits());
       processMap.put("joinSplits", new joinSplits());
       return processMap;
     }
@@ -328,65 +212,7 @@ public class IShuffleModule {
       public createSplits_result getResult(I iface, createSplits_args args) throws org.apache.thrift.TException {
         createSplits_result result = new createSplits_result();
         try {
-          iface.createSplits();
-        } catch (org.ignis.rpc.IRemoteException ex) {
-          result.ex = ex;
-        }
-        return result;
-      }
-    }
-
-    public static class nextSplit<I extends Iface> extends org.apache.thrift.ProcessFunction<I, nextSplit_args> {
-      public nextSplit() {
-        super("nextSplit");
-      }
-
-      public nextSplit_args getEmptyArgsInstance() {
-        return new nextSplit_args();
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      @Override
-      protected boolean handleRuntimeExceptions() {
-        return true;
-      }
-
-      public nextSplit_result getResult(I iface, nextSplit_args args) throws org.apache.thrift.TException {
-        nextSplit_result result = new nextSplit_result();
-        try {
-          iface.nextSplit(args.addr, args.length);
-        } catch (org.ignis.rpc.IRemoteException ex) {
-          result.ex = ex;
-        }
-        return result;
-      }
-    }
-
-    public static class finishSplits<I extends Iface> extends org.apache.thrift.ProcessFunction<I, finishSplits_args> {
-      public finishSplits() {
-        super("finishSplits");
-      }
-
-      public finishSplits_args getEmptyArgsInstance() {
-        return new finishSplits_args();
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      @Override
-      protected boolean handleRuntimeExceptions() {
-        return true;
-      }
-
-      public finishSplits_result getResult(I iface, finishSplits_args args) throws org.apache.thrift.TException {
-        finishSplits_result result = new finishSplits_result();
-        try {
-          iface.finishSplits();
+          iface.createSplits(args.splits);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -437,8 +263,6 @@ public class IShuffleModule {
 
     private static <I extends AsyncIface> java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
       processMap.put("createSplits", new createSplits());
-      processMap.put("nextSplit", new nextSplit());
-      processMap.put("finishSplits", new finishSplits());
       processMap.put("joinSplits", new joinSplits());
       return processMap;
     }
@@ -503,135 +327,7 @@ public class IShuffleModule {
       }
 
       public void start(I iface, createSplits_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.createSplits(resultHandler);
-      }
-    }
-
-    public static class nextSplit<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, nextSplit_args, Void> {
-      public nextSplit() {
-        super("nextSplit");
-      }
-
-      public nextSplit_args getEmptyArgsInstance() {
-        return new nextSplit_args();
-      }
-
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
-        final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
-            nextSplit_result result = new nextSplit_result();
-            try {
-              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-            } catch (org.apache.thrift.transport.TTransportException e) {
-              _LOGGER.error("TTransportException writing to internal frame buffer", e);
-              fb.close();
-            } catch (java.lang.Exception e) {
-              _LOGGER.error("Exception writing to internal frame buffer", e);
-              onError(e);
-            }
-          }
-          public void onError(java.lang.Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TSerializable msg;
-            nextSplit_result result = new nextSplit_result();
-            if (e instanceof org.ignis.rpc.IRemoteException) {
-              result.ex = (org.ignis.rpc.IRemoteException) e;
-              result.setExIsSet(true);
-              msg = result;
-            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
-              _LOGGER.error("TTransportException inside handler", e);
-              fb.close();
-              return;
-            } else if (e instanceof org.apache.thrift.TApplicationException) {
-              _LOGGER.error("TApplicationException inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TApplicationException)e;
-            } else {
-              _LOGGER.error("Exception inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (java.lang.Exception ex) {
-              _LOGGER.error("Exception writing to internal frame buffer", ex);
-              fb.close();
-            }
-          }
-        };
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      public void start(I iface, nextSplit_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.nextSplit(args.addr, args.length,resultHandler);
-      }
-    }
-
-    public static class finishSplits<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, finishSplits_args, Void> {
-      public finishSplits() {
-        super("finishSplits");
-      }
-
-      public finishSplits_args getEmptyArgsInstance() {
-        return new finishSplits_args();
-      }
-
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
-        final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
-            finishSplits_result result = new finishSplits_result();
-            try {
-              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-            } catch (org.apache.thrift.transport.TTransportException e) {
-              _LOGGER.error("TTransportException writing to internal frame buffer", e);
-              fb.close();
-            } catch (java.lang.Exception e) {
-              _LOGGER.error("Exception writing to internal frame buffer", e);
-              onError(e);
-            }
-          }
-          public void onError(java.lang.Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TSerializable msg;
-            finishSplits_result result = new finishSplits_result();
-            if (e instanceof org.ignis.rpc.IRemoteException) {
-              result.ex = (org.ignis.rpc.IRemoteException) e;
-              result.setExIsSet(true);
-              msg = result;
-            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
-              _LOGGER.error("TTransportException inside handler", e);
-              fb.close();
-              return;
-            } else if (e instanceof org.apache.thrift.TApplicationException) {
-              _LOGGER.error("TApplicationException inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TApplicationException)e;
-            } else {
-              _LOGGER.error("Exception inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (java.lang.Exception ex) {
-              _LOGGER.error("Exception writing to internal frame buffer", ex);
-              fb.close();
-            }
-          }
-        };
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      public void start(I iface, finishSplits_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.finishSplits(resultHandler);
+        iface.createSplits(args.splits,resultHandler);
       }
     }
 
@@ -704,14 +400,16 @@ public class IShuffleModule {
   public static class createSplits_args implements org.apache.thrift.TBase<createSplits_args, createSplits_args._Fields>, java.io.Serializable, Cloneable, Comparable<createSplits_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("createSplits_args");
 
+    private static final org.apache.thrift.protocol.TField SPLITS_FIELD_DESC = new org.apache.thrift.protocol.TField("splits", org.apache.thrift.protocol.TType.LIST, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new createSplits_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new createSplits_argsTupleSchemeFactory();
 
+    private java.util.List<ISplit> splits; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SPLITS((short)1, "splits");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -726,6 +424,8 @@ public class IShuffleModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 1: // SPLITS
+            return SPLITS;
           default:
             return null;
         }
@@ -764,9 +464,14 @@ public class IShuffleModule {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SPLITS, new org.apache.thrift.meta_data.FieldMetaData("splits", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, ISplit.class))));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(createSplits_args.class, metaDataMap);
     }
@@ -774,10 +479,24 @@ public class IShuffleModule {
     public createSplits_args() {
     }
 
+    public createSplits_args(
+      java.util.List<ISplit> splits)
+    {
+      this();
+      this.splits = splits;
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public createSplits_args(createSplits_args other) {
+      if (other.isSetSplits()) {
+        java.util.List<ISplit> __this__splits = new java.util.ArrayList<ISplit>(other.splits.size());
+        for (ISplit other_element : other.splits) {
+          __this__splits.add(new ISplit(other_element));
+        }
+        this.splits = __this__splits;
+      }
     }
 
     public createSplits_args deepCopy() {
@@ -786,15 +505,66 @@ public class IShuffleModule {
 
     @Override
     public void clear() {
+      this.splits = null;
+    }
+
+    public int getSplitsSize() {
+      return (this.splits == null) ? 0 : this.splits.size();
+    }
+
+    public java.util.Iterator<ISplit> getSplitsIterator() {
+      return (this.splits == null) ? null : this.splits.iterator();
+    }
+
+    public void addToSplits(ISplit elem) {
+      if (this.splits == null) {
+        this.splits = new java.util.ArrayList<ISplit>();
+      }
+      this.splits.add(elem);
+    }
+
+    public java.util.List<ISplit> getSplits() {
+      return this.splits;
+    }
+
+    public createSplits_args setSplits(java.util.List<ISplit> splits) {
+      this.splits = splits;
+      return this;
+    }
+
+    public void unsetSplits() {
+      this.splits = null;
+    }
+
+    /** Returns true if field splits is set (has been assigned a value) and false otherwise */
+    public boolean isSetSplits() {
+      return this.splits != null;
+    }
+
+    public void setSplitsIsSet(boolean value) {
+      if (!value) {
+        this.splits = null;
+      }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case SPLITS:
+        if (value == null) {
+          unsetSplits();
+        } else {
+          setSplits((java.util.List<ISplit>)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case SPLITS:
+        return getSplits();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -806,6 +576,8 @@ public class IShuffleModule {
       }
 
       switch (field) {
+      case SPLITS:
+        return isSetSplits();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -825,12 +597,25 @@ public class IShuffleModule {
       if (this == that)
         return true;
 
+      boolean this_present_splits = true && this.isSetSplits();
+      boolean that_present_splits = true && that.isSetSplits();
+      if (this_present_splits || that_present_splits) {
+        if (!(this_present_splits && that_present_splits))
+          return false;
+        if (!this.splits.equals(that.splits))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSplits()) ? 131071 : 524287);
+      if (isSetSplits())
+        hashCode = hashCode * 8191 + splits.hashCode();
 
       return hashCode;
     }
@@ -843,6 +628,16 @@ public class IShuffleModule {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetSplits()).compareTo(other.isSetSplits());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSplits()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.splits, other.splits);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -863,6 +658,13 @@ public class IShuffleModule {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("createSplits_args(");
       boolean first = true;
 
+      sb.append("splits:");
+      if (this.splits == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.splits);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -906,6 +708,25 @@ public class IShuffleModule {
             break;
           }
           switch (schemeField.id) {
+            case 1: // SPLITS
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
+                  struct.splits = new java.util.ArrayList<ISplit>(_list0.size);
+                  ISplit _elem1;
+                  for (int _i2 = 0; _i2 < _list0.size; ++_i2)
+                  {
+                    _elem1 = new ISplit();
+                    _elem1.read(iprot);
+                    struct.splits.add(_elem1);
+                  }
+                  iprot.readListEnd();
+                }
+                struct.setSplitsIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -921,6 +742,18 @@ public class IShuffleModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.splits != null) {
+          oprot.writeFieldBegin(SPLITS_FIELD_DESC);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.splits.size()));
+            for (ISplit _iter3 : struct.splits)
+            {
+              _iter3.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -938,11 +771,40 @@ public class IShuffleModule {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, createSplits_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSplits()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSplits()) {
+          {
+            oprot.writeI32(struct.splits.size());
+            for (ISplit _iter4 : struct.splits)
+            {
+              _iter4.write(oprot);
+            }
+          }
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, createSplits_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          {
+            org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.splits = new java.util.ArrayList<ISplit>(_list5.size);
+            ISplit _elem6;
+            for (int _i7 = 0; _i7 < _list5.size; ++_i7)
+            {
+              _elem6 = new ISplit();
+              _elem6.read(iprot);
+              struct.splits.add(_elem6);
+            }
+          }
+          struct.setSplitsIsSet(true);
+        }
       }
     }
 
@@ -1315,1446 +1177,6 @@ public class IShuffleModule {
     }
   }
 
-  public static class nextSplit_args implements org.apache.thrift.TBase<nextSplit_args, nextSplit_args._Fields>, java.io.Serializable, Cloneable, Comparable<nextSplit_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("nextSplit_args");
-
-    private static final org.apache.thrift.protocol.TField ADDR_FIELD_DESC = new org.apache.thrift.protocol.TField("addr", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField LENGTH_FIELD_DESC = new org.apache.thrift.protocol.TField("length", org.apache.thrift.protocol.TType.I64, (short)2);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new nextSplit_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new nextSplit_argsTupleSchemeFactory();
-
-    private java.lang.String addr; // required
-    private long length; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      ADDR((short)1, "addr"),
-      LENGTH((short)2, "length");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // ADDR
-            return ADDR;
-          case 2: // LENGTH
-            return LENGTH;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    private static final int __LENGTH_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.ADDR, new org.apache.thrift.meta_data.FieldMetaData("addr", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.LENGTH, new org.apache.thrift.meta_data.FieldMetaData("length", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(nextSplit_args.class, metaDataMap);
-    }
-
-    public nextSplit_args() {
-    }
-
-    public nextSplit_args(
-      java.lang.String addr,
-      long length)
-    {
-      this();
-      this.addr = addr;
-      this.length = length;
-      setLengthIsSet(true);
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public nextSplit_args(nextSplit_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      if (other.isSetAddr()) {
-        this.addr = other.addr;
-      }
-      this.length = other.length;
-    }
-
-    public nextSplit_args deepCopy() {
-      return new nextSplit_args(this);
-    }
-
-    @Override
-    public void clear() {
-      this.addr = null;
-      setLengthIsSet(false);
-      this.length = 0;
-    }
-
-    public java.lang.String getAddr() {
-      return this.addr;
-    }
-
-    public nextSplit_args setAddr(java.lang.String addr) {
-      this.addr = addr;
-      return this;
-    }
-
-    public void unsetAddr() {
-      this.addr = null;
-    }
-
-    /** Returns true if field addr is set (has been assigned a value) and false otherwise */
-    public boolean isSetAddr() {
-      return this.addr != null;
-    }
-
-    public void setAddrIsSet(boolean value) {
-      if (!value) {
-        this.addr = null;
-      }
-    }
-
-    public long getLength() {
-      return this.length;
-    }
-
-    public nextSplit_args setLength(long length) {
-      this.length = length;
-      setLengthIsSet(true);
-      return this;
-    }
-
-    public void unsetLength() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __LENGTH_ISSET_ID);
-    }
-
-    /** Returns true if field length is set (has been assigned a value) and false otherwise */
-    public boolean isSetLength() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __LENGTH_ISSET_ID);
-    }
-
-    public void setLengthIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __LENGTH_ISSET_ID, value);
-    }
-
-    public void setFieldValue(_Fields field, java.lang.Object value) {
-      switch (field) {
-      case ADDR:
-        if (value == null) {
-          unsetAddr();
-        } else {
-          setAddr((java.lang.String)value);
-        }
-        break;
-
-      case LENGTH:
-        if (value == null) {
-          unsetLength();
-        } else {
-          setLength((java.lang.Long)value);
-        }
-        break;
-
-      }
-    }
-
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case ADDR:
-        return getAddr();
-
-      case LENGTH:
-        return getLength();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case ADDR:
-        return isSetAddr();
-      case LENGTH:
-        return isSetLength();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof nextSplit_args)
-        return this.equals((nextSplit_args)that);
-      return false;
-    }
-
-    public boolean equals(nextSplit_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_addr = true && this.isSetAddr();
-      boolean that_present_addr = true && that.isSetAddr();
-      if (this_present_addr || that_present_addr) {
-        if (!(this_present_addr && that_present_addr))
-          return false;
-        if (!this.addr.equals(that.addr))
-          return false;
-      }
-
-      boolean this_present_length = true;
-      boolean that_present_length = true;
-      if (this_present_length || that_present_length) {
-        if (!(this_present_length && that_present_length))
-          return false;
-        if (this.length != that.length)
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetAddr()) ? 131071 : 524287);
-      if (isSetAddr())
-        hashCode = hashCode * 8191 + addr.hashCode();
-
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(length);
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(nextSplit_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetAddr()).compareTo(other.isSetAddr());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetAddr()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.addr, other.addr);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetLength()).compareTo(other.isSetLength());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetLength()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.length, other.length);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-    }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("nextSplit_args(");
-      boolean first = true;
-
-      sb.append("addr:");
-      if (this.addr == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.addr);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("length:");
-      sb.append(this.length);
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class nextSplit_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public nextSplit_argsStandardScheme getScheme() {
-        return new nextSplit_argsStandardScheme();
-      }
-    }
-
-    private static class nextSplit_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<nextSplit_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, nextSplit_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // ADDR
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.addr = iprot.readString();
-                struct.setAddrIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 2: // LENGTH
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.length = iprot.readI64();
-                struct.setLengthIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, nextSplit_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.addr != null) {
-          oprot.writeFieldBegin(ADDR_FIELD_DESC);
-          oprot.writeString(struct.addr);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldBegin(LENGTH_FIELD_DESC);
-        oprot.writeI64(struct.length);
-        oprot.writeFieldEnd();
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class nextSplit_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public nextSplit_argsTupleScheme getScheme() {
-        return new nextSplit_argsTupleScheme();
-      }
-    }
-
-    private static class nextSplit_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<nextSplit_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, nextSplit_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetAddr()) {
-          optionals.set(0);
-        }
-        if (struct.isSetLength()) {
-          optionals.set(1);
-        }
-        oprot.writeBitSet(optionals, 2);
-        if (struct.isSetAddr()) {
-          oprot.writeString(struct.addr);
-        }
-        if (struct.isSetLength()) {
-          oprot.writeI64(struct.length);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, nextSplit_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
-        if (incoming.get(0)) {
-          struct.addr = iprot.readString();
-          struct.setAddrIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.length = iprot.readI64();
-          struct.setLengthIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class nextSplit_result implements org.apache.thrift.TBase<nextSplit_result, nextSplit_result._Fields>, java.io.Serializable, Cloneable, Comparable<nextSplit_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("nextSplit_result");
-
-    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new nextSplit_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new nextSplit_resultTupleSchemeFactory();
-
-    private org.ignis.rpc.IRemoteException ex; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      EX((short)1, "ex");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // EX
-            return EX;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(nextSplit_result.class, metaDataMap);
-    }
-
-    public nextSplit_result() {
-    }
-
-    public nextSplit_result(
-      org.ignis.rpc.IRemoteException ex)
-    {
-      this();
-      this.ex = ex;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public nextSplit_result(nextSplit_result other) {
-      if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IRemoteException(other.ex);
-      }
-    }
-
-    public nextSplit_result deepCopy() {
-      return new nextSplit_result(this);
-    }
-
-    @Override
-    public void clear() {
-      this.ex = null;
-    }
-
-    public org.ignis.rpc.IRemoteException getEx() {
-      return this.ex;
-    }
-
-    public nextSplit_result setEx(org.ignis.rpc.IRemoteException ex) {
-      this.ex = ex;
-      return this;
-    }
-
-    public void unsetEx() {
-      this.ex = null;
-    }
-
-    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
-    public boolean isSetEx() {
-      return this.ex != null;
-    }
-
-    public void setExIsSet(boolean value) {
-      if (!value) {
-        this.ex = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, java.lang.Object value) {
-      switch (field) {
-      case EX:
-        if (value == null) {
-          unsetEx();
-        } else {
-          setEx((org.ignis.rpc.IRemoteException)value);
-        }
-        break;
-
-      }
-    }
-
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case EX:
-        return getEx();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case EX:
-        return isSetEx();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof nextSplit_result)
-        return this.equals((nextSplit_result)that);
-      return false;
-    }
-
-    public boolean equals(nextSplit_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_ex = true && this.isSetEx();
-      boolean that_present_ex = true && that.isSetEx();
-      if (this_present_ex || that_present_ex) {
-        if (!(this_present_ex && that_present_ex))
-          return false;
-        if (!this.ex.equals(that.ex))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
-      if (isSetEx())
-        hashCode = hashCode * 8191 + ex.hashCode();
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(nextSplit_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetEx()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-      }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("nextSplit_result(");
-      boolean first = true;
-
-      sb.append("ex:");
-      if (this.ex == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.ex);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class nextSplit_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public nextSplit_resultStandardScheme getScheme() {
-        return new nextSplit_resultStandardScheme();
-      }
-    }
-
-    private static class nextSplit_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<nextSplit_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, nextSplit_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // EX
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IRemoteException();
-                struct.ex.read(iprot);
-                struct.setExIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, nextSplit_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.ex != null) {
-          oprot.writeFieldBegin(EX_FIELD_DESC);
-          struct.ex.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class nextSplit_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public nextSplit_resultTupleScheme getScheme() {
-        return new nextSplit_resultTupleScheme();
-      }
-    }
-
-    private static class nextSplit_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<nextSplit_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, nextSplit_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetEx()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetEx()) {
-          struct.ex.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, nextSplit_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IRemoteException();
-          struct.ex.read(iprot);
-          struct.setExIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class finishSplits_args implements org.apache.thrift.TBase<finishSplits_args, finishSplits_args._Fields>, java.io.Serializable, Cloneable, Comparable<finishSplits_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("finishSplits_args");
-
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new finishSplits_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new finishSplits_argsTupleSchemeFactory();
-
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(finishSplits_args.class, metaDataMap);
-    }
-
-    public finishSplits_args() {
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public finishSplits_args(finishSplits_args other) {
-    }
-
-    public finishSplits_args deepCopy() {
-      return new finishSplits_args(this);
-    }
-
-    @Override
-    public void clear() {
-    }
-
-    public void setFieldValue(_Fields field, java.lang.Object value) {
-      switch (field) {
-      }
-    }
-
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof finishSplits_args)
-        return this.equals((finishSplits_args)that);
-      return false;
-    }
-
-    public boolean equals(finishSplits_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(finishSplits_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-    }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("finishSplits_args(");
-      boolean first = true;
-
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class finishSplits_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public finishSplits_argsStandardScheme getScheme() {
-        return new finishSplits_argsStandardScheme();
-      }
-    }
-
-    private static class finishSplits_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<finishSplits_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, finishSplits_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, finishSplits_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class finishSplits_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public finishSplits_argsTupleScheme getScheme() {
-        return new finishSplits_argsTupleScheme();
-      }
-    }
-
-    private static class finishSplits_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<finishSplits_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, finishSplits_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, finishSplits_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class finishSplits_result implements org.apache.thrift.TBase<finishSplits_result, finishSplits_result._Fields>, java.io.Serializable, Cloneable, Comparable<finishSplits_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("finishSplits_result");
-
-    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new finishSplits_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new finishSplits_resultTupleSchemeFactory();
-
-    private org.ignis.rpc.IRemoteException ex; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      EX((short)1, "ex");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // EX
-            return EX;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(finishSplits_result.class, metaDataMap);
-    }
-
-    public finishSplits_result() {
-    }
-
-    public finishSplits_result(
-      org.ignis.rpc.IRemoteException ex)
-    {
-      this();
-      this.ex = ex;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public finishSplits_result(finishSplits_result other) {
-      if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IRemoteException(other.ex);
-      }
-    }
-
-    public finishSplits_result deepCopy() {
-      return new finishSplits_result(this);
-    }
-
-    @Override
-    public void clear() {
-      this.ex = null;
-    }
-
-    public org.ignis.rpc.IRemoteException getEx() {
-      return this.ex;
-    }
-
-    public finishSplits_result setEx(org.ignis.rpc.IRemoteException ex) {
-      this.ex = ex;
-      return this;
-    }
-
-    public void unsetEx() {
-      this.ex = null;
-    }
-
-    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
-    public boolean isSetEx() {
-      return this.ex != null;
-    }
-
-    public void setExIsSet(boolean value) {
-      if (!value) {
-        this.ex = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, java.lang.Object value) {
-      switch (field) {
-      case EX:
-        if (value == null) {
-          unsetEx();
-        } else {
-          setEx((org.ignis.rpc.IRemoteException)value);
-        }
-        break;
-
-      }
-    }
-
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case EX:
-        return getEx();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case EX:
-        return isSetEx();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof finishSplits_result)
-        return this.equals((finishSplits_result)that);
-      return false;
-    }
-
-    public boolean equals(finishSplits_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_ex = true && this.isSetEx();
-      boolean that_present_ex = true && that.isSetEx();
-      if (this_present_ex || that_present_ex) {
-        if (!(this_present_ex && that_present_ex))
-          return false;
-        if (!this.ex.equals(that.ex))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
-      if (isSetEx())
-        hashCode = hashCode * 8191 + ex.hashCode();
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(finishSplits_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetEx()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-      }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("finishSplits_result(");
-      boolean first = true;
-
-      sb.append("ex:");
-      if (this.ex == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.ex);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class finishSplits_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public finishSplits_resultStandardScheme getScheme() {
-        return new finishSplits_resultStandardScheme();
-      }
-    }
-
-    private static class finishSplits_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<finishSplits_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, finishSplits_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // EX
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IRemoteException();
-                struct.ex.read(iprot);
-                struct.setExIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, finishSplits_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.ex != null) {
-          oprot.writeFieldBegin(EX_FIELD_DESC);
-          struct.ex.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class finishSplits_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public finishSplits_resultTupleScheme getScheme() {
-        return new finishSplits_resultTupleScheme();
-      }
-    }
-
-    private static class finishSplits_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<finishSplits_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, finishSplits_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetEx()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetEx()) {
-          struct.ex.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, finishSplits_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IRemoteException();
-          struct.ex.read(iprot);
-          struct.setExIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
   public static class joinSplits_args implements org.apache.thrift.TBase<joinSplits_args, joinSplits_args._Fields>, java.io.Serializable, Cloneable, Comparable<joinSplits_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinSplits_args");
 
@@ -3066,13 +1488,13 @@ public class IShuffleModule {
             case 1: // ORDER
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
-                  struct.order = new java.util.ArrayList<java.lang.Long>(_list0.size);
-                  long _elem1;
-                  for (int _i2 = 0; _i2 < _list0.size; ++_i2)
+                  org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
+                  struct.order = new java.util.ArrayList<java.lang.Long>(_list8.size);
+                  long _elem9;
+                  for (int _i10 = 0; _i10 < _list8.size; ++_i10)
                   {
-                    _elem1 = iprot.readI64();
-                    struct.order.add(_elem1);
+                    _elem9 = iprot.readI64();
+                    struct.order.add(_elem9);
                   }
                   iprot.readListEnd();
                 }
@@ -3100,9 +1522,9 @@ public class IShuffleModule {
           oprot.writeFieldBegin(ORDER_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, struct.order.size()));
-            for (long _iter3 : struct.order)
+            for (long _iter11 : struct.order)
             {
-              oprot.writeI64(_iter3);
+              oprot.writeI64(_iter11);
             }
             oprot.writeListEnd();
           }
@@ -3133,9 +1555,9 @@ public class IShuffleModule {
         if (struct.isSetOrder()) {
           {
             oprot.writeI32(struct.order.size());
-            for (long _iter4 : struct.order)
+            for (long _iter12 : struct.order)
             {
-              oprot.writeI64(_iter4);
+              oprot.writeI64(_iter12);
             }
           }
         }
@@ -3147,13 +1569,13 @@ public class IShuffleModule {
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
-            struct.order = new java.util.ArrayList<java.lang.Long>(_list5.size);
-            long _elem6;
-            for (int _i7 = 0; _i7 < _list5.size; ++_i7)
+            org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
+            struct.order = new java.util.ArrayList<java.lang.Long>(_list13.size);
+            long _elem14;
+            for (int _i15 = 0; _i15 < _list13.size; ++_i15)
             {
-              _elem6 = iprot.readI64();
-              struct.order.add(_elem6);
+              _elem14 = iprot.readI64();
+              struct.order.add(_elem14);
             }
           }
           struct.setOrderIsSet(true);

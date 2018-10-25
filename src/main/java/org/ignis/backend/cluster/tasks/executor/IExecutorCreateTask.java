@@ -48,7 +48,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
         LOGGER.info(log() + "Starting new executor");
         executor.getStub().create();
         try {
-            executor.getServerModule().setContext(executor.getContainer().getId(), executor.getProperties().toMap());
+            executor.getServerModule().updateProperties(executor.getProperties().toMap());
         } catch (TException ex) {
             try {
                 executor.getStub().destroy();

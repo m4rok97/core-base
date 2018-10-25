@@ -31,19 +31,21 @@ public final class ISaveAsTextFileTask extends IExecutorTask {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsTextFileTask.class);
 
     private final String path;
-    private final boolean joined;
+    private final boolean trunc;
+    private final boolean newLine;
 
-    public ISaveAsTextFileTask(IHelper helper, IExecutor executor, String path, boolean joined) {
+    public ISaveAsTextFileTask(IHelper helper, IExecutor executor, String path, boolean trunc, boolean newLine) {
         super(helper, executor);
         this.path = path;
-        this.joined = joined;
+        this.trunc = trunc;
+        this.newLine = newLine;
     }
 
     @Override
     public void execute() throws IgnisException {
         LOGGER.info(log() + "Saving text file");
         try {
-            executor.getFilesModule().saveFile(path, joined);
+            executor.getFilesModule().saveFile(path, trunc, newLine);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }

@@ -15,19 +15,19 @@ public class IDataService {
 
     public void setName(IDataId data, java.lang.String name) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId _map(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId _map(IDataId data, org.ignis.rpc.ISource _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId flatmap(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId flatmap(IDataId data, org.ignis.rpc.ISource _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId filter(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId filter(IDataId data, org.ignis.rpc.ISource _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId streamingMap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId streamingFlatmap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId streamingFlatmap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId streamingFilter(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId streamingFilter(IDataId data, org.ignis.rpc.ISource _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public IDataId reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public IDataId reduceByKey(IDataId data, org.ignis.rpc.ISource _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public IDataId shuffle(IDataId data) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -43,19 +43,19 @@ public class IDataService {
 
     public void setName(IDataId data, java.lang.String name, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void _map(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void _map(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void flatmap(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void flatmap(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void filter(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void filter(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void streamingMap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void streamingFlatmap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void streamingFlatmap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void streamingFilter(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void streamingFilter(IDataId data, org.ignis.rpc.ISource _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
+    public void reduceByKey(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
     public void shuffle(IDataId data, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
@@ -133,13 +133,13 @@ public class IDataService {
       return;
     }
 
-    public IDataId _map(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId _map(IDataId data, org.ignis.rpc.ISource _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send__map(data, _function);
       return recv__map();
     }
 
-    public void send__map(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.apache.thrift.TException
+    public void send__map(IDataId data, org.ignis.rpc.ISource _function) throws org.apache.thrift.TException
     {
       _map_args args = new _map_args();
       args.setData(data);
@@ -160,13 +160,13 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "_map failed: unknown result");
     }
 
-    public IDataId flatmap(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId flatmap(IDataId data, org.ignis.rpc.ISource _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_flatmap(data, _function);
       return recv_flatmap();
     }
 
-    public void send_flatmap(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.apache.thrift.TException
+    public void send_flatmap(IDataId data, org.ignis.rpc.ISource _function) throws org.apache.thrift.TException
     {
       flatmap_args args = new flatmap_args();
       args.setData(data);
@@ -187,13 +187,13 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "flatmap failed: unknown result");
     }
 
-    public IDataId filter(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId filter(IDataId data, org.ignis.rpc.ISource _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_filter(data, _function);
       return recv_filter();
     }
 
-    public void send_filter(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.apache.thrift.TException
+    public void send_filter(IDataId data, org.ignis.rpc.ISource _function) throws org.apache.thrift.TException
     {
       filter_args args = new filter_args();
       args.setData(data);
@@ -214,13 +214,13 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "filter failed: unknown result");
     }
 
-    public IDataId streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId streamingMap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_streamingMap(data, _function, ordered);
       return recv_streamingMap();
     }
 
-    public void send_streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.apache.thrift.TException
+    public void send_streamingMap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered) throws org.apache.thrift.TException
     {
       streamingMap_args args = new streamingMap_args();
       args.setData(data);
@@ -242,13 +242,13 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "streamingMap failed: unknown result");
     }
 
-    public IDataId streamingFlatmap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId streamingFlatmap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_streamingFlatmap(data, _function, ordered);
       return recv_streamingFlatmap();
     }
 
-    public void send_streamingFlatmap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.apache.thrift.TException
+    public void send_streamingFlatmap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered) throws org.apache.thrift.TException
     {
       streamingFlatmap_args args = new streamingFlatmap_args();
       args.setData(data);
@@ -270,13 +270,13 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "streamingFlatmap failed: unknown result");
     }
 
-    public IDataId streamingFilter(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId streamingFilter(IDataId data, org.ignis.rpc.ISource _function, boolean ordered) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_streamingFilter(data, _function, ordered);
       return recv_streamingFilter();
     }
 
-    public void send_streamingFilter(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered) throws org.apache.thrift.TException
+    public void send_streamingFilter(IDataId data, org.ignis.rpc.ISource _function, boolean ordered) throws org.apache.thrift.TException
     {
       streamingFilter_args args = new streamingFilter_args();
       args.setData(data);
@@ -298,13 +298,13 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "streamingFilter failed: unknown result");
     }
 
-    public IDataId reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public IDataId reduceByKey(IDataId data, org.ignis.rpc.ISource _function) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_reduceByKey(data, _function);
       return recv_reduceByKey();
     }
 
-    public void send_reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function) throws org.apache.thrift.TException
+    public void send_reduceByKey(IDataId data, org.ignis.rpc.ISource _function) throws org.apache.thrift.TException
     {
       reduceByKey_args args = new reduceByKey_args();
       args.setData(data);
@@ -489,7 +489,7 @@ public class IDataService {
       }
     }
 
-    public void _map(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void _map(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       _map_call method_call = new _map_call(data, _function, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -498,8 +498,8 @@ public class IDataService {
 
     public static class _map_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.ISourceFunction _function;
-      public _map_call(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource _function;
+      public _map_call(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -524,7 +524,7 @@ public class IDataService {
       }
     }
 
-    public void flatmap(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void flatmap(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       flatmap_call method_call = new flatmap_call(data, _function, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -533,8 +533,8 @@ public class IDataService {
 
     public static class flatmap_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.ISourceFunction _function;
-      public flatmap_call(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource _function;
+      public flatmap_call(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -559,7 +559,7 @@ public class IDataService {
       }
     }
 
-    public void filter(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void filter(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       filter_call method_call = new filter_call(data, _function, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -568,8 +568,8 @@ public class IDataService {
 
     public static class filter_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.ISourceFunction _function;
-      public filter_call(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource _function;
+      public filter_call(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -594,7 +594,7 @@ public class IDataService {
       }
     }
 
-    public void streamingMap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void streamingMap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       streamingMap_call method_call = new streamingMap_call(data, _function, ordered, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -603,9 +603,9 @@ public class IDataService {
 
     public static class streamingMap_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.ISourceFunction _function;
+      private org.ignis.rpc.ISource _function;
       private boolean ordered;
-      public streamingMap_call(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public streamingMap_call(IDataId data, org.ignis.rpc.ISource _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -632,7 +632,7 @@ public class IDataService {
       }
     }
 
-    public void streamingFlatmap(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void streamingFlatmap(IDataId data, org.ignis.rpc.ISource _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       streamingFlatmap_call method_call = new streamingFlatmap_call(data, _function, ordered, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -641,9 +641,9 @@ public class IDataService {
 
     public static class streamingFlatmap_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.ISourceFunction _function;
+      private org.ignis.rpc.ISource _function;
       private boolean ordered;
-      public streamingFlatmap_call(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public streamingFlatmap_call(IDataId data, org.ignis.rpc.ISource _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -670,7 +670,7 @@ public class IDataService {
       }
     }
 
-    public void streamingFilter(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void streamingFilter(IDataId data, org.ignis.rpc.ISource _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       streamingFilter_call method_call = new streamingFilter_call(data, _function, ordered, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -679,9 +679,9 @@ public class IDataService {
 
     public static class streamingFilter_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.ISourceFunction _function;
+      private org.ignis.rpc.ISource _function;
       private boolean ordered;
-      public streamingFilter_call(IDataId data, org.ignis.rpc.ISourceFunction _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public streamingFilter_call(IDataId data, org.ignis.rpc.ISource _function, boolean ordered, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -708,7 +708,7 @@ public class IDataService {
       }
     }
 
-    public void reduceByKey(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
+    public void reduceByKey(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       reduceByKey_call method_call = new reduceByKey_call(data, _function, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -717,8 +717,8 @@ public class IDataService {
 
     public static class reduceByKey_call extends org.apache.thrift.async.TAsyncMethodCall<IDataId> {
       private IDataId data;
-      private org.ignis.rpc.ISourceFunction _function;
-      public reduceByKey_call(IDataId data, org.ignis.rpc.ISourceFunction _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource _function;
+      public reduceByKey_call(IDataId data, org.ignis.rpc.ISource _function, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this._function = _function;
@@ -3709,7 +3709,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new _map_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.ISourceFunction _function; // required
+    private org.ignis.rpc.ISource _function; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -3779,7 +3779,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(_map_args.class, metaDataMap);
     }
@@ -3789,7 +3789,7 @@ public class IDataService {
 
     public _map_args(
       IDataId data,
-      org.ignis.rpc.ISourceFunction _function)
+      org.ignis.rpc.ISource _function)
     {
       this();
       this.data = data;
@@ -3804,7 +3804,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.ISourceFunction(other._function);
+        this._function = new org.ignis.rpc.ISource(other._function);
       }
     }
 
@@ -3842,11 +3842,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.ISourceFunction get_function() {
+    public org.ignis.rpc.ISource get_function() {
       return this._function;
     }
 
-    public _map_args set_function(org.ignis.rpc.ISourceFunction _function) {
+    public _map_args set_function(org.ignis.rpc.ISource _function) {
       this._function = _function;
       return this;
     }
@@ -3880,7 +3880,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.ISourceFunction)value);
+          set_function((org.ignis.rpc.ISource)value);
         }
         break;
 
@@ -4085,7 +4085,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.ISourceFunction();
+                struct._function = new org.ignis.rpc.ISource();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -4160,7 +4160,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.ISourceFunction();
+          struct._function = new org.ignis.rpc.ISource();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }
@@ -4655,7 +4655,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new flatmap_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.ISourceFunction _function; // required
+    private org.ignis.rpc.ISource _function; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -4725,7 +4725,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(flatmap_args.class, metaDataMap);
     }
@@ -4735,7 +4735,7 @@ public class IDataService {
 
     public flatmap_args(
       IDataId data,
-      org.ignis.rpc.ISourceFunction _function)
+      org.ignis.rpc.ISource _function)
     {
       this();
       this.data = data;
@@ -4750,7 +4750,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.ISourceFunction(other._function);
+        this._function = new org.ignis.rpc.ISource(other._function);
       }
     }
 
@@ -4788,11 +4788,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.ISourceFunction get_function() {
+    public org.ignis.rpc.ISource get_function() {
       return this._function;
     }
 
-    public flatmap_args set_function(org.ignis.rpc.ISourceFunction _function) {
+    public flatmap_args set_function(org.ignis.rpc.ISource _function) {
       this._function = _function;
       return this;
     }
@@ -4826,7 +4826,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.ISourceFunction)value);
+          set_function((org.ignis.rpc.ISource)value);
         }
         break;
 
@@ -5031,7 +5031,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.ISourceFunction();
+                struct._function = new org.ignis.rpc.ISource();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -5106,7 +5106,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.ISourceFunction();
+          struct._function = new org.ignis.rpc.ISource();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }
@@ -5601,7 +5601,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new filter_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.ISourceFunction _function; // required
+    private org.ignis.rpc.ISource _function; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -5671,7 +5671,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(filter_args.class, metaDataMap);
     }
@@ -5681,7 +5681,7 @@ public class IDataService {
 
     public filter_args(
       IDataId data,
-      org.ignis.rpc.ISourceFunction _function)
+      org.ignis.rpc.ISource _function)
     {
       this();
       this.data = data;
@@ -5696,7 +5696,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.ISourceFunction(other._function);
+        this._function = new org.ignis.rpc.ISource(other._function);
       }
     }
 
@@ -5734,11 +5734,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.ISourceFunction get_function() {
+    public org.ignis.rpc.ISource get_function() {
       return this._function;
     }
 
-    public filter_args set_function(org.ignis.rpc.ISourceFunction _function) {
+    public filter_args set_function(org.ignis.rpc.ISource _function) {
       this._function = _function;
       return this;
     }
@@ -5772,7 +5772,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.ISourceFunction)value);
+          set_function((org.ignis.rpc.ISource)value);
         }
         break;
 
@@ -5977,7 +5977,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.ISourceFunction();
+                struct._function = new org.ignis.rpc.ISource();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -6052,7 +6052,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.ISourceFunction();
+          struct._function = new org.ignis.rpc.ISource();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }
@@ -6548,7 +6548,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new streamingMap_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.ISourceFunction _function; // required
+    private org.ignis.rpc.ISource _function; // required
     private boolean ordered; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -6624,7 +6624,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       tmpMap.put(_Fields.ORDERED, new org.apache.thrift.meta_data.FieldMetaData("ordered", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
@@ -6636,7 +6636,7 @@ public class IDataService {
 
     public streamingMap_args(
       IDataId data,
-      org.ignis.rpc.ISourceFunction _function,
+      org.ignis.rpc.ISource _function,
       boolean ordered)
     {
       this();
@@ -6655,7 +6655,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.ISourceFunction(other._function);
+        this._function = new org.ignis.rpc.ISource(other._function);
       }
       this.ordered = other.ordered;
     }
@@ -6696,11 +6696,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.ISourceFunction get_function() {
+    public org.ignis.rpc.ISource get_function() {
       return this._function;
     }
 
-    public streamingMap_args set_function(org.ignis.rpc.ISourceFunction _function) {
+    public streamingMap_args set_function(org.ignis.rpc.ISource _function) {
       this._function = _function;
       return this;
     }
@@ -6757,7 +6757,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.ISourceFunction)value);
+          set_function((org.ignis.rpc.ISource)value);
         }
         break;
 
@@ -7002,7 +7002,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.ISourceFunction();
+                struct._function = new org.ignis.rpc.ISource();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -7094,7 +7094,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.ISourceFunction();
+          struct._function = new org.ignis.rpc.ISource();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }
@@ -7594,7 +7594,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new streamingFlatmap_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.ISourceFunction _function; // required
+    private org.ignis.rpc.ISource _function; // required
     private boolean ordered; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -7670,7 +7670,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       tmpMap.put(_Fields.ORDERED, new org.apache.thrift.meta_data.FieldMetaData("ordered", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
@@ -7682,7 +7682,7 @@ public class IDataService {
 
     public streamingFlatmap_args(
       IDataId data,
-      org.ignis.rpc.ISourceFunction _function,
+      org.ignis.rpc.ISource _function,
       boolean ordered)
     {
       this();
@@ -7701,7 +7701,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.ISourceFunction(other._function);
+        this._function = new org.ignis.rpc.ISource(other._function);
       }
       this.ordered = other.ordered;
     }
@@ -7742,11 +7742,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.ISourceFunction get_function() {
+    public org.ignis.rpc.ISource get_function() {
       return this._function;
     }
 
-    public streamingFlatmap_args set_function(org.ignis.rpc.ISourceFunction _function) {
+    public streamingFlatmap_args set_function(org.ignis.rpc.ISource _function) {
       this._function = _function;
       return this;
     }
@@ -7803,7 +7803,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.ISourceFunction)value);
+          set_function((org.ignis.rpc.ISource)value);
         }
         break;
 
@@ -8048,7 +8048,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.ISourceFunction();
+                struct._function = new org.ignis.rpc.ISource();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -8140,7 +8140,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.ISourceFunction();
+          struct._function = new org.ignis.rpc.ISource();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }
@@ -8640,7 +8640,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new streamingFilter_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.ISourceFunction _function; // required
+    private org.ignis.rpc.ISource _function; // required
     private boolean ordered; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -8716,7 +8716,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       tmpMap.put(_Fields.ORDERED, new org.apache.thrift.meta_data.FieldMetaData("ordered", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
@@ -8728,7 +8728,7 @@ public class IDataService {
 
     public streamingFilter_args(
       IDataId data,
-      org.ignis.rpc.ISourceFunction _function,
+      org.ignis.rpc.ISource _function,
       boolean ordered)
     {
       this();
@@ -8747,7 +8747,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.ISourceFunction(other._function);
+        this._function = new org.ignis.rpc.ISource(other._function);
       }
       this.ordered = other.ordered;
     }
@@ -8788,11 +8788,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.ISourceFunction get_function() {
+    public org.ignis.rpc.ISource get_function() {
       return this._function;
     }
 
-    public streamingFilter_args set_function(org.ignis.rpc.ISourceFunction _function) {
+    public streamingFilter_args set_function(org.ignis.rpc.ISource _function) {
       this._function = _function;
       return this;
     }
@@ -8849,7 +8849,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.ISourceFunction)value);
+          set_function((org.ignis.rpc.ISource)value);
         }
         break;
 
@@ -9094,7 +9094,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.ISourceFunction();
+                struct._function = new org.ignis.rpc.ISource();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -9186,7 +9186,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.ISourceFunction();
+          struct._function = new org.ignis.rpc.ISource();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }
@@ -9685,7 +9685,7 @@ public class IDataService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new reduceByKey_argsTupleSchemeFactory();
 
     private IDataId data; // required
-    private org.ignis.rpc.ISourceFunction _function; // required
+    private org.ignis.rpc.ISource _function; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -9755,7 +9755,7 @@ public class IDataService {
       tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataId.class)));
       tmpMap.put(_Fields._FUNCTION, new org.apache.thrift.meta_data.FieldMetaData("_function", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISourceFunction.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(reduceByKey_args.class, metaDataMap);
     }
@@ -9765,7 +9765,7 @@ public class IDataService {
 
     public reduceByKey_args(
       IDataId data,
-      org.ignis.rpc.ISourceFunction _function)
+      org.ignis.rpc.ISource _function)
     {
       this();
       this.data = data;
@@ -9780,7 +9780,7 @@ public class IDataService {
         this.data = new IDataId(other.data);
       }
       if (other.isSet_function()) {
-        this._function = new org.ignis.rpc.ISourceFunction(other._function);
+        this._function = new org.ignis.rpc.ISource(other._function);
       }
     }
 
@@ -9818,11 +9818,11 @@ public class IDataService {
       }
     }
 
-    public org.ignis.rpc.ISourceFunction get_function() {
+    public org.ignis.rpc.ISource get_function() {
       return this._function;
     }
 
-    public reduceByKey_args set_function(org.ignis.rpc.ISourceFunction _function) {
+    public reduceByKey_args set_function(org.ignis.rpc.ISource _function) {
       this._function = _function;
       return this;
     }
@@ -9856,7 +9856,7 @@ public class IDataService {
         if (value == null) {
           unset_function();
         } else {
-          set_function((org.ignis.rpc.ISourceFunction)value);
+          set_function((org.ignis.rpc.ISource)value);
         }
         break;
 
@@ -10061,7 +10061,7 @@ public class IDataService {
               break;
             case 2: // _FUNCTION
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct._function = new org.ignis.rpc.ISourceFunction();
+                struct._function = new org.ignis.rpc.ISource();
                 struct._function.read(iprot);
                 struct.set_functionIsSet(true);
               } else { 
@@ -10136,7 +10136,7 @@ public class IDataService {
           struct.setDataIsSet(true);
         }
         if (incoming.get(1)) {
-          struct._function = new org.ignis.rpc.ISourceFunction();
+          struct._function = new org.ignis.rpc.ISource();
           struct._function.read(iprot);
           struct.set_functionIsSet(true);
         }

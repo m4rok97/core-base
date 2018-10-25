@@ -24,7 +24,7 @@ import java.util.Random;
 import org.ignis.backend.properties.IPropsKeys;
 import org.ignis.backend.rpc.MockClusterServices;
 import org.ignis.backend.rpc.MockJobServices;
-import org.ignis.rpc.ISourceFunction;
+import org.ignis.rpc.ISource;
 import org.ignis.rpc.driver.IDataId;
 import org.ignis.rpc.driver.IJobId;
 import org.ignis.rpc.executor.IFilesModule;
@@ -43,9 +43,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class ReducerModuleTest extends BackendTest {
+public class KeysModuleTest extends BackendTest {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ReducerModuleTest.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(KeysModuleTest.class);
 
     @BeforeAll
     public static void info() {
@@ -55,11 +55,11 @@ public class ReducerModuleTest extends BackendTest {
     @SuppressWarnings("unchecked")
     public void testReduceByKey(int instances) {
         Random random = new Random(0);
-        List<Map<Long, Long>> keys = new ArrayList<>();
+        List<List<Long>> keys = new ArrayList<>();
         for (int i = 0; i < instances; i++) {
-            keys.add(new HashMap<>());
+            keys.add(new ArrayList<>());
             for (int j = 0; j < 10; j++) {
-                keys.get(i).put((Long) (long) random.nextInt(20), 1l);
+                keys.get(i).add((Long) (long) random.nextInt(20));
             }
         }
 
@@ -77,17 +77,16 @@ public class ReducerModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.setShuffleModule(Mockito.mock(IShuffleModule.Iface.class, a -> null));
             mockJob.setPostmanModule(Mockito.mock(IPostmanModule.Iface.class, a -> null));
             mockJob.setReducerModule(Mockito.mock(IReducerModule.Iface.class, a -> null));
             mockJob.setKeysModule(Mockito.mock(IKeysModule.Iface.class, a -> null));
-            Mockito.when(mockJob.getKeysModule().getKeys(Mockito.anyBoolean())).
-                    thenReturn(keys.get(0), keys.subList(0, keys.size()).toArray(new Map[0]));
+            Mockito.when(mockJob.getKeysModule().getKeys()).thenReturn(keys.get(0), keys.subList(0, keys.size()).toArray(new List[0]));
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
-            IDataId map = dataService.reduceByKey(read, new ISourceFunction());
+            IDataId map = dataService.reduceByKey(read, new ISource());
             dataService.saveAsTextFile(map, "src/test/salida.txt", true);
         } catch (Exception ex) {
             Assert.fail(ex.toString());

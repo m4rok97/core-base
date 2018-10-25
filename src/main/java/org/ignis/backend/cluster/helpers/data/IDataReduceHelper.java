@@ -24,7 +24,7 @@ import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IReduceByKeyTask;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.ISourceFunction;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -39,7 +39,7 @@ public final class IDataReduceHelper extends IDataHelper {
         super(data, properties);
     }
 
-    public IData reduceByKey(ISourceFunction function) {
+    public IData reduceByKey(ISource function) {
         IBarrier barrier = new IBarrier(data.getPartitions());
         IReduceByKeyTask.Shared keyShared = new IReduceByKeyTask.Shared();
         List<IExecutor> result = new ArrayList<>();

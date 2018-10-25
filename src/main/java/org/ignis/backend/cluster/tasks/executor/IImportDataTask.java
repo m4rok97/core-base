@@ -30,6 +30,7 @@ import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.rpc.executor.ISplit;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -175,10 +176,10 @@ public final class IImportDataTask extends IExecutorTask {
 
             if (type == SEND || type == SHUFFLE) {
                 LOGGER.info(log() + "Creating " + keyShared.msgs.get(executor).size() + " partitions");
-                executor.getShuffleModule().createSplits();
                 int i = 1;
                 int port = executor.getContainer().getProperties().getInteger(IPropsKeys.TRANSPORT_PORT);
                 StringBuilder addr = new StringBuilder();
+                List<ISplit> splits = new ArrayList<>();
                 for (Map.Entry<IExecutor, Long> msg : keyShared.msgs.get(executor).entrySet()) {
                     addr.setLength(0);
                     //TODO shared memory
@@ -188,10 +189,10 @@ public final class IImportDataTask extends IExecutorTask {
                         IContainer container = msg.getKey().getContainer();
                         addr.append("socket!").append(container.getHost()).append("!").append(port);
                     }
-                    executor.getShuffleModule().nextSplit(addr.toString(), msg.getValue());
+                    splits.add(new ISplit(executor.getId(), addr.toString(), msg.getValue()));
                     LOGGER.info(log() + "Partition " + (i++) + " with " + msg.getValue() + " elements to " + addr.toString());
                 }
-                executor.getShuffleModule().finishSplits();
+                executor.getShuffleModule().createSplits(splits);
                 LOGGER.info(log() + "Partitions created");
             }
             barrier.await();
@@ -214,7 +215,8 @@ public final class IImportDataTask extends IExecutorTask {
                 }
             }
             if (type == RECEIVE || type == SHUFFLE) {
-                List<Long> order = sources.stream().map(e -> e.getJob()).collect(Collectors.toList());
+                List<Long> order = sources.stream().filter(e -> keyShared.msgs.get(e).containsKey(executor))
+                        .map(e -> e.getJob()).sorted().collect(Collectors.toList());
                 LOGGER.info(log() + "Joining partitions");
                 executor.getShuffleModule().joinSplits(order);
                 LOGGER.info(log() + "Partitions joined");

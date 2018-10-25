@@ -19,7 +19,7 @@ package org.ignis.backend.modules;
 import org.ignis.backend.properties.IPropsKeys;
 import org.ignis.backend.rpc.MockClusterServices;
 import org.ignis.backend.rpc.MockJobServices;
-import org.ignis.rpc.ISourceFunction;
+import org.ignis.rpc.ISource;
 import org.ignis.rpc.driver.IDataId;
 import org.ignis.rpc.driver.IJobId;
 import org.ignis.rpc.executor.IFilesModule;
@@ -59,13 +59,13 @@ public class MapperModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.setMapperModule(Mockito.mock(IMapperModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getMapperModule())._map(Mockito.any());
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
-            IDataId map = dataService._map(read, new ISourceFunction());
+            IDataId map = dataService._map(read, new ISource());
             dataService.saveAsTextFile(map, "src/test/salida.txt", true);
         } catch (Exception ex) {
             Assert.fail(ex.toString());
@@ -87,13 +87,13 @@ public class MapperModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.setMapperModule(Mockito.mock(IMapperModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getMapperModule()).streamingMap(Mockito.any(), Mockito.anyBoolean());
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
-            IDataId map = dataService.streamingMap(read, new ISourceFunction(), true);
+            IDataId map = dataService.streamingMap(read, new ISource(), true);
             dataService.saveAsTextFile(map, "src/test/salida.txt", true);
         } catch (Exception ex) {
             Assert.fail(ex.toString());
@@ -115,13 +115,13 @@ public class MapperModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.setMapperModule(Mockito.mock(IMapperModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getMapperModule()).flatmap(Mockito.any());
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
-            IDataId map = dataService.flatmap(read, new ISourceFunction());
+            IDataId map = dataService.flatmap(read, new ISource());
             dataService.saveAsTextFile(map, "src/test/salida.txt", true);
         } catch (Exception ex) {
             Assert.fail(ex.toString());
@@ -143,13 +143,13 @@ public class MapperModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.setMapperModule(Mockito.mock(IMapperModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getMapperModule()).streamingFlatmap(Mockito.any(), Mockito.anyBoolean());
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
-            IDataId map = dataService.streamingMap(read, new ISourceFunction(), true);
+            IDataId map = dataService.streamingMap(read, new ISource(), true);
             dataService.saveAsTextFile(map, "src/test/salida.txt", true);
         } catch (Exception ex) {
             Assert.fail(ex.toString());
@@ -171,13 +171,13 @@ public class MapperModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.setMapperModule(Mockito.mock(IMapperModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getMapperModule()).filter(Mockito.any());
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
-            IDataId map = dataService.filter(read, new ISourceFunction());
+            IDataId map = dataService.filter(read, new ISource());
             dataService.saveAsTextFile(map, "src/test/salida.txt", true);
         } catch (Exception ex) {
             Assert.fail(ex.toString());
@@ -199,13 +199,13 @@ public class MapperModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.setMapperModule(Mockito.mock(IMapperModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getMapperModule()).streamingFilter(Mockito.any(), Mockito.anyBoolean());
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
-            IDataId map = dataService.streamingFilter(read, new ISourceFunction(), true);
+            IDataId map = dataService.streamingFilter(read, new ISource(), true);
             dataService.saveAsTextFile(map, "src/test/salida.txt", true);
         } catch (Exception ex) {
             Assert.fail(ex.toString());

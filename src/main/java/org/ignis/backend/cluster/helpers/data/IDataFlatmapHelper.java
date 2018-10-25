@@ -24,7 +24,7 @@ import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IFlatmapTask;
 import org.ignis.backend.cluster.tasks.executor.IStreamingFlatmapTask;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.ISourceFunction;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -39,7 +39,7 @@ public final class IDataFlatmapHelper extends IDataHelper {
         super(data, properties);
     }
 
-    public IData flatmap(ISourceFunction function) {
+    public IData flatmap(ISource function) {
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
@@ -52,7 +52,7 @@ public final class IDataFlatmapHelper extends IDataHelper {
         return target;
     }
 
-    public IData streamingFlatmap(ISourceFunction function, boolean ordered) {
+    public IData streamingFlatmap(ISource function, boolean ordered) {
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());

@@ -20,7 +20,7 @@ import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.ISourceFunction;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -31,9 +31,9 @@ public final class IFlatmapTask extends IExecutorTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IFlatmapTask.class);
 
-    private final ISourceFunction function;
+    private final ISource function;
 
-    public IFlatmapTask(IHelper helper, IExecutor executor, ISourceFunction function) {
+    public IFlatmapTask(IHelper helper, IExecutor executor, ISource function) {
         super(helper, executor);
         this.function = function;
     }

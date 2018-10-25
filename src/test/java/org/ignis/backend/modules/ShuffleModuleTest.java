@@ -61,7 +61,7 @@ public class ShuffleModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.setShuffleModule(Mockito.mock(IShuffleModule.Iface.class, a -> null));
             mockJob.setPostmanModule(Mockito.mock(IPostmanModule.Iface.class, a -> null));
             mockJob.setStorageModule(Mockito.mock(IStorageModule.Iface.class));
@@ -96,7 +96,7 @@ public class ShuffleModuleTest extends BackendTest {
             MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster1).getJob(job.getJob()));
             mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob.setShuffleModule(Mockito.mock(IShuffleModule.Iface.class, a -> null));
             mockJob.setPostmanModule(Mockito.mock(IPostmanModule.Iface.class, a -> null));
             mockJob.setStorageModule(Mockito.mock(IStorageModule.Iface.class));
@@ -117,16 +117,15 @@ public class ShuffleModuleTest extends BackendTest {
             MockJobServices mockJob2 = new MockJobServices(attributes.getCluster(cluster2).getJob(job2.getJob()));
             mockJob2.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
             Mockito.doAnswer(a -> null).when(mockJob2.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
-            Mockito.doAnswer(a -> null).when(mockJob2.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean());
+            Mockito.doAnswer(a -> null).when(mockJob2.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
             mockJob2.setShuffleModule(Mockito.mock(IShuffleModule.Iface.class, a -> null));
             mockJob2.setPostmanModule(Mockito.mock(IPostmanModule.Iface.class, a -> null));
             mockJob2.setStorageModule(Mockito.mock(IStorageModule.Iface.class));
-            //Mockito.when(mockJob2.getStorageModule().count()).thenReturn(count[0], Arrays.copyOfRange(count, 1, count.length));
             mockJob2.mock();
             ////////////
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
-            IDataId imported = jobService.importData(job2, read);     
+            IDataId imported = jobService.importData(job2, read);
             dataService.saveAsTextFile(imported, "src/test/salida.txt", true);
         } catch (Exception ex) {
             Assert.fail(ex.toString());

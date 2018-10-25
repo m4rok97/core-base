@@ -13,9 +13,9 @@ public class IFilesModule {
 
     public void readFile(java.lang.String path, long offset, long len, long lines) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void saveFile(java.lang.String path, boolean joined) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void saveFile(java.lang.String path, boolean trunc, boolean new_line) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void saveJson(java.lang.String path, boolean joined) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void saveJson(java.lang.String path, boolean array_start, boolean array_end) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
   }
 
@@ -23,9 +23,9 @@ public class IFilesModule {
 
     public void readFile(java.lang.String path, long offset, long len, long lines, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void saveFile(java.lang.String path, boolean joined, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void saveFile(java.lang.String path, boolean trunc, boolean new_line, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void saveJson(java.lang.String path, boolean joined, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void saveJson(java.lang.String path, boolean array_start, boolean array_end, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -75,17 +75,18 @@ public class IFilesModule {
       return;
     }
 
-    public void saveFile(java.lang.String path, boolean joined) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void saveFile(java.lang.String path, boolean trunc, boolean new_line) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_saveFile(path, joined);
+      send_saveFile(path, trunc, new_line);
       recv_saveFile();
     }
 
-    public void send_saveFile(java.lang.String path, boolean joined) throws org.apache.thrift.TException
+    public void send_saveFile(java.lang.String path, boolean trunc, boolean new_line) throws org.apache.thrift.TException
     {
       saveFile_args args = new saveFile_args();
       args.setPath(path);
-      args.setJoined(joined);
+      args.setTrunc(trunc);
+      args.setNew_line(new_line);
       sendBase("saveFile", args);
     }
 
@@ -99,17 +100,18 @@ public class IFilesModule {
       return;
     }
 
-    public void saveJson(java.lang.String path, boolean joined) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void saveJson(java.lang.String path, boolean array_start, boolean array_end) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_saveJson(path, joined);
+      send_saveJson(path, array_start, array_end);
       recv_saveJson();
     }
 
-    public void send_saveJson(java.lang.String path, boolean joined) throws org.apache.thrift.TException
+    public void send_saveJson(java.lang.String path, boolean array_start, boolean array_end) throws org.apache.thrift.TException
     {
       saveJson_args args = new saveJson_args();
       args.setPath(path);
-      args.setJoined(joined);
+      args.setArray_start(array_start);
+      args.setArray_end(array_end);
       sendBase("saveJson", args);
     }
 
@@ -182,27 +184,30 @@ public class IFilesModule {
       }
     }
 
-    public void saveFile(java.lang.String path, boolean joined, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void saveFile(java.lang.String path, boolean trunc, boolean new_line, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      saveFile_call method_call = new saveFile_call(path, joined, resultHandler, this, ___protocolFactory, ___transport);
+      saveFile_call method_call = new saveFile_call(path, trunc, new_line, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class saveFile_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private java.lang.String path;
-      private boolean joined;
-      public saveFile_call(java.lang.String path, boolean joined, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private boolean trunc;
+      private boolean new_line;
+      public saveFile_call(java.lang.String path, boolean trunc, boolean new_line, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.path = path;
-        this.joined = joined;
+        this.trunc = trunc;
+        this.new_line = new_line;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("saveFile", org.apache.thrift.protocol.TMessageType.CALL, 0));
         saveFile_args args = new saveFile_args();
         args.setPath(path);
-        args.setJoined(joined);
+        args.setTrunc(trunc);
+        args.setNew_line(new_line);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -217,27 +222,30 @@ public class IFilesModule {
       }
     }
 
-    public void saveJson(java.lang.String path, boolean joined, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void saveJson(java.lang.String path, boolean array_start, boolean array_end, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      saveJson_call method_call = new saveJson_call(path, joined, resultHandler, this, ___protocolFactory, ___transport);
+      saveJson_call method_call = new saveJson_call(path, array_start, array_end, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class saveJson_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private java.lang.String path;
-      private boolean joined;
-      public saveJson_call(java.lang.String path, boolean joined, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private boolean array_start;
+      private boolean array_end;
+      public saveJson_call(java.lang.String path, boolean array_start, boolean array_end, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.path = path;
-        this.joined = joined;
+        this.array_start = array_start;
+        this.array_end = array_end;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("saveJson", org.apache.thrift.protocol.TMessageType.CALL, 0));
         saveJson_args args = new saveJson_args();
         args.setPath(path);
-        args.setJoined(joined);
+        args.setArray_start(array_start);
+        args.setArray_end(array_end);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -321,7 +329,7 @@ public class IFilesModule {
       public saveFile_result getResult(I iface, saveFile_args args) throws org.apache.thrift.TException {
         saveFile_result result = new saveFile_result();
         try {
-          iface.saveFile(args.path, args.joined);
+          iface.saveFile(args.path, args.trunc, args.new_line);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -350,7 +358,7 @@ public class IFilesModule {
       public saveJson_result getResult(I iface, saveJson_args args) throws org.apache.thrift.TException {
         saveJson_result result = new saveJson_result();
         try {
-          iface.saveJson(args.path, args.joined);
+          iface.saveJson(args.path, args.array_start, args.array_end);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -501,7 +509,7 @@ public class IFilesModule {
       }
 
       public void start(I iface, saveFile_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.saveFile(args.path, args.joined,resultHandler);
+        iface.saveFile(args.path, args.trunc, args.new_line,resultHandler);
       }
     }
 
@@ -565,7 +573,7 @@ public class IFilesModule {
       }
 
       public void start(I iface, saveJson_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.saveJson(args.path, args.joined,resultHandler);
+        iface.saveJson(args.path, args.array_start, args.array_end,resultHandler);
       }
     }
 
@@ -1593,18 +1601,21 @@ public class IFilesModule {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveFile_args");
 
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField JOINED_FIELD_DESC = new org.apache.thrift.protocol.TField("joined", org.apache.thrift.protocol.TType.BOOL, (short)2);
+    private static final org.apache.thrift.protocol.TField TRUNC_FIELD_DESC = new org.apache.thrift.protocol.TField("trunc", org.apache.thrift.protocol.TType.BOOL, (short)2);
+    private static final org.apache.thrift.protocol.TField NEW_LINE_FIELD_DESC = new org.apache.thrift.protocol.TField("new_line", org.apache.thrift.protocol.TType.BOOL, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveFile_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveFile_argsTupleSchemeFactory();
 
     private java.lang.String path; // required
-    private boolean joined; // required
+    private boolean trunc; // required
+    private boolean new_line; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       PATH((short)1, "path"),
-      JOINED((short)2, "joined");
+      TRUNC((short)2, "trunc"),
+      NEW_LINE((short)3, "new_line");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -1621,8 +1632,10 @@ public class IFilesModule {
         switch(fieldId) {
           case 1: // PATH
             return PATH;
-          case 2: // JOINED
-            return JOINED;
+          case 2: // TRUNC
+            return TRUNC;
+          case 3: // NEW_LINE
+            return NEW_LINE;
           default:
             return null;
         }
@@ -1663,14 +1676,17 @@ public class IFilesModule {
     }
 
     // isset id assignments
-    private static final int __JOINED_ISSET_ID = 0;
+    private static final int __TRUNC_ISSET_ID = 0;
+    private static final int __NEW_LINE_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.PATH, new org.apache.thrift.meta_data.FieldMetaData("path", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.JOINED, new org.apache.thrift.meta_data.FieldMetaData("joined", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.TRUNC, new org.apache.thrift.meta_data.FieldMetaData("trunc", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
+      tmpMap.put(_Fields.NEW_LINE, new org.apache.thrift.meta_data.FieldMetaData("new_line", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveFile_args.class, metaDataMap);
@@ -1681,12 +1697,15 @@ public class IFilesModule {
 
     public saveFile_args(
       java.lang.String path,
-      boolean joined)
+      boolean trunc,
+      boolean new_line)
     {
       this();
       this.path = path;
-      this.joined = joined;
-      setJoinedIsSet(true);
+      this.trunc = trunc;
+      setTruncIsSet(true);
+      this.new_line = new_line;
+      setNew_lineIsSet(true);
     }
 
     /**
@@ -1697,7 +1716,8 @@ public class IFilesModule {
       if (other.isSetPath()) {
         this.path = other.path;
       }
-      this.joined = other.joined;
+      this.trunc = other.trunc;
+      this.new_line = other.new_line;
     }
 
     public saveFile_args deepCopy() {
@@ -1707,8 +1727,10 @@ public class IFilesModule {
     @Override
     public void clear() {
       this.path = null;
-      setJoinedIsSet(false);
-      this.joined = false;
+      setTruncIsSet(false);
+      this.trunc = false;
+      setNew_lineIsSet(false);
+      this.new_line = false;
     }
 
     public java.lang.String getPath() {
@@ -1735,27 +1757,50 @@ public class IFilesModule {
       }
     }
 
-    public boolean isJoined() {
-      return this.joined;
+    public boolean isTrunc() {
+      return this.trunc;
     }
 
-    public saveFile_args setJoined(boolean joined) {
-      this.joined = joined;
-      setJoinedIsSet(true);
+    public saveFile_args setTrunc(boolean trunc) {
+      this.trunc = trunc;
+      setTruncIsSet(true);
       return this;
     }
 
-    public void unsetJoined() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __JOINED_ISSET_ID);
+    public void unsetTrunc() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __TRUNC_ISSET_ID);
     }
 
-    /** Returns true if field joined is set (has been assigned a value) and false otherwise */
-    public boolean isSetJoined() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __JOINED_ISSET_ID);
+    /** Returns true if field trunc is set (has been assigned a value) and false otherwise */
+    public boolean isSetTrunc() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __TRUNC_ISSET_ID);
     }
 
-    public void setJoinedIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __JOINED_ISSET_ID, value);
+    public void setTruncIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __TRUNC_ISSET_ID, value);
+    }
+
+    public boolean isNew_line() {
+      return this.new_line;
+    }
+
+    public saveFile_args setNew_line(boolean new_line) {
+      this.new_line = new_line;
+      setNew_lineIsSet(true);
+      return this;
+    }
+
+    public void unsetNew_line() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __NEW_LINE_ISSET_ID);
+    }
+
+    /** Returns true if field new_line is set (has been assigned a value) and false otherwise */
+    public boolean isSetNew_line() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __NEW_LINE_ISSET_ID);
+    }
+
+    public void setNew_lineIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __NEW_LINE_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
@@ -1768,11 +1813,19 @@ public class IFilesModule {
         }
         break;
 
-      case JOINED:
+      case TRUNC:
         if (value == null) {
-          unsetJoined();
+          unsetTrunc();
         } else {
-          setJoined((java.lang.Boolean)value);
+          setTrunc((java.lang.Boolean)value);
+        }
+        break;
+
+      case NEW_LINE:
+        if (value == null) {
+          unsetNew_line();
+        } else {
+          setNew_line((java.lang.Boolean)value);
         }
         break;
 
@@ -1784,8 +1837,11 @@ public class IFilesModule {
       case PATH:
         return getPath();
 
-      case JOINED:
-        return isJoined();
+      case TRUNC:
+        return isTrunc();
+
+      case NEW_LINE:
+        return isNew_line();
 
       }
       throw new java.lang.IllegalStateException();
@@ -1800,8 +1856,10 @@ public class IFilesModule {
       switch (field) {
       case PATH:
         return isSetPath();
-      case JOINED:
-        return isSetJoined();
+      case TRUNC:
+        return isSetTrunc();
+      case NEW_LINE:
+        return isSetNew_line();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1830,12 +1888,21 @@ public class IFilesModule {
           return false;
       }
 
-      boolean this_present_joined = true;
-      boolean that_present_joined = true;
-      if (this_present_joined || that_present_joined) {
-        if (!(this_present_joined && that_present_joined))
+      boolean this_present_trunc = true;
+      boolean that_present_trunc = true;
+      if (this_present_trunc || that_present_trunc) {
+        if (!(this_present_trunc && that_present_trunc))
           return false;
-        if (this.joined != that.joined)
+        if (this.trunc != that.trunc)
+          return false;
+      }
+
+      boolean this_present_new_line = true;
+      boolean that_present_new_line = true;
+      if (this_present_new_line || that_present_new_line) {
+        if (!(this_present_new_line && that_present_new_line))
+          return false;
+        if (this.new_line != that.new_line)
           return false;
       }
 
@@ -1850,7 +1917,9 @@ public class IFilesModule {
       if (isSetPath())
         hashCode = hashCode * 8191 + path.hashCode();
 
-      hashCode = hashCode * 8191 + ((joined) ? 131071 : 524287);
+      hashCode = hashCode * 8191 + ((trunc) ? 131071 : 524287);
+
+      hashCode = hashCode * 8191 + ((new_line) ? 131071 : 524287);
 
       return hashCode;
     }
@@ -1873,12 +1942,22 @@ public class IFilesModule {
           return lastComparison;
         }
       }
-      lastComparison = java.lang.Boolean.valueOf(isSetJoined()).compareTo(other.isSetJoined());
+      lastComparison = java.lang.Boolean.valueOf(isSetTrunc()).compareTo(other.isSetTrunc());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetJoined()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.joined, other.joined);
+      if (isSetTrunc()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.trunc, other.trunc);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetNew_line()).compareTo(other.isSetNew_line());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetNew_line()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.new_line, other.new_line);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1911,8 +1990,12 @@ public class IFilesModule {
       }
       first = false;
       if (!first) sb.append(", ");
-      sb.append("joined:");
-      sb.append(this.joined);
+      sb.append("trunc:");
+      sb.append(this.trunc);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("new_line:");
+      sb.append(this.new_line);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -1967,10 +2050,18 @@ public class IFilesModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // JOINED
+            case 2: // TRUNC
               if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
-                struct.joined = iprot.readBool();
-                struct.setJoinedIsSet(true);
+                struct.trunc = iprot.readBool();
+                struct.setTruncIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // NEW_LINE
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.new_line = iprot.readBool();
+                struct.setNew_lineIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -1995,8 +2086,11 @@ public class IFilesModule {
           oprot.writeString(struct.path);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(JOINED_FIELD_DESC);
-        oprot.writeBool(struct.joined);
+        oprot.writeFieldBegin(TRUNC_FIELD_DESC);
+        oprot.writeBool(struct.trunc);
+        oprot.writeFieldEnd();
+        oprot.writeFieldBegin(NEW_LINE_FIELD_DESC);
+        oprot.writeBool(struct.new_line);
         oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
@@ -2019,29 +2113,39 @@ public class IFilesModule {
         if (struct.isSetPath()) {
           optionals.set(0);
         }
-        if (struct.isSetJoined()) {
+        if (struct.isSetTrunc()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetNew_line()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetPath()) {
           oprot.writeString(struct.path);
         }
-        if (struct.isSetJoined()) {
-          oprot.writeBool(struct.joined);
+        if (struct.isSetTrunc()) {
+          oprot.writeBool(struct.trunc);
+        }
+        if (struct.isSetNew_line()) {
+          oprot.writeBool(struct.new_line);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, saveFile_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.path = iprot.readString();
           struct.setPathIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.joined = iprot.readBool();
-          struct.setJoinedIsSet(true);
+          struct.trunc = iprot.readBool();
+          struct.setTruncIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.new_line = iprot.readBool();
+          struct.setNew_lineIsSet(true);
         }
       }
     }
@@ -2419,18 +2523,21 @@ public class IFilesModule {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveJson_args");
 
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField JOINED_FIELD_DESC = new org.apache.thrift.protocol.TField("joined", org.apache.thrift.protocol.TType.BOOL, (short)2);
+    private static final org.apache.thrift.protocol.TField ARRAY_START_FIELD_DESC = new org.apache.thrift.protocol.TField("array_start", org.apache.thrift.protocol.TType.BOOL, (short)2);
+    private static final org.apache.thrift.protocol.TField ARRAY_END_FIELD_DESC = new org.apache.thrift.protocol.TField("array_end", org.apache.thrift.protocol.TType.BOOL, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveJson_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveJson_argsTupleSchemeFactory();
 
     private java.lang.String path; // required
-    private boolean joined; // required
+    private boolean array_start; // required
+    private boolean array_end; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       PATH((short)1, "path"),
-      JOINED((short)2, "joined");
+      ARRAY_START((short)2, "array_start"),
+      ARRAY_END((short)3, "array_end");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -2447,8 +2554,10 @@ public class IFilesModule {
         switch(fieldId) {
           case 1: // PATH
             return PATH;
-          case 2: // JOINED
-            return JOINED;
+          case 2: // ARRAY_START
+            return ARRAY_START;
+          case 3: // ARRAY_END
+            return ARRAY_END;
           default:
             return null;
         }
@@ -2489,14 +2598,17 @@ public class IFilesModule {
     }
 
     // isset id assignments
-    private static final int __JOINED_ISSET_ID = 0;
+    private static final int __ARRAY_START_ISSET_ID = 0;
+    private static final int __ARRAY_END_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.PATH, new org.apache.thrift.meta_data.FieldMetaData("path", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.JOINED, new org.apache.thrift.meta_data.FieldMetaData("joined", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.ARRAY_START, new org.apache.thrift.meta_data.FieldMetaData("array_start", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
+      tmpMap.put(_Fields.ARRAY_END, new org.apache.thrift.meta_data.FieldMetaData("array_end", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveJson_args.class, metaDataMap);
@@ -2507,12 +2619,15 @@ public class IFilesModule {
 
     public saveJson_args(
       java.lang.String path,
-      boolean joined)
+      boolean array_start,
+      boolean array_end)
     {
       this();
       this.path = path;
-      this.joined = joined;
-      setJoinedIsSet(true);
+      this.array_start = array_start;
+      setArray_startIsSet(true);
+      this.array_end = array_end;
+      setArray_endIsSet(true);
     }
 
     /**
@@ -2523,7 +2638,8 @@ public class IFilesModule {
       if (other.isSetPath()) {
         this.path = other.path;
       }
-      this.joined = other.joined;
+      this.array_start = other.array_start;
+      this.array_end = other.array_end;
     }
 
     public saveJson_args deepCopy() {
@@ -2533,8 +2649,10 @@ public class IFilesModule {
     @Override
     public void clear() {
       this.path = null;
-      setJoinedIsSet(false);
-      this.joined = false;
+      setArray_startIsSet(false);
+      this.array_start = false;
+      setArray_endIsSet(false);
+      this.array_end = false;
     }
 
     public java.lang.String getPath() {
@@ -2561,27 +2679,50 @@ public class IFilesModule {
       }
     }
 
-    public boolean isJoined() {
-      return this.joined;
+    public boolean isArray_start() {
+      return this.array_start;
     }
 
-    public saveJson_args setJoined(boolean joined) {
-      this.joined = joined;
-      setJoinedIsSet(true);
+    public saveJson_args setArray_start(boolean array_start) {
+      this.array_start = array_start;
+      setArray_startIsSet(true);
       return this;
     }
 
-    public void unsetJoined() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __JOINED_ISSET_ID);
+    public void unsetArray_start() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __ARRAY_START_ISSET_ID);
     }
 
-    /** Returns true if field joined is set (has been assigned a value) and false otherwise */
-    public boolean isSetJoined() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __JOINED_ISSET_ID);
+    /** Returns true if field array_start is set (has been assigned a value) and false otherwise */
+    public boolean isSetArray_start() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __ARRAY_START_ISSET_ID);
     }
 
-    public void setJoinedIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __JOINED_ISSET_ID, value);
+    public void setArray_startIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ARRAY_START_ISSET_ID, value);
+    }
+
+    public boolean isArray_end() {
+      return this.array_end;
+    }
+
+    public saveJson_args setArray_end(boolean array_end) {
+      this.array_end = array_end;
+      setArray_endIsSet(true);
+      return this;
+    }
+
+    public void unsetArray_end() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __ARRAY_END_ISSET_ID);
+    }
+
+    /** Returns true if field array_end is set (has been assigned a value) and false otherwise */
+    public boolean isSetArray_end() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __ARRAY_END_ISSET_ID);
+    }
+
+    public void setArray_endIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ARRAY_END_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
@@ -2594,11 +2735,19 @@ public class IFilesModule {
         }
         break;
 
-      case JOINED:
+      case ARRAY_START:
         if (value == null) {
-          unsetJoined();
+          unsetArray_start();
         } else {
-          setJoined((java.lang.Boolean)value);
+          setArray_start((java.lang.Boolean)value);
+        }
+        break;
+
+      case ARRAY_END:
+        if (value == null) {
+          unsetArray_end();
+        } else {
+          setArray_end((java.lang.Boolean)value);
         }
         break;
 
@@ -2610,8 +2759,11 @@ public class IFilesModule {
       case PATH:
         return getPath();
 
-      case JOINED:
-        return isJoined();
+      case ARRAY_START:
+        return isArray_start();
+
+      case ARRAY_END:
+        return isArray_end();
 
       }
       throw new java.lang.IllegalStateException();
@@ -2626,8 +2778,10 @@ public class IFilesModule {
       switch (field) {
       case PATH:
         return isSetPath();
-      case JOINED:
-        return isSetJoined();
+      case ARRAY_START:
+        return isSetArray_start();
+      case ARRAY_END:
+        return isSetArray_end();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2656,12 +2810,21 @@ public class IFilesModule {
           return false;
       }
 
-      boolean this_present_joined = true;
-      boolean that_present_joined = true;
-      if (this_present_joined || that_present_joined) {
-        if (!(this_present_joined && that_present_joined))
+      boolean this_present_array_start = true;
+      boolean that_present_array_start = true;
+      if (this_present_array_start || that_present_array_start) {
+        if (!(this_present_array_start && that_present_array_start))
           return false;
-        if (this.joined != that.joined)
+        if (this.array_start != that.array_start)
+          return false;
+      }
+
+      boolean this_present_array_end = true;
+      boolean that_present_array_end = true;
+      if (this_present_array_end || that_present_array_end) {
+        if (!(this_present_array_end && that_present_array_end))
+          return false;
+        if (this.array_end != that.array_end)
           return false;
       }
 
@@ -2676,7 +2839,9 @@ public class IFilesModule {
       if (isSetPath())
         hashCode = hashCode * 8191 + path.hashCode();
 
-      hashCode = hashCode * 8191 + ((joined) ? 131071 : 524287);
+      hashCode = hashCode * 8191 + ((array_start) ? 131071 : 524287);
+
+      hashCode = hashCode * 8191 + ((array_end) ? 131071 : 524287);
 
       return hashCode;
     }
@@ -2699,12 +2864,22 @@ public class IFilesModule {
           return lastComparison;
         }
       }
-      lastComparison = java.lang.Boolean.valueOf(isSetJoined()).compareTo(other.isSetJoined());
+      lastComparison = java.lang.Boolean.valueOf(isSetArray_start()).compareTo(other.isSetArray_start());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetJoined()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.joined, other.joined);
+      if (isSetArray_start()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.array_start, other.array_start);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetArray_end()).compareTo(other.isSetArray_end());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetArray_end()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.array_end, other.array_end);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -2737,8 +2912,12 @@ public class IFilesModule {
       }
       first = false;
       if (!first) sb.append(", ");
-      sb.append("joined:");
-      sb.append(this.joined);
+      sb.append("array_start:");
+      sb.append(this.array_start);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("array_end:");
+      sb.append(this.array_end);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -2793,10 +2972,18 @@ public class IFilesModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // JOINED
+            case 2: // ARRAY_START
               if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
-                struct.joined = iprot.readBool();
-                struct.setJoinedIsSet(true);
+                struct.array_start = iprot.readBool();
+                struct.setArray_startIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // ARRAY_END
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.array_end = iprot.readBool();
+                struct.setArray_endIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -2821,8 +3008,11 @@ public class IFilesModule {
           oprot.writeString(struct.path);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(JOINED_FIELD_DESC);
-        oprot.writeBool(struct.joined);
+        oprot.writeFieldBegin(ARRAY_START_FIELD_DESC);
+        oprot.writeBool(struct.array_start);
+        oprot.writeFieldEnd();
+        oprot.writeFieldBegin(ARRAY_END_FIELD_DESC);
+        oprot.writeBool(struct.array_end);
         oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
@@ -2845,29 +3035,39 @@ public class IFilesModule {
         if (struct.isSetPath()) {
           optionals.set(0);
         }
-        if (struct.isSetJoined()) {
+        if (struct.isSetArray_start()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetArray_end()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetPath()) {
           oprot.writeString(struct.path);
         }
-        if (struct.isSetJoined()) {
-          oprot.writeBool(struct.joined);
+        if (struct.isSetArray_start()) {
+          oprot.writeBool(struct.array_start);
+        }
+        if (struct.isSetArray_end()) {
+          oprot.writeBool(struct.array_end);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, saveJson_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.path = iprot.readString();
           struct.setPathIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.joined = iprot.readBool();
-          struct.setJoinedIsSet(true);
+          struct.array_start = iprot.readBool();
+          struct.setArray_startIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.array_end = iprot.readBool();
+          struct.setArray_endIsSet(true);
         }
       }
     }

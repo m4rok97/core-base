@@ -20,7 +20,7 @@ import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.ISourceFunction;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -31,10 +31,10 @@ public final class IStreamingMapTask extends IExecutorTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IStreamingMapTask.class);
 
-    private final ISourceFunction function;
+    private final ISource function;
     private final boolean ordered;
 
-    public IStreamingMapTask(IHelper helper, IExecutor executor, ISourceFunction function, boolean ordered) {
+    public IStreamingMapTask(IHelper helper, IExecutor executor, ISource function, boolean ordered) {
         super(helper, executor);
         this.function = function;
         this.ordered = ordered;

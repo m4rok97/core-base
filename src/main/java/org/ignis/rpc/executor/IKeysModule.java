@@ -11,25 +11,29 @@ public class IKeysModule {
 
   public interface Iface {
 
-    public java.util.Map<java.lang.Long,java.lang.Long> getKeys(boolean single) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public java.util.List<java.lang.Long> getKeys() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public java.util.Map<java.lang.Long,java.lang.Long> getKeysWithCount() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void joinPairs() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void prepareKeys(java.util.List<IExecutorKeys> executorKeys) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void reset() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void collectKeys() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+
+    public void reduceByKey(org.ignis.rpc.ISource funct) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
   }
 
   public interface AsyncIface {
 
-    public void getKeys(boolean single, org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler) throws org.apache.thrift.TException;
+    public void getKeys(org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.lang.Long>> resultHandler) throws org.apache.thrift.TException;
 
-    public void sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void getKeysWithCount(org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler) throws org.apache.thrift.TException;
 
-    public void joinPairs(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void prepareKeys(java.util.List<IExecutorKeys> executorKeys, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void reset(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void collectKeys(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+
+    public void reduceByKey(org.ignis.rpc.ISource funct, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -53,20 +57,19 @@ public class IKeysModule {
       super(iprot, oprot);
     }
 
-    public java.util.Map<java.lang.Long,java.lang.Long> getKeys(boolean single) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.List<java.lang.Long> getKeys() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_getKeys(single);
+      send_getKeys();
       return recv_getKeys();
     }
 
-    public void send_getKeys(boolean single) throws org.apache.thrift.TException
+    public void send_getKeys() throws org.apache.thrift.TException
     {
       getKeys_args args = new getKeys_args();
-      args.setSingle(single);
       sendBase("getKeys", args);
     }
 
-    public java.util.Map<java.lang.Long,java.lang.Long> recv_getKeys() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.List<java.lang.Long> recv_getKeys() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       getKeys_result result = new getKeys_result();
       receiveBase(result, "getKeys");
@@ -79,68 +82,93 @@ public class IKeysModule {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getKeys failed: unknown result");
     }
 
-    public void sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.Map<java.lang.Long,java.lang.Long> getKeysWithCount() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_sendPairs(addr, keys_id);
-      recv_sendPairs();
+      send_getKeysWithCount();
+      return recv_getKeysWithCount();
     }
 
-    public void send_sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id) throws org.apache.thrift.TException
+    public void send_getKeysWithCount() throws org.apache.thrift.TException
     {
-      sendPairs_args args = new sendPairs_args();
-      args.setAddr(addr);
-      args.setKeys_id(keys_id);
-      sendBase("sendPairs", args);
+      getKeysWithCount_args args = new getKeysWithCount_args();
+      sendBase("getKeysWithCount", args);
     }
 
-    public void recv_sendPairs() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.Map<java.lang.Long,java.lang.Long> recv_getKeysWithCount() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      sendPairs_result result = new sendPairs_result();
-      receiveBase(result, "sendPairs");
+      getKeysWithCount_result result = new getKeysWithCount_result();
+      receiveBase(result, "getKeysWithCount");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getKeysWithCount failed: unknown result");
+    }
+
+    public void prepareKeys(java.util.List<IExecutorKeys> executorKeys) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    {
+      send_prepareKeys(executorKeys);
+      recv_prepareKeys();
+    }
+
+    public void send_prepareKeys(java.util.List<IExecutorKeys> executorKeys) throws org.apache.thrift.TException
+    {
+      prepareKeys_args args = new prepareKeys_args();
+      args.setExecutorKeys(executorKeys);
+      sendBase("prepareKeys", args);
+    }
+
+    public void recv_prepareKeys() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    {
+      prepareKeys_result result = new prepareKeys_result();
+      receiveBase(result, "prepareKeys");
       if (result.ex != null) {
         throw result.ex;
       }
       return;
     }
 
-    public void joinPairs() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void collectKeys() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_joinPairs();
-      recv_joinPairs();
+      send_collectKeys();
+      recv_collectKeys();
     }
 
-    public void send_joinPairs() throws org.apache.thrift.TException
+    public void send_collectKeys() throws org.apache.thrift.TException
     {
-      joinPairs_args args = new joinPairs_args();
-      sendBase("joinPairs", args);
+      collectKeys_args args = new collectKeys_args();
+      sendBase("collectKeys", args);
     }
 
-    public void recv_joinPairs() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void recv_collectKeys() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      joinPairs_result result = new joinPairs_result();
-      receiveBase(result, "joinPairs");
+      collectKeys_result result = new collectKeys_result();
+      receiveBase(result, "collectKeys");
       if (result.ex != null) {
         throw result.ex;
       }
       return;
     }
 
-    public void reset() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void reduceByKey(org.ignis.rpc.ISource funct) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_reset();
-      recv_reset();
+      send_reduceByKey(funct);
+      recv_reduceByKey();
     }
 
-    public void send_reset() throws org.apache.thrift.TException
+    public void send_reduceByKey(org.ignis.rpc.ISource funct) throws org.apache.thrift.TException
     {
-      reset_args args = new reset_args();
-      sendBase("reset", args);
+      reduceByKey_args args = new reduceByKey_args();
+      args.setFunct(funct);
+      sendBase("reduceByKey", args);
     }
 
-    public void recv_reset() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void recv_reduceByKey() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      reset_result result = new reset_result();
-      receiveBase(result, "reset");
+      reduceByKey_result result = new reduceByKey_result();
+      receiveBase(result, "reduceByKey");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -165,24 +193,50 @@ public class IKeysModule {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void getKeys(boolean single, org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler) throws org.apache.thrift.TException {
+    public void getKeys(org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.lang.Long>> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      getKeys_call method_call = new getKeys_call(single, resultHandler, this, ___protocolFactory, ___transport);
+      getKeys_call method_call = new getKeys_call(resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class getKeys_call extends org.apache.thrift.async.TAsyncMethodCall<java.util.Map<java.lang.Long,java.lang.Long>> {
-      private boolean single;
-      public getKeys_call(boolean single, org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class getKeys_call extends org.apache.thrift.async.TAsyncMethodCall<java.util.List<java.lang.Long>> {
+      public getKeys_call(org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.lang.Long>> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.single = single;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("getKeys", org.apache.thrift.protocol.TMessageType.CALL, 0));
         getKeys_args args = new getKeys_args();
-        args.setSingle(single);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public java.util.List<java.lang.Long> getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_getKeys();
+      }
+    }
+
+    public void getKeysWithCount(org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      getKeysWithCount_call method_call = new getKeysWithCount_call(resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class getKeysWithCount_call extends org.apache.thrift.async.TAsyncMethodCall<java.util.Map<java.lang.Long,java.lang.Long>> {
+      public getKeysWithCount_call(org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("getKeysWithCount", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        getKeysWithCount_args args = new getKeysWithCount_args();
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -193,31 +247,28 @@ public class IKeysModule {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_getKeys();
+        return (new Client(prot)).recv_getKeysWithCount();
       }
     }
 
-    public void sendPairs(java.lang.String addr, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void prepareKeys(java.util.List<IExecutorKeys> executorKeys, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      sendPairs_call method_call = new sendPairs_call(addr, keys_id, resultHandler, this, ___protocolFactory, ___transport);
+      prepareKeys_call method_call = new prepareKeys_call(executorKeys, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class sendPairs_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private java.lang.String addr;
-      private java.util.List<java.lang.Long> keys_id;
-      public sendPairs_call(java.lang.String addr, java.util.List<java.lang.Long> keys_id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class prepareKeys_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+      private java.util.List<IExecutorKeys> executorKeys;
+      public prepareKeys_call(java.util.List<IExecutorKeys> executorKeys, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.addr = addr;
-        this.keys_id = keys_id;
+        this.executorKeys = executorKeys;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendPairs", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        sendPairs_args args = new sendPairs_args();
-        args.setAddr(addr);
-        args.setKeys_id(keys_id);
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("prepareKeys", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        prepareKeys_args args = new prepareKeys_args();
+        args.setExecutorKeys(executorKeys);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -232,21 +283,21 @@ public class IKeysModule {
       }
     }
 
-    public void joinPairs(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void collectKeys(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      joinPairs_call method_call = new joinPairs_call(resultHandler, this, ___protocolFactory, ___transport);
+      collectKeys_call method_call = new collectKeys_call(resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class joinPairs_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      public joinPairs_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class collectKeys_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+      public collectKeys_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("joinPairs", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        joinPairs_args args = new joinPairs_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("collectKeys", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        collectKeys_args args = new collectKeys_args();
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -261,21 +312,24 @@ public class IKeysModule {
       }
     }
 
-    public void reset(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void reduceByKey(org.ignis.rpc.ISource funct, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      reset_call method_call = new reset_call(resultHandler, this, ___protocolFactory, ___transport);
+      reduceByKey_call method_call = new reduceByKey_call(funct, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class reset_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      public reset_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class reduceByKey_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+      private org.ignis.rpc.ISource funct;
+      public reduceByKey_call(org.ignis.rpc.ISource funct, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.funct = funct;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("reset", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        reset_args args = new reset_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("reduceByKey", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        reduceByKey_args args = new reduceByKey_args();
+        args.setFunct(funct);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -304,9 +358,10 @@ public class IKeysModule {
 
     private static <I extends Iface> java.util.Map<java.lang.String,  org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> getProcessMap(java.util.Map<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
       processMap.put("getKeys", new getKeys());
-      processMap.put("sendPairs", new sendPairs());
-      processMap.put("joinPairs", new joinPairs());
-      processMap.put("reset", new reset());
+      processMap.put("getKeysWithCount", new getKeysWithCount());
+      processMap.put("prepareKeys", new prepareKeys());
+      processMap.put("collectKeys", new collectKeys());
+      processMap.put("reduceByKey", new reduceByKey());
       return processMap;
     }
 
@@ -331,7 +386,7 @@ public class IKeysModule {
       public getKeys_result getResult(I iface, getKeys_args args) throws org.apache.thrift.TException {
         getKeys_result result = new getKeys_result();
         try {
-          result.success = iface.getKeys(args.single);
+          result.success = iface.getKeys();
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -339,13 +394,13 @@ public class IKeysModule {
       }
     }
 
-    public static class sendPairs<I extends Iface> extends org.apache.thrift.ProcessFunction<I, sendPairs_args> {
-      public sendPairs() {
-        super("sendPairs");
+    public static class getKeysWithCount<I extends Iface> extends org.apache.thrift.ProcessFunction<I, getKeysWithCount_args> {
+      public getKeysWithCount() {
+        super("getKeysWithCount");
       }
 
-      public sendPairs_args getEmptyArgsInstance() {
-        return new sendPairs_args();
+      public getKeysWithCount_args getEmptyArgsInstance() {
+        return new getKeysWithCount_args();
       }
 
       protected boolean isOneway() {
@@ -357,10 +412,10 @@ public class IKeysModule {
         return true;
       }
 
-      public sendPairs_result getResult(I iface, sendPairs_args args) throws org.apache.thrift.TException {
-        sendPairs_result result = new sendPairs_result();
+      public getKeysWithCount_result getResult(I iface, getKeysWithCount_args args) throws org.apache.thrift.TException {
+        getKeysWithCount_result result = new getKeysWithCount_result();
         try {
-          iface.sendPairs(args.addr, args.keys_id);
+          result.success = iface.getKeysWithCount();
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -368,13 +423,13 @@ public class IKeysModule {
       }
     }
 
-    public static class joinPairs<I extends Iface> extends org.apache.thrift.ProcessFunction<I, joinPairs_args> {
-      public joinPairs() {
-        super("joinPairs");
+    public static class prepareKeys<I extends Iface> extends org.apache.thrift.ProcessFunction<I, prepareKeys_args> {
+      public prepareKeys() {
+        super("prepareKeys");
       }
 
-      public joinPairs_args getEmptyArgsInstance() {
-        return new joinPairs_args();
+      public prepareKeys_args getEmptyArgsInstance() {
+        return new prepareKeys_args();
       }
 
       protected boolean isOneway() {
@@ -386,10 +441,10 @@ public class IKeysModule {
         return true;
       }
 
-      public joinPairs_result getResult(I iface, joinPairs_args args) throws org.apache.thrift.TException {
-        joinPairs_result result = new joinPairs_result();
+      public prepareKeys_result getResult(I iface, prepareKeys_args args) throws org.apache.thrift.TException {
+        prepareKeys_result result = new prepareKeys_result();
         try {
-          iface.joinPairs();
+          iface.prepareKeys(args.executorKeys);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -397,13 +452,13 @@ public class IKeysModule {
       }
     }
 
-    public static class reset<I extends Iface> extends org.apache.thrift.ProcessFunction<I, reset_args> {
-      public reset() {
-        super("reset");
+    public static class collectKeys<I extends Iface> extends org.apache.thrift.ProcessFunction<I, collectKeys_args> {
+      public collectKeys() {
+        super("collectKeys");
       }
 
-      public reset_args getEmptyArgsInstance() {
-        return new reset_args();
+      public collectKeys_args getEmptyArgsInstance() {
+        return new collectKeys_args();
       }
 
       protected boolean isOneway() {
@@ -415,10 +470,39 @@ public class IKeysModule {
         return true;
       }
 
-      public reset_result getResult(I iface, reset_args args) throws org.apache.thrift.TException {
-        reset_result result = new reset_result();
+      public collectKeys_result getResult(I iface, collectKeys_args args) throws org.apache.thrift.TException {
+        collectKeys_result result = new collectKeys_result();
         try {
-          iface.reset();
+          iface.collectKeys();
+        } catch (org.ignis.rpc.IRemoteException ex) {
+          result.ex = ex;
+        }
+        return result;
+      }
+    }
+
+    public static class reduceByKey<I extends Iface> extends org.apache.thrift.ProcessFunction<I, reduceByKey_args> {
+      public reduceByKey() {
+        super("reduceByKey");
+      }
+
+      public reduceByKey_args getEmptyArgsInstance() {
+        return new reduceByKey_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean handleRuntimeExceptions() {
+        return true;
+      }
+
+      public reduceByKey_result getResult(I iface, reduceByKey_args args) throws org.apache.thrift.TException {
+        reduceByKey_result result = new reduceByKey_result();
+        try {
+          iface.reduceByKey(args.funct);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -440,13 +524,14 @@ public class IKeysModule {
 
     private static <I extends AsyncIface> java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
       processMap.put("getKeys", new getKeys());
-      processMap.put("sendPairs", new sendPairs());
-      processMap.put("joinPairs", new joinPairs());
-      processMap.put("reset", new reset());
+      processMap.put("getKeysWithCount", new getKeysWithCount());
+      processMap.put("prepareKeys", new prepareKeys());
+      processMap.put("collectKeys", new collectKeys());
+      processMap.put("reduceByKey", new reduceByKey());
       return processMap;
     }
 
-    public static class getKeys<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, getKeys_args, java.util.Map<java.lang.Long,java.lang.Long>> {
+    public static class getKeys<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, getKeys_args, java.util.List<java.lang.Long>> {
       public getKeys() {
         super("getKeys");
       }
@@ -455,10 +540,10 @@ public class IKeysModule {
         return new getKeys_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.lang.Long>> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>>() { 
-          public void onComplete(java.util.Map<java.lang.Long,java.lang.Long> o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.lang.Long>>() { 
+          public void onComplete(java.util.List<java.lang.Long> o) {
             getKeys_result result = new getKeys_result();
             result.success = o;
             try {
@@ -506,25 +591,26 @@ public class IKeysModule {
         return false;
       }
 
-      public void start(I iface, getKeys_args args, org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler) throws org.apache.thrift.TException {
-        iface.getKeys(args.single,resultHandler);
+      public void start(I iface, getKeys_args args, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.lang.Long>> resultHandler) throws org.apache.thrift.TException {
+        iface.getKeys(resultHandler);
       }
     }
 
-    public static class sendPairs<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, sendPairs_args, Void> {
-      public sendPairs() {
-        super("sendPairs");
+    public static class getKeysWithCount<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, getKeysWithCount_args, java.util.Map<java.lang.Long,java.lang.Long>> {
+      public getKeysWithCount() {
+        super("getKeysWithCount");
       }
 
-      public sendPairs_args getEmptyArgsInstance() {
-        return new sendPairs_args();
+      public getKeysWithCount_args getEmptyArgsInstance() {
+        return new getKeysWithCount_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
-            sendPairs_result result = new sendPairs_result();
+        return new org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>>() { 
+          public void onComplete(java.util.Map<java.lang.Long,java.lang.Long> o) {
+            getKeysWithCount_result result = new getKeysWithCount_result();
+            result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -538,7 +624,7 @@ public class IKeysModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            sendPairs_result result = new sendPairs_result();
+            getKeysWithCount_result result = new getKeysWithCount_result();
             if (e instanceof org.ignis.rpc.IRemoteException) {
               result.ex = (org.ignis.rpc.IRemoteException) e;
               result.setExIsSet(true);
@@ -570,25 +656,25 @@ public class IKeysModule {
         return false;
       }
 
-      public void start(I iface, sendPairs_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.sendPairs(args.addr, args.keys_id,resultHandler);
+      public void start(I iface, getKeysWithCount_args args, org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.Long,java.lang.Long>> resultHandler) throws org.apache.thrift.TException {
+        iface.getKeysWithCount(resultHandler);
       }
     }
 
-    public static class joinPairs<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, joinPairs_args, Void> {
-      public joinPairs() {
-        super("joinPairs");
+    public static class prepareKeys<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, prepareKeys_args, Void> {
+      public prepareKeys() {
+        super("prepareKeys");
       }
 
-      public joinPairs_args getEmptyArgsInstance() {
-        return new joinPairs_args();
+      public prepareKeys_args getEmptyArgsInstance() {
+        return new prepareKeys_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            joinPairs_result result = new joinPairs_result();
+            prepareKeys_result result = new prepareKeys_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -602,7 +688,7 @@ public class IKeysModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            joinPairs_result result = new joinPairs_result();
+            prepareKeys_result result = new prepareKeys_result();
             if (e instanceof org.ignis.rpc.IRemoteException) {
               result.ex = (org.ignis.rpc.IRemoteException) e;
               result.setExIsSet(true);
@@ -634,25 +720,25 @@ public class IKeysModule {
         return false;
       }
 
-      public void start(I iface, joinPairs_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.joinPairs(resultHandler);
+      public void start(I iface, prepareKeys_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.prepareKeys(args.executorKeys,resultHandler);
       }
     }
 
-    public static class reset<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, reset_args, Void> {
-      public reset() {
-        super("reset");
+    public static class collectKeys<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, collectKeys_args, Void> {
+      public collectKeys() {
+        super("collectKeys");
       }
 
-      public reset_args getEmptyArgsInstance() {
-        return new reset_args();
+      public collectKeys_args getEmptyArgsInstance() {
+        return new collectKeys_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            reset_result result = new reset_result();
+            collectKeys_result result = new collectKeys_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -666,7 +752,7 @@ public class IKeysModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            reset_result result = new reset_result();
+            collectKeys_result result = new collectKeys_result();
             if (e instanceof org.ignis.rpc.IRemoteException) {
               result.ex = (org.ignis.rpc.IRemoteException) e;
               result.setExIsSet(true);
@@ -698,8 +784,72 @@ public class IKeysModule {
         return false;
       }
 
-      public void start(I iface, reset_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.reset(resultHandler);
+      public void start(I iface, collectKeys_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.collectKeys(resultHandler);
+      }
+    }
+
+    public static class reduceByKey<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, reduceByKey_args, Void> {
+      public reduceByKey() {
+        super("reduceByKey");
+      }
+
+      public reduceByKey_args getEmptyArgsInstance() {
+        return new reduceByKey_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
+            reduceByKey_result result = new reduceByKey_result();
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            reduceByKey_result result = new reduceByKey_result();
+            if (e instanceof org.ignis.rpc.IRemoteException) {
+              result.ex = (org.ignis.rpc.IRemoteException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, reduceByKey_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.reduceByKey(args.funct,resultHandler);
       }
     }
 
@@ -708,16 +858,14 @@ public class IKeysModule {
   public static class getKeys_args implements org.apache.thrift.TBase<getKeys_args, getKeys_args._Fields>, java.io.Serializable, Cloneable, Comparable<getKeys_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("getKeys_args");
 
-    private static final org.apache.thrift.protocol.TField SINGLE_FIELD_DESC = new org.apache.thrift.protocol.TField("single", org.apache.thrift.protocol.TType.BOOL, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new getKeys_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new getKeys_argsTupleSchemeFactory();
 
-    private boolean single; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SINGLE((short)1, "single");
+;
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -732,8 +880,6 @@ public class IKeysModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // SINGLE
-            return SINGLE;
           default:
             return null;
         }
@@ -772,15 +918,9 @@ public class IKeysModule {
         return _fieldName;
       }
     }
-
-    // isset id assignments
-    private static final int __SINGLE_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SINGLE, new org.apache.thrift.meta_data.FieldMetaData("single", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getKeys_args.class, metaDataMap);
     }
@@ -788,20 +928,10 @@ public class IKeysModule {
     public getKeys_args() {
     }
 
-    public getKeys_args(
-      boolean single)
-    {
-      this();
-      this.single = single;
-      setSingleIsSet(true);
-    }
-
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public getKeys_args(getKeys_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.single = other.single;
     }
 
     public getKeys_args deepCopy() {
@@ -810,51 +940,15 @@ public class IKeysModule {
 
     @Override
     public void clear() {
-      setSingleIsSet(false);
-      this.single = false;
-    }
-
-    public boolean isSingle() {
-      return this.single;
-    }
-
-    public getKeys_args setSingle(boolean single) {
-      this.single = single;
-      setSingleIsSet(true);
-      return this;
-    }
-
-    public void unsetSingle() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __SINGLE_ISSET_ID);
-    }
-
-    /** Returns true if field single is set (has been assigned a value) and false otherwise */
-    public boolean isSetSingle() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __SINGLE_ISSET_ID);
-    }
-
-    public void setSingleIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __SINGLE_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
-      case SINGLE:
-        if (value == null) {
-          unsetSingle();
-        } else {
-          setSingle((java.lang.Boolean)value);
-        }
-        break;
-
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
-      case SINGLE:
-        return isSingle();
-
       }
       throw new java.lang.IllegalStateException();
     }
@@ -866,8 +960,6 @@ public class IKeysModule {
       }
 
       switch (field) {
-      case SINGLE:
-        return isSetSingle();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -887,23 +979,12 @@ public class IKeysModule {
       if (this == that)
         return true;
 
-      boolean this_present_single = true;
-      boolean that_present_single = true;
-      if (this_present_single || that_present_single) {
-        if (!(this_present_single && that_present_single))
-          return false;
-        if (this.single != that.single)
-          return false;
-      }
-
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((single) ? 131071 : 524287);
 
       return hashCode;
     }
@@ -916,16 +997,6 @@ public class IKeysModule {
 
       int lastComparison = 0;
 
-      lastComparison = java.lang.Boolean.valueOf(isSetSingle()).compareTo(other.isSetSingle());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSingle()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.single, other.single);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
       return 0;
     }
 
@@ -946,9 +1017,6 @@ public class IKeysModule {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("getKeys_args(");
       boolean first = true;
 
-      sb.append("single:");
-      sb.append(this.single);
-      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -968,8 +1036,6 @@ public class IKeysModule {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -994,14 +1060,6 @@ public class IKeysModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // SINGLE
-              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
-                struct.single = iprot.readBool();
-                struct.setSingleIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -1017,9 +1075,6 @@ public class IKeysModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(SINGLE_FIELD_DESC);
-        oprot.writeBool(struct.single);
-        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -1037,24 +1092,11 @@ public class IKeysModule {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, getKeys_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetSingle()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetSingle()) {
-          oprot.writeBool(struct.single);
-        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, getKeys_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.single = iprot.readBool();
-          struct.setSingleIsSet(true);
-        }
       }
     }
 
@@ -1066,13 +1108,13 @@ public class IKeysModule {
   public static class getKeys_result implements org.apache.thrift.TBase<getKeys_result, getKeys_result._Fields>, java.io.Serializable, Cloneable, Comparable<getKeys_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("getKeys_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.MAP, (short)0);
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new getKeys_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new getKeys_resultTupleSchemeFactory();
 
-    private java.util.Map<java.lang.Long,java.lang.Long> success; // required
+    private java.util.List<java.lang.Long> success; // required
     private org.ignis.rpc.IRemoteException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -1141,8 +1183,7 @@ public class IKeysModule {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
-              new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64), 
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64))));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
@@ -1154,7 +1195,7 @@ public class IKeysModule {
     }
 
     public getKeys_result(
-      java.util.Map<java.lang.Long,java.lang.Long> success,
+      java.util.List<java.lang.Long> success,
       org.ignis.rpc.IRemoteException ex)
     {
       this();
@@ -1167,7 +1208,7 @@ public class IKeysModule {
      */
     public getKeys_result(getKeys_result other) {
       if (other.isSetSuccess()) {
-        java.util.Map<java.lang.Long,java.lang.Long> __this__success = new java.util.HashMap<java.lang.Long,java.lang.Long>(other.success);
+        java.util.List<java.lang.Long> __this__success = new java.util.ArrayList<java.lang.Long>(other.success);
         this.success = __this__success;
       }
       if (other.isSetEx()) {
@@ -1189,18 +1230,22 @@ public class IKeysModule {
       return (this.success == null) ? 0 : this.success.size();
     }
 
-    public void putToSuccess(long key, long val) {
-      if (this.success == null) {
-        this.success = new java.util.HashMap<java.lang.Long,java.lang.Long>();
-      }
-      this.success.put(key, val);
+    public java.util.Iterator<java.lang.Long> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
     }
 
-    public java.util.Map<java.lang.Long,java.lang.Long> getSuccess() {
+    public void addToSuccess(long elem) {
+      if (this.success == null) {
+        this.success = new java.util.ArrayList<java.lang.Long>();
+      }
+      this.success.add(elem);
+    }
+
+    public java.util.List<java.lang.Long> getSuccess() {
       return this.success;
     }
 
-    public getKeys_result setSuccess(java.util.Map<java.lang.Long,java.lang.Long> success) {
+    public getKeys_result setSuccess(java.util.List<java.lang.Long> success) {
       this.success = success;
       return this;
     }
@@ -1250,7 +1295,7 @@ public class IKeysModule {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((java.util.Map<java.lang.Long,java.lang.Long>)value);
+          setSuccess((java.util.List<java.lang.Long>)value);
         }
         break;
 
@@ -1450,19 +1495,17 @@ public class IKeysModule {
           }
           switch (schemeField.id) {
             case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TMap _map0 = iprot.readMapBegin();
-                  struct.success = new java.util.HashMap<java.lang.Long,java.lang.Long>(2*_map0.size);
-                  long _key1;
-                  long _val2;
-                  for (int _i3 = 0; _i3 < _map0.size; ++_i3)
+                  org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.Long>(_list8.size);
+                  long _elem9;
+                  for (int _i10 = 0; _i10 < _list8.size; ++_i10)
                   {
-                    _key1 = iprot.readI64();
-                    _val2 = iprot.readI64();
-                    struct.success.put(_key1, _val2);
+                    _elem9 = iprot.readI64();
+                    struct.success.add(_elem9);
                   }
-                  iprot.readMapEnd();
+                  iprot.readListEnd();
                 }
                 struct.setSuccessIsSet(true);
               } else { 
@@ -1496,13 +1539,12 @@ public class IKeysModule {
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
-            oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.I64, org.apache.thrift.protocol.TType.I64, struct.success.size()));
-            for (java.util.Map.Entry<java.lang.Long, java.lang.Long> _iter4 : struct.success.entrySet())
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, struct.success.size()));
+            for (long _iter11 : struct.success)
             {
-              oprot.writeI64(_iter4.getKey());
-              oprot.writeI64(_iter4.getValue());
+              oprot.writeI64(_iter11);
             }
-            oprot.writeMapEnd();
+            oprot.writeListEnd();
           }
           oprot.writeFieldEnd();
         }
@@ -1539,10 +1581,9 @@ public class IKeysModule {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.util.Map.Entry<java.lang.Long, java.lang.Long> _iter5 : struct.success.entrySet())
+            for (long _iter12 : struct.success)
             {
-              oprot.writeI64(_iter5.getKey());
-              oprot.writeI64(_iter5.getValue());
+              oprot.writeI64(_iter12);
             }
           }
         }
@@ -1557,15 +1598,13 @@ public class IKeysModule {
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TMap _map6 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.I64, org.apache.thrift.protocol.TType.I64, iprot.readI32());
-            struct.success = new java.util.HashMap<java.lang.Long,java.lang.Long>(2*_map6.size);
-            long _key7;
-            long _val8;
-            for (int _i9 = 0; _i9 < _map6.size; ++_i9)
+            org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
+            struct.success = new java.util.ArrayList<java.lang.Long>(_list13.size);
+            long _elem14;
+            for (int _i15 = 0; _i15 < _list13.size; ++_i15)
             {
-              _key7 = iprot.readI64();
-              _val8 = iprot.readI64();
-              struct.success.put(_key7, _val8);
+              _elem14 = iprot.readI64();
+              struct.success.add(_elem14);
             }
           }
           struct.setSuccessIsSet(true);
@@ -1583,22 +1622,17 @@ public class IKeysModule {
     }
   }
 
-  public static class sendPairs_args implements org.apache.thrift.TBase<sendPairs_args, sendPairs_args._Fields>, java.io.Serializable, Cloneable, Comparable<sendPairs_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("sendPairs_args");
+  public static class getKeysWithCount_args implements org.apache.thrift.TBase<getKeysWithCount_args, getKeysWithCount_args._Fields>, java.io.Serializable, Cloneable, Comparable<getKeysWithCount_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("getKeysWithCount_args");
 
-    private static final org.apache.thrift.protocol.TField ADDR_FIELD_DESC = new org.apache.thrift.protocol.TField("addr", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField KEYS_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("keys_id", org.apache.thrift.protocol.TType.LIST, (short)2);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new sendPairs_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sendPairs_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new getKeysWithCount_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new getKeysWithCount_argsTupleSchemeFactory();
 
-    private java.lang.String addr; // required
-    private java.util.List<java.lang.Long> keys_id; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      ADDR((short)1, "addr"),
-      KEYS_ID((short)2, "keys_id");
+;
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -1613,10 +1647,265 @@ public class IKeysModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // ADDR
-            return ADDR;
-          case 2: // KEYS_ID
-            return KEYS_ID;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getKeysWithCount_args.class, metaDataMap);
+    }
+
+    public getKeysWithCount_args() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public getKeysWithCount_args(getKeysWithCount_args other) {
+    }
+
+    public getKeysWithCount_args deepCopy() {
+      return new getKeysWithCount_args(this);
+    }
+
+    @Override
+    public void clear() {
+    }
+
+    public void setFieldValue(_Fields field, java.lang.Object value) {
+      switch (field) {
+      }
+    }
+
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof getKeysWithCount_args)
+        return this.equals((getKeysWithCount_args)that);
+      return false;
+    }
+
+    public boolean equals(getKeysWithCount_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(getKeysWithCount_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("getKeysWithCount_args(");
+      boolean first = true;
+
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class getKeysWithCount_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public getKeysWithCount_argsStandardScheme getScheme() {
+        return new getKeysWithCount_argsStandardScheme();
+      }
+    }
+
+    private static class getKeysWithCount_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<getKeysWithCount_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, getKeysWithCount_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, getKeysWithCount_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class getKeysWithCount_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public getKeysWithCount_argsTupleScheme getScheme() {
+        return new getKeysWithCount_argsTupleScheme();
+      }
+    }
+
+    private static class getKeysWithCount_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<getKeysWithCount_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, getKeysWithCount_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, getKeysWithCount_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class getKeysWithCount_result implements org.apache.thrift.TBase<getKeysWithCount_result, getKeysWithCount_result._Fields>, java.io.Serializable, Cloneable, Comparable<getKeysWithCount_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("getKeysWithCount_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.MAP, (short)0);
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new getKeysWithCount_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new getKeysWithCount_resultTupleSchemeFactory();
+
+    private java.util.Map<java.lang.Long,java.lang.Long> success; // required
+    private org.ignis.rpc.IRemoteException ex; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX((short)1, "ex");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          case 1: // EX
+            return EX;
           default:
             return null;
         }
@@ -1660,128 +1949,125 @@ public class IKeysModule {
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.ADDR, new org.apache.thrift.meta_data.FieldMetaData("addr", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.KEYS_ID, new org.apache.thrift.meta_data.FieldMetaData("keys_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
+              new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64), 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64))));
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sendPairs_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getKeysWithCount_result.class, metaDataMap);
     }
 
-    public sendPairs_args() {
+    public getKeysWithCount_result() {
     }
 
-    public sendPairs_args(
-      java.lang.String addr,
-      java.util.List<java.lang.Long> keys_id)
+    public getKeysWithCount_result(
+      java.util.Map<java.lang.Long,java.lang.Long> success,
+      org.ignis.rpc.IRemoteException ex)
     {
       this();
-      this.addr = addr;
-      this.keys_id = keys_id;
+      this.success = success;
+      this.ex = ex;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public sendPairs_args(sendPairs_args other) {
-      if (other.isSetAddr()) {
-        this.addr = other.addr;
+    public getKeysWithCount_result(getKeysWithCount_result other) {
+      if (other.isSetSuccess()) {
+        java.util.Map<java.lang.Long,java.lang.Long> __this__success = new java.util.HashMap<java.lang.Long,java.lang.Long>(other.success);
+        this.success = __this__success;
       }
-      if (other.isSetKeys_id()) {
-        java.util.List<java.lang.Long> __this__keys_id = new java.util.ArrayList<java.lang.Long>(other.keys_id);
-        this.keys_id = __this__keys_id;
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
-    public sendPairs_args deepCopy() {
-      return new sendPairs_args(this);
+    public getKeysWithCount_result deepCopy() {
+      return new getKeysWithCount_result(this);
     }
 
     @Override
     public void clear() {
-      this.addr = null;
-      this.keys_id = null;
+      this.success = null;
+      this.ex = null;
     }
 
-    public java.lang.String getAddr() {
-      return this.addr;
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
     }
 
-    public sendPairs_args setAddr(java.lang.String addr) {
-      this.addr = addr;
+    public void putToSuccess(long key, long val) {
+      if (this.success == null) {
+        this.success = new java.util.HashMap<java.lang.Long,java.lang.Long>();
+      }
+      this.success.put(key, val);
+    }
+
+    public java.util.Map<java.lang.Long,java.lang.Long> getSuccess() {
+      return this.success;
+    }
+
+    public getKeysWithCount_result setSuccess(java.util.Map<java.lang.Long,java.lang.Long> success) {
+      this.success = success;
       return this;
     }
 
-    public void unsetAddr() {
-      this.addr = null;
+    public void unsetSuccess() {
+      this.success = null;
     }
 
-    /** Returns true if field addr is set (has been assigned a value) and false otherwise */
-    public boolean isSetAddr() {
-      return this.addr != null;
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
     }
 
-    public void setAddrIsSet(boolean value) {
+    public void setSuccessIsSet(boolean value) {
       if (!value) {
-        this.addr = null;
+        this.success = null;
       }
     }
 
-    public int getKeys_idSize() {
-      return (this.keys_id == null) ? 0 : this.keys_id.size();
+    public org.ignis.rpc.IRemoteException getEx() {
+      return this.ex;
     }
 
-    public java.util.Iterator<java.lang.Long> getKeys_idIterator() {
-      return (this.keys_id == null) ? null : this.keys_id.iterator();
-    }
-
-    public void addToKeys_id(long elem) {
-      if (this.keys_id == null) {
-        this.keys_id = new java.util.ArrayList<java.lang.Long>();
-      }
-      this.keys_id.add(elem);
-    }
-
-    public java.util.List<java.lang.Long> getKeys_id() {
-      return this.keys_id;
-    }
-
-    public sendPairs_args setKeys_id(java.util.List<java.lang.Long> keys_id) {
-      this.keys_id = keys_id;
+    public getKeysWithCount_result setEx(org.ignis.rpc.IRemoteException ex) {
+      this.ex = ex;
       return this;
     }
 
-    public void unsetKeys_id() {
-      this.keys_id = null;
+    public void unsetEx() {
+      this.ex = null;
     }
 
-    /** Returns true if field keys_id is set (has been assigned a value) and false otherwise */
-    public boolean isSetKeys_id() {
-      return this.keys_id != null;
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
     }
 
-    public void setKeys_idIsSet(boolean value) {
+    public void setExIsSet(boolean value) {
       if (!value) {
-        this.keys_id = null;
+        this.ex = null;
       }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
-      case ADDR:
+      case SUCCESS:
         if (value == null) {
-          unsetAddr();
+          unsetSuccess();
         } else {
-          setAddr((java.lang.String)value);
+          setSuccess((java.util.Map<java.lang.Long,java.lang.Long>)value);
         }
         break;
 
-      case KEYS_ID:
+      case EX:
         if (value == null) {
-          unsetKeys_id();
+          unsetEx();
         } else {
-          setKeys_id((java.util.List<java.lang.Long>)value);
+          setEx((org.ignis.rpc.IRemoteException)value);
         }
         break;
 
@@ -1790,11 +2076,11 @@ public class IKeysModule {
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
-      case ADDR:
-        return getAddr();
+      case SUCCESS:
+        return getSuccess();
 
-      case KEYS_ID:
-        return getKeys_id();
+      case EX:
+        return getEx();
 
       }
       throw new java.lang.IllegalStateException();
@@ -1807,10 +2093,10 @@ public class IKeysModule {
       }
 
       switch (field) {
-      case ADDR:
-        return isSetAddr();
-      case KEYS_ID:
-        return isSetKeys_id();
+      case SUCCESS:
+        return isSetSuccess();
+      case EX:
+        return isSetEx();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1819,32 +2105,32 @@ public class IKeysModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof sendPairs_args)
-        return this.equals((sendPairs_args)that);
+      if (that instanceof getKeysWithCount_result)
+        return this.equals((getKeysWithCount_result)that);
       return false;
     }
 
-    public boolean equals(sendPairs_args that) {
+    public boolean equals(getKeysWithCount_result that) {
       if (that == null)
         return false;
       if (this == that)
         return true;
 
-      boolean this_present_addr = true && this.isSetAddr();
-      boolean that_present_addr = true && that.isSetAddr();
-      if (this_present_addr || that_present_addr) {
-        if (!(this_present_addr && that_present_addr))
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
           return false;
-        if (!this.addr.equals(that.addr))
+        if (!this.success.equals(that.success))
           return false;
       }
 
-      boolean this_present_keys_id = true && this.isSetKeys_id();
-      boolean that_present_keys_id = true && that.isSetKeys_id();
-      if (this_present_keys_id || that_present_keys_id) {
-        if (!(this_present_keys_id && that_present_keys_id))
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
           return false;
-        if (!this.keys_id.equals(that.keys_id))
+        if (!this.ex.equals(that.ex))
           return false;
       }
 
@@ -1855,41 +2141,41 @@ public class IKeysModule {
     public int hashCode() {
       int hashCode = 1;
 
-      hashCode = hashCode * 8191 + ((isSetAddr()) ? 131071 : 524287);
-      if (isSetAddr())
-        hashCode = hashCode * 8191 + addr.hashCode();
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
 
-      hashCode = hashCode * 8191 + ((isSetKeys_id()) ? 131071 : 524287);
-      if (isSetKeys_id())
-        hashCode = hashCode * 8191 + keys_id.hashCode();
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
 
       return hashCode;
     }
 
     @Override
-    public int compareTo(sendPairs_args other) {
+    public int compareTo(getKeysWithCount_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
 
-      lastComparison = java.lang.Boolean.valueOf(isSetAddr()).compareTo(other.isSetAddr());
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetAddr()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.addr, other.addr);
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
         if (lastComparison != 0) {
           return lastComparison;
         }
       }
-      lastComparison = java.lang.Boolean.valueOf(isSetKeys_id()).compareTo(other.isSetKeys_id());
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetKeys_id()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.keys_id, other.keys_id);
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1907,26 +2193,26 @@ public class IKeysModule {
 
     public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
       scheme(oprot).write(oprot, this);
-    }
+      }
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("sendPairs_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("getKeysWithCount_result(");
       boolean first = true;
 
-      sb.append("addr:");
-      if (this.addr == null) {
+      sb.append("success:");
+      if (this.success == null) {
         sb.append("null");
       } else {
-        sb.append(this.addr);
+        sb.append(this.success);
       }
       first = false;
       if (!first) sb.append(", ");
-      sb.append("keys_id:");
-      if (this.keys_id == null) {
+      sb.append("ex:");
+      if (this.ex == null) {
         sb.append("null");
       } else {
-        sb.append(this.keys_id);
+        sb.append(this.ex);
       }
       first = false;
       sb.append(")");
@@ -1954,15 +2240,15 @@ public class IKeysModule {
       }
     }
 
-    private static class sendPairs_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public sendPairs_argsStandardScheme getScheme() {
-        return new sendPairs_argsStandardScheme();
+    private static class getKeysWithCount_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public getKeysWithCount_resultStandardScheme getScheme() {
+        return new getKeysWithCount_resultStandardScheme();
       }
     }
 
-    private static class sendPairs_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<sendPairs_args> {
+    private static class getKeysWithCount_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<getKeysWithCount_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, sendPairs_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, getKeysWithCount_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -1972,28 +2258,31 @@ public class IKeysModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // ADDR
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.addr = iprot.readString();
-                struct.setAddrIsSet(true);
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
+                {
+                  org.apache.thrift.protocol.TMap _map16 = iprot.readMapBegin();
+                  struct.success = new java.util.HashMap<java.lang.Long,java.lang.Long>(2*_map16.size);
+                  long _key17;
+                  long _val18;
+                  for (int _i19 = 0; _i19 < _map16.size; ++_i19)
+                  {
+                    _key17 = iprot.readI64();
+                    _val18 = iprot.readI64();
+                    struct.success.put(_key17, _val18);
+                  }
+                  iprot.readMapEnd();
+                }
+                struct.setSuccessIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // KEYS_ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
-                {
-                  org.apache.thrift.protocol.TList _list10 = iprot.readListBegin();
-                  struct.keys_id = new java.util.ArrayList<java.lang.Long>(_list10.size);
-                  long _elem11;
-                  for (int _i12 = 0; _i12 < _list10.size; ++_i12)
-                  {
-                    _elem11 = iprot.readI64();
-                    struct.keys_id.add(_elem11);
-                  }
-                  iprot.readListEnd();
-                }
-                struct.setKeys_idIsSet(true);
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IRemoteException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -2009,22 +2298,452 @@ public class IKeysModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, sendPairs_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, getKeysWithCount_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.addr != null) {
-          oprot.writeFieldBegin(ADDR_FIELD_DESC);
-          oprot.writeString(struct.addr);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          {
+            oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.I64, org.apache.thrift.protocol.TType.I64, struct.success.size()));
+            for (java.util.Map.Entry<java.lang.Long, java.lang.Long> _iter20 : struct.success.entrySet())
+            {
+              oprot.writeI64(_iter20.getKey());
+              oprot.writeI64(_iter20.getValue());
+            }
+            oprot.writeMapEnd();
+          }
           oprot.writeFieldEnd();
         }
-        if (struct.keys_id != null) {
-          oprot.writeFieldBegin(KEYS_ID_FIELD_DESC);
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class getKeysWithCount_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public getKeysWithCount_resultTupleScheme getScheme() {
+        return new getKeysWithCount_resultTupleScheme();
+      }
+    }
+
+    private static class getKeysWithCount_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<getKeysWithCount_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, getKeysWithCount_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        if (struct.isSetEx()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetSuccess()) {
           {
-            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, struct.keys_id.size()));
-            for (long _iter13 : struct.keys_id)
+            oprot.writeI32(struct.success.size());
+            for (java.util.Map.Entry<java.lang.Long, java.lang.Long> _iter21 : struct.success.entrySet())
             {
-              oprot.writeI64(_iter13);
+              oprot.writeI64(_iter21.getKey());
+              oprot.writeI64(_iter21.getValue());
+            }
+          }
+        }
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, getKeysWithCount_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          {
+            org.apache.thrift.protocol.TMap _map22 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.I64, org.apache.thrift.protocol.TType.I64, iprot.readI32());
+            struct.success = new java.util.HashMap<java.lang.Long,java.lang.Long>(2*_map22.size);
+            long _key23;
+            long _val24;
+            for (int _i25 = 0; _i25 < _map22.size; ++_i25)
+            {
+              _key23 = iprot.readI64();
+              _val24 = iprot.readI64();
+              struct.success.put(_key23, _val24);
+            }
+          }
+          struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.ex = new org.ignis.rpc.IRemoteException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class prepareKeys_args implements org.apache.thrift.TBase<prepareKeys_args, prepareKeys_args._Fields>, java.io.Serializable, Cloneable, Comparable<prepareKeys_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("prepareKeys_args");
+
+    private static final org.apache.thrift.protocol.TField EXECUTOR_KEYS_FIELD_DESC = new org.apache.thrift.protocol.TField("executorKeys", org.apache.thrift.protocol.TType.LIST, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new prepareKeys_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new prepareKeys_argsTupleSchemeFactory();
+
+    private java.util.List<IExecutorKeys> executorKeys; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      EXECUTOR_KEYS((short)1, "executorKeys");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // EXECUTOR_KEYS
+            return EXECUTOR_KEYS;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.EXECUTOR_KEYS, new org.apache.thrift.meta_data.FieldMetaData("executorKeys", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IExecutorKeys.class))));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(prepareKeys_args.class, metaDataMap);
+    }
+
+    public prepareKeys_args() {
+    }
+
+    public prepareKeys_args(
+      java.util.List<IExecutorKeys> executorKeys)
+    {
+      this();
+      this.executorKeys = executorKeys;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public prepareKeys_args(prepareKeys_args other) {
+      if (other.isSetExecutorKeys()) {
+        java.util.List<IExecutorKeys> __this__executorKeys = new java.util.ArrayList<IExecutorKeys>(other.executorKeys.size());
+        for (IExecutorKeys other_element : other.executorKeys) {
+          __this__executorKeys.add(new IExecutorKeys(other_element));
+        }
+        this.executorKeys = __this__executorKeys;
+      }
+    }
+
+    public prepareKeys_args deepCopy() {
+      return new prepareKeys_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.executorKeys = null;
+    }
+
+    public int getExecutorKeysSize() {
+      return (this.executorKeys == null) ? 0 : this.executorKeys.size();
+    }
+
+    public java.util.Iterator<IExecutorKeys> getExecutorKeysIterator() {
+      return (this.executorKeys == null) ? null : this.executorKeys.iterator();
+    }
+
+    public void addToExecutorKeys(IExecutorKeys elem) {
+      if (this.executorKeys == null) {
+        this.executorKeys = new java.util.ArrayList<IExecutorKeys>();
+      }
+      this.executorKeys.add(elem);
+    }
+
+    public java.util.List<IExecutorKeys> getExecutorKeys() {
+      return this.executorKeys;
+    }
+
+    public prepareKeys_args setExecutorKeys(java.util.List<IExecutorKeys> executorKeys) {
+      this.executorKeys = executorKeys;
+      return this;
+    }
+
+    public void unsetExecutorKeys() {
+      this.executorKeys = null;
+    }
+
+    /** Returns true if field executorKeys is set (has been assigned a value) and false otherwise */
+    public boolean isSetExecutorKeys() {
+      return this.executorKeys != null;
+    }
+
+    public void setExecutorKeysIsSet(boolean value) {
+      if (!value) {
+        this.executorKeys = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, java.lang.Object value) {
+      switch (field) {
+      case EXECUTOR_KEYS:
+        if (value == null) {
+          unsetExecutorKeys();
+        } else {
+          setExecutorKeys((java.util.List<IExecutorKeys>)value);
+        }
+        break;
+
+      }
+    }
+
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case EXECUTOR_KEYS:
+        return getExecutorKeys();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case EXECUTOR_KEYS:
+        return isSetExecutorKeys();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof prepareKeys_args)
+        return this.equals((prepareKeys_args)that);
+      return false;
+    }
+
+    public boolean equals(prepareKeys_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_executorKeys = true && this.isSetExecutorKeys();
+      boolean that_present_executorKeys = true && that.isSetExecutorKeys();
+      if (this_present_executorKeys || that_present_executorKeys) {
+        if (!(this_present_executorKeys && that_present_executorKeys))
+          return false;
+        if (!this.executorKeys.equals(that.executorKeys))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetExecutorKeys()) ? 131071 : 524287);
+      if (isSetExecutorKeys())
+        hashCode = hashCode * 8191 + executorKeys.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(prepareKeys_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetExecutorKeys()).compareTo(other.isSetExecutorKeys());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetExecutorKeys()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.executorKeys, other.executorKeys);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("prepareKeys_args(");
+      boolean first = true;
+
+      sb.append("executorKeys:");
+      if (this.executorKeys == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.executorKeys);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class prepareKeys_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public prepareKeys_argsStandardScheme getScheme() {
+        return new prepareKeys_argsStandardScheme();
+      }
+    }
+
+    private static class prepareKeys_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<prepareKeys_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, prepareKeys_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // EXECUTOR_KEYS
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list26 = iprot.readListBegin();
+                  struct.executorKeys = new java.util.ArrayList<IExecutorKeys>(_list26.size);
+                  IExecutorKeys _elem27;
+                  for (int _i28 = 0; _i28 < _list26.size; ++_i28)
+                  {
+                    _elem27 = new IExecutorKeys();
+                    _elem27.read(iprot);
+                    struct.executorKeys.add(_elem27);
+                  }
+                  iprot.readListEnd();
+                }
+                struct.setExecutorKeysIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, prepareKeys_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.executorKeys != null) {
+          oprot.writeFieldBegin(EXECUTOR_KEYS_FIELD_DESC);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.executorKeys.size()));
+            for (IExecutorKeys _iter29 : struct.executorKeys)
+            {
+              _iter29.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -2036,59 +2755,50 @@ public class IKeysModule {
 
     }
 
-    private static class sendPairs_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public sendPairs_argsTupleScheme getScheme() {
-        return new sendPairs_argsTupleScheme();
+    private static class prepareKeys_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public prepareKeys_argsTupleScheme getScheme() {
+        return new prepareKeys_argsTupleScheme();
       }
     }
 
-    private static class sendPairs_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<sendPairs_args> {
+    private static class prepareKeys_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<prepareKeys_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, sendPairs_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, prepareKeys_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetAddr()) {
+        if (struct.isSetExecutorKeys()) {
           optionals.set(0);
         }
-        if (struct.isSetKeys_id()) {
-          optionals.set(1);
-        }
-        oprot.writeBitSet(optionals, 2);
-        if (struct.isSetAddr()) {
-          oprot.writeString(struct.addr);
-        }
-        if (struct.isSetKeys_id()) {
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetExecutorKeys()) {
           {
-            oprot.writeI32(struct.keys_id.size());
-            for (long _iter14 : struct.keys_id)
+            oprot.writeI32(struct.executorKeys.size());
+            for (IExecutorKeys _iter30 : struct.executorKeys)
             {
-              oprot.writeI64(_iter14);
+              _iter30.write(oprot);
             }
           }
         }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, sendPairs_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, prepareKeys_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.addr = iprot.readString();
-          struct.setAddrIsSet(true);
-        }
-        if (incoming.get(1)) {
           {
-            org.apache.thrift.protocol.TList _list15 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
-            struct.keys_id = new java.util.ArrayList<java.lang.Long>(_list15.size);
-            long _elem16;
-            for (int _i17 = 0; _i17 < _list15.size; ++_i17)
+            org.apache.thrift.protocol.TList _list31 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.executorKeys = new java.util.ArrayList<IExecutorKeys>(_list31.size);
+            IExecutorKeys _elem32;
+            for (int _i33 = 0; _i33 < _list31.size; ++_i33)
             {
-              _elem16 = iprot.readI64();
-              struct.keys_id.add(_elem16);
+              _elem32 = new IExecutorKeys();
+              _elem32.read(iprot);
+              struct.executorKeys.add(_elem32);
             }
           }
-          struct.setKeys_idIsSet(true);
+          struct.setExecutorKeysIsSet(true);
         }
       }
     }
@@ -2098,13 +2808,13 @@ public class IKeysModule {
     }
   }
 
-  public static class sendPairs_result implements org.apache.thrift.TBase<sendPairs_result, sendPairs_result._Fields>, java.io.Serializable, Cloneable, Comparable<sendPairs_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("sendPairs_result");
+  public static class prepareKeys_result implements org.apache.thrift.TBase<prepareKeys_result, prepareKeys_result._Fields>, java.io.Serializable, Cloneable, Comparable<prepareKeys_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("prepareKeys_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new sendPairs_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sendPairs_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new prepareKeys_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new prepareKeys_resultTupleSchemeFactory();
 
     private org.ignis.rpc.IRemoteException ex; // required
 
@@ -2173,13 +2883,13 @@ public class IKeysModule {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sendPairs_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(prepareKeys_result.class, metaDataMap);
     }
 
-    public sendPairs_result() {
+    public prepareKeys_result() {
     }
 
-    public sendPairs_result(
+    public prepareKeys_result(
       org.ignis.rpc.IRemoteException ex)
     {
       this();
@@ -2189,14 +2899,14 @@ public class IKeysModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public sendPairs_result(sendPairs_result other) {
+    public prepareKeys_result(prepareKeys_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
-    public sendPairs_result deepCopy() {
-      return new sendPairs_result(this);
+    public prepareKeys_result deepCopy() {
+      return new prepareKeys_result(this);
     }
 
     @Override
@@ -2208,7 +2918,7 @@ public class IKeysModule {
       return this.ex;
     }
 
-    public sendPairs_result setEx(org.ignis.rpc.IRemoteException ex) {
+    public prepareKeys_result setEx(org.ignis.rpc.IRemoteException ex) {
       this.ex = ex;
       return this;
     }
@@ -2267,12 +2977,12 @@ public class IKeysModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof sendPairs_result)
-        return this.equals((sendPairs_result)that);
+      if (that instanceof prepareKeys_result)
+        return this.equals((prepareKeys_result)that);
       return false;
     }
 
-    public boolean equals(sendPairs_result that) {
+    public boolean equals(prepareKeys_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -2302,7 +3012,7 @@ public class IKeysModule {
     }
 
     @Override
-    public int compareTo(sendPairs_result other) {
+    public int compareTo(prepareKeys_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -2336,7 +3046,7 @@ public class IKeysModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("sendPairs_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("prepareKeys_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -2371,15 +3081,15 @@ public class IKeysModule {
       }
     }
 
-    private static class sendPairs_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public sendPairs_resultStandardScheme getScheme() {
-        return new sendPairs_resultStandardScheme();
+    private static class prepareKeys_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public prepareKeys_resultStandardScheme getScheme() {
+        return new prepareKeys_resultStandardScheme();
       }
     }
 
-    private static class sendPairs_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<sendPairs_result> {
+    private static class prepareKeys_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<prepareKeys_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, sendPairs_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, prepareKeys_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -2409,7 +3119,7 @@ public class IKeysModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, sendPairs_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, prepareKeys_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -2424,16 +3134,16 @@ public class IKeysModule {
 
     }
 
-    private static class sendPairs_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public sendPairs_resultTupleScheme getScheme() {
-        return new sendPairs_resultTupleScheme();
+    private static class prepareKeys_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public prepareKeys_resultTupleScheme getScheme() {
+        return new prepareKeys_resultTupleScheme();
       }
     }
 
-    private static class sendPairs_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<sendPairs_result> {
+    private static class prepareKeys_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<prepareKeys_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, sendPairs_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, prepareKeys_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -2446,7 +3156,7 @@ public class IKeysModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, sendPairs_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, prepareKeys_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
@@ -2462,12 +3172,12 @@ public class IKeysModule {
     }
   }
 
-  public static class joinPairs_args implements org.apache.thrift.TBase<joinPairs_args, joinPairs_args._Fields>, java.io.Serializable, Cloneable, Comparable<joinPairs_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinPairs_args");
+  public static class collectKeys_args implements org.apache.thrift.TBase<collectKeys_args, collectKeys_args._Fields>, java.io.Serializable, Cloneable, Comparable<collectKeys_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("collectKeys_args");
 
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinPairs_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinPairs_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new collectKeys_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new collectKeys_argsTupleSchemeFactory();
 
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -2529,20 +3239,20 @@ public class IKeysModule {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinPairs_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(collectKeys_args.class, metaDataMap);
     }
 
-    public joinPairs_args() {
+    public collectKeys_args() {
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public joinPairs_args(joinPairs_args other) {
+    public collectKeys_args(collectKeys_args other) {
     }
 
-    public joinPairs_args deepCopy() {
-      return new joinPairs_args(this);
+    public collectKeys_args deepCopy() {
+      return new collectKeys_args(this);
     }
 
     @Override
@@ -2575,12 +3285,12 @@ public class IKeysModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof joinPairs_args)
-        return this.equals((joinPairs_args)that);
+      if (that instanceof collectKeys_args)
+        return this.equals((collectKeys_args)that);
       return false;
     }
 
-    public boolean equals(joinPairs_args that) {
+    public boolean equals(collectKeys_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -2597,7 +3307,7 @@ public class IKeysModule {
     }
 
     @Override
-    public int compareTo(joinPairs_args other) {
+    public int compareTo(collectKeys_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -2621,7 +3331,7 @@ public class IKeysModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinPairs_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("collectKeys_args(");
       boolean first = true;
 
       sb.append(")");
@@ -2649,15 +3359,15 @@ public class IKeysModule {
       }
     }
 
-    private static class joinPairs_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinPairs_argsStandardScheme getScheme() {
-        return new joinPairs_argsStandardScheme();
+    private static class collectKeys_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public collectKeys_argsStandardScheme getScheme() {
+        return new collectKeys_argsStandardScheme();
       }
     }
 
-    private static class joinPairs_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinPairs_args> {
+    private static class collectKeys_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<collectKeys_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, joinPairs_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, collectKeys_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -2678,7 +3388,7 @@ public class IKeysModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, joinPairs_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, collectKeys_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -2688,21 +3398,21 @@ public class IKeysModule {
 
     }
 
-    private static class joinPairs_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinPairs_argsTupleScheme getScheme() {
-        return new joinPairs_argsTupleScheme();
+    private static class collectKeys_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public collectKeys_argsTupleScheme getScheme() {
+        return new collectKeys_argsTupleScheme();
       }
     }
 
-    private static class joinPairs_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinPairs_args> {
+    private static class collectKeys_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<collectKeys_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, joinPairs_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, collectKeys_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, joinPairs_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, collectKeys_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
       }
     }
@@ -2712,13 +3422,13 @@ public class IKeysModule {
     }
   }
 
-  public static class joinPairs_result implements org.apache.thrift.TBase<joinPairs_result, joinPairs_result._Fields>, java.io.Serializable, Cloneable, Comparable<joinPairs_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinPairs_result");
+  public static class collectKeys_result implements org.apache.thrift.TBase<collectKeys_result, collectKeys_result._Fields>, java.io.Serializable, Cloneable, Comparable<collectKeys_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("collectKeys_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinPairs_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinPairs_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new collectKeys_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new collectKeys_resultTupleSchemeFactory();
 
     private org.ignis.rpc.IRemoteException ex; // required
 
@@ -2787,13 +3497,13 @@ public class IKeysModule {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinPairs_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(collectKeys_result.class, metaDataMap);
     }
 
-    public joinPairs_result() {
+    public collectKeys_result() {
     }
 
-    public joinPairs_result(
+    public collectKeys_result(
       org.ignis.rpc.IRemoteException ex)
     {
       this();
@@ -2803,14 +3513,14 @@ public class IKeysModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public joinPairs_result(joinPairs_result other) {
+    public collectKeys_result(collectKeys_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
-    public joinPairs_result deepCopy() {
-      return new joinPairs_result(this);
+    public collectKeys_result deepCopy() {
+      return new collectKeys_result(this);
     }
 
     @Override
@@ -2822,7 +3532,7 @@ public class IKeysModule {
       return this.ex;
     }
 
-    public joinPairs_result setEx(org.ignis.rpc.IRemoteException ex) {
+    public collectKeys_result setEx(org.ignis.rpc.IRemoteException ex) {
       this.ex = ex;
       return this;
     }
@@ -2881,12 +3591,12 @@ public class IKeysModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof joinPairs_result)
-        return this.equals((joinPairs_result)that);
+      if (that instanceof collectKeys_result)
+        return this.equals((collectKeys_result)that);
       return false;
     }
 
-    public boolean equals(joinPairs_result that) {
+    public boolean equals(collectKeys_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -2916,7 +3626,7 @@ public class IKeysModule {
     }
 
     @Override
-    public int compareTo(joinPairs_result other) {
+    public int compareTo(collectKeys_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -2950,7 +3660,7 @@ public class IKeysModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinPairs_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("collectKeys_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -2985,15 +3695,15 @@ public class IKeysModule {
       }
     }
 
-    private static class joinPairs_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinPairs_resultStandardScheme getScheme() {
-        return new joinPairs_resultStandardScheme();
+    private static class collectKeys_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public collectKeys_resultStandardScheme getScheme() {
+        return new collectKeys_resultStandardScheme();
       }
     }
 
-    private static class joinPairs_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinPairs_result> {
+    private static class collectKeys_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<collectKeys_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, joinPairs_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, collectKeys_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -3023,7 +3733,7 @@ public class IKeysModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, joinPairs_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, collectKeys_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -3038,16 +3748,16 @@ public class IKeysModule {
 
     }
 
-    private static class joinPairs_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinPairs_resultTupleScheme getScheme() {
-        return new joinPairs_resultTupleScheme();
+    private static class collectKeys_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public collectKeys_resultTupleScheme getScheme() {
+        return new collectKeys_resultTupleScheme();
       }
     }
 
-    private static class joinPairs_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinPairs_result> {
+    private static class collectKeys_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<collectKeys_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, joinPairs_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, collectKeys_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -3060,7 +3770,7 @@ public class IKeysModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, joinPairs_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, collectKeys_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
@@ -3076,17 +3786,19 @@ public class IKeysModule {
     }
   }
 
-  public static class reset_args implements org.apache.thrift.TBase<reset_args, reset_args._Fields>, java.io.Serializable, Cloneable, Comparable<reset_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("reset_args");
+  public static class reduceByKey_args implements org.apache.thrift.TBase<reduceByKey_args, reduceByKey_args._Fields>, java.io.Serializable, Cloneable, Comparable<reduceByKey_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("reduceByKey_args");
 
+    private static final org.apache.thrift.protocol.TField FUNCT_FIELD_DESC = new org.apache.thrift.protocol.TField("funct", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new reset_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new reset_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new reduceByKey_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new reduceByKey_argsTupleSchemeFactory();
 
+    private org.ignis.rpc.ISource funct; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      FUNCT((short)1, "funct");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -3101,6 +3813,8 @@ public class IKeysModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 1: // FUNCT
+            return FUNCT;
           default:
             return null;
         }
@@ -3139,37 +3853,87 @@ public class IKeysModule {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.FUNCT, new org.apache.thrift.meta_data.FieldMetaData("funct", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(reset_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(reduceByKey_args.class, metaDataMap);
     }
 
-    public reset_args() {
+    public reduceByKey_args() {
+    }
+
+    public reduceByKey_args(
+      org.ignis.rpc.ISource funct)
+    {
+      this();
+      this.funct = funct;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public reset_args(reset_args other) {
+    public reduceByKey_args(reduceByKey_args other) {
+      if (other.isSetFunct()) {
+        this.funct = new org.ignis.rpc.ISource(other.funct);
+      }
     }
 
-    public reset_args deepCopy() {
-      return new reset_args(this);
+    public reduceByKey_args deepCopy() {
+      return new reduceByKey_args(this);
     }
 
     @Override
     public void clear() {
+      this.funct = null;
+    }
+
+    public org.ignis.rpc.ISource getFunct() {
+      return this.funct;
+    }
+
+    public reduceByKey_args setFunct(org.ignis.rpc.ISource funct) {
+      this.funct = funct;
+      return this;
+    }
+
+    public void unsetFunct() {
+      this.funct = null;
+    }
+
+    /** Returns true if field funct is set (has been assigned a value) and false otherwise */
+    public boolean isSetFunct() {
+      return this.funct != null;
+    }
+
+    public void setFunctIsSet(boolean value) {
+      if (!value) {
+        this.funct = null;
+      }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case FUNCT:
+        if (value == null) {
+          unsetFunct();
+        } else {
+          setFunct((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case FUNCT:
+        return getFunct();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -3181,6 +3945,8 @@ public class IKeysModule {
       }
 
       switch (field) {
+      case FUNCT:
+        return isSetFunct();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -3189,16 +3955,25 @@ public class IKeysModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof reset_args)
-        return this.equals((reset_args)that);
+      if (that instanceof reduceByKey_args)
+        return this.equals((reduceByKey_args)that);
       return false;
     }
 
-    public boolean equals(reset_args that) {
+    public boolean equals(reduceByKey_args that) {
       if (that == null)
         return false;
       if (this == that)
         return true;
+
+      boolean this_present_funct = true && this.isSetFunct();
+      boolean that_present_funct = true && that.isSetFunct();
+      if (this_present_funct || that_present_funct) {
+        if (!(this_present_funct && that_present_funct))
+          return false;
+        if (!this.funct.equals(that.funct))
+          return false;
+      }
 
       return true;
     }
@@ -3207,17 +3982,31 @@ public class IKeysModule {
     public int hashCode() {
       int hashCode = 1;
 
+      hashCode = hashCode * 8191 + ((isSetFunct()) ? 131071 : 524287);
+      if (isSetFunct())
+        hashCode = hashCode * 8191 + funct.hashCode();
+
       return hashCode;
     }
 
     @Override
-    public int compareTo(reset_args other) {
+    public int compareTo(reduceByKey_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetFunct()).compareTo(other.isSetFunct());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetFunct()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.funct, other.funct);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -3235,9 +4024,16 @@ public class IKeysModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("reset_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("reduceByKey_args(");
       boolean first = true;
 
+      sb.append("funct:");
+      if (this.funct == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.funct);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -3263,15 +4059,15 @@ public class IKeysModule {
       }
     }
 
-    private static class reset_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public reset_argsStandardScheme getScheme() {
-        return new reset_argsStandardScheme();
+    private static class reduceByKey_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public reduceByKey_argsStandardScheme getScheme() {
+        return new reduceByKey_argsStandardScheme();
       }
     }
 
-    private static class reset_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<reset_args> {
+    private static class reduceByKey_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<reduceByKey_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, reset_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, reduceByKey_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -3281,6 +4077,15 @@ public class IKeysModule {
             break;
           }
           switch (schemeField.id) {
+            case 1: // FUNCT
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.funct = new org.ignis.rpc.ISource();
+                struct.funct.read(iprot);
+                struct.setFunctIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3292,32 +4097,51 @@ public class IKeysModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, reset_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, reduceByKey_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.funct != null) {
+          oprot.writeFieldBegin(FUNCT_FIELD_DESC);
+          struct.funct.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
 
     }
 
-    private static class reset_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public reset_argsTupleScheme getScheme() {
-        return new reset_argsTupleScheme();
+    private static class reduceByKey_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public reduceByKey_argsTupleScheme getScheme() {
+        return new reduceByKey_argsTupleScheme();
       }
     }
 
-    private static class reset_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<reset_args> {
+    private static class reduceByKey_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<reduceByKey_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, reset_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, reduceByKey_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetFunct()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetFunct()) {
+          struct.funct.write(oprot);
+        }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, reset_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, reduceByKey_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.funct = new org.ignis.rpc.ISource();
+          struct.funct.read(iprot);
+          struct.setFunctIsSet(true);
+        }
       }
     }
 
@@ -3326,13 +4150,13 @@ public class IKeysModule {
     }
   }
 
-  public static class reset_result implements org.apache.thrift.TBase<reset_result, reset_result._Fields>, java.io.Serializable, Cloneable, Comparable<reset_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("reset_result");
+  public static class reduceByKey_result implements org.apache.thrift.TBase<reduceByKey_result, reduceByKey_result._Fields>, java.io.Serializable, Cloneable, Comparable<reduceByKey_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("reduceByKey_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new reset_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new reset_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new reduceByKey_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new reduceByKey_resultTupleSchemeFactory();
 
     private org.ignis.rpc.IRemoteException ex; // required
 
@@ -3401,13 +4225,13 @@ public class IKeysModule {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(reset_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(reduceByKey_result.class, metaDataMap);
     }
 
-    public reset_result() {
+    public reduceByKey_result() {
     }
 
-    public reset_result(
+    public reduceByKey_result(
       org.ignis.rpc.IRemoteException ex)
     {
       this();
@@ -3417,14 +4241,14 @@ public class IKeysModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public reset_result(reset_result other) {
+    public reduceByKey_result(reduceByKey_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
-    public reset_result deepCopy() {
-      return new reset_result(this);
+    public reduceByKey_result deepCopy() {
+      return new reduceByKey_result(this);
     }
 
     @Override
@@ -3436,7 +4260,7 @@ public class IKeysModule {
       return this.ex;
     }
 
-    public reset_result setEx(org.ignis.rpc.IRemoteException ex) {
+    public reduceByKey_result setEx(org.ignis.rpc.IRemoteException ex) {
       this.ex = ex;
       return this;
     }
@@ -3495,12 +4319,12 @@ public class IKeysModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof reset_result)
-        return this.equals((reset_result)that);
+      if (that instanceof reduceByKey_result)
+        return this.equals((reduceByKey_result)that);
       return false;
     }
 
-    public boolean equals(reset_result that) {
+    public boolean equals(reduceByKey_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -3530,7 +4354,7 @@ public class IKeysModule {
     }
 
     @Override
-    public int compareTo(reset_result other) {
+    public int compareTo(reduceByKey_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -3564,7 +4388,7 @@ public class IKeysModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("reset_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("reduceByKey_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -3599,15 +4423,15 @@ public class IKeysModule {
       }
     }
 
-    private static class reset_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public reset_resultStandardScheme getScheme() {
-        return new reset_resultStandardScheme();
+    private static class reduceByKey_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public reduceByKey_resultStandardScheme getScheme() {
+        return new reduceByKey_resultStandardScheme();
       }
     }
 
-    private static class reset_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<reset_result> {
+    private static class reduceByKey_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<reduceByKey_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, reset_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, reduceByKey_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -3637,7 +4461,7 @@ public class IKeysModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, reset_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, reduceByKey_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -3652,16 +4476,16 @@ public class IKeysModule {
 
     }
 
-    private static class reset_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public reset_resultTupleScheme getScheme() {
-        return new reset_resultTupleScheme();
+    private static class reduceByKey_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public reduceByKey_resultTupleScheme getScheme() {
+        return new reduceByKey_resultTupleScheme();
       }
     }
 
-    private static class reset_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<reset_result> {
+    private static class reduceByKey_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<reduceByKey_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, reset_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, reduceByKey_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -3674,7 +4498,7 @@ public class IKeysModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, reset_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, reduceByKey_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {

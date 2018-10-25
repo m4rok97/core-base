@@ -24,7 +24,7 @@ import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IFilterTask;
 import org.ignis.backend.cluster.tasks.executor.IStreamingFilterTask;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.ISourceFunction;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -39,7 +39,7 @@ public final class IDataFilterHelper extends IDataHelper {
         super(data, properties);
     }
 
-    public IData filter(ISourceFunction function) {
+    public IData filter(ISource function) {
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
@@ -52,7 +52,7 @@ public final class IDataFilterHelper extends IDataHelper {
         return target;
     }
 
-    public IData streamingFilter(ISourceFunction function, boolean ordered) {
+    public IData streamingFilter(ISource function, boolean ordered) {
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());

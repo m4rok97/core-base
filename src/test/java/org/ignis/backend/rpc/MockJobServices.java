@@ -146,7 +146,7 @@ public class MockJobServices {
                     serverModule = Mockito.mock(IServerModule.Iface.class);
                     Mockito.doAnswer(a -> null).when(serverModule).test();
                     Mockito.doAnswer(a -> null).when(serverModule).stop();
-                    Mockito.doAnswer(a -> null).when(serverModule).setContext(Mockito.anyInt(), Mockito.any());
+                    Mockito.doAnswer(a -> null).when(serverModule).updateProperties(Mockito.any());
                 } catch (TException ex) {
                 }
             }
