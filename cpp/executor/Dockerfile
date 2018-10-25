@@ -6,9 +6,9 @@ RUN \
 	mkdir -p /tmp/core-cpp && \ 
 	cd /tmp/core-cpp && \
 	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/core-cpp.git /tmp/core-cpp && \
-	cmake . && \
+	cmake -DBUILD_TESTING=OFF . && \
 	make && \
-	chmod +x igniscpp && \
+	chmod +x ignis-cpp && \
 	mv igniscpp ${IGNIS_HOME}/bin && \
 	mkdir -p ${IGNIS_HOME}/core/cpp && \
 	make install DESTDIR=${IGNIS_HOME}/core/cpp && \
