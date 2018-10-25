@@ -10,7 +10,7 @@ RUN \
 	cmake . && \
 	make && \
 	chmod +x ignismanager && \ 
-	mv ignismanager ${IGNIS_HOME}/bin && \ 
+	mv ignismanager ${IGNIS_HOME}/bin/ignis-manager && \ 
 	cd / && \
 	rm -fr /tmp/manager
 

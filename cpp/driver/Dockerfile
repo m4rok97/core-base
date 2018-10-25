@@ -12,7 +12,7 @@ RUN \
 	mv igniscpp ${IGNIS_HOME}/bin && \
 	mkdir -p ${IGNIS_HOME}/core/cpp && \
 	make install DESTDIR=${IGNIS_HOME}/core/cpp && \
-	mv igniscpp ${IGNIS_HOME}/core/cpp/ignis-cpp && \
+	mv ignis-cpp ${IGNIS_HOME}/core/cpp/ignis-cpp && \
 	cd / && \
 	rm -fR /tmp/core-cpp
 
