@@ -18,6 +18,7 @@ RUN \
 RUN \
 	mkdir -p /tmp/utils && \ 
 	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/utils.git /tmp/utils && \
+	mv /tmp/utils/etc/* ${IGNIS_HOME}/etc && \
 	cd /tmp/utils/line-indexing && \
 	cmake . && \
 	make && \

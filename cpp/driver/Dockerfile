@@ -21,5 +21,7 @@ FROM ignisframework/base-driver
 
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 
-RUN cp -R ${IGNIS_HOME}/core/cpp/* / &&
+RUN \
+	yum -y install libgomp && \
+	cp -R ${IGNIS_HOME}/core/cpp/* / &&
 	ldconfig
