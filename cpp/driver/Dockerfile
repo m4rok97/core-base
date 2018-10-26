@@ -6,7 +6,7 @@ RUN \
 	mkdir -p /tmp/core-cpp && \ 
 	cd /tmp/core-cpp && \
 	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/core-cpp.git /tmp/core-cpp && \
-	cmake -DBUILD_TESTING=OFF . && \
+	cmake -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/usr . && \
 	make && \
 	cd ignis && \
 	chmod +x ignis-cpp && \

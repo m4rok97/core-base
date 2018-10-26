@@ -96,7 +96,7 @@ RUN \
 	cd /tmp/thrift && \
 	git clone --branch ${THRIFT_VERSION} https://github.com/apache/thrift /tmp/thrift && \
 	./bootstrap.sh && \
-	./configure --enable-tests=no && \
+	./configure --enable-tests=no --prefix /usr && \
 	cd lib/cpp && \
 	make && \
 	mkdir -p /root/thrift/build && \
