@@ -10,5 +10,4 @@ RUN \
 	cp -R ${IGNIS_HOME}/core/cpp/* / && \
 	/root/jsoncpp/install && \
 	rm -fr /root/jsoncpp && \
-	ldconfig && \
 	cp ${IGNIS_HOME}/core/cpp/ignis-cpp ${IGNIS_HOME}/bin

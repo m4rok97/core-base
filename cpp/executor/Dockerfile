@@ -8,11 +8,11 @@ RUN \
 	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/core-cpp.git /tmp/core-cpp && \
 	cmake -DBUILD_TESTING=OFF . && \
 	make && \
+	cd ignis && \
 	chmod +x ignis-cpp && \
-	mv igniscpp ${IGNIS_HOME}/bin && \
+	mv ignis-cpp ${IGNIS_HOME}/bin && \
 	mkdir -p ${IGNIS_HOME}/core/cpp && \
 	make install DESTDIR=${IGNIS_HOME}/core/cpp && \
-	mv ignis-cpp ${IGNIS_HOME}/core/cpp/ignis-cpp && \
 	cd / && \
 	rm -fR /tmp/core-cpp
 
@@ -27,6 +27,4 @@ RUN \
 	yum -y install libgomp && \
 	cp -R ${IGNIS_HOME}/core/cpp/* / && \
 	/root/jsoncpp/install && \
-	rm -fr /root/jsoncpp && \
-	ldconfig && \
-	cp ${IGNIS_HOME}/core/cpp/ignis-cpp ${IGNIS_HOME}/bin
+	rm -fr /root/jsoncpp
