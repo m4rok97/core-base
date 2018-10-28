@@ -10,7 +10,6 @@ RUN /tmp/python3/install && \
 	/tmp/pythrift/install && \
 	rm -fR /tmp/python3 && \
 	rm -fR /tmp/pythrift && \
-	curl https://bootstrap.pypa.io/get-pip.py | python3 && \
 	pip3 install setuptools --upgrade
 
 RUN cd ${IGNIS_HOME}/core/python && \
