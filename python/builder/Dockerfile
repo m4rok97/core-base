@@ -3,8 +3,8 @@ FROM ignisframework/base-builder
 
 ENV PY_VERSION=3.7.0
 RUN \
+	yum install -y centos-release-scl && \
 	yum install -y \ 
-		centos-release-scl \
 		devtoolset-7-gcc-c++ \
 		bzip2-devel \
 		libffi-devel \
