@@ -35,8 +35,6 @@ COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 
 RUN /tmp/python3/install && \
 	rm -fr /tmp/python3 && \
-	curl https://bootstrap.pypa.io/get-pip.py | python3 && \
-	pip3 install setuptools --upgrade && \
 	pip3 install requests && \
 	/tmp/pythrift/install && \
 	rm -fr /tmp/pythrift
