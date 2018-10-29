@@ -9,5 +9,4 @@ RUN \
 	yum -y install libgomp && \
 	cp -R ${IGNIS_HOME}/core/cpp/* / && \
 	/root/jsoncpp/install && \
-	rm -fr /root/jsoncpp && \
-	cp ${IGNIS_HOME}/core/cpp/ignis-cpp ${IGNIS_HOME}/bin
+	rm -fr /root/jsoncpp

@@ -24,6 +24,6 @@ COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 COPY --from=builder /root/jsoncpp /root/jsoncpp
 
 RUN \
-	yum -y install libgomp
+	yum -y install libgomp && \
 	/root/jsoncpp/install && \
 	rm -fr /root/jsoncpp

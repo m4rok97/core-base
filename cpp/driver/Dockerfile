@@ -23,5 +23,5 @@ COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 
 RUN \
 	yum -y install libgomp && \
-	cp -R ${IGNIS_HOME}/core/cpp/* / &&
+	cp -R ${IGNIS_HOME}/core/cpp/* / && \
 	ldconfig
