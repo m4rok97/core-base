@@ -77,12 +77,20 @@ public final class Main {
     public static void main(String[] args) {
         LOGGER.info("Backend started");
         IAttributes attributes = new IAttributes();
-        
+
         LOGGER.info("Loading environment variables");
         String home = loadVarEnv(attributes.defaultProperties, IPropsKeys.HOME, "IGNIS_HOME");
         loadVarEnv(attributes.defaultProperties, IPropsKeys.ALLOCATOR_URL, "ALLOCATOR_URL");
         loadVarEnv(attributes.defaultProperties, IPropsKeys.DFS_HOME, "DFS_HOME");
         loadVarEnv(attributes.defaultProperties, IPropsKeys.DFS_ID, "DFS_ID");
+
+        LOGGER.info("Loading configuration file");
+        try {
+            attributes.defaultProperties.fromFile(new File(home, "etc/ignis.yaml").getPath());
+        } catch (IgnisException ex) {
+            LOGGER.error("Error loading ignis.yaml, aborting", ex);
+            return;
+        }
 
         LOGGER.info("Loading allocator");
         IAllocator allocator = loadAllocator(attributes.defaultProperties);
@@ -93,14 +101,6 @@ public final class Main {
         } catch (IgnisException ex) {
             LOGGER.error("Allocator " + allocator.getName() + " ...Fails\n" + ex);
             System.exit(-1);
-        }
-
-        LOGGER.info("Loading configuration file");
-        try {
-            attributes.defaultProperties.fromFile(new File(home, "etc/ignis.yaml").getPath());
-        } catch (IgnisException ex) {
-            LOGGER.error("Error loading ignis.yaml, aborting", ex);
-            return;
         }
 
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
