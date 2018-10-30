@@ -46,7 +46,6 @@ public final class IPropsKeys {
     public static final String EXECUTOR_SWAP = "ignis.executor.swap";
     public static final String EXECUTOR_SWAPPINESS = "ignis.executor.swappiness";
     public static final String HOME = "ignis.home";
-    public static final String MANAGER_EXECUTORS_FOLDER = "ignis.manager.executors.folder";
     public static final String MANAGER_EXECUTORS_PORT = "ignis.manager.executors.port";
     public static final String MANAGER_RPC_COMPRESSION = "ignis.manager.rpc.compression";
     public static final String MANAGER_RPC_PORT = "ignis.manager.rpc.port";
