@@ -67,7 +67,7 @@ public final class IAncorisContainerStub extends IContainerStub {
         //RESOURCES
         JSONObject resources = new JSONObject();
         resources.put("cores", properties.getInteger(IPropsKeys.EXECUTOR_CORES));
-        resources.put("memory", properties.getInteger(IPropsKeys.EXECUTOR_MEMORY));
+        resources.put("memory", properties.getString(IPropsKeys.EXECUTOR_MEMORY));
         resources.put("swap", properties.getString(IPropsKeys.EXECUTOR_SWAP));
         JSONArray volumes = new JSONArray();
         //  VOLUMES
