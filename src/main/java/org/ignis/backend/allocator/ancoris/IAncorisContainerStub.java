@@ -67,26 +67,27 @@ public final class IAncorisContainerStub extends IContainerStub {
         //RESOURCES
         JSONObject resources = new JSONObject();
         resources.put("cores", properties.getInteger(IPropsKeys.EXECUTOR_CORES));
-        resources.put("swap", properties.getProperty(IPropsKeys.EXECUTOR_SWAP));
+        resources.put("memory", properties.getInteger(IPropsKeys.EXECUTOR_MEMORY));
+        resources.put("swap", properties.getString(IPropsKeys.EXECUTOR_SWAP));
         JSONArray volumes = new JSONArray();
         //  VOLUMES
         JSONObject dfs = new JSONObject();
-        dfs.put("id", properties.getProperty(IPropsKeys.DFS_ID));
+        dfs.put("id", properties.getString(IPropsKeys.DFS_ID));
         dfs.put("mode", "rw");
-        dfs.put("path", properties.getProperty(IPropsKeys.DFS_HOME));
+        dfs.put("path", properties.getString(IPropsKeys.DFS_HOME));
         volumes.add(dfs);
         resources.put("volumes", volumes);
         //  DEVICES
         resources.put("devices", new JSONArray());
-        requestJSON.put("resources", resources);
-        //PORTS
+        //  PORTS
         JSONArray ports = new JSONArray();
         ports.add(properties.getInteger(IPropsKeys.TRANSPORT_PORT));
         ports.add(properties.getInteger(IPropsKeys.MANAGER_RPC_PORT));
-        requestJSON.put("ports", ports);
+        resources.put("ports", ports);
+        requestJSON.put("resources", resources);
         //OPTIONS
         JSONObject opts = new JSONObject();
-        opts.put("swappiness", properties.getProperty(IPropsKeys.EXECUTOR_SWAPPINESS));
+        opts.put("swappiness", properties.getString(IPropsKeys.EXECUTOR_SWAPPINESS));
         requestJSON.put("opts", opts);
         //ENVIRONMENT
         JSONObject environment = new JSONObject();
@@ -96,13 +97,13 @@ public final class IAncorisContainerStub extends IContainerStub {
         JSONObject on_exit = new JSONObject();
         on_exit.put("restart", false);
         on_exit.put("destroy", true);
-        requestJSON.put("on_exit", on_exit);
+        events.put("on_exit", on_exit);
         requestJSON.put("events", events);
         //ARGUMENTS
         JSONArray args = new JSONArray();
         args.add("ignis-manager");
-        args.add(properties.getProperty(IPropsKeys.MANAGER_RPC_PORT));
-        args.add(properties.getProperty(IPropsKeys.MANAGER_EXECUTORS_PORT));
+        args.add(properties.getString(IPropsKeys.MANAGER_RPC_PORT));
+        args.add(properties.getString(IPropsKeys.MANAGER_EXECUTORS_PORT));
         requestJSON.put("args", args);
 
     }

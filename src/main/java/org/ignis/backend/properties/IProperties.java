@@ -50,6 +50,10 @@ public final class IProperties {
         return value == null ? "" : value;
     }
 
+    public String getString(String key) throws IgnisException {
+        return IPropertyParser.getString(this, key);
+    }
+    
     public boolean getBoolean(String key) throws IgnisException {
         return IPropertyParser.getBoolean(this, key);
     }
