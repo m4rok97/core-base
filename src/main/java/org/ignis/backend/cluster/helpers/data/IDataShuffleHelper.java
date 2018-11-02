@@ -53,7 +53,7 @@ public final class IDataShuffleHelper extends IDataHelper {
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "Shuffle -> " + target.toString());
+        LOGGER.info(log() + "Shuffle -> " + target.getName());
         return target;
     }
 

@@ -17,9 +17,12 @@
 package org.ignis.backend.cluster.helpers.job;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.cluster.IData;
@@ -58,7 +61,38 @@ public final class IJobReadFileHelper extends IJobHelper {
         return distribution;
     }
 
-    private List<Long> parseIndex(String path) throws IgnisException {
+    private long getIndex(InputStream buffer, long last, int from, int to) {
+        long index = 0;
+        int i = 0;
+        try {
+            for (int b = buffer.read(); b != -1; b = buffer.read()) {
+                index |= (b & 127) << (7 * i);
+                i++;
+                if ((b & 128) == 0) {
+                    last += index;
+                    if(++from == to){
+                        return last;
+                    }
+                    i = 0;
+                    index = 0;
+                }
+            }
+        } catch (IOException ex) {
+        }
+        return last;
+    }
+
+    private int countIndex(byte[] bytes) {
+        int count = 0;
+        for (int i = 0; i < bytes.length; i++) {
+            if ((bytes[i] & 128) == 0) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private byte[] fileIndex(String path) throws IgnisException {
         File pathFile = new File(path);
         if (!pathFile.exists()) {
             throw new IgnisException(path + " doesn't exist");
@@ -66,7 +100,6 @@ public final class IJobReadFileHelper extends IJobHelper {
         if (!pathFile.isFile()) {
             throw new IgnisException(path + " is not a file");
         }
-        List<Long> indices = new ArrayList<>(100000);
         File indexFile = new File(path + ".ii");
         if (!indexFile.exists()) {
             try {
@@ -78,31 +111,25 @@ public final class IJobReadFileHelper extends IJobHelper {
                 throw new IgnisException("Failed to index " + path, ex);
             }
         }
-        long offset = 0;
-        try (FileInputStream in = new FileInputStream(indexFile);
-                BufferedInputStream buf = new BufferedInputStream(in);) {
-            long index = 0;
-            int i = 0;
-            for (int b = buf.read(); b != -1; b = buf.read()) {
-                index |= (b & 127) << (7 * i);
-                i++;
-                if ((b & 128) == 0) {
-                    indices.add(offset += index);
-                    i = 0;
-                    index = 0;
-                }
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream((int) indexFile.length());
+        try (FileInputStream in = new FileInputStream(indexFile)) {
+            int len;
+            byte[] buffer = new byte[1024];
+            while ((len = in.read(buffer)) > 0) {
+                bytes.write(buffer, 0, len);
             }
         } catch (IOException ex) {
             throw new IgnisException("Failed to open index " + path + ".ii", ex);
         }
-        return indices;
+        return bytes.toByteArray();
     }
 
     public IData readFile(String path) throws IgnisException {
         LOGGER.info(log() + "Preparing readFile");
-        List<Long> indices = parseIndex(path);
+        byte[] bytes = fileIndex(path);
+        InputStream buffer = new ByteArrayInputStream(bytes);
         int executors = job.getExecutors().size();
-        int[] distribution = distribute(indices.size(), executors);
+        int[] distribution = distribute(countIndex(bytes), executors);
 
         List<IExecutor> result = new ArrayList<>();
         TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
@@ -113,7 +140,7 @@ public final class IJobReadFileHelper extends IJobHelper {
             IExecutor executor = job.getExecutors().get(i);
             int lines = distribution[i + 1] - distribution[i];
             long offset = last;
-            last = indices.get(distribution[i + 1] - 1);
+            last = getIndex(buffer, last, distribution[i] - 1, distribution[i + 1] - 1);
             long length = last - offset;
             shedulerBuilder.newTask(new IReadFileTask(this, executor, path, offset, length, lines));
             result.add(executor);

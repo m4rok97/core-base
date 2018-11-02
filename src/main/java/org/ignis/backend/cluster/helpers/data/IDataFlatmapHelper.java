@@ -61,7 +61,7 @@ public final class IDataFlatmapHelper extends IDataHelper {
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "StreamingFlatmap " + (ordered ? "ordered " : "") + "-> " + target.toString());
+        LOGGER.info(log() + "StreamingFlatmap " + (ordered ? "ordered " : "") + "-> " + target.getName());
         return target;
     }
 

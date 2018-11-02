@@ -139,7 +139,7 @@ public final class IAncorisContainerStub extends IContainerStub {
             if (response.isSuccessful()) {
                 JSONParser parser = new JSONParser();
                 try {
-                    parser.parse(response.body().charStream());
+                    responseJSON = (JSONObject) parser.parse(response.body().charStream());
                 } catch (ParseException ex) {
                     throw new IgnisException(ex.getMessage() + "\n" + response.body(), ex);
                 }

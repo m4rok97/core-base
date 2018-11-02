@@ -61,7 +61,7 @@ public final class IDataFilterHelper extends IDataHelper {
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "StreamingFilter " + (ordered ? "ordered " : "") + "-> " + target.toString());
+        LOGGER.info(log() + "StreamingFilter " + (ordered ? "ordered " : "") + "-> " + target.getName());
         return target;
     }
 

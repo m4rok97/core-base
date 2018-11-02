@@ -61,7 +61,7 @@ public final class IDataMapHelper extends IDataHelper {
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "StreamingMap " + (ordered ? "ordered " : "") + "-> " + target.toString());
+        LOGGER.info(log() + "StreamingMap " + (ordered ? "ordered " : "") + "-> " + target.getName());
         return target;
     }
 

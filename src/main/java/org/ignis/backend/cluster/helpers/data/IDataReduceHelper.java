@@ -50,7 +50,7 @@ public final class IDataReduceHelper extends IDataHelper {
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "ReduceByKey -> " + target.toString());
+        LOGGER.info(log() + "ReduceByKey -> " + target.getName());
         return target;
     }
 
