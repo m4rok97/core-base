@@ -171,7 +171,10 @@ public final class IAncorisContainerStub extends IContainerStub {
         if (isRunning()) {
             Map ports = new HashMap<>();
             ((JSONArray) ((JSONObject) responseJSON.get("resources")).get("ports")).forEach(p -> {
-                ports.put(((JSONObject) p).get("container"), ((JSONObject) p).get("host"));
+                ports.put(
+                        ((Number)((JSONObject) p).get("container")).intValue(), 
+                        ((Number)((JSONObject) p).get("host")).intValue()
+                );
             });
             return (Map<Integer, Integer>) ports;
         } else {
