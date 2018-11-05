@@ -18,6 +18,7 @@ package org.ignis.backend.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import org.ignis.rpc.IRemoteException;
 
 /**
@@ -29,25 +30,26 @@ public final class IgnisException extends IRemoteException {
     private final Throwable cause;
 
     public IgnisException(String msg) {
-        super(msg, "");
+        super(msg, stackToString());
         this.cause = this;
-        setStack(stackToString(this));
     }
 
     public IgnisException(String msg, Throwable cause) {
-        super(msg, "");
+        super(msg, stackToString() + "\nCaused by: " + exToString(cause));
         this.cause = cause;
-        setStack(stackToString(this) + "\nCaused by: " + stackToString(cause));
     }
 
-    private static String stackToString(Throwable ex) {
+    private static String exToString(Throwable ex) {
         StringWriter writer = new StringWriter();
-        writer.append(ex.getClass().getName());
-        writer.append(": ");
-        writer.append(ex.getLocalizedMessage());
-        writer.append(" from ");
         ex.printStackTrace(new PrintWriter(writer));
         return writer.toString();
+    }
+
+    private static String stackToString() {
+        Throwable t = new Throwable().fillInStackTrace();
+        t.setStackTrace(Arrays.copyOfRange(t.getStackTrace(), 2, t.getStackTrace().length));
+        String stack = exToString(t);
+        return stack.substring(stack.indexOf('\n') + 1);
     }
 
     @Override
@@ -57,7 +59,7 @@ public final class IgnisException extends IRemoteException {
 
     @Override
     public String toString() {
-        return getClass().getName() + ": " + getMessage() + " from " + getStack();
+        return getClass().getName() + ": " + getMessage() + "\n" + getStack();
     }
 
 }

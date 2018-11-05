@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.modules;
 
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropsKeys;
 import org.ignis.backend.rpc.MockClusterServices;
 import org.ignis.backend.rpc.MockJobServices;
@@ -67,7 +68,7 @@ public class FilesModuleTest extends BackendTest {
         }
     }
 
-    @Test
+    
     public void testOneInstance() {
         LOGGER.info("----|----testOneInstance----|----");
         testReadAndWrite(1);
@@ -75,8 +76,11 @@ public class FilesModuleTest extends BackendTest {
 
     @Test
     public void testMultipleInstance() {
-        LOGGER.info("----|----testMultipleInstance----|----");
-        testReadAndWrite(10);
+        try{
+            Integer.parseInt("no");
+        }catch(Exception ex){
+            System.out.println(new IgnisException("holita",ex).toString());
+        }
     }
 
 }
