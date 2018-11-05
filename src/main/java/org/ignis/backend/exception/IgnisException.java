@@ -30,18 +30,18 @@ public final class IgnisException extends IRemoteException {
 
     public IgnisException(String msg) {
         super(msg, "");
-        cause = this;
+        this.cause = this;
         setStack(stackToString(this));
     }
 
     public IgnisException(String msg, Throwable cause) {
-        super(msg, stackToString(cause));
+        super(msg, "");
         this.cause = cause;
+        setStack(stackToString(this) + "\nCaused by: " + stackToString(cause));
     }
 
     private static String stackToString(Throwable ex) {
         StringWriter writer = new StringWriter();
-        writer.append("Caused by: ");
         writer.append(ex.getClass().getName());
         writer.append(": ");
         writer.append(ex.getLocalizedMessage());

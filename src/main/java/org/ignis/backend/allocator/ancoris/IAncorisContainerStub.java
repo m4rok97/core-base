@@ -91,6 +91,7 @@ public final class IAncorisContainerStub extends IContainerStub {
         requestJSON.put("opts", opts);
         //ENVIRONMENT
         JSONObject environment = new JSONObject();
+        environment.put("IGNIS_HOME",properties.getString(IPropsKeys.HOME));
         requestJSON.put("environment", environment);
         //EVENTS
         JSONObject events = new JSONObject();
