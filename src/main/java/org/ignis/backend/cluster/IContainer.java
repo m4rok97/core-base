@@ -69,6 +69,7 @@ public final class IContainer {
         for (int i = 0; i < 10; i++) {
             try {
                 socket.open();
+                break;
             } catch (TTransportException ex) {
                 if (i == 9) {
                     throw new IgnisException(ex.getMessage(), ex);
