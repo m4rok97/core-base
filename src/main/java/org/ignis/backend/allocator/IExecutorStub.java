@@ -56,7 +56,7 @@ public final class IExecutorStub{
         try {
             container.getRegisterManager().test(id);
         } catch (TException ex) {
-            throw new IgnisException("Fails to test container", ex);
+            throw new IgnisException("Fails to test executor", ex);
         }
     }
 
@@ -65,7 +65,7 @@ public final class IExecutorStub{
             container.getRegisterManager().execute(id, type);
             running = true;
         } catch (TException ex) {
-            throw new IgnisException("Fails to create container", ex);
+            throw new IgnisException("Fails to create executor", ex);
         }
     }
 
@@ -74,7 +74,7 @@ public final class IExecutorStub{
             container.getRegisterManager().destroy(id);
             running = false;
         } catch (TException ex) {
-            throw new IgnisException("Fails to destroy container", ex);
+            throw new IgnisException("Fails to destroy executor", ex);
         }
     }
 

@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.exception;
 
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.ignis.rpc.IRemoteException;
@@ -28,7 +27,7 @@ import org.ignis.rpc.IRemoteException;
 public final class IgnisException extends IRemoteException {
 
     private final Throwable cause;
-    
+
     public IgnisException(String msg) {
         super(msg, "");
         cause = this;
@@ -42,6 +41,11 @@ public final class IgnisException extends IRemoteException {
 
     private static String stackToString(Throwable ex) {
         StringWriter writer = new StringWriter();
+        writer.append("Caused by: ");
+        writer.append(ex.getClass().getName());
+        writer.append(": ");
+        writer.append(ex.getLocalizedMessage());
+        writer.append(" from ");
         ex.printStackTrace(new PrintWriter(writer));
         return writer.toString();
     }
@@ -49,6 +53,11 @@ public final class IgnisException extends IRemoteException {
     @Override
     public Throwable getCause() {
         return cause;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + ": " + getMessage() + " from " + getStack();
     }
 
 }

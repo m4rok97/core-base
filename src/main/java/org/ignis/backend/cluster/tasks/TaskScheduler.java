@@ -78,29 +78,29 @@ public final class TaskScheduler {
     }
 
     public void execute(IThreadPool pool) throws IgnisException {
-        List<Future<TaskScheduler>> depFutures = new ArrayList<>();
-        for (TaskScheduler dependency : depencencies) {
-            depFutures.add(pool.submit(dependency));
-        }
-        IgnisException error = null;
-        for (int i = 0; i < depFutures.size(); i++) {
-            try {
-                depFutures.get(i).get();
-            } catch (InterruptedException | ExecutionException ex) {
-                if (error == null) {
-                    error = new IgnisException("Dependency execution failed", ex);
-                } else {
-                    LOGGER.warn("Dependency execution failed", ex);
+        for (int _try = 0;; _try++) {
+            List<Future<TaskScheduler>> depFutures = new ArrayList<>();
+            for (TaskScheduler dependency : depencencies) {
+                depFutures.add(pool.submit(dependency));
+            }
+            IgnisException error = null;
+            for (int i = 0; i < depFutures.size(); i++) {
+                try {
+                    depFutures.get(i).get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    if (error == null) {
+                        error = new IgnisException("Dependency execution failed", ex);
+                    } else {
+                        LOGGER.warn("Dependency execution failed", ex);
+                    }
                 }
             }
-        }
-        if (error != null) {
-            throw error;
-        }
-        if (tasks.isEmpty()) {
-            return;
-        }
-        for (int _try = 0;; _try++) {
+            if (error != null) {
+                throw error;
+            }
+            if (tasks.isEmpty()) {
+                return;
+            }
             try {
                 execute(pool, locks);
             } catch (InterruptedException | ExecutionException ex) {

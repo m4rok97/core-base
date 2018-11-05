@@ -34,8 +34,8 @@ artifacts {
 
 configure(install.repositories.mavenInstaller) {
     pom.project {
-        groupId = 'org.ignis.backend'
-        artifactId = 'org.ignis.backend'
+        groupId = 'org.ignis'
+        artifactId = 'backend'
         version = '1.0'
     }
 }

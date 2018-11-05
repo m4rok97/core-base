@@ -63,8 +63,7 @@ public final class IContainer {
     public void connect() throws IgnisException {
         TSocket socket = new TSocket(
                 stub.getHost(), stub.getHostPort(stub.getProperties().getInteger(IPropsKeys.MANAGER_RPC_PORT)));
-        transport.setTransport(new TZlibTransport(
-                socket, stub.getProperties().getInteger(IPropsKeys.MANAGER_RPC_COMPRESSION)));
+        transport.setTransport(socket);
 
         for (int i = 0; i < 10; i++) {
             try {
