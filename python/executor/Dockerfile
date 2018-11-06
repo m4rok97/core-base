@@ -5,7 +5,7 @@ ARG SOURCE_CACHE=1
 RUN git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/core-python.git ${IGNIS_HOME}/core/python
 
 
-FROM ignisframework/base-driver 
+FROM ignisframework/base-executor 
 
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 COPY --from=builder /root/python3 /tmp/python3
