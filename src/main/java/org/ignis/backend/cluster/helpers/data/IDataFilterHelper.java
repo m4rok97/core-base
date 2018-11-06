@@ -48,7 +48,7 @@ public final class IDataFilterHelper extends IDataHelper {
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "Filter -> " + target.toString());
+        LOGGER.info(log() + "Filter -> " + target.getName());
         return target;
     }
 

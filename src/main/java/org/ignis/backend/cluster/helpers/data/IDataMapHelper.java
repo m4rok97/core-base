@@ -48,7 +48,7 @@ public final class IDataMapHelper extends IDataHelper {
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "Map -> " + target.toString());
+        LOGGER.info(log() + "Map -> " + target.getName());
         return target;
     }
 

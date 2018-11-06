@@ -48,7 +48,7 @@ public final class IDataFlatmapHelper extends IDataHelper {
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
-        LOGGER.info(log() + "Flatmap -> " + target.toString());
+        LOGGER.info(log() + "Flatmap -> " + target.getName());
         return target;
     }
 
