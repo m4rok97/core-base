@@ -97,9 +97,9 @@ public final class Main {
         try {
             LOGGER.info("Checking allocator");
             allocator.ping();
-            LOGGER.info("Allocator " + allocator.getName() + " ...OK");
+            LOGGER.info("Allocator " + allocator.getName() + " ... OK");
         } catch (IgnisException ex) {
-            LOGGER.error("Allocator " + allocator.getName() + " ...Fails\n" + ex);
+            LOGGER.error("Allocator " + allocator.getName() + " ... Fails\n" + ex);
             System.exit(-1);
         }
 
