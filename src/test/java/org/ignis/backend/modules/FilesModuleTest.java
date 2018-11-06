@@ -68,7 +68,7 @@ public class FilesModuleTest extends BackendTest {
         }
     }
 
-    
+    @Test
     public void testOneInstance() {
         LOGGER.info("----|----testOneInstance----|----");
         testReadAndWrite(1);
@@ -76,11 +76,8 @@ public class FilesModuleTest extends BackendTest {
 
     @Test
     public void testMultipleInstance() {
-        try{
-            Integer.parseInt("no");
-        }catch(Exception ex){
-            System.out.println(new IgnisException("holita",ex).toString());
-        }
+        LOGGER.info("----|----testMultipleInstance----|----");
+        testReadAndWrite(10);
     }
 
 }
