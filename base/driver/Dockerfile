@@ -25,16 +25,19 @@ RUN \
 	mv /tmp/utils/line-indexing/ii ${IGNIS_HOME}/bin/ && \
 	mv /tmp/utils/line-indexing/icp ${IGNIS_HOME}/bin/ && \
 	mv /tmp/utils/line-indexing/libignisindex.so ${IGNIS_HOME}/bin/ && \
-	cd /tmp/utils/remote-client && \
-	cmake . && \
-	make && \
-	mv /tmp/utils/remote-client/irc ${IGNIS_HOME}/bin/ && \
+	cd /tmp/utils/submit-remote && \
+	gradle jarAndLibs && \
+	mv build/libs/* ${IGNIS_HOME}/backend && \
+	{ \
+		echo '#!/bin/bash'; \
+		echo 'java -cp "${IGNIS_HOME}/backend/*" org.ignis.submit.remote.Main "$@"'; \
+	} > bin/isr  && chmod +x bin/isr
 	cd / && \
 	rm -fr /tmp/utils
 
 FROM ignisframework/base-skel
 
-RUN yum -y install java-1.8.0-openjdk openssl
+RUN yum -y install java-1.8.0-openjdk
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 
 COPY --from=builder /root/boost /root/boost
