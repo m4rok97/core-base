@@ -28,12 +28,13 @@ RUN \
 	cd /tmp/utils/submit-remote && \
 	gradle jarAndLibs && \
 	mv build/libs/* ${IGNIS_HOME}/backend && \
+	cd ${IGNIS_HOME} && \
+	rm -fr /tmp/utils && \
 	{ \
 		echo '#!/bin/bash'; \
 		echo 'java -cp "${IGNIS_HOME}/backend/*" org.ignis.submit.remote.Main "$@"'; \
-	} > bin/isr  && chmod +x bin/isr
-	cd / && \
-	rm -fr /tmp/utils
+	} > bin/isr  && chmod +x bin/isr 
+
 
 FROM ignisframework/base-skel
 
