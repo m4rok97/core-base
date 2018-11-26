@@ -16,8 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;

@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.cluster.helpers.job;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

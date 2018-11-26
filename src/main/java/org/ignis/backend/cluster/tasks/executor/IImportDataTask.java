@@ -24,12 +24,11 @@ import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.IAddrManager;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IPropsKeys;
 import org.ignis.rpc.executor.ISplit;
 import org.slf4j.LoggerFactory;
 
@@ -177,20 +176,12 @@ public final class IImportDataTask extends IExecutorTask {
             if (type == SEND || type == SHUFFLE) {
                 LOGGER.info(log() + "Creating " + keyShared.msgs.get(executor).size() + " partitions");
                 int i = 1;
-                int port = executor.getContainer().getProperties().getInteger(IPropsKeys.TRANSPORT_PORT);
-                StringBuilder addr = new StringBuilder();
+                IAddrManager addrManager = new IAddrManager();
                 List<ISplit> splits = new ArrayList<>();
                 for (Map.Entry<IExecutor, Long> msg : keyShared.msgs.get(executor).entrySet()) {
-                    addr.setLength(0);
-                    //TODO shared memory
-                    if (msg.getKey() == executor) {
-                        addr.append("local");
-                    } else {
-                        IContainer container = msg.getKey().getContainer();
-                        addr.append("socket!").append(container.getHost()).append("!").append(port);
-                    }
-                    splits.add(new ISplit(executor.getId(), addr.toString(), msg.getValue()));
-                    LOGGER.info(log() + "Partition " + (i++) + " with " + msg.getValue() + " elements to " + addr.toString());
+                    String addr = addrManager.parseAddr(executor, msg.getKey());
+                    splits.add(new ISplit(executor.getId(), addr, msg.getValue()));
+                    LOGGER.info(log() + "Partition " + (i++) + " with " + msg.getValue() + " elements to " + addr);
                 }
                 executor.getShuffleModule().createSplits(splits);
                 LOGGER.info(log() + "Partitions created");

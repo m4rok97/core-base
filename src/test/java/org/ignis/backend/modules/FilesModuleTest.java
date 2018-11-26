@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.modules;
 
-import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IPropsKeys;
 import org.ignis.backend.rpc.MockClusterServices;
 import org.ignis.backend.rpc.MockJobServices;

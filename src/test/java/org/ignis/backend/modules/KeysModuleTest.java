@@ -17,9 +17,7 @@
 package org.ignis.backend.modules;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import org.ignis.backend.properties.IPropsKeys;
 import org.ignis.backend.rpc.MockClusterServices;

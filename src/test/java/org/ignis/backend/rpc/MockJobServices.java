@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.rpc;
 
-import java.util.List;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;

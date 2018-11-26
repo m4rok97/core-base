@@ -18,20 +18,20 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentHashMap;
-import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.IAddrManager;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IPropsKeys;
 import org.ignis.rpc.ISource;
-import org.slf4j.LoggerFactory;
 import org.ignis.rpc.executor.IExecutorKeys;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -63,44 +63,51 @@ public final class IReduceByKeyTask extends IExecutorTask {
     }
 
     private void keyDistribution() {
-        long total = keyShared.count.values().stream().map(m -> m.size()).reduce(0, (a, b) -> a + b);
-
-        Map<Long, List<IExecutor>> keys = new HashMap<>();
-        Map<IExecutor, Long> load = new HashMap<>();
-        for (Map.Entry<IExecutor, List<Long>> values : keyShared.count.entrySet()) {
-            for (long key : values.getValue()) {
-                List<IExecutor> list = keys.get(key);
+        Map<Long, Set<IExecutor>> keys = new HashMap<>();// Inverse of Shared.count
+        Map<IExecutor, Long> load = new HashMap<>();//Number of keys assigned to each executor
+        for (Map.Entry<IExecutor, List<Long>> executorWithKeys : keyShared.count.entrySet()) {
+            for (long key : executorWithKeys.getValue()) {
+                Set<IExecutor> list = keys.get(key);
                 if (list == null) {
-                    keys.put(key, list = new ArrayList<>());
+                    keys.put(key, list = new HashSet<>());
                 }
-                list.add(values.getKey());
+                list.add(executorWithKeys.getKey());
             }
-            load.put(values.getKey(), 0l);
-            keyShared.msgs.put(values.getKey(), new HashMap<>());
+            load.put(executorWithKeys.getKey(), 0l);
+            keyShared.msgs.put(executorWithKeys.getKey(), new HashMap<>());
         }
-
-        for (Map.Entry<Long, List<IExecutor>> values : keys.entrySet()) {
-            long maxKeys = 0;
-            for (IExecutor target : values.getValue()) {
-                maxKeys += keyShared.count.get(target).size();
-            }
-            maxKeys /= values.getValue().size();
-            for (IExecutor target : values.getValue()) {
+        
+        long maxKeys = keys.size() / (load.size() * 4);
+        IExecutor exWithMaxKeys = null;
+        for (Map.Entry<Long, Set<IExecutor>> keyInExecutors : keys.entrySet()) {
+            for (IExecutor target : keyInExecutors.getValue()) {
                 long eload = load.get(target);
-                if (eload <= maxKeys) {
-                    Map<IExecutor, List<Long>> emsgs = keyShared.msgs.get(target);
-                    for (IExecutor source : values.getValue()) {
-                        List<Long> list = emsgs.get(source);
-                        if (list == null) {
-                            emsgs.put(source, list = new ArrayList<>());
-                        }
-                        list.add(values.getKey());
+                if (eload == maxKeys) {
+                    if(target == exWithMaxKeys && keyInExecutors.getValue().size() > 1){
+                        break;
                     }
-                    load.put(target, eload + 1);
-                    break;
+                    maxKeys += 10;
+                    maxKeys *= 1.25;
+                    exWithMaxKeys = target;
                 }
+
+                for (IExecutor source : keyInExecutors.getValue()) {
+                    List<Long> list = keyShared.msgs.get(source).get(target);
+                    if (list == null) {
+                        keyShared.msgs.get(source).put(target, list = new ArrayList<>());
+                    }
+                    list.add(keyInExecutors.getKey());
+                }
+                load.put(target, eload + 1);
+                break;
             }
-        }
+        }/*
+        for (Map.Entry<IExecutor, Map<IExecutor, List<Long>>> e1 : keyShared.msgs.entrySet()){
+            System.out.println(e1.getKey().getContainer().getId()+":");
+            for(Map.Entry<IExecutor, List<Long>> e2:e1.getValue().entrySet()){
+                System.out.println("\t"+e2.getKey().getContainer().getId()+" -> " + e2.getValue().toString());
+            }
+        }*/
     }
 
     @Override
@@ -124,25 +131,17 @@ public final class IReduceByKeyTask extends IExecutorTask {
                 }
                 barrier.await();
 
-                int port = executor.getContainer().getProperties().getInteger(IPropsKeys.TRANSPORT_PORT);
-
-                LOGGER.info(log() + "Preparing keys to send to " + keyShared.msgs.size() + " executors");
-                StringBuilder addr = new StringBuilder();
+                LOGGER.info(log() + "Preparing keys to send to " + keyShared.msgs.get(executor).size() + " executors");
+                IAddrManager addrManager = new IAddrManager();
                 List<IExecutorKeys> executorKeys = new ArrayList<>();
                 for (Map.Entry<IExecutor, List<Long>> entry : keyShared.msgs.get(executor).entrySet()) {
-                    addr.setLength(0);
-                    //TODO shared memory
-                    if (entry.getKey() == executor) {
-                        addr.append("local");
-                    } else {
-                        IContainer container = entry.getKey().getContainer();
-                        addr.append("socket!").append(container.getHost()).append("!").append(port);
-                    }
-                    executorKeys.add(new IExecutorKeys(executor.getId(), addr.toString(), entry.getValue()));
-                    LOGGER.info(log() + entry.getValue().size() + " keys prepared to" + addr.toString());
+                    String addr = addrManager.parseAddr(executor, entry.getKey());
+                    executorKeys.add(new IExecutorKeys(executor.getId(), addr, entry.getValue()));
+                    LOGGER.info(log() + entry.getValue().size() + " keys prepared to " + addr);
                 }
                 executor.getKeysModule().prepareKeys(executorKeys);
                 try {
+                    barrier.await();
                     LOGGER.info(log() + "Preparing to recive keys");
                     executor.getPostmanModule().start();
                     barrier.await();

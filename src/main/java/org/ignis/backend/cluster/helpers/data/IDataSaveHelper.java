@@ -17,7 +17,6 @@
 package org.ignis.backend.cluster.helpers.data;
 
 import org.ignis.backend.cluster.IData;
-import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.tasks.Lazy;
 import org.ignis.backend.cluster.tasks.TaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.ISaveAsJsonFileTask;
