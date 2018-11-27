@@ -46,6 +46,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
 
     public void start(TProcessor processor, int port) {
         LOGGER.info("Backend server started on port " + port);
+        driverLifeCheck();
         try {
             transport = new TServerSocket(port);
             server = new TThreadPoolServer(new TThreadPoolServer.Args(transport)
@@ -68,6 +69,21 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
         } catch (Exception ex) {
             throw new IgnisException(ex.getLocalizedMessage(), ex);
         }
+    }
+
+    private void driverLifeCheck() {
+        Thread lc = new Thread(() -> {
+            try {
+                System.in.read();
+            } catch (Exception ex) {
+            }
+            try {
+                stop();
+            } catch (TException ex) {
+            }
+        });
+        lc.setDaemon(true);
+        lc.start();
     }
 
 }

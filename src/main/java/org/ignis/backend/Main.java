@@ -80,7 +80,6 @@ public final class Main {
 
         LOGGER.info("Loading environment variables");
         String home = loadVarEnv(attributes.defaultProperties, IPropsKeys.HOME, "IGNIS_HOME");
-        loadVarEnv(attributes.defaultProperties, IPropsKeys.ALLOCATOR_URL, "ALLOCATOR_URL");
         loadVarEnv(attributes.defaultProperties, IPropsKeys.DFS_HOME, "DFS_HOME");
         loadVarEnv(attributes.defaultProperties, IPropsKeys.DFS_ID, "DFS_ID");
 
