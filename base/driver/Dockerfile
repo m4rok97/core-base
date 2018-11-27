@@ -12,7 +12,7 @@ RUN \
 	rm -fr /tmp/backend && \
 	{ \
 		echo '#!/bin/bash'; \
-		echo 'java -cp "${IGNIS_HOME}/backend/*" org.ignis.backend.Main "$@"'; \
+		echo 'exec java -cp "${IGNIS_HOME}/backend/*" org.ignis.backend.Main "$@"'; \
 	} > bin/ignis-backend  && chmod +x bin/ignis-backend
 
 RUN \
@@ -32,7 +32,7 @@ RUN \
 	rm -fr /tmp/utils && \
 	{ \
 		echo '#!/bin/bash'; \
-		echo 'java -cp "${IGNIS_HOME}/backend/*" org.ignis.submit.remote.Main "$@"'; \
+		echo 'exec java -cp "${IGNIS_HOME}/backend/*" org.ignis.submit.remote.Main "$@"'; \
 	} > bin/isr  && chmod +x bin/isr 
 
 

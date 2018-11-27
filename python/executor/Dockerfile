@@ -20,5 +20,5 @@ RUN /tmp/python3/install && \
 
 RUN { \
 		echo '#!/bin/bash'; \
-		echo 'python3 "${IGNIS_HOME}/core/python/ignis/main.py" "$@"'; \
+		echo 'exec python3 "${IGNIS_HOME}/core/python/ignis/Main.py" "$@"'; \
 	} > bin/ignis-py  && chmod +x bin/ignis-py
