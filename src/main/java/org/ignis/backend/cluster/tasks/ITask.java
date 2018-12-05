@@ -14,36 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.tasks.executor;
+package org.ignis.backend.cluster.tasks;
 
-import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public final class IExecutorDestroyTask extends IExecutorTask {
+public abstract class ITask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IExecutorDestroyTask.class);
+    protected final IHelper helper;
 
-    public IExecutorDestroyTask(IHelper helper, IExecutor executor) {
-        super(helper, executor);
+    public ITask(IHelper helper) {
+        this.helper = helper;
     }
 
-    @Override
-    public void execute(IExecutionContext context) throws IgnisException {
-        LOGGER.info(log() + "Destroying executor");
-        try {
-            executor.getContainer().getRegisterManager().destroy(executor.getJob());
-        } catch (TException ex) {
-            throw new IgnisException(ex.getMessage(), ex);
-        }
-        LOGGER.info(log() + "Executor destroyed");
+    public void loadContext(IExecutionContext context) throws IgnisException {
     }
 
+    public abstract void execute(IExecutionContext context) throws IgnisException;
+
+    public void saveContext(IExecutionContext context) throws IgnisException {
+    }
 }

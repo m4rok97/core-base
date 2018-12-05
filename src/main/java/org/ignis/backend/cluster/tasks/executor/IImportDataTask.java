@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.ignis.backend.cluster.IAddrManager;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class IImportDataTask extends IExecutorTask {
+public final class IImportDataTask extends IExecutorContextTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IImportDataTask.class);
 
@@ -62,7 +63,7 @@ public final class IImportDataTask extends IExecutorTask {
 
     public IImportDataTask(IHelper helper, IExecutor executor, IBarrier barrier, Shared keyShared, byte type,
             List<IExecutor> sources, List<IExecutor> targets) {
-        super(helper, executor);
+        super(helper, executor, Mode.SAVE);
         this.barrier = barrier;
         this.keyShared = keyShared;
         this.type = type;
@@ -149,7 +150,7 @@ public final class IImportDataTask extends IExecutorTask {
     }
 
     @Override
-    public void execute() throws IgnisException {
+    public void execute(IExecutionContext context) throws IgnisException {
         try {
             if (barrier.await() == 0) {
                 keyShared.count.clear();

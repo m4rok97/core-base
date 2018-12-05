@@ -14,27 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.tasks.executor;
+package org.ignis.backend.cluster.helpers.data;
 
-import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
-import org.ignis.backend.cluster.tasks.ITask;
+import java.nio.ByteBuffer;
+import org.ignis.backend.cluster.IData;
+import org.ignis.backend.properties.IProperties;
+import org.slf4j.LoggerFactory;
+import org.ignis.backend.cluster.tasks.ILazy;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class IExecutorTask extends ITask {
+public class IDataCollectHelper extends IDataHelper {
 
-    protected final IExecutor executor;
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IDataCollectHelper.class);
 
-    public IExecutorTask(IHelper helper, IExecutor executor) {
-        super(helper);
-        this.executor = executor;
+    public IDataCollectHelper(IData data, IProperties properties) {
+        super(data, properties);
     }
 
-    protected String log() {
-        return helper.logHeader() + " " + executor.getId() + ": ";
+    public ILazy<ByteBuffer> collect(boolean light) {
+        return null;
     }
+
 
 }

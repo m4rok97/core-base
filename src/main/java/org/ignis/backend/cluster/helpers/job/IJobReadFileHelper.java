@@ -27,7 +27,7 @@ import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IReadFileTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -131,7 +131,7 @@ public final class IJobReadFileHelper extends IJobHelper {
         int[] distribution = distribute(countIndex(bytes), executors);
 
         List<IExecutor> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(job.getLock());
         shedulerBuilder.newDependency(job.getScheduler());
 
         long last = 0;

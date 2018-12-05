@@ -22,6 +22,7 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 
 /**
  *
@@ -54,16 +55,18 @@ public final class IThreadPool {
         return maxFailures;
     }
 
-    Future<TaskScheduler> submit(TaskScheduler scheduler) {
+    Future<ITaskScheduler> submit(ITaskScheduler scheduler, IExecutionContext context) {
         return pool.submit(() -> {
-            scheduler.execute(this);
+            scheduler.execute(this, context);
             return scheduler;
         });
     }
 
-    Future<Task> submit(Task task) {
+    Future<ITask> submit(ITask task, IExecutionContext context) {
         return pool.submit(() -> {
-            task.execute();
+            task.loadContext(context);
+            task.execute(context);
+            task.saveContext(context);
             return task;
         });
     }
@@ -71,23 +74,22 @@ public final class IThreadPool {
     public void destroy() {
         pool.shutdownNow();
     }
-    
-    private class DaemonThreadFactory implements ThreadFactory{
+
+    private class DaemonThreadFactory implements ThreadFactory {
 
         private final ThreadFactory factory;
-        
+
         public DaemonThreadFactory() {
             factory = Executors.defaultThreadFactory();
         }
 
-     
         @Override
         public Thread newThread(Runnable r) {
             Thread t = factory.newThread(r);
             t.setDaemon(true);
             return t;
         }
-        
+
     }
 
 }

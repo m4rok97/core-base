@@ -18,7 +18,7 @@ package org.ignis.backend.cluster.helpers.job;
 
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IExecutorDestroyTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -38,7 +38,7 @@ public final class IJobDestroyHelper extends IJobHelper {
 
     public void destroy() throws IgnisException {
         LOGGER.info(log() + "Preparing cluster to destroy");
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(job.getLock());
         int instances = 0;
         for (IExecutor executor : job.getExecutors()) {
             if (executor.getStub().isRunning()) {

@@ -91,7 +91,7 @@ public final class IAncorisContainerStub extends IContainerStub {
         requestJSON.put("opts", opts);
         //ENVIRONMENT
         JSONObject environment = new JSONObject();
-        environment.put("IGNIS_HOME",properties.getString(IPropsKeys.HOME));
+        environment.put("IGNIS_HOME", properties.getString(IPropsKeys.HOME));
         requestJSON.put("environment", environment);
         //EVENTS
         JSONObject events = new JSONObject();
@@ -103,8 +103,9 @@ public final class IAncorisContainerStub extends IContainerStub {
         //ARGUMENTS
         JSONArray args = new JSONArray();
         args.add("ignis-manager");
-        args.add(properties.getString(IPropsKeys.MANAGER_RPC_PORT));
-        args.add(properties.getString(IPropsKeys.MANAGER_EXECUTORS_PORT));
+        args.add(String.valueOf(properties.getInteger(IPropsKeys.MANAGER_RPC_PORT)));
+        args.add(String.valueOf(properties.getInteger(IPropsKeys.MANAGER_EXECUTORS_PORT)));
+        args.add(String.valueOf(properties.getInteger(IPropsKeys.MANAGER_RPC_COMPRESSION)));
         requestJSON.put("args", args);
 
     }
@@ -173,8 +174,8 @@ public final class IAncorisContainerStub extends IContainerStub {
             Map ports = new HashMap<>();
             ((JSONArray) ((JSONObject) responseJSON.get("resources")).get("ports")).forEach(p -> {
                 ports.put(
-                        ((Number)((JSONObject) p).get("container")).intValue(), 
-                        ((Number)((JSONObject) p).get("host")).intValue()
+                        ((Number) ((JSONObject) p).get("container")).intValue(),
+                        ((Number) ((JSONObject) p).get("host")).intValue()
                 );
             });
             return (Map<Integer, Integer>) ports;

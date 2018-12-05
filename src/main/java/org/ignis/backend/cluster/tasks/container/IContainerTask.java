@@ -18,13 +18,13 @@ package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.helpers.IHelper;
-import org.ignis.backend.cluster.tasks.Task;
+import org.ignis.backend.cluster.tasks.ITask;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class IContainerTask extends Task {
+public abstract class IContainerTask extends ITask {
 
     protected final IContainer container;
 

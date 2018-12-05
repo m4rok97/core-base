@@ -157,9 +157,15 @@ public class MockJobServices {
             if (sortModule != null) {
                 Mockito.when(executor.getSortModule()).thenReturn(sortModule);
             }
-            if (storageModule != null) {
-                Mockito.when(executor.getStorageModule()).thenReturn(storageModule);
+            if (storageModule == null) {
+                try {
+                    storageModule = Mockito.mock(IStorageModule.Iface.class);
+                    Mockito.doAnswer(a -> null).when(storageModule).loadContext(Mockito.anyInt());
+                    Mockito.doAnswer(a -> null).when(storageModule).saveContext(Mockito.anyInt());
+                } catch (TException ex) {
+                }
             }
+            Mockito.when(executor.getStorageModule()).thenReturn(storageModule);
         }
     }
 

@@ -24,7 +24,7 @@ import org.ignis.backend.cluster.helpers.job.IJobImportDataHelper;
 import org.ignis.backend.cluster.helpers.job.IJobReadFileHelper;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.IThreadPool;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
@@ -40,7 +40,7 @@ public final class IJob {
     private final IProperties properties;
     private final List<IExecutor> executors;
     private final List<IData> datas;
-    private final List<TaskScheduler> schedulers;
+    private final List<ITaskScheduler> schedulers;
     private String name;
     private boolean keep;
 
@@ -52,7 +52,7 @@ public final class IJob {
         this.datas = new ArrayList<>();
         this.schedulers = new ArrayList<>();
         setName("");
-        this.executors = new IJobCreateHelper(this, properties).create(id, type);//Must be the last
+        this.executors = new IJobCreateHelper(this, properties).create();//Must be the last
     }
 
     public long getId() {
@@ -67,7 +67,7 @@ public final class IJob {
         return cluster.getPool();
     }
 
-    public void putScheduler(TaskScheduler scheduler) {
+    public void putScheduler(ITaskScheduler scheduler) {
         if (scheduler != null) {
             schedulers.add(scheduler);
         }
@@ -84,7 +84,7 @@ public final class IJob {
         this.name = name;
     }
 
-    public TaskScheduler getScheduler() {
+    public ITaskScheduler getScheduler() {
         return schedulers.get(schedulers.size() - 1);
     }
 
@@ -116,7 +116,7 @@ public final class IJob {
         return datas.size();
     }
 
-    public IData newData(List<IExecutor> executors, TaskScheduler scheduler) {
+    public IData newData(List<IExecutor> executors, ITaskScheduler scheduler) {
         IData data = new IData(datas.size(), this, executors, scheduler);
         datas.add(data);
         return data;

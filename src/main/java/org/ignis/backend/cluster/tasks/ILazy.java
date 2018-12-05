@@ -23,7 +23,7 @@ import org.ignis.backend.exception.IgnisException;
  * @author César Pomar
  * @param <T>
  */
-public interface Lazy<T> {
+public interface ILazy<T> {
 
     T execute() throws IgnisException;
 

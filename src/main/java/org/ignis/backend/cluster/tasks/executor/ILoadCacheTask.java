@@ -14,11 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.tasks.container;
+package org.ignis.backend.cluster.tasks.executor;
 
-import java.nio.ByteBuffer;
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
@@ -28,28 +27,26 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class ISendCompressedFileTask extends IContainerTask {
+public class ILoadCacheTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISendCompressedFileTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IFlatmapTask.class);
+    
+    private final long id;
 
-    private final String path;
-    private final ByteBuffer bytes;
-
-    public ISendCompressedFileTask(IHelper helper, IContainer container, String path, ByteBuffer bytes) {
-        super(helper, container);
-        this.path = path;
-        this.bytes = bytes;
+    public ILoadCacheTask(IHelper helper, IExecutor executor, long id) {
+        super(helper, executor, Mode.SAVE);
+        this.id = id;
     }
 
     @Override
     public void execute(IExecutionContext context) throws IgnisException {
-        LOGGER.info(log() + "Sending compressed file");
+        LOGGER.info(log() + "Loading cache");
         try {
-            container.getFileManager().sendFileAndExtract(path, bytes);
+            executor.getStorageModule().loadCache(id);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "File sent");
+        LOGGER.info(log() + "Cache loaded");
     }
 
 }

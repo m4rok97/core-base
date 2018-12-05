@@ -24,7 +24,7 @@ import org.ignis.backend.cluster.helpers.cluster.IClusterDestroyHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.IThreadPool;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
@@ -40,7 +40,7 @@ public final class ICluster {
     private final List<IContainer> containers;
     private final List<IJob> jobs;
     private final ILock lock;
-    private final List<TaskScheduler> schedulers;
+    private final List<ITaskScheduler> schedulers;
     private String name;
     private boolean keep;
 
@@ -78,13 +78,13 @@ public final class ICluster {
         this.name = name;
     }
 
-    public void putScheduler(TaskScheduler scheduler) {
+    public void putScheduler(ITaskScheduler scheduler) {
         if (scheduler != null) {
             schedulers.add(scheduler);
         }
     }
 
-    public TaskScheduler getScheduler() {
+    public ITaskScheduler getScheduler() {
         return schedulers.get(schedulers.size() - 1);
     }
 

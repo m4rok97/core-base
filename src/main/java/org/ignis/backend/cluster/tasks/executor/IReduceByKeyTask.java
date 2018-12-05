@@ -26,6 +26,7 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentHashMap;
 import org.ignis.backend.cluster.IAddrManager;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
@@ -37,7 +38,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class IReduceByKeyTask extends IExecutorTask {
+public final class IReduceByKeyTask extends IExecutorContextTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IReduceByKeyTask.class);
 
@@ -55,7 +56,7 @@ public final class IReduceByKeyTask extends IExecutorTask {
     private final boolean single;
 
     public IReduceByKeyTask(IHelper helper, IExecutor executor, ISource function, IBarrier barrier, Shared keyShared) {
-        super(helper, executor);
+        super(helper, executor, Mode.LOAD_AND_SAVE);
         this.function = function;
         this.barrier = barrier;
         this.keyShared = keyShared;
@@ -111,7 +112,7 @@ public final class IReduceByKeyTask extends IExecutorTask {
     }
 
     @Override
-    public void execute() throws IgnisException {
+    public void execute(IExecutionContext context) throws IgnisException {
         try {
             LOGGER.info(log() + "Reducing executor keys");
             executor.getKeysModule().reduceByKey(function);

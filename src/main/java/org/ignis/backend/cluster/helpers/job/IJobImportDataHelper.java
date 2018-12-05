@@ -22,7 +22,7 @@ import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IJob;
 import org.ignis.backend.cluster.tasks.IBarrier;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IImportDataTask;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public final class IJobImportDataHelper extends IJobHelper {
     public IData importData(IData source) {
         LOGGER.info(log() + "Preparing importData");
         List<IExecutor> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(job.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(job.getLock());
         shedulerBuilder.newDependency(source.getScheduler());
         shedulerBuilder.newDependency(job.getScheduler());
         int senders = source.getExecutors().size();

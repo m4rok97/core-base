@@ -22,7 +22,7 @@ import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -44,7 +44,7 @@ public final class IClusterCreateHelper extends IClusterHelper {
     public List<IContainer> create(IAllocator allocator) throws IgnisException {
         int instances = properties.getInteger(IPropsKeys.EXECUTOR_INSTANCES);
         List<IContainer> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(cluster.getLock());
         LOGGER.info(log() + "Registering cluster with " + instances + " containers");
         for (int i = 0; i < instances; i++) {
             IContainerStub stub = allocator.getContainer(properties);

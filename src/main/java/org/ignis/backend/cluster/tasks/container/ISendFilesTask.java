@@ -20,6 +20,7 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ public final class ISendFilesTask extends IContainerTask {
     }
 
     @Override
-    public void execute() throws IgnisException {
+    public void execute(IExecutionContext context) throws IgnisException {
         LOGGER.info(log() + "Sending files");
         int i = 1;
         for (Map.Entry<String, ByteBuffer> entry : files.entrySet()) {

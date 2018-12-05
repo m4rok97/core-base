@@ -16,43 +16,40 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public final class IReadFileTask extends IExecutorContextTask {
+public abstract class IExecutorContextTask extends IExecutorTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IReadFileTask.class);
+    public enum Mode {
+        LOAD, SAVE, LOAD_AND_SAVE
+    }
 
-    private final String path;
-    private final long offset;
-    private final long length;
-    private final long lines;
+    private final Mode mode;
 
-    public IReadFileTask(IHelper helper, IExecutor executor, String path, long offset, long length, long lines) {
-        super(helper, executor, Mode.SAVE);
-        this.path = path;
-        this.offset = offset;
-        this.length = length;
-        this.lines = lines;
+    public IExecutorContextTask(IHelper helper, IExecutor executor, Mode mode) {
+        super(helper, executor);
+        this.mode = mode;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
-        LOGGER.info(log() + "Reading file");
-        try {
-            executor.getFilesModule().readFile(path, offset, length, lines);
-        } catch (TException ex) {
-            throw new IgnisException(ex.getMessage(), ex);
+    public final void loadContext(IExecutionContext context) throws IgnisException {
+        if (mode == Mode.LOAD || mode == Mode.LOAD_AND_SAVE) {
+            context.loadContext(executor);
         }
-        LOGGER.info(log() + "File read");
+    }
+
+    @Override
+    public final void saveContext(IExecutionContext context) throws IgnisException {
+        if (mode == Mode.SAVE || mode == Mode.LOAD_AND_SAVE) {
+            context.saveContext(executor);
+        }
     }
 
 }

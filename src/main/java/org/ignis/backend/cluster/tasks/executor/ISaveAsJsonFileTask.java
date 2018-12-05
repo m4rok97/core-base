@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class ISaveAsJsonFileTask extends IExecutorTask {
+public final class ISaveAsJsonFileTask extends IExecutorContextTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsJsonFileTask.class);
 
@@ -35,14 +36,14 @@ public final class ISaveAsJsonFileTask extends IExecutorTask {
     private final boolean arrayEnd;
 
     public ISaveAsJsonFileTask(IHelper helper, IExecutor executor, String path, boolean arrayStart, boolean arrayEnd) {
-        super(helper, executor);
+        super(helper, executor, Mode.LOAD);
         this.path = path;
         this.arrayStart = arrayStart;
         this.arrayEnd = arrayEnd;
     }
 
     @Override
-    public void execute() throws IgnisException {
+    public void execute(IExecutionContext context) throws IgnisException {
         LOGGER.info(log() + "Saving json file");
         try {
             executor.getFilesModule().saveJson(path, arrayStart, arrayEnd);

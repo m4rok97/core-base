@@ -21,7 +21,7 @@ import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.tasks.IBarrier;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IImportDataTask;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public final class IDataShuffleHelper extends IDataHelper {
     public IData shuffle() {
         LOGGER.info(log() + "Preparing shuffle");
         List<IExecutor> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         int executors = data.getExecutors().size();
 

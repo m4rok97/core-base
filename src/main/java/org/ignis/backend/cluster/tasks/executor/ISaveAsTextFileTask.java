@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class ISaveAsTextFileTask extends IExecutorTask {
+public final class ISaveAsTextFileTask extends IExecutorContextTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsTextFileTask.class);
 
@@ -35,14 +36,14 @@ public final class ISaveAsTextFileTask extends IExecutorTask {
     private final boolean newLine;
 
     public ISaveAsTextFileTask(IHelper helper, IExecutor executor, String path, boolean trunc, boolean newLine) {
-        super(helper, executor);
+        super(helper, executor, Mode.LOAD);
         this.path = path;
         this.trunc = trunc;
         this.newLine = newLine;
     }
 
     @Override
-    public void execute() throws IgnisException {
+    public void execute(IExecutionContext context) throws IgnisException {
         LOGGER.info(log() + "Saving text file");
         try {
             executor.getFilesModule().saveFile(path, trunc, newLine);

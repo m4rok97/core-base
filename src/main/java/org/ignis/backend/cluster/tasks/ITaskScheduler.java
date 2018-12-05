@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
@@ -28,14 +29,14 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class TaskScheduler {
+public class ITaskScheduler {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TaskScheduler.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITaskScheduler.class);
 
     public static class Builder {
 
-        private final List<Task> tasks;
-        private final List<TaskScheduler> depencencies;
+        private final List<ITask> tasks;
+        private final List<ITaskScheduler> depencencies;
         private final List<ILock> locks;
 
         public Builder(ILock lock) {
@@ -45,12 +46,12 @@ public final class TaskScheduler {
             this.locks.add(lock);
         }
 
-        public Builder newTask(Task task) {
+        public Builder newTask(ITask task) {
             tasks.add(task);
             return this;
         }
 
-        public Builder newDependency(TaskScheduler scheduler) {
+        public Builder newDependency(ITaskScheduler scheduler) {
             depencencies.add(scheduler);
             return this;
         }
@@ -60,28 +61,32 @@ public final class TaskScheduler {
             return this;
         }
 
-        public TaskScheduler build() {
-            return new TaskScheduler(tasks, locks, depencencies);
+        public ITaskScheduler build() {
+            return new ITaskScheduler(tasks, locks, depencencies);
         }
 
     }
 
-    private final List<Task> tasks;
-    private final List<TaskScheduler> depencencies;
+    private final List<ITask> tasks;
+    private final List<ITaskScheduler> depencencies;
     private final List<ILock> locks;
 
-    private TaskScheduler(List<Task> tasks, List<ILock> locks, List<TaskScheduler> depencencies) {
+    protected ITaskScheduler(List<ITask> tasks, List<ILock> locks, List<ITaskScheduler> depencencies) {
         this.tasks = tasks;
         this.locks = locks;
         this.depencencies = depencencies;
         locks.sort(Comparator.naturalOrder());
     }
 
-    public void execute(IThreadPool pool) throws IgnisException {
+    public final void execute(IThreadPool pool) throws IgnisException {
+        execute(pool, new IExecutionContext());
+    }
+    
+    protected void execute(IThreadPool pool, IExecutionContext context) throws IgnisException {
         for (int _try = 0;; _try++) {
-            List<Future<TaskScheduler>> depFutures = new ArrayList<>();
-            for (TaskScheduler dependency : depencencies) {
-                depFutures.add(pool.submit(dependency));
+            List<Future<ITaskScheduler>> depFutures = new ArrayList<>();
+            for (ITaskScheduler dependency : depencencies) {
+                depFutures.add(pool.submit(dependency, context));
             }
             IgnisException error = null;
             for (int i = 0; i < depFutures.size(); i++) {
@@ -102,9 +107,9 @@ public final class TaskScheduler {
                 return;
             }
             try {
-                execute(pool, locks);
+                execute(pool, locks, context);
             } catch (InterruptedException | ExecutionException ex) {
-                if (_try == pool.getMaxFailures()) {
+                if (_try == pool.getMaxFailures() - 1) {
                     throw new IgnisException("Execution failed", ex);
                 }
                 LOGGER.error("Failed execution attempt " + (_try + 1) + ", retrying", ex);
@@ -114,11 +119,11 @@ public final class TaskScheduler {
         }
     }
 
-    private void execute(IThreadPool pool, List<ILock> locks) throws InterruptedException, ExecutionException {
+    private void execute(IThreadPool pool, List<ILock> locks, IExecutionContext context) throws InterruptedException, ExecutionException {
         if (locks.isEmpty()) {
-            List<Future<Task>> futures = new ArrayList<>(tasks.size());
-            for (Task task : tasks) {
-                futures.add(pool.submit(task));
+            List<Future<ITask>> futures = new ArrayList<>(tasks.size());
+            for (ITask task : tasks) {
+                futures.add(pool.submit(task,context));
             }
             for (int i = 0; i < futures.size(); i++) {
                 try {
@@ -136,7 +141,7 @@ public final class TaskScheduler {
             }
         } else {
             synchronized (locks.get(0)) {
-                execute(pool, locks.subList(1, locks.size()));
+                execute(pool, locks.subList(1, locks.size()), context);
             }
         }
     }

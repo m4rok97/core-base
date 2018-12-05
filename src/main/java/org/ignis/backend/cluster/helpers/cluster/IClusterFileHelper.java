@@ -28,7 +28,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.container.ISendCompressedFileTask;
 import org.ignis.backend.cluster.tasks.container.ISendFilesTask;
 import org.ignis.backend.exception.IgnisException;
@@ -66,7 +66,7 @@ public final class IClusterFileHelper extends IClusterHelper {
         for (File file : wd.listFiles(fileFilter)) {
             files.put(new File(target, file.getName()).getPath(), loadFile(file));
         }
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(cluster.getLock());
         shedulerBuilder.newDependency(cluster.getScheduler());
         for (IContainer container : cluster.getContainers()) {
             shedulerBuilder.newTask(new ISendFilesTask(this, container, files));
@@ -78,7 +78,7 @@ public final class IClusterFileHelper extends IClusterHelper {
     public int sendCompressedFile(String source, String target) throws IgnisException {
         LOGGER.info(log() + "Loading compressed file from " + source + " to " + target);
         File file = new File(source);
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(cluster.getLock());
         shedulerBuilder.newDependency(cluster.getScheduler());
         for (IContainer container : cluster.getContainers()) {
             shedulerBuilder.newTask(new ISendCompressedFileTask(this, container,

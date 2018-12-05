@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IFlatmapTask;
 import org.ignis.backend.cluster.tasks.executor.IStreamingFlatmapTask;
 import org.ignis.backend.properties.IProperties;
@@ -41,7 +41,7 @@ public final class IDataFlatmapHelper extends IDataHelper {
 
     public IData flatmap(ISource function) {
         List<IExecutor> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IFlatmapTask(this, executor, function));
@@ -54,7 +54,7 @@ public final class IDataFlatmapHelper extends IDataHelper {
 
     public IData streamingFlatmap(ISource function, boolean ordered) {
         List<IExecutor> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IStreamingFlatmapTask(this, executor, function, ordered));

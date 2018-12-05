@@ -16,14 +16,15 @@
  */
 package org.ignis.backend.services;
 
+import java.nio.ByteBuffer;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IData;
-import org.ignis.backend.cluster.tasks.Lazy;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.ISource;
 import org.ignis.rpc.driver.IDataId;
 import org.ignis.rpc.driver.IDataService;
+import org.ignis.backend.cluster.tasks.ILazy;
 
 /**
  *
@@ -33,14 +34,6 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
 
     public IDataServiceImpl(IAttributes attributes) {
         super(attributes);
-    }
-
-    @Override
-    public void keep(IDataId data, byte level) throws IRemoteException, TException {
-        ICluster cluster = attributes.getCluster(data.getCluster());
-        synchronized (cluster.getLock()) {
-            cluster.getJob(data.getJob()).getData(data.getData()).setKeep(level);
-        }
     }
 
     @Override
@@ -114,6 +107,16 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     }
 
     @Override
+    public IDataId values(IDataId data) throws IRemoteException, TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            IData target = source.values();
+            return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        }
+    }
+
+    @Override
     public IDataId shuffle(IDataId data) throws IRemoteException, TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {
@@ -124,10 +127,48 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     }
 
     @Override
+    public IDataId parallelize() throws IRemoteException, TException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ByteBuffer take(IDataId data, long n, boolean light) throws IRemoteException, TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        ILazy<ByteBuffer> result;
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            result = source.take(n, light);
+        }
+        return result.execute();
+    }
+
+    @Override
+    public ByteBuffer takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean randomSeed, boolean light) throws IRemoteException, TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        ILazy<ByteBuffer> result;
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            result = source.takeSample(n, withRemplacement, seed, randomSeed, light);
+        }
+        return result.execute();
+    }
+
+    @Override
+    public ByteBuffer collect(IDataId data, boolean light) throws IRemoteException, TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        ILazy<ByteBuffer> result;
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            result = source.collect(light);
+        }
+        return result.execute();
+    }
+
+    @Override
     public void saveAsTextFile(IDataId data, String path, boolean join) throws TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
-        Lazy<Void> result;
-        synchronized (cluster.getLock()) {//TODo release lock before execute
+        ILazy<Void> result;
+        synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
             result = source.saveAsTextFile(path, join);
         }
@@ -137,7 +178,7 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     @Override
     public void saveAsJsonFile(IDataId data, String path, boolean join) throws TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
-        Lazy<Void> result;
+        ILazy<Void> result;
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
             result = source.saveAsJsonFile(path, join);
@@ -150,6 +191,22 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {
             cluster.getJob(data.getJob()).getData(data.getData()).setName(name);
+        }
+    }
+
+    @Override
+    public void cache(IDataId data) throws IRemoteException, TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            cluster.getJob(data.getJob()).getData(data.getData()).cache();
+        }
+    }
+
+    @Override
+    public void uncache(IDataId data) throws IRemoteException, TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            cluster.getJob(data.getJob()).getData(data.getData()).uncache();
         }
     }
 

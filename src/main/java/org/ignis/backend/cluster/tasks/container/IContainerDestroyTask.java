@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public final class IContainerDestroyTask extends IContainerTask {
     }
 
     @Override
-    public void execute() throws IgnisException {
+    public void execute(IExecutionContext context) throws IgnisException {
         LOGGER.info(log() + "Destroying container");
         if(container.getStub().isRunning()){
             container.getStub().destroy();

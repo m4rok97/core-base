@@ -13,11 +13,11 @@ public class IStorageModule {
 
     public long count() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void cache(long id, java.lang.String storage) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void cache(long id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public void uncache(long id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public void restore(long id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public void loadCache(long id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public void saveContext(long id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -29,11 +29,11 @@ public class IStorageModule {
 
     public void count(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void cache(long id, java.lang.String storage, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void cache(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void uncache(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void restore(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void loadCache(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void saveContext(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -86,17 +86,16 @@ public class IStorageModule {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "count failed: unknown result");
     }
 
-    public void cache(long id, java.lang.String storage) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void cache(long id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_cache(id, storage);
+      send_cache(id);
       recv_cache();
     }
 
-    public void send_cache(long id, java.lang.String storage) throws org.apache.thrift.TException
+    public void send_cache(long id) throws org.apache.thrift.TException
     {
       cache_args args = new cache_args();
       args.setId(id);
-      args.setStorage(storage);
       sendBase("cache", args);
     }
 
@@ -133,23 +132,23 @@ public class IStorageModule {
       return;
     }
 
-    public void restore(long id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void loadCache(long id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_restore(id);
-      recv_restore();
+      send_loadCache(id);
+      recv_loadCache();
     }
 
-    public void send_restore(long id) throws org.apache.thrift.TException
+    public void send_loadCache(long id) throws org.apache.thrift.TException
     {
-      restore_args args = new restore_args();
+      loadCache_args args = new loadCache_args();
       args.setId(id);
-      sendBase("restore", args);
+      sendBase("loadCache", args);
     }
 
-    public void recv_restore() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public void recv_loadCache() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      restore_result result = new restore_result();
-      receiveBase(result, "restore");
+      loadCache_result result = new loadCache_result();
+      receiveBase(result, "loadCache");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -249,27 +248,24 @@ public class IStorageModule {
       }
     }
 
-    public void cache(long id, java.lang.String storage, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void cache(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      cache_call method_call = new cache_call(id, storage, resultHandler, this, ___protocolFactory, ___transport);
+      cache_call method_call = new cache_call(id, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class cache_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private long id;
-      private java.lang.String storage;
-      public cache_call(long id, java.lang.String storage, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public cache_call(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
-        this.storage = storage;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("cache", org.apache.thrift.protocol.TMessageType.CALL, 0));
         cache_args args = new cache_args();
         args.setId(id);
-        args.setStorage(storage);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -316,23 +312,23 @@ public class IStorageModule {
       }
     }
 
-    public void restore(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void loadCache(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      restore_call method_call = new restore_call(id, resultHandler, this, ___protocolFactory, ___transport);
+      loadCache_call method_call = new loadCache_call(id, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class restore_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class loadCache_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private long id;
-      public restore_call(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public loadCache_call(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("restore", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        restore_args args = new restore_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("loadCache", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        loadCache_args args = new loadCache_args();
         args.setId(id);
         args.write(prot);
         prot.writeMessageEnd();
@@ -428,7 +424,7 @@ public class IStorageModule {
       processMap.put("count", new count());
       processMap.put("cache", new cache());
       processMap.put("uncache", new uncache());
-      processMap.put("restore", new restore());
+      processMap.put("loadCache", new loadCache());
       processMap.put("saveContext", new saveContext());
       processMap.put("loadContext", new loadContext());
       return processMap;
@@ -485,7 +481,7 @@ public class IStorageModule {
       public cache_result getResult(I iface, cache_args args) throws org.apache.thrift.TException {
         cache_result result = new cache_result();
         try {
-          iface.cache(args.id, args.storage);
+          iface.cache(args.id);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -522,13 +518,13 @@ public class IStorageModule {
       }
     }
 
-    public static class restore<I extends Iface> extends org.apache.thrift.ProcessFunction<I, restore_args> {
-      public restore() {
-        super("restore");
+    public static class loadCache<I extends Iface> extends org.apache.thrift.ProcessFunction<I, loadCache_args> {
+      public loadCache() {
+        super("loadCache");
       }
 
-      public restore_args getEmptyArgsInstance() {
-        return new restore_args();
+      public loadCache_args getEmptyArgsInstance() {
+        return new loadCache_args();
       }
 
       protected boolean isOneway() {
@@ -540,10 +536,10 @@ public class IStorageModule {
         return true;
       }
 
-      public restore_result getResult(I iface, restore_args args) throws org.apache.thrift.TException {
-        restore_result result = new restore_result();
+      public loadCache_result getResult(I iface, loadCache_args args) throws org.apache.thrift.TException {
+        loadCache_result result = new loadCache_result();
         try {
-          iface.restore(args.id);
+          iface.loadCache(args.id);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -625,7 +621,7 @@ public class IStorageModule {
       processMap.put("count", new count());
       processMap.put("cache", new cache());
       processMap.put("uncache", new uncache());
-      processMap.put("restore", new restore());
+      processMap.put("loadCache", new loadCache());
       processMap.put("saveContext", new saveContext());
       processMap.put("loadContext", new loadContext());
       return processMap;
@@ -757,7 +753,7 @@ public class IStorageModule {
       }
 
       public void start(I iface, cache_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.cache(args.id, args.storage,resultHandler);
+        iface.cache(args.id,resultHandler);
       }
     }
 
@@ -825,20 +821,20 @@ public class IStorageModule {
       }
     }
 
-    public static class restore<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, restore_args, Void> {
-      public restore() {
-        super("restore");
+    public static class loadCache<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, loadCache_args, Void> {
+      public loadCache() {
+        super("loadCache");
       }
 
-      public restore_args getEmptyArgsInstance() {
-        return new restore_args();
+      public loadCache_args getEmptyArgsInstance() {
+        return new loadCache_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            restore_result result = new restore_result();
+            loadCache_result result = new loadCache_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -852,7 +848,7 @@ public class IStorageModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            restore_result result = new restore_result();
+            loadCache_result result = new loadCache_result();
             if (e instanceof org.ignis.rpc.IRemoteException) {
               result.ex = (org.ignis.rpc.IRemoteException) e;
               result.setExIsSet(true);
@@ -884,8 +880,8 @@ public class IStorageModule {
         return false;
       }
 
-      public void start(I iface, restore_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.restore(args.id,resultHandler);
+      public void start(I iface, loadCache_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.loadCache(args.id,resultHandler);
       }
     }
 
@@ -1739,18 +1735,15 @@ public class IStorageModule {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("cache_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)1);
-    private static final org.apache.thrift.protocol.TField STORAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("storage", org.apache.thrift.protocol.TType.STRING, (short)2);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new cache_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new cache_argsTupleSchemeFactory();
 
     private long id; // required
-    private java.lang.String storage; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      ID((short)1, "id"),
-      STORAGE((short)2, "storage");
+      ID((short)1, "id");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -1767,8 +1760,6 @@ public class IStorageModule {
         switch(fieldId) {
           case 1: // ID
             return ID;
-          case 2: // STORAGE
-            return STORAGE;
           default:
             return null;
         }
@@ -1816,8 +1807,6 @@ public class IStorageModule {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      tmpMap.put(_Fields.STORAGE, new org.apache.thrift.meta_data.FieldMetaData("storage", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(cache_args.class, metaDataMap);
     }
@@ -1826,13 +1815,11 @@ public class IStorageModule {
     }
 
     public cache_args(
-      long id,
-      java.lang.String storage)
+      long id)
     {
       this();
       this.id = id;
       setIdIsSet(true);
-      this.storage = storage;
     }
 
     /**
@@ -1841,9 +1828,6 @@ public class IStorageModule {
     public cache_args(cache_args other) {
       __isset_bitfield = other.__isset_bitfield;
       this.id = other.id;
-      if (other.isSetStorage()) {
-        this.storage = other.storage;
-      }
     }
 
     public cache_args deepCopy() {
@@ -1854,7 +1838,6 @@ public class IStorageModule {
     public void clear() {
       setIdIsSet(false);
       this.id = 0;
-      this.storage = null;
     }
 
     public long getId() {
@@ -1880,30 +1863,6 @@ public class IStorageModule {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
     }
 
-    public java.lang.String getStorage() {
-      return this.storage;
-    }
-
-    public cache_args setStorage(java.lang.String storage) {
-      this.storage = storage;
-      return this;
-    }
-
-    public void unsetStorage() {
-      this.storage = null;
-    }
-
-    /** Returns true if field storage is set (has been assigned a value) and false otherwise */
-    public boolean isSetStorage() {
-      return this.storage != null;
-    }
-
-    public void setStorageIsSet(boolean value) {
-      if (!value) {
-        this.storage = null;
-      }
-    }
-
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
       case ID:
@@ -1914,14 +1873,6 @@ public class IStorageModule {
         }
         break;
 
-      case STORAGE:
-        if (value == null) {
-          unsetStorage();
-        } else {
-          setStorage((java.lang.String)value);
-        }
-        break;
-
       }
     }
 
@@ -1929,9 +1880,6 @@ public class IStorageModule {
       switch (field) {
       case ID:
         return getId();
-
-      case STORAGE:
-        return getStorage();
 
       }
       throw new java.lang.IllegalStateException();
@@ -1946,8 +1894,6 @@ public class IStorageModule {
       switch (field) {
       case ID:
         return isSetId();
-      case STORAGE:
-        return isSetStorage();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1976,15 +1922,6 @@ public class IStorageModule {
           return false;
       }
 
-      boolean this_present_storage = true && this.isSetStorage();
-      boolean that_present_storage = true && that.isSetStorage();
-      if (this_present_storage || that_present_storage) {
-        if (!(this_present_storage && that_present_storage))
-          return false;
-        if (!this.storage.equals(that.storage))
-          return false;
-      }
-
       return true;
     }
 
@@ -1993,10 +1930,6 @@ public class IStorageModule {
       int hashCode = 1;
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(id);
-
-      hashCode = hashCode * 8191 + ((isSetStorage()) ? 131071 : 524287);
-      if (isSetStorage())
-        hashCode = hashCode * 8191 + storage.hashCode();
 
       return hashCode;
     }
@@ -2015,16 +1948,6 @@ public class IStorageModule {
       }
       if (isSetId()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetStorage()).compareTo(other.isSetStorage());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetStorage()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.storage, other.storage);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -2051,14 +1974,6 @@ public class IStorageModule {
 
       sb.append("id:");
       sb.append(this.id);
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("storage:");
-      if (this.storage == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.storage);
-      }
       first = false;
       sb.append(")");
       return sb.toString();
@@ -2113,14 +2028,6 @@ public class IStorageModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // STORAGE
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.storage = iprot.readString();
-                struct.setStorageIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -2139,11 +2046,6 @@ public class IStorageModule {
         oprot.writeFieldBegin(ID_FIELD_DESC);
         oprot.writeI64(struct.id);
         oprot.writeFieldEnd();
-        if (struct.storage != null) {
-          oprot.writeFieldBegin(STORAGE_FIELD_DESC);
-          oprot.writeString(struct.storage);
-          oprot.writeFieldEnd();
-        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -2165,29 +2067,19 @@ public class IStorageModule {
         if (struct.isSetId()) {
           optionals.set(0);
         }
-        if (struct.isSetStorage()) {
-          optionals.set(1);
-        }
-        oprot.writeBitSet(optionals, 2);
+        oprot.writeBitSet(optionals, 1);
         if (struct.isSetId()) {
           oprot.writeI64(struct.id);
-        }
-        if (struct.isSetStorage()) {
-          oprot.writeString(struct.storage);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, cache_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           struct.id = iprot.readI64();
           struct.setIdIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.storage = iprot.readString();
-          struct.setStorageIsSet(true);
         }
       }
     }
@@ -3283,13 +3175,13 @@ public class IStorageModule {
     }
   }
 
-  public static class restore_args implements org.apache.thrift.TBase<restore_args, restore_args._Fields>, java.io.Serializable, Cloneable, Comparable<restore_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("restore_args");
+  public static class loadCache_args implements org.apache.thrift.TBase<loadCache_args, loadCache_args._Fields>, java.io.Serializable, Cloneable, Comparable<loadCache_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("loadCache_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new restore_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new restore_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new loadCache_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new loadCache_argsTupleSchemeFactory();
 
     private long id; // required
 
@@ -3360,13 +3252,13 @@ public class IStorageModule {
       tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(restore_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(loadCache_args.class, metaDataMap);
     }
 
-    public restore_args() {
+    public loadCache_args() {
     }
 
-    public restore_args(
+    public loadCache_args(
       long id)
     {
       this();
@@ -3377,13 +3269,13 @@ public class IStorageModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public restore_args(restore_args other) {
+    public loadCache_args(loadCache_args other) {
       __isset_bitfield = other.__isset_bitfield;
       this.id = other.id;
     }
 
-    public restore_args deepCopy() {
-      return new restore_args(this);
+    public loadCache_args deepCopy() {
+      return new loadCache_args(this);
     }
 
     @Override
@@ -3396,7 +3288,7 @@ public class IStorageModule {
       return this.id;
     }
 
-    public restore_args setId(long id) {
+    public loadCache_args setId(long id) {
       this.id = id;
       setIdIsSet(true);
       return this;
@@ -3454,12 +3346,12 @@ public class IStorageModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof restore_args)
-        return this.equals((restore_args)that);
+      if (that instanceof loadCache_args)
+        return this.equals((loadCache_args)that);
       return false;
     }
 
-    public boolean equals(restore_args that) {
+    public boolean equals(loadCache_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -3487,7 +3379,7 @@ public class IStorageModule {
     }
 
     @Override
-    public int compareTo(restore_args other) {
+    public int compareTo(loadCache_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -3521,7 +3413,7 @@ public class IStorageModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("restore_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("loadCache_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -3554,15 +3446,15 @@ public class IStorageModule {
       }
     }
 
-    private static class restore_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public restore_argsStandardScheme getScheme() {
-        return new restore_argsStandardScheme();
+    private static class loadCache_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public loadCache_argsStandardScheme getScheme() {
+        return new loadCache_argsStandardScheme();
       }
     }
 
-    private static class restore_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<restore_args> {
+    private static class loadCache_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<loadCache_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, restore_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, loadCache_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -3591,7 +3483,7 @@ public class IStorageModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, restore_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, loadCache_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -3604,16 +3496,16 @@ public class IStorageModule {
 
     }
 
-    private static class restore_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public restore_argsTupleScheme getScheme() {
-        return new restore_argsTupleScheme();
+    private static class loadCache_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public loadCache_argsTupleScheme getScheme() {
+        return new loadCache_argsTupleScheme();
       }
     }
 
-    private static class restore_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<restore_args> {
+    private static class loadCache_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<loadCache_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, restore_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, loadCache_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetId()) {
@@ -3626,7 +3518,7 @@ public class IStorageModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, restore_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, loadCache_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
@@ -3641,13 +3533,13 @@ public class IStorageModule {
     }
   }
 
-  public static class restore_result implements org.apache.thrift.TBase<restore_result, restore_result._Fields>, java.io.Serializable, Cloneable, Comparable<restore_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("restore_result");
+  public static class loadCache_result implements org.apache.thrift.TBase<loadCache_result, loadCache_result._Fields>, java.io.Serializable, Cloneable, Comparable<loadCache_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("loadCache_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new restore_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new restore_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new loadCache_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new loadCache_resultTupleSchemeFactory();
 
     private org.ignis.rpc.IRemoteException ex; // required
 
@@ -3716,13 +3608,13 @@ public class IStorageModule {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(restore_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(loadCache_result.class, metaDataMap);
     }
 
-    public restore_result() {
+    public loadCache_result() {
     }
 
-    public restore_result(
+    public loadCache_result(
       org.ignis.rpc.IRemoteException ex)
     {
       this();
@@ -3732,14 +3624,14 @@ public class IStorageModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public restore_result(restore_result other) {
+    public loadCache_result(loadCache_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
       }
     }
 
-    public restore_result deepCopy() {
-      return new restore_result(this);
+    public loadCache_result deepCopy() {
+      return new loadCache_result(this);
     }
 
     @Override
@@ -3751,7 +3643,7 @@ public class IStorageModule {
       return this.ex;
     }
 
-    public restore_result setEx(org.ignis.rpc.IRemoteException ex) {
+    public loadCache_result setEx(org.ignis.rpc.IRemoteException ex) {
       this.ex = ex;
       return this;
     }
@@ -3810,12 +3702,12 @@ public class IStorageModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof restore_result)
-        return this.equals((restore_result)that);
+      if (that instanceof loadCache_result)
+        return this.equals((loadCache_result)that);
       return false;
     }
 
-    public boolean equals(restore_result that) {
+    public boolean equals(loadCache_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -3845,7 +3737,7 @@ public class IStorageModule {
     }
 
     @Override
-    public int compareTo(restore_result other) {
+    public int compareTo(loadCache_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -3879,7 +3771,7 @@ public class IStorageModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("restore_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("loadCache_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -3914,15 +3806,15 @@ public class IStorageModule {
       }
     }
 
-    private static class restore_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public restore_resultStandardScheme getScheme() {
-        return new restore_resultStandardScheme();
+    private static class loadCache_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public loadCache_resultStandardScheme getScheme() {
+        return new loadCache_resultStandardScheme();
       }
     }
 
-    private static class restore_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<restore_result> {
+    private static class loadCache_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<loadCache_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, restore_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, loadCache_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -3952,7 +3844,7 @@ public class IStorageModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, restore_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, loadCache_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -3967,16 +3859,16 @@ public class IStorageModule {
 
     }
 
-    private static class restore_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public restore_resultTupleScheme getScheme() {
-        return new restore_resultTupleScheme();
+    private static class loadCache_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public loadCache_resultTupleScheme getScheme() {
+        return new loadCache_resultTupleScheme();
       }
     }
 
-    private static class restore_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<restore_result> {
+    private static class loadCache_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<loadCache_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, restore_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, loadCache_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -3989,7 +3881,7 @@ public class IStorageModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, restore_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, loadCache_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {

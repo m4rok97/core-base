@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IFilterTask;
 import org.ignis.backend.cluster.tasks.executor.IStreamingFilterTask;
 import org.ignis.backend.properties.IProperties;
@@ -41,7 +41,7 @@ public final class IDataFilterHelper extends IDataHelper {
 
     public IData filter(ISource function) {
         List<IExecutor> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IFilterTask(this, executor, function));
@@ -54,7 +54,7 @@ public final class IDataFilterHelper extends IDataHelper {
 
     public IData streamingFilter(ISource function, boolean ordered) {
         List<IExecutor> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IStreamingFilterTask(this, executor, function, ordered));

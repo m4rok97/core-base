@@ -14,22 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.tasks;
+package org.ignis.backend.cluster.tasks.executor;
 
+import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public abstract class Task {
+public class IValuesTask extends IExecutorContextTask{
+    
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IValuesTask.class);
 
-    protected final IHelper helper;
-
-    public Task(IHelper helper) {
-        this.helper = helper;
+    public IValuesTask(IHelper helper, IExecutor executor) {
+        super(helper, executor, Mode.LOAD_AND_SAVE);
     }
-      
-    public abstract void execute() throws IgnisException;
+
+    @Override
+    public void execute(IExecutionContext context) throws IgnisException {
+        LOGGER.info(log() + "Getting values");
+        //TODO
+        /*
+        try {
+            
+        } catch (TException ex) {
+            throw new IgnisException(ex.getMessage(), ex);
+        }*/
+        LOGGER.info(log() + "Values got");
+    }
+    
 }

@@ -16,19 +16,24 @@
  */
 package org.ignis.backend.cluster;
 
+import java.nio.ByteBuffer;
 import java.util.List;
+import org.ignis.backend.cluster.helpers.data.IDataCacheHelper;
+import org.ignis.backend.cluster.helpers.data.IDataCollectHelper;
 import org.ignis.backend.cluster.helpers.data.IDataFilterHelper;
 import org.ignis.backend.cluster.helpers.data.IDataFlatmapHelper;
 import org.ignis.backend.cluster.helpers.data.IDataMapHelper;
 import org.ignis.backend.cluster.helpers.data.IDataReduceHelper;
 import org.ignis.backend.cluster.helpers.data.IDataSaveHelper;
 import org.ignis.backend.cluster.helpers.data.IDataShuffleHelper;
+import org.ignis.backend.cluster.helpers.data.IDataValuesHelper;
+import org.ignis.backend.cluster.helpers.data.IDataTakeHelper;
+import org.ignis.backend.cluster.tasks.ICacheSheduler;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.IThreadPool;
-import org.ignis.backend.cluster.tasks.Lazy;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
-import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.rpc.ISource;
+import org.ignis.backend.cluster.tasks.ILazy;
 
 /**
  *
@@ -39,15 +44,15 @@ public final class IData {
     private final long id;
     private final IJob job;
     private final List<IExecutor> executors;
-    private final TaskScheduler scheduler;
+    private final ICacheSheduler scheduler;
     private String name;
 
-    public IData(long id, IJob job, List<IExecutor> executors, TaskScheduler scheduler) {
+    public IData(long id, IJob job, List<IExecutor> executors, ITaskScheduler scheduler) {
         this.id = id;
         this.job = job;
         this.executors = executors;
-        this.scheduler = scheduler;
         setName("");
+        this.scheduler = new IDataCacheHelper(this, job.getProperties()).create(scheduler);//Must be the last
     }
 
     public List<IExecutor> getExecutors() {
@@ -58,7 +63,11 @@ public final class IData {
         return executors.size();
     }
 
-    public TaskScheduler getScheduler() {
+    public ITaskScheduler getScheduler() {
+        return scheduler;
+    }
+
+    public ICacheSheduler getCacheScheduler() {
         return scheduler;
     }
 
@@ -89,10 +98,6 @@ public final class IData {
         this.name = name;
     }
 
-    public void setKeep(int level) {
-        //TODO
-    }
-
     public IData map(ISource function) {
         return new IDataMapHelper(this, job.getProperties()).map(function);
     }
@@ -121,16 +126,40 @@ public final class IData {
         return new IDataReduceHelper(this, job.getProperties()).reduceByKey(function);
     }
 
+    public IData values() {
+        return new IDataValuesHelper(this, job.getProperties()).values();
+    }
+
     public IData shuffle() {
         return new IDataShuffleHelper(this, job.getProperties()).shuffle();
     }
 
-    public Lazy<Void> saveAsTextFile(String path, boolean join) throws IgnisException {
+    public ILazy<ByteBuffer> take(long n, boolean light) {
+        return new IDataTakeHelper(this, job.getProperties()).take(n, light);
+    }
+
+    public ILazy<ByteBuffer> takeSample(long n, boolean withRemplacement, int seed, boolean randomSeed, boolean light) {
+        return new IDataTakeHelper(this, job.getProperties()).takeSample(n, withRemplacement, seed, randomSeed, light);
+    }
+
+    public ILazy<ByteBuffer> collect(boolean light) {
+        return new IDataCollectHelper(this, job.getProperties()).collect(light);
+    }
+
+    public ILazy<Void> saveAsTextFile(String path, boolean join) {
         return new IDataSaveHelper(this, job.getProperties()).saveAsTextFile(path, join);
     }
 
-    public Lazy<Void> saveAsJsonFile(String path, boolean join) throws IgnisException {
+    public ILazy<Void> saveAsJsonFile(String path, boolean join) {
         return new IDataSaveHelper(this, job.getProperties()).saveAsJsonFile(path, join);
+    }
+
+    public void cache() {
+        new IDataCacheHelper(this, job.getProperties()).cache();
+    }
+
+    public void uncache() {
+        new IDataCacheHelper(this, job.getProperties()).uncache();
     }
 
 }

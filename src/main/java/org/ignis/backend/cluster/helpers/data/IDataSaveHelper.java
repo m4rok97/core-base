@@ -17,13 +17,12 @@
 package org.ignis.backend.cluster.helpers.data;
 
 import org.ignis.backend.cluster.IData;
-import org.ignis.backend.cluster.tasks.Lazy;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.ISaveAsJsonFileTask;
 import org.ignis.backend.cluster.tasks.executor.ISaveAsTextFileTask;
-import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
+import org.ignis.backend.cluster.tasks.ILazy;
 
 /**
  *
@@ -37,9 +36,9 @@ public final class IDataSaveHelper extends IDataHelper {
         super(data, properties);
     }
 
-    public Lazy<Void> saveAsTextFile(String path, boolean joined) throws IgnisException {
+    public ILazy<Void> saveAsTextFile(String path, boolean joined){
         LOGGER.info(log() + "SaveAsTextFile path: " + path + ", joined: " + joined);
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         int size = data.getExecutors().size();
         for (int i = 0; i < size; i++) {
@@ -53,9 +52,9 @@ public final class IDataSaveHelper extends IDataHelper {
         };
     }
 
-    public Lazy<Void> saveAsJsonFile(String path, boolean joined) throws IgnisException {
+    public ILazy<Void> saveAsJsonFile(String path, boolean joined) {
         LOGGER.info(log() + "SaveAsJsonFile path: " + path + ", joined: " + joined);
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         int size = data.getExecutors().size();
         for (int i = 0; i < size; i++) {

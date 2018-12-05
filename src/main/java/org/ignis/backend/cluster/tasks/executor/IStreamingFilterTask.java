@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISource;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class IStreamingFilterTask extends IExecutorTask {
+public final class IStreamingFilterTask extends IExecutorContextTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IStreamingFilterTask.class);
 
@@ -35,13 +36,13 @@ public final class IStreamingFilterTask extends IExecutorTask {
     private final boolean ordered;
 
     public IStreamingFilterTask(IHelper helper, IExecutor executor, ISource function, boolean ordered) {
-        super(helper, executor);
+        super(helper, executor,Mode.LOAD_AND_SAVE);
         this.function = function;
         this.ordered = ordered;
     }
 
     @Override
-    public void execute() throws IgnisException {
+    public void execute(IExecutionContext context) throws IgnisException {
         LOGGER.info(log() + "Executing StreamingFilter");
         try {
             executor.getMapperModule().streamingFilter(function, ordered);

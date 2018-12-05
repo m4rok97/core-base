@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.IMapTask;
 import org.ignis.backend.cluster.tasks.executor.IStreamingMapTask;
 import org.ignis.backend.properties.IProperties;
@@ -41,7 +41,7 @@ public final class IDataMapHelper extends IDataHelper {
 
     public IData map(ISource function) {
         List<IExecutor> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IMapTask(this, executor, function));
@@ -54,7 +54,7 @@ public final class IDataMapHelper extends IDataHelper {
 
     public IData streamingMap(ISource function, boolean ordered) {
         List<IExecutor> result = new ArrayList<>();
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(data.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
         for (IExecutor executor : data.getExecutors()) {
             shedulerBuilder.newTask(new IStreamingMapTask(this, executor, function, ordered));

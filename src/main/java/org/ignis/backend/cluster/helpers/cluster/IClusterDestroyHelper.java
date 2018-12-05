@@ -18,7 +18,7 @@ package org.ignis.backend.cluster.helpers.cluster;
 
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.TaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.container.IContainerDestroyTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -38,7 +38,7 @@ public final class IClusterDestroyHelper extends IClusterHelper {
 
     public void destroy() throws IgnisException {
         LOGGER.info(log() + "Preparing cluster to destroy");
-        TaskScheduler.Builder shedulerBuilder = new TaskScheduler.Builder(cluster.getLock());
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(cluster.getLock());
         int instances = 0;
         for (IContainer container : cluster.getContainers()) {
             if (container.getStub().isRunning()) {

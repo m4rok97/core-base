@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.tasks.container;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.helpers.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public final class IContainerCreateTask extends IContainerTask {
     }
 
     @Override
-    public void execute() throws IgnisException {
+    public void execute(IExecutionContext context) throws IgnisException {
         if (container.getStub().isRunning()) {
             try {
                 container.getServerManager().test();

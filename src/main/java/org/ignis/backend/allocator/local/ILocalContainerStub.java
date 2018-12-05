@@ -63,7 +63,8 @@ public final class ILocalContainerStub extends IContainerStub {
         try {
             manager = new ProcessBuilder("ignis-manager",
                     String.valueOf(properties.getInteger(IPropsKeys.MANAGER_RPC_PORT)),
-                    String.valueOf(properties.getInteger(IPropsKeys.MANAGER_EXECUTORS_PORT))
+                    String.valueOf(properties.getInteger(IPropsKeys.MANAGER_EXECUTORS_PORT)),
+                    String.valueOf(properties.getInteger(IPropsKeys.MANAGER_RPC_COMPRESSION))
             ).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
         } catch (IOException ex) {
             throw new IgnisException(ex.getMessage(), ex);
