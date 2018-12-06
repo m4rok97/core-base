@@ -37,6 +37,14 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     }
 
     @Override
+    public void setName(IDataId data, String name) throws IRemoteException, TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            cluster.getJob(data.getJob()).getData(data.getData()).setName(name);
+        }
+    }
+
+    @Override
     public IDataId _map(IDataId data, ISource _function) throws TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {
@@ -62,6 +70,16 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
             IData target = source.filter(_function);
+            return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        }
+    }
+
+    @Override
+    public IDataId keyBy(IDataId data, ISource _function) throws TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            IData target = source.keyBy(_function);
             return new IDataId(data.getCluster(), data.getJob(), target.getId());
         }
     }
@@ -107,6 +125,16 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     }
 
     @Override
+    public IDataId streamingKeyBy(IDataId data, ISource _function, boolean ordered) throws TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            IData target = source.streamingKeyBy(_function, ordered);
+            return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        }
+    }
+
+    @Override
     public IDataId values(IDataId data) throws IRemoteException, TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {
@@ -143,12 +171,12 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     }
 
     @Override
-    public ByteBuffer takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean randomSeed, boolean light) throws IRemoteException, TException {
+    public ByteBuffer takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light) throws IRemoteException, TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         ILazy<ByteBuffer> result;
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
-            result = source.takeSample(n, withRemplacement, seed, randomSeed, light);
+            result = source.takeSample(n, withRemplacement, seed, light);
         }
         return result.execute();
     }
@@ -184,14 +212,6 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
             result = source.saveAsJsonFile(path, join);
         }
         result.execute();
-    }
-
-    @Override
-    public void setName(IDataId data, String name) throws IRemoteException, TException {
-        ICluster cluster = attributes.getCluster(data.getCluster());
-        synchronized (cluster.getLock()) {
-            cluster.getJob(data.getJob()).getData(data.getData()).setName(name);
-        }
     }
 
     @Override

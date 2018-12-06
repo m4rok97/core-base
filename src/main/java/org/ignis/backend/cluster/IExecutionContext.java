@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.cluster.helpers;
+package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.exception.IgnisException;
 
 /**
@@ -30,24 +29,33 @@ import org.ignis.backend.exception.IgnisException;
  */
 public class IExecutionContext {
 
+    private final static Map<IExecutor, List<Long>> INDEXS = new ConcurrentHashMap<>();
     private final Map<IExecutor, List<Long>> contexts;
+    private final Map map;
 
     public IExecutionContext() {
         contexts = new ConcurrentHashMap<>();
+        map = new ConcurrentHashMap<>();
     }
 
     public void saveContext(IExecutor e) throws IgnisException {
-        List<Long> ids = contexts.get(e);
+        List<Long> ctx = contexts.get(e);
+        List<Long> ids = INDEXS.get(e);
         long id;
+        if (ctx == null) {
+            ctx = new ArrayList<>();
+            contexts.put(e, ctx);
+        }
         if (ids == null) {
             ids = new ArrayList<>();
-            contexts.put(e, ids);
+            INDEXS.put(e, ids);
         }
         if (ids.isEmpty()) {
             id = 0;
         } else {
             id = ids.get(ids.size() - 1) + 1;
         }
+        ctx.add(id);
         ids.add(id);
         try {
             e.getStorageModule().saveContext(id);
@@ -57,16 +65,26 @@ public class IExecutionContext {
     }
 
     public void loadContext(IExecutor e) throws IgnisException {
-        List<Long> ids = contexts.get(e);
-        if (ids == null || ids.isEmpty()) {
+        List<Long> ctx = contexts.get(e);
+        List<Long> ids = INDEXS.get(e);
+        if (ctx == null || ctx.isEmpty()) {
             throw new IgnisException("Executor context error");
         }
-        long id = ids.remove(0);
+        long id = ctx.remove(0);
+        ids.remove((Long) id);
         try {
             e.getStorageModule().loadContext(id);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
+    }
+
+    public <V> void set(Object key, V value) {
+        map.put(key, value);
+    }
+
+    public <V> V get(Object key) {
+        return (V)map.get(key);
     }
 
 }

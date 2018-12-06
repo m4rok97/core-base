@@ -17,10 +17,19 @@
 package org.ignis.backend.cluster.helpers.data;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
 import org.ignis.backend.cluster.tasks.ILazy;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
+import org.ignis.backend.cluster.tasks.executor.IReduceByKeyTask;
+import org.ignis.backend.cluster.tasks.executor.ITakeSampleTask;
+import org.ignis.backend.cluster.tasks.executor.ITakeTask;
 
 /**
  *
@@ -35,11 +44,37 @@ public class IDataTakeHelper extends IDataHelper {
     }
 
     public ILazy<ByteBuffer> take(long n, boolean light) {
-        return null;
+        IBarrier barrier = new IBarrier(data.getPartitions());
+        ITakeTask.Shared shared = new ITakeTask.Shared();
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
+        shedulerBuilder.newDependency(data.getScheduler());
+        for (IExecutor executor : data.getExecutors()) {
+            shedulerBuilder.newTask(new ITakeTask(this, executor, data.getExecutors(), barrier, shared, null, n, light));
+        }
+        LOGGER.info(log() + "Take n: " + n + ", light: " + light);
+        return () -> {
+            IExecutionContext context = shedulerBuilder.build().execute(data.getPool());
+            LOGGER.info(log() + "Take Done");
+            return context.<ByteBuffer>get("result");
+        };
     }
 
-    public ILazy<ByteBuffer> takeSample(long n, boolean withRemplacement, int seed, boolean randomSeed, boolean light) {
-        return null;
+    public ILazy<ByteBuffer> takeSample(long n, boolean withRemplacement, int seed, boolean light) {
+        IBarrier barrier = new IBarrier(data.getPartitions());
+        ITakeSampleTask.Shared shared = new ITakeSampleTask.Shared();
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
+        shedulerBuilder.newDependency(data.getScheduler());
+        for (IExecutor executor : data.getExecutors()) {
+            shedulerBuilder.newTask(new ITakeSampleTask(this, executor, data.getExecutors(), barrier, shared, null,
+                    n, withRemplacement, seed, light));
+        }
+        LOGGER.info(log() + "TakeSample n: " + n + ", withRemplacement: " + withRemplacement + ", seed: " + seed
+                + ", light: " + light);
+        return () -> {
+            IExecutionContext context = shedulerBuilder.build().execute(data.getPool());
+            LOGGER.info(log() + "TakeSample Done");
+            return context.<ByteBuffer>get("result");
+        };
     }
 
 }

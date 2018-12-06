@@ -16,7 +16,7 @@
  */
 package org.ignis.backend.cluster.tasks;
 
-import org.ignis.backend.cluster.helpers.IExecutionContext;
+import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 

@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.ignis.backend.cluster.IAddrManager;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IExecutionContext;
+import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
@@ -55,17 +55,17 @@ public final class IImportDataTask extends IExecutorContextTask {
     }
 
     private final IBarrier barrier;
-    private final Shared keyShared;
+    private final Shared shared;
     private final List<IExecutor> sources;
     private final List<IExecutor> targets;
     private final byte type;
     private final float ratio;
 
-    public IImportDataTask(IHelper helper, IExecutor executor, IBarrier barrier, Shared keyShared, byte type,
+    public IImportDataTask(IHelper helper, IExecutor executor, IBarrier barrier, Shared shared, byte type,
             List<IExecutor> sources, List<IExecutor> targets) {
         super(helper, executor, Mode.SAVE);
         this.barrier = barrier;
-        this.keyShared = keyShared;
+        this.shared = shared;
         this.type = type;
         this.sources = sources;
         this.targets = targets;
@@ -86,7 +86,7 @@ public final class IImportDataTask extends IExecutorContextTask {
     }
 
     private void distribution() {
-        long total = keyShared.count.values().stream().reduce(0l, (a, b) -> a + b);
+        long total = shared.count.values().stream().reduce(0l, (a, b) -> a + b);
         int boxs = targets.size();
 
         long[] splits = new long[boxs];
@@ -102,13 +102,13 @@ public final class IImportDataTask extends IExecutorContextTask {
 
         if (sources.equals(targets)) {
             int i = 0;
-            for (long ecount : keyShared.count.values()) {
+            for (long ecount : shared.count.values()) {
                 if ((splits[i] - splits[i] * ratio) > ecount || ecount > (splits[i] + splits[i] * ratio)) {
                     break;
                 }
                 i++;
             }
-            if (keyShared.count.size() == i) {
+            if (shared.count.size() == i) {
                 return;
             }
         }
@@ -118,8 +118,8 @@ public final class IImportDataTask extends IExecutorContextTask {
         IExecutor actualTarget = null;
         for (int i = 0, j = 0; i < sources.size(); i++) {
             IExecutor source = sources.get(i);
-            long elements = keyShared.count.get(source);
-            keyShared.msgs.put(source, new LinkedHashMap<>());
+            long elements = shared.count.get(source);
+            shared.msgs.put(source, new LinkedHashMap<>());
             while (elements > 0) {
                 if (actualTarget == null) {
                     //if the current executor provides less elements than the next
@@ -133,11 +133,11 @@ public final class IImportDataTask extends IExecutorContextTask {
 
                 if (splits[j] - elements > 0) {
                     splits[j] -= elements;
-                    keyShared.msgs.get(source).put(actualTarget, elements);
+                    shared.msgs.get(source).put(actualTarget, elements);
                     elements = 0;
                 } else {
                     elements -= splits[j];
-                    keyShared.msgs.get(source).put(actualTarget, splits[j]);
+                    shared.msgs.get(source).put(actualTarget, splits[j]);
                     splits[j] = 0;
                     actualTarget = null;
                     j++;
@@ -153,21 +153,26 @@ public final class IImportDataTask extends IExecutorContextTask {
     public void execute(IExecutionContext context) throws IgnisException {
         try {
             if (barrier.await() == 0) {
-                keyShared.count.clear();
-                keyShared.msgs.clear();
+                shared.count.clear();
+                shared.msgs.clear();
+                if (type == SHUFFLE) {
+                    LOGGER.info(log() + "Executing shuffle");
+                } else {
+                    LOGGER.info(log() + "Executing import");
+                }
             }
             barrier.await();
             if (type == SEND || type == SHUFFLE) {
                 LOGGER.info(log() + "Counting elements");
-                keyShared.count.put(executor, executor.getStorageModule().count());
-                LOGGER.info(log() + keyShared.count.get(executor) + " elements");
+                shared.count.put(executor, executor.getStorageModule().count());
+                LOGGER.info(log() + shared.count.get(executor) + " elements");
             }
             if (barrier.await() == 0) {
                 LOGGER.info(log() + "Calculating element distribution");
                 distribution();
             }
             barrier.await();
-            if (keyShared.msgs.isEmpty()) {
+            if (shared.msgs.isEmpty()) {
                 if (barrier.await() == 0) {
                     LOGGER.info(log() + "Aborting, shuffle is not necessary");
                 }
@@ -175,11 +180,11 @@ public final class IImportDataTask extends IExecutorContextTask {
             }
 
             if (type == SEND || type == SHUFFLE) {
-                LOGGER.info(log() + "Creating " + keyShared.msgs.get(executor).size() + " partitions");
+                LOGGER.info(log() + "Creating " + shared.msgs.get(executor).size() + " partitions");
                 int i = 1;
                 IAddrManager addrManager = new IAddrManager();
                 List<ISplit> splits = new ArrayList<>();
-                for (Map.Entry<IExecutor, Long> msg : keyShared.msgs.get(executor).entrySet()) {
+                for (Map.Entry<IExecutor, Long> msg : shared.msgs.get(executor).entrySet()) {
                     String addr = addrManager.parseAddr(executor, msg.getKey());
                     splits.add(new ISplit(executor.getId(), addr, msg.getValue()));
                     LOGGER.info(log() + "Partition " + (i++) + " with " + msg.getValue() + " elements to " + addr);
@@ -207,13 +212,19 @@ public final class IImportDataTask extends IExecutorContextTask {
                 }
             }
             if (type == RECEIVE || type == SHUFFLE) {
-                List<Long> order = sources.stream().filter(e -> keyShared.msgs.get(e).containsKey(executor))
+                List<Long> order = sources.stream().filter(e -> shared.msgs.get(e).containsKey(executor))
                         .map(e -> e.getJob()).sorted().collect(Collectors.toList());
                 LOGGER.info(log() + "Joining partitions");
                 executor.getShuffleModule().joinSplits(order);
                 LOGGER.info(log() + "Partitions joined");
             }
-            barrier.await();
+            if (barrier.await() == 0) {
+                if (type == SHUFFLE) {
+                    LOGGER.info(log() + "Shuffle executed");
+                } else {
+                    LOGGER.info(log() + "Import executed");
+                }
+            }
         } catch (IgnisException ex) {
             barrier.fails();
             throw ex;

@@ -21,7 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import org.ignis.backend.cluster.helpers.IExecutionContext;
+import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
@@ -78,8 +78,10 @@ public class ITaskScheduler {
         locks.sort(Comparator.naturalOrder());
     }
 
-    public final void execute(IThreadPool pool) throws IgnisException {
+    public final IExecutionContext execute(IThreadPool pool) throws IgnisException {
+        IExecutionContext context = new IExecutionContext();
         execute(pool, new IExecutionContext());
+        return context;
     }
     
     protected void execute(IThreadPool pool, IExecutionContext context) throws IgnisException {

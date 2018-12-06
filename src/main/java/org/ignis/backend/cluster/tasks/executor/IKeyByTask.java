@@ -21,36 +21,33 @@ import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public final class ISaveAsTextFileTask extends IExecutorContextTask {
+public final class IKeyByTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsTextFileTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IKeyByTask.class);
 
-    private final String path;
-    private final boolean trunc;
-    private final boolean newLine;
+    private final ISource function;
 
-    public ISaveAsTextFileTask(IHelper helper, IExecutor executor, String path, boolean trunc, boolean newLine) {
-        super(helper, executor, Mode.LOAD);
-        this.path = path;
-        this.trunc = trunc;
-        this.newLine = newLine;
+    public IKeyByTask(IHelper helper, IExecutor executor, ISource function) {
+        super(helper, executor, Mode.LOAD_AND_SAVE);
+        this.function = function;
     }
 
     @Override
     public void execute(IExecutionContext context) throws IgnisException {
-        LOGGER.info(log() + "Saving text file");
+        LOGGER.info(log() + "Executing keyBy");
         try {
-            executor.getFilesModule().saveFile(path, trunc, newLine);
+            executor.getMapperModule().keyBy(function);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "File saved");
+        LOGGER.info(log() + "KeyBy executed");
     }
 
 }

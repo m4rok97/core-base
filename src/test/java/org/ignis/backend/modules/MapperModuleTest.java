@@ -211,6 +211,34 @@ public class MapperModuleTest extends BackendTest {
             Assert.fail(ex.toString());
         }
     }
+    
+        public void testKeyBy(int instances) {
+        try {
+            long prop = propertiesService.newInstance();
+            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+
+            long cluster = clusterService.newInstance(prop);
+            MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));
+            mockCluster.setRegisterManager(Mockito.mock(IRegisterManager.Iface.class));
+            Mockito.doAnswer(a -> null).when(mockCluster.getRegisterManager()).execute(Mockito.anyInt(), Mockito.any());
+            mockCluster.mock();
+
+            IJobId job = jobService.newInstance(cluster, "none");
+            MockJobServices mockJob = new MockJobServices(attributes.getCluster(cluster).getJob(job.getJob()));
+            mockJob.setFilesModule(Mockito.mock(IFilesModule.Iface.class));
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).readFile(Mockito.any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong());
+            Mockito.doAnswer(a -> null).when(mockJob.getFilesModule()).saveFile(Mockito.any(), Mockito.anyBoolean(), Mockito.anyBoolean());
+            mockJob.setMapperModule(Mockito.mock(IMapperModule.Iface.class));
+            Mockito.doAnswer(a -> null).when(mockJob.getMapperModule())._map(Mockito.any());
+            mockJob.mock();
+
+            IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
+            IDataId map = dataService.keyBy(read, new ISource());
+            dataService.saveAsTextFile(map, "src/test/salida.txt", true);
+        } catch (Exception ex) {
+            Assert.fail(ex.toString());
+        }
+    }
 
     @Test
     public void testMapOneInstance() {

@@ -17,7 +17,7 @@
 package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.helpers.IExecutionContext;
+import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;

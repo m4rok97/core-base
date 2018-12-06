@@ -16,8 +16,9 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IExecutionContext;
+import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
@@ -37,13 +38,11 @@ public class IValuesTask extends IExecutorContextTask{
     @Override
     public void execute(IExecutionContext context) throws IgnisException {
         LOGGER.info(log() + "Getting values");
-        //TODO
-        /*
         try {
-            
+            executor.getMapperModule().values();
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
-        }*/
+        }
         LOGGER.info(log() + "Values got");
     }
     

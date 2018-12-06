@@ -22,6 +22,7 @@ import org.ignis.backend.cluster.helpers.data.IDataCacheHelper;
 import org.ignis.backend.cluster.helpers.data.IDataCollectHelper;
 import org.ignis.backend.cluster.helpers.data.IDataFilterHelper;
 import org.ignis.backend.cluster.helpers.data.IDataFlatmapHelper;
+import org.ignis.backend.cluster.helpers.data.IDataKeyByHelper;
 import org.ignis.backend.cluster.helpers.data.IDataMapHelper;
 import org.ignis.backend.cluster.helpers.data.IDataReduceHelper;
 import org.ignis.backend.cluster.helpers.data.IDataSaveHelper;
@@ -122,6 +123,14 @@ public final class IData {
         return new IDataFilterHelper(this, job.getProperties()).streamingFilter(function, ordered);
     }
 
+    public IData keyBy(ISource function) {
+        return new IDataKeyByHelper(this, job.getProperties()).keyBy(function);
+    }
+
+    public IData streamingKeyBy(ISource function, boolean ordered) {
+        return new IDataKeyByHelper(this, job.getProperties()).streamingKeyBy(function, ordered);
+    }
+
     public IData reduceByKey(ISource function) {
         return new IDataReduceHelper(this, job.getProperties()).reduceByKey(function);
     }
@@ -138,8 +147,8 @@ public final class IData {
         return new IDataTakeHelper(this, job.getProperties()).take(n, light);
     }
 
-    public ILazy<ByteBuffer> takeSample(long n, boolean withRemplacement, int seed, boolean randomSeed, boolean light) {
-        return new IDataTakeHelper(this, job.getProperties()).takeSample(n, withRemplacement, seed, randomSeed, light);
+    public ILazy<ByteBuffer> takeSample(long n, boolean withRemplacement, int seed, boolean light) {
+        return new IDataTakeHelper(this, job.getProperties()).takeSample(n, withRemplacement, seed, light);
     }
 
     public ILazy<ByteBuffer> collect(boolean light) {

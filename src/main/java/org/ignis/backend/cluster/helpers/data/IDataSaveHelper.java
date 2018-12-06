@@ -47,7 +47,7 @@ public final class IDataSaveHelper extends IDataHelper {
         }
         return () -> {
             shedulerBuilder.build().execute(data.getPool());
-            LOGGER.info(log() + "saveAsTextFile Done");
+            LOGGER.info(log() + "SaveAsTextFile Done");
             return null;
         };
     }
@@ -63,7 +63,7 @@ public final class IDataSaveHelper extends IDataHelper {
         }
         return () -> {
             shedulerBuilder.build().execute(data.getPool());
-            LOGGER.info(log() + "saveAsJsonFile Done");
+            LOGGER.info(log() + "SaveAsJsonFile Done");
             return null;
         };
     }

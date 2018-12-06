@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IExecutionContext;
+import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.tasks.executor.ILoadCacheTask;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;

@@ -18,9 +18,14 @@ package org.ignis.backend.cluster.helpers.data;
 
 import java.nio.ByteBuffer;
 import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
 import org.ignis.backend.cluster.tasks.ILazy;
+import org.ignis.backend.cluster.tasks.ITaskScheduler;
+import org.ignis.backend.cluster.tasks.executor.ICollectTask;
 
 /**
  *
@@ -35,7 +40,19 @@ public class IDataCollectHelper extends IDataHelper {
     }
 
     public ILazy<ByteBuffer> collect(boolean light) {
-        return null;
+        IBarrier barrier = new IBarrier(data.getPartitions());
+        ICollectTask.Shared shared = new ICollectTask.Shared();
+        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
+        shedulerBuilder.newDependency(data.getScheduler());
+        for (IExecutor executor : data.getExecutors()) {
+            shedulerBuilder.newTask(new ICollectTask(this, executor, data.getExecutors(), barrier, shared, null, light));
+        }
+        LOGGER.info(log() + "Collect light: " + light);
+        return () -> {
+            IExecutionContext context = shedulerBuilder.build().execute(data.getPool());
+            LOGGER.info(log() + "Collect Done");
+            return context.<ByteBuffer>get("result");
+        };
     }
 
 

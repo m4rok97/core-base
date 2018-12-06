@@ -26,7 +26,7 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentHashMap;
 import org.ignis.backend.cluster.IAddrManager;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IExecutionContext;
+import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
@@ -52,21 +52,21 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
 
     private final ISource function;
     private final IBarrier barrier;
-    private final Shared keyShared;
+    private final Shared shared;
     private final boolean single;
 
-    public IReduceByKeyTask(IHelper helper, IExecutor executor, ISource function, IBarrier barrier, Shared keyShared) {
+    public IReduceByKeyTask(IHelper helper, IExecutor executor, ISource function, IBarrier barrier, Shared shared) {
         super(helper, executor, Mode.LOAD_AND_SAVE);
         this.function = function;
         this.barrier = barrier;
-        this.keyShared = keyShared;
+        this.shared = shared;
         this.single = barrier.getParties() == 1;
     }
 
     private void keyDistribution() {
         Map<Long, Set<IExecutor>> keys = new HashMap<>();// Inverse of Shared.count
         Map<IExecutor, Long> load = new HashMap<>();//Number of keys assigned to each executor
-        for (Map.Entry<IExecutor, List<Long>> executorWithKeys : keyShared.count.entrySet()) {
+        for (Map.Entry<IExecutor, List<Long>> executorWithKeys : shared.count.entrySet()) {
             for (long key : executorWithKeys.getValue()) {
                 Set<IExecutor> list = keys.get(key);
                 if (list == null) {
@@ -75,16 +75,16 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
                 list.add(executorWithKeys.getKey());
             }
             load.put(executorWithKeys.getKey(), 0l);
-            keyShared.msgs.put(executorWithKeys.getKey(), new HashMap<>());
+            shared.msgs.put(executorWithKeys.getKey(), new HashMap<>());
         }
-        
+
         long maxKeys = keys.size() / (load.size() * 4);
         IExecutor exWithMaxKeys = null;
         for (Map.Entry<Long, Set<IExecutor>> keyInExecutors : keys.entrySet()) {
             for (IExecutor target : keyInExecutors.getValue()) {
                 long eload = load.get(target);
                 if (eload == maxKeys) {
-                    if(target == exWithMaxKeys && keyInExecutors.getValue().size() > 1){
+                    if (target == exWithMaxKeys && keyInExecutors.getValue().size() > 1) {
                         break;
                     }
                     maxKeys += 10;
@@ -93,9 +93,9 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
                 }
 
                 for (IExecutor source : keyInExecutors.getValue()) {
-                    List<Long> list = keyShared.msgs.get(source).get(target);
+                    List<Long> list = shared.msgs.get(source).get(target);
                     if (list == null) {
-                        keyShared.msgs.get(source).put(target, list = new ArrayList<>());
+                        shared.msgs.get(source).put(target, list = new ArrayList<>());
                     }
                     list.add(keyInExecutors.getKey());
                 }
@@ -103,7 +103,7 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
                 break;
             }
         }/*
-        for (Map.Entry<IExecutor, Map<IExecutor, List<Long>>> e1 : keyShared.msgs.entrySet()){
+        for (Map.Entry<IExecutor, Map<IExecutor, List<Long>>> e1 : shared.msgs.entrySet()){
             System.out.println(e1.getKey().getContainer().getId()+":");
             for(Map.Entry<IExecutor, List<Long>> e2:e1.getValue().entrySet()){
                 System.out.println("\t"+e2.getKey().getContainer().getId()+" -> " + e2.getValue().toString());
@@ -114,6 +114,12 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
     @Override
     public void execute(IExecutionContext context) throws IgnisException {
         try {
+            if (barrier.await() == 0) {
+                shared.count.clear();
+                shared.msgs.clear();
+                LOGGER.info(log() + "Executing reduceByKey");
+            }
+            barrier.await();
             LOGGER.info(log() + "Reducing executor keys");
             executor.getKeysModule().reduceByKey(function);
             LOGGER.info(log() + "Executor keys reduced");
@@ -124,7 +130,7 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
                 LOGGER.info(log() + "Preparing keys");
                 List<Long> keys = executor.getKeysModule().getKeys();
                 LOGGER.info(log() + "Keys ready");
-                keyShared.count.put(executor, keys);
+                shared.count.put(executor, keys);
                 LOGGER.info(log() + keys.size() + " keys");
                 if (barrier.await() == 0) {
                     LOGGER.info(log() + "Calculating key distribution");
@@ -132,10 +138,10 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
                 }
                 barrier.await();
 
-                LOGGER.info(log() + "Preparing keys to send to " + keyShared.msgs.get(executor).size() + " executors");
+                LOGGER.info(log() + "Preparing keys to send to " + shared.msgs.get(executor).size() + " executors");
                 IAddrManager addrManager = new IAddrManager();
                 List<IExecutorKeys> executorKeys = new ArrayList<>();
-                for (Map.Entry<IExecutor, List<Long>> entry : keyShared.msgs.get(executor).entrySet()) {
+                for (Map.Entry<IExecutor, List<Long>> entry : shared.msgs.get(executor).entrySet()) {
                     String addr = addrManager.parseAddr(executor, entry.getKey());
                     executorKeys.add(new IExecutorKeys(executor.getId(), addr, entry.getValue()));
                     LOGGER.info(log() + entry.getValue().size() + " keys prepared to " + addr);
@@ -159,7 +165,9 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
                 executor.getKeysModule().reduceByKey(function);
             }
             LOGGER.info(log() + "Keys Reduced");
-            barrier.await();
+            if (barrier.await() == 0) {
+                LOGGER.info(log() + "ReduceByKey Executed");
+            }
         } catch (IgnisException ex) {
             barrier.fails();
             throw ex;
