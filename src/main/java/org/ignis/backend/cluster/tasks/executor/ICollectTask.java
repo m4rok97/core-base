@@ -38,7 +38,7 @@ public class ICollectTask extends IExecutorContextTask {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITakeTask.class);
 
     public static class Shared {
-        
+
         //Executor -> Result (Multiple Write, One Read)
         private final Map<IExecutor, ByteBuffer> result = new ConcurrentHashMap<>();
 
@@ -68,7 +68,7 @@ public class ICollectTask extends IExecutorContextTask {
                 LOGGER.info(log() + "Executing " + (ligth ? "ligth " : "") + "collect");
             }
             barrier.await();
-            ByteBuffer bytes = executor.getStorageModule().collect(ligth);
+            ByteBuffer bytes = executor.getStorageModule().collect(executor.getId(), "none", ligth);//TODO
             if (ligth) {
                 shared.result.put(executor, bytes);
             }
@@ -104,7 +104,7 @@ public class ICollectTask extends IExecutorContextTask {
     }
 
     private void directMode(IExecutionContext context) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");//TODO
     }
 
 }

@@ -23,11 +23,11 @@ public class IStorageModule {
 
     public void loadContext(long id) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public java.nio.ByteBuffer take(long n, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public java.nio.ByteBuffer take(long msg_id, java.lang.String addr, long n, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public java.nio.ByteBuffer takeSample(long n, boolean withRemplacement, int seed, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public java.nio.ByteBuffer takeSample(long msg_id, java.lang.String addr, long n, boolean withRemplacement, int seed, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public java.nio.ByteBuffer collect(boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public java.nio.ByteBuffer collect(long msg_id, java.lang.String addr, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
   }
 
@@ -45,11 +45,11 @@ public class IStorageModule {
 
     public void loadContext(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void take(long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException;
+    public void take(long msg_id, java.lang.String addr, long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException;
 
-    public void takeSample(long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException;
+    public void takeSample(long msg_id, java.lang.String addr, long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException;
 
-    public void collect(boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException;
+    public void collect(long msg_id, java.lang.String addr, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -213,15 +213,17 @@ public class IStorageModule {
       return;
     }
 
-    public java.nio.ByteBuffer take(long n, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.nio.ByteBuffer take(long msg_id, java.lang.String addr, long n, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_take(n, light);
+      send_take(msg_id, addr, n, light);
       return recv_take();
     }
 
-    public void send_take(long n, boolean light) throws org.apache.thrift.TException
+    public void send_take(long msg_id, java.lang.String addr, long n, boolean light) throws org.apache.thrift.TException
     {
       take_args args = new take_args();
+      args.setMsg_id(msg_id);
+      args.setAddr(addr);
       args.setN(n);
       args.setLight(light);
       sendBase("take", args);
@@ -240,15 +242,17 @@ public class IStorageModule {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "take failed: unknown result");
     }
 
-    public java.nio.ByteBuffer takeSample(long n, boolean withRemplacement, int seed, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.nio.ByteBuffer takeSample(long msg_id, java.lang.String addr, long n, boolean withRemplacement, int seed, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_takeSample(n, withRemplacement, seed, light);
+      send_takeSample(msg_id, addr, n, withRemplacement, seed, light);
       return recv_takeSample();
     }
 
-    public void send_takeSample(long n, boolean withRemplacement, int seed, boolean light) throws org.apache.thrift.TException
+    public void send_takeSample(long msg_id, java.lang.String addr, long n, boolean withRemplacement, int seed, boolean light) throws org.apache.thrift.TException
     {
       takeSample_args args = new takeSample_args();
+      args.setMsg_id(msg_id);
+      args.setAddr(addr);
       args.setN(n);
       args.setWithRemplacement(withRemplacement);
       args.setSeed(seed);
@@ -269,15 +273,17 @@ public class IStorageModule {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "takeSample failed: unknown result");
     }
 
-    public java.nio.ByteBuffer collect(boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.nio.ByteBuffer collect(long msg_id, java.lang.String addr, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
-      send_collect(light);
+      send_collect(msg_id, addr, light);
       return recv_collect();
     }
 
-    public void send_collect(boolean light) throws org.apache.thrift.TException
+    public void send_collect(long msg_id, java.lang.String addr, boolean light) throws org.apache.thrift.TException
     {
       collect_args args = new collect_args();
+      args.setMsg_id(msg_id);
+      args.setAddr(addr);
       args.setLight(light);
       sendBase("collect", args);
     }
@@ -502,18 +508,22 @@ public class IStorageModule {
       }
     }
 
-    public void take(long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
+    public void take(long msg_id, java.lang.String addr, long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      take_call method_call = new take_call(n, light, resultHandler, this, ___protocolFactory, ___transport);
+      take_call method_call = new take_call(msg_id, addr, n, light, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class take_call extends org.apache.thrift.async.TAsyncMethodCall<java.nio.ByteBuffer> {
+      private long msg_id;
+      private java.lang.String addr;
       private long n;
       private boolean light;
-      public take_call(long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public take_call(long msg_id, java.lang.String addr, long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.msg_id = msg_id;
+        this.addr = addr;
         this.n = n;
         this.light = light;
       }
@@ -521,6 +531,8 @@ public class IStorageModule {
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("take", org.apache.thrift.protocol.TMessageType.CALL, 0));
         take_args args = new take_args();
+        args.setMsg_id(msg_id);
+        args.setAddr(addr);
         args.setN(n);
         args.setLight(light);
         args.write(prot);
@@ -537,20 +549,24 @@ public class IStorageModule {
       }
     }
 
-    public void takeSample(long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
+    public void takeSample(long msg_id, java.lang.String addr, long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      takeSample_call method_call = new takeSample_call(n, withRemplacement, seed, light, resultHandler, this, ___protocolFactory, ___transport);
+      takeSample_call method_call = new takeSample_call(msg_id, addr, n, withRemplacement, seed, light, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class takeSample_call extends org.apache.thrift.async.TAsyncMethodCall<java.nio.ByteBuffer> {
+      private long msg_id;
+      private java.lang.String addr;
       private long n;
       private boolean withRemplacement;
       private int seed;
       private boolean light;
-      public takeSample_call(long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public takeSample_call(long msg_id, java.lang.String addr, long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.msg_id = msg_id;
+        this.addr = addr;
         this.n = n;
         this.withRemplacement = withRemplacement;
         this.seed = seed;
@@ -560,6 +576,8 @@ public class IStorageModule {
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("takeSample", org.apache.thrift.protocol.TMessageType.CALL, 0));
         takeSample_args args = new takeSample_args();
+        args.setMsg_id(msg_id);
+        args.setAddr(addr);
         args.setN(n);
         args.setWithRemplacement(withRemplacement);
         args.setSeed(seed);
@@ -578,23 +596,29 @@ public class IStorageModule {
       }
     }
 
-    public void collect(boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
+    public void collect(long msg_id, java.lang.String addr, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      collect_call method_call = new collect_call(light, resultHandler, this, ___protocolFactory, ___transport);
+      collect_call method_call = new collect_call(msg_id, addr, light, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class collect_call extends org.apache.thrift.async.TAsyncMethodCall<java.nio.ByteBuffer> {
+      private long msg_id;
+      private java.lang.String addr;
       private boolean light;
-      public collect_call(boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public collect_call(long msg_id, java.lang.String addr, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.msg_id = msg_id;
+        this.addr = addr;
         this.light = light;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("collect", org.apache.thrift.protocol.TMessageType.CALL, 0));
         collect_args args = new collect_args();
+        args.setMsg_id(msg_id);
+        args.setAddr(addr);
         args.setLight(light);
         args.write(prot);
         prot.writeMessageEnd();
@@ -831,7 +855,7 @@ public class IStorageModule {
       public take_result getResult(I iface, take_args args) throws org.apache.thrift.TException {
         take_result result = new take_result();
         try {
-          result.success = iface.take(args.n, args.light);
+          result.success = iface.take(args.msg_id, args.addr, args.n, args.light);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -860,7 +884,7 @@ public class IStorageModule {
       public takeSample_result getResult(I iface, takeSample_args args) throws org.apache.thrift.TException {
         takeSample_result result = new takeSample_result();
         try {
-          result.success = iface.takeSample(args.n, args.withRemplacement, args.seed, args.light);
+          result.success = iface.takeSample(args.msg_id, args.addr, args.n, args.withRemplacement, args.seed, args.light);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -889,7 +913,7 @@ public class IStorageModule {
       public collect_result getResult(I iface, collect_args args) throws org.apache.thrift.TException {
         collect_result result = new collect_result();
         try {
-          result.success = iface.collect(args.light);
+          result.success = iface.collect(args.msg_id, args.addr, args.light);
         } catch (org.ignis.rpc.IRemoteException ex) {
           result.ex = ex;
         }
@@ -1369,7 +1393,7 @@ public class IStorageModule {
       }
 
       public void start(I iface, take_args args, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
-        iface.take(args.n, args.light,resultHandler);
+        iface.take(args.msg_id, args.addr, args.n, args.light,resultHandler);
       }
     }
 
@@ -1434,7 +1458,7 @@ public class IStorageModule {
       }
 
       public void start(I iface, takeSample_args args, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
-        iface.takeSample(args.n, args.withRemplacement, args.seed, args.light,resultHandler);
+        iface.takeSample(args.msg_id, args.addr, args.n, args.withRemplacement, args.seed, args.light,resultHandler);
       }
     }
 
@@ -1499,7 +1523,7 @@ public class IStorageModule {
       }
 
       public void start(I iface, collect_args args, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
-        iface.collect(args.light,resultHandler);
+        iface.collect(args.msg_id, args.addr, args.light,resultHandler);
       }
     }
 
@@ -5834,19 +5858,25 @@ public class IStorageModule {
   public static class take_args implements org.apache.thrift.TBase<take_args, take_args._Fields>, java.io.Serializable, Cloneable, Comparable<take_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("take_args");
 
-    private static final org.apache.thrift.protocol.TField N_FIELD_DESC = new org.apache.thrift.protocol.TField("n", org.apache.thrift.protocol.TType.I64, (short)1);
-    private static final org.apache.thrift.protocol.TField LIGHT_FIELD_DESC = new org.apache.thrift.protocol.TField("light", org.apache.thrift.protocol.TType.BOOL, (short)2);
+    private static final org.apache.thrift.protocol.TField MSG_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("msg_id", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField ADDR_FIELD_DESC = new org.apache.thrift.protocol.TField("addr", org.apache.thrift.protocol.TType.STRING, (short)2);
+    private static final org.apache.thrift.protocol.TField N_FIELD_DESC = new org.apache.thrift.protocol.TField("n", org.apache.thrift.protocol.TType.I64, (short)3);
+    private static final org.apache.thrift.protocol.TField LIGHT_FIELD_DESC = new org.apache.thrift.protocol.TField("light", org.apache.thrift.protocol.TType.BOOL, (short)4);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new take_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new take_argsTupleSchemeFactory();
 
+    private long msg_id; // required
+    private java.lang.String addr; // required
     private long n; // required
     private boolean light; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      N((short)1, "n"),
-      LIGHT((short)2, "light");
+      MSG_ID((short)1, "msg_id"),
+      ADDR((short)2, "addr"),
+      N((short)3, "n"),
+      LIGHT((short)4, "light");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -5861,9 +5891,13 @@ public class IStorageModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // N
+          case 1: // MSG_ID
+            return MSG_ID;
+          case 2: // ADDR
+            return ADDR;
+          case 3: // N
             return N;
-          case 2: // LIGHT
+          case 4: // LIGHT
             return LIGHT;
           default:
             return null;
@@ -5905,12 +5939,17 @@ public class IStorageModule {
     }
 
     // isset id assignments
-    private static final int __N_ISSET_ID = 0;
-    private static final int __LIGHT_ISSET_ID = 1;
+    private static final int __MSG_ID_ISSET_ID = 0;
+    private static final int __N_ISSET_ID = 1;
+    private static final int __LIGHT_ISSET_ID = 2;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.MSG_ID, new org.apache.thrift.meta_data.FieldMetaData("msg_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.ADDR, new org.apache.thrift.meta_data.FieldMetaData("addr", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       tmpMap.put(_Fields.N, new org.apache.thrift.meta_data.FieldMetaData("n", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.LIGHT, new org.apache.thrift.meta_data.FieldMetaData("light", org.apache.thrift.TFieldRequirementType.DEFAULT, 
@@ -5923,10 +5962,15 @@ public class IStorageModule {
     }
 
     public take_args(
+      long msg_id,
+      java.lang.String addr,
       long n,
       boolean light)
     {
       this();
+      this.msg_id = msg_id;
+      setMsg_idIsSet(true);
+      this.addr = addr;
       this.n = n;
       setNIsSet(true);
       this.light = light;
@@ -5938,6 +5982,10 @@ public class IStorageModule {
      */
     public take_args(take_args other) {
       __isset_bitfield = other.__isset_bitfield;
+      this.msg_id = other.msg_id;
+      if (other.isSetAddr()) {
+        this.addr = other.addr;
+      }
       this.n = other.n;
       this.light = other.light;
     }
@@ -5948,10 +5996,60 @@ public class IStorageModule {
 
     @Override
     public void clear() {
+      setMsg_idIsSet(false);
+      this.msg_id = 0;
+      this.addr = null;
       setNIsSet(false);
       this.n = 0;
       setLightIsSet(false);
       this.light = false;
+    }
+
+    public long getMsg_id() {
+      return this.msg_id;
+    }
+
+    public take_args setMsg_id(long msg_id) {
+      this.msg_id = msg_id;
+      setMsg_idIsSet(true);
+      return this;
+    }
+
+    public void unsetMsg_id() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __MSG_ID_ISSET_ID);
+    }
+
+    /** Returns true if field msg_id is set (has been assigned a value) and false otherwise */
+    public boolean isSetMsg_id() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __MSG_ID_ISSET_ID);
+    }
+
+    public void setMsg_idIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __MSG_ID_ISSET_ID, value);
+    }
+
+    public java.lang.String getAddr() {
+      return this.addr;
+    }
+
+    public take_args setAddr(java.lang.String addr) {
+      this.addr = addr;
+      return this;
+    }
+
+    public void unsetAddr() {
+      this.addr = null;
+    }
+
+    /** Returns true if field addr is set (has been assigned a value) and false otherwise */
+    public boolean isSetAddr() {
+      return this.addr != null;
+    }
+
+    public void setAddrIsSet(boolean value) {
+      if (!value) {
+        this.addr = null;
+      }
     }
 
     public long getN() {
@@ -6002,6 +6100,22 @@ public class IStorageModule {
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case MSG_ID:
+        if (value == null) {
+          unsetMsg_id();
+        } else {
+          setMsg_id((java.lang.Long)value);
+        }
+        break;
+
+      case ADDR:
+        if (value == null) {
+          unsetAddr();
+        } else {
+          setAddr((java.lang.String)value);
+        }
+        break;
+
       case N:
         if (value == null) {
           unsetN();
@@ -6023,6 +6137,12 @@ public class IStorageModule {
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case MSG_ID:
+        return getMsg_id();
+
+      case ADDR:
+        return getAddr();
+
       case N:
         return getN();
 
@@ -6040,6 +6160,10 @@ public class IStorageModule {
       }
 
       switch (field) {
+      case MSG_ID:
+        return isSetMsg_id();
+      case ADDR:
+        return isSetAddr();
       case N:
         return isSetN();
       case LIGHT:
@@ -6062,6 +6186,24 @@ public class IStorageModule {
         return false;
       if (this == that)
         return true;
+
+      boolean this_present_msg_id = true;
+      boolean that_present_msg_id = true;
+      if (this_present_msg_id || that_present_msg_id) {
+        if (!(this_present_msg_id && that_present_msg_id))
+          return false;
+        if (this.msg_id != that.msg_id)
+          return false;
+      }
+
+      boolean this_present_addr = true && this.isSetAddr();
+      boolean that_present_addr = true && that.isSetAddr();
+      if (this_present_addr || that_present_addr) {
+        if (!(this_present_addr && that_present_addr))
+          return false;
+        if (!this.addr.equals(that.addr))
+          return false;
+      }
 
       boolean this_present_n = true;
       boolean that_present_n = true;
@@ -6088,6 +6230,12 @@ public class IStorageModule {
     public int hashCode() {
       int hashCode = 1;
 
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(msg_id);
+
+      hashCode = hashCode * 8191 + ((isSetAddr()) ? 131071 : 524287);
+      if (isSetAddr())
+        hashCode = hashCode * 8191 + addr.hashCode();
+
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(n);
 
       hashCode = hashCode * 8191 + ((light) ? 131071 : 524287);
@@ -6103,6 +6251,26 @@ public class IStorageModule {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetMsg_id()).compareTo(other.isSetMsg_id());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetMsg_id()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.msg_id, other.msg_id);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetAddr()).compareTo(other.isSetAddr());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetAddr()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.addr, other.addr);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = java.lang.Boolean.valueOf(isSetN()).compareTo(other.isSetN());
       if (lastComparison != 0) {
         return lastComparison;
@@ -6143,6 +6311,18 @@ public class IStorageModule {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("take_args(");
       boolean first = true;
 
+      sb.append("msg_id:");
+      sb.append(this.msg_id);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("addr:");
+      if (this.addr == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.addr);
+      }
+      first = false;
+      if (!first) sb.append(", ");
       sb.append("n:");
       sb.append(this.n);
       first = false;
@@ -6195,7 +6375,23 @@ public class IStorageModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // N
+            case 1: // MSG_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.msg_id = iprot.readI64();
+                struct.setMsg_idIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // ADDR
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.addr = iprot.readString();
+                struct.setAddrIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // N
               if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
                 struct.n = iprot.readI64();
                 struct.setNIsSet(true);
@@ -6203,7 +6399,7 @@ public class IStorageModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // LIGHT
+            case 4: // LIGHT
               if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
                 struct.light = iprot.readBool();
                 struct.setLightIsSet(true);
@@ -6226,6 +6422,14 @@ public class IStorageModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(MSG_ID_FIELD_DESC);
+        oprot.writeI64(struct.msg_id);
+        oprot.writeFieldEnd();
+        if (struct.addr != null) {
+          oprot.writeFieldBegin(ADDR_FIELD_DESC);
+          oprot.writeString(struct.addr);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldBegin(N_FIELD_DESC);
         oprot.writeI64(struct.n);
         oprot.writeFieldEnd();
@@ -6250,13 +6454,25 @@ public class IStorageModule {
       public void write(org.apache.thrift.protocol.TProtocol prot, take_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetN()) {
+        if (struct.isSetMsg_id()) {
           optionals.set(0);
         }
-        if (struct.isSetLight()) {
+        if (struct.isSetAddr()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetN()) {
+          optionals.set(2);
+        }
+        if (struct.isSetLight()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
+        if (struct.isSetMsg_id()) {
+          oprot.writeI64(struct.msg_id);
+        }
+        if (struct.isSetAddr()) {
+          oprot.writeString(struct.addr);
+        }
         if (struct.isSetN()) {
           oprot.writeI64(struct.n);
         }
@@ -6268,12 +6484,20 @@ public class IStorageModule {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, take_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
+          struct.msg_id = iprot.readI64();
+          struct.setMsg_idIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.addr = iprot.readString();
+          struct.setAddrIsSet(true);
+        }
+        if (incoming.get(2)) {
           struct.n = iprot.readI64();
           struct.setNIsSet(true);
         }
-        if (incoming.get(1)) {
+        if (incoming.get(3)) {
           struct.light = iprot.readBool();
           struct.setLightIsSet(true);
         }
@@ -6770,14 +6994,18 @@ public class IStorageModule {
   public static class takeSample_args implements org.apache.thrift.TBase<takeSample_args, takeSample_args._Fields>, java.io.Serializable, Cloneable, Comparable<takeSample_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("takeSample_args");
 
-    private static final org.apache.thrift.protocol.TField N_FIELD_DESC = new org.apache.thrift.protocol.TField("n", org.apache.thrift.protocol.TType.I64, (short)1);
-    private static final org.apache.thrift.protocol.TField WITH_REMPLACEMENT_FIELD_DESC = new org.apache.thrift.protocol.TField("withRemplacement", org.apache.thrift.protocol.TType.BOOL, (short)2);
-    private static final org.apache.thrift.protocol.TField SEED_FIELD_DESC = new org.apache.thrift.protocol.TField("seed", org.apache.thrift.protocol.TType.I32, (short)3);
-    private static final org.apache.thrift.protocol.TField LIGHT_FIELD_DESC = new org.apache.thrift.protocol.TField("light", org.apache.thrift.protocol.TType.BOOL, (short)4);
+    private static final org.apache.thrift.protocol.TField MSG_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("msg_id", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField ADDR_FIELD_DESC = new org.apache.thrift.protocol.TField("addr", org.apache.thrift.protocol.TType.STRING, (short)2);
+    private static final org.apache.thrift.protocol.TField N_FIELD_DESC = new org.apache.thrift.protocol.TField("n", org.apache.thrift.protocol.TType.I64, (short)3);
+    private static final org.apache.thrift.protocol.TField WITH_REMPLACEMENT_FIELD_DESC = new org.apache.thrift.protocol.TField("withRemplacement", org.apache.thrift.protocol.TType.BOOL, (short)4);
+    private static final org.apache.thrift.protocol.TField SEED_FIELD_DESC = new org.apache.thrift.protocol.TField("seed", org.apache.thrift.protocol.TType.I32, (short)5);
+    private static final org.apache.thrift.protocol.TField LIGHT_FIELD_DESC = new org.apache.thrift.protocol.TField("light", org.apache.thrift.protocol.TType.BOOL, (short)6);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new takeSample_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new takeSample_argsTupleSchemeFactory();
 
+    private long msg_id; // required
+    private java.lang.String addr; // required
     private long n; // required
     private boolean withRemplacement; // required
     private int seed; // required
@@ -6785,10 +7013,12 @@ public class IStorageModule {
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      N((short)1, "n"),
-      WITH_REMPLACEMENT((short)2, "withRemplacement"),
-      SEED((short)3, "seed"),
-      LIGHT((short)4, "light");
+      MSG_ID((short)1, "msg_id"),
+      ADDR((short)2, "addr"),
+      N((short)3, "n"),
+      WITH_REMPLACEMENT((short)4, "withRemplacement"),
+      SEED((short)5, "seed"),
+      LIGHT((short)6, "light");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -6803,13 +7033,17 @@ public class IStorageModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // N
+          case 1: // MSG_ID
+            return MSG_ID;
+          case 2: // ADDR
+            return ADDR;
+          case 3: // N
             return N;
-          case 2: // WITH_REMPLACEMENT
+          case 4: // WITH_REMPLACEMENT
             return WITH_REMPLACEMENT;
-          case 3: // SEED
+          case 5: // SEED
             return SEED;
-          case 4: // LIGHT
+          case 6: // LIGHT
             return LIGHT;
           default:
             return null;
@@ -6851,14 +7085,19 @@ public class IStorageModule {
     }
 
     // isset id assignments
-    private static final int __N_ISSET_ID = 0;
-    private static final int __WITHREMPLACEMENT_ISSET_ID = 1;
-    private static final int __SEED_ISSET_ID = 2;
-    private static final int __LIGHT_ISSET_ID = 3;
+    private static final int __MSG_ID_ISSET_ID = 0;
+    private static final int __N_ISSET_ID = 1;
+    private static final int __WITHREMPLACEMENT_ISSET_ID = 2;
+    private static final int __SEED_ISSET_ID = 3;
+    private static final int __LIGHT_ISSET_ID = 4;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.MSG_ID, new org.apache.thrift.meta_data.FieldMetaData("msg_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.ADDR, new org.apache.thrift.meta_data.FieldMetaData("addr", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       tmpMap.put(_Fields.N, new org.apache.thrift.meta_data.FieldMetaData("n", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.WITH_REMPLACEMENT, new org.apache.thrift.meta_data.FieldMetaData("withRemplacement", org.apache.thrift.TFieldRequirementType.DEFAULT, 
@@ -6875,12 +7114,17 @@ public class IStorageModule {
     }
 
     public takeSample_args(
+      long msg_id,
+      java.lang.String addr,
       long n,
       boolean withRemplacement,
       int seed,
       boolean light)
     {
       this();
+      this.msg_id = msg_id;
+      setMsg_idIsSet(true);
+      this.addr = addr;
       this.n = n;
       setNIsSet(true);
       this.withRemplacement = withRemplacement;
@@ -6896,6 +7140,10 @@ public class IStorageModule {
      */
     public takeSample_args(takeSample_args other) {
       __isset_bitfield = other.__isset_bitfield;
+      this.msg_id = other.msg_id;
+      if (other.isSetAddr()) {
+        this.addr = other.addr;
+      }
       this.n = other.n;
       this.withRemplacement = other.withRemplacement;
       this.seed = other.seed;
@@ -6908,6 +7156,9 @@ public class IStorageModule {
 
     @Override
     public void clear() {
+      setMsg_idIsSet(false);
+      this.msg_id = 0;
+      this.addr = null;
       setNIsSet(false);
       this.n = 0;
       setWithRemplacementIsSet(false);
@@ -6916,6 +7167,53 @@ public class IStorageModule {
       this.seed = 0;
       setLightIsSet(false);
       this.light = false;
+    }
+
+    public long getMsg_id() {
+      return this.msg_id;
+    }
+
+    public takeSample_args setMsg_id(long msg_id) {
+      this.msg_id = msg_id;
+      setMsg_idIsSet(true);
+      return this;
+    }
+
+    public void unsetMsg_id() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __MSG_ID_ISSET_ID);
+    }
+
+    /** Returns true if field msg_id is set (has been assigned a value) and false otherwise */
+    public boolean isSetMsg_id() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __MSG_ID_ISSET_ID);
+    }
+
+    public void setMsg_idIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __MSG_ID_ISSET_ID, value);
+    }
+
+    public java.lang.String getAddr() {
+      return this.addr;
+    }
+
+    public takeSample_args setAddr(java.lang.String addr) {
+      this.addr = addr;
+      return this;
+    }
+
+    public void unsetAddr() {
+      this.addr = null;
+    }
+
+    /** Returns true if field addr is set (has been assigned a value) and false otherwise */
+    public boolean isSetAddr() {
+      return this.addr != null;
+    }
+
+    public void setAddrIsSet(boolean value) {
+      if (!value) {
+        this.addr = null;
+      }
     }
 
     public long getN() {
@@ -7012,6 +7310,22 @@ public class IStorageModule {
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case MSG_ID:
+        if (value == null) {
+          unsetMsg_id();
+        } else {
+          setMsg_id((java.lang.Long)value);
+        }
+        break;
+
+      case ADDR:
+        if (value == null) {
+          unsetAddr();
+        } else {
+          setAddr((java.lang.String)value);
+        }
+        break;
+
       case N:
         if (value == null) {
           unsetN();
@@ -7049,6 +7363,12 @@ public class IStorageModule {
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case MSG_ID:
+        return getMsg_id();
+
+      case ADDR:
+        return getAddr();
+
       case N:
         return getN();
 
@@ -7072,6 +7392,10 @@ public class IStorageModule {
       }
 
       switch (field) {
+      case MSG_ID:
+        return isSetMsg_id();
+      case ADDR:
+        return isSetAddr();
       case N:
         return isSetN();
       case WITH_REMPLACEMENT:
@@ -7098,6 +7422,24 @@ public class IStorageModule {
         return false;
       if (this == that)
         return true;
+
+      boolean this_present_msg_id = true;
+      boolean that_present_msg_id = true;
+      if (this_present_msg_id || that_present_msg_id) {
+        if (!(this_present_msg_id && that_present_msg_id))
+          return false;
+        if (this.msg_id != that.msg_id)
+          return false;
+      }
+
+      boolean this_present_addr = true && this.isSetAddr();
+      boolean that_present_addr = true && that.isSetAddr();
+      if (this_present_addr || that_present_addr) {
+        if (!(this_present_addr && that_present_addr))
+          return false;
+        if (!this.addr.equals(that.addr))
+          return false;
+      }
 
       boolean this_present_n = true;
       boolean that_present_n = true;
@@ -7142,6 +7484,12 @@ public class IStorageModule {
     public int hashCode() {
       int hashCode = 1;
 
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(msg_id);
+
+      hashCode = hashCode * 8191 + ((isSetAddr()) ? 131071 : 524287);
+      if (isSetAddr())
+        hashCode = hashCode * 8191 + addr.hashCode();
+
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(n);
 
       hashCode = hashCode * 8191 + ((withRemplacement) ? 131071 : 524287);
@@ -7161,6 +7509,26 @@ public class IStorageModule {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetMsg_id()).compareTo(other.isSetMsg_id());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetMsg_id()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.msg_id, other.msg_id);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetAddr()).compareTo(other.isSetAddr());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetAddr()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.addr, other.addr);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = java.lang.Boolean.valueOf(isSetN()).compareTo(other.isSetN());
       if (lastComparison != 0) {
         return lastComparison;
@@ -7221,6 +7589,18 @@ public class IStorageModule {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("takeSample_args(");
       boolean first = true;
 
+      sb.append("msg_id:");
+      sb.append(this.msg_id);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("addr:");
+      if (this.addr == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.addr);
+      }
+      first = false;
+      if (!first) sb.append(", ");
       sb.append("n:");
       sb.append(this.n);
       first = false;
@@ -7281,7 +7661,23 @@ public class IStorageModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // N
+            case 1: // MSG_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.msg_id = iprot.readI64();
+                struct.setMsg_idIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // ADDR
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.addr = iprot.readString();
+                struct.setAddrIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // N
               if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
                 struct.n = iprot.readI64();
                 struct.setNIsSet(true);
@@ -7289,7 +7685,7 @@ public class IStorageModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // WITH_REMPLACEMENT
+            case 4: // WITH_REMPLACEMENT
               if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
                 struct.withRemplacement = iprot.readBool();
                 struct.setWithRemplacementIsSet(true);
@@ -7297,7 +7693,7 @@ public class IStorageModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 3: // SEED
+            case 5: // SEED
               if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
                 struct.seed = iprot.readI32();
                 struct.setSeedIsSet(true);
@@ -7305,7 +7701,7 @@ public class IStorageModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 4: // LIGHT
+            case 6: // LIGHT
               if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
                 struct.light = iprot.readBool();
                 struct.setLightIsSet(true);
@@ -7328,6 +7724,14 @@ public class IStorageModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(MSG_ID_FIELD_DESC);
+        oprot.writeI64(struct.msg_id);
+        oprot.writeFieldEnd();
+        if (struct.addr != null) {
+          oprot.writeFieldBegin(ADDR_FIELD_DESC);
+          oprot.writeString(struct.addr);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldBegin(N_FIELD_DESC);
         oprot.writeI64(struct.n);
         oprot.writeFieldEnd();
@@ -7358,19 +7762,31 @@ public class IStorageModule {
       public void write(org.apache.thrift.protocol.TProtocol prot, takeSample_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetN()) {
+        if (struct.isSetMsg_id()) {
           optionals.set(0);
         }
-        if (struct.isSetWithRemplacement()) {
+        if (struct.isSetAddr()) {
           optionals.set(1);
         }
-        if (struct.isSetSeed()) {
+        if (struct.isSetN()) {
           optionals.set(2);
         }
-        if (struct.isSetLight()) {
+        if (struct.isSetWithRemplacement()) {
           optionals.set(3);
         }
-        oprot.writeBitSet(optionals, 4);
+        if (struct.isSetSeed()) {
+          optionals.set(4);
+        }
+        if (struct.isSetLight()) {
+          optionals.set(5);
+        }
+        oprot.writeBitSet(optionals, 6);
+        if (struct.isSetMsg_id()) {
+          oprot.writeI64(struct.msg_id);
+        }
+        if (struct.isSetAddr()) {
+          oprot.writeString(struct.addr);
+        }
         if (struct.isSetN()) {
           oprot.writeI64(struct.n);
         }
@@ -7388,20 +7804,28 @@ public class IStorageModule {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, takeSample_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(4);
+        java.util.BitSet incoming = iprot.readBitSet(6);
         if (incoming.get(0)) {
+          struct.msg_id = iprot.readI64();
+          struct.setMsg_idIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.addr = iprot.readString();
+          struct.setAddrIsSet(true);
+        }
+        if (incoming.get(2)) {
           struct.n = iprot.readI64();
           struct.setNIsSet(true);
         }
-        if (incoming.get(1)) {
+        if (incoming.get(3)) {
           struct.withRemplacement = iprot.readBool();
           struct.setWithRemplacementIsSet(true);
         }
-        if (incoming.get(2)) {
+        if (incoming.get(4)) {
           struct.seed = iprot.readI32();
           struct.setSeedIsSet(true);
         }
-        if (incoming.get(3)) {
+        if (incoming.get(5)) {
           struct.light = iprot.readBool();
           struct.setLightIsSet(true);
         }
@@ -7898,16 +8322,22 @@ public class IStorageModule {
   public static class collect_args implements org.apache.thrift.TBase<collect_args, collect_args._Fields>, java.io.Serializable, Cloneable, Comparable<collect_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("collect_args");
 
-    private static final org.apache.thrift.protocol.TField LIGHT_FIELD_DESC = new org.apache.thrift.protocol.TField("light", org.apache.thrift.protocol.TType.BOOL, (short)1);
+    private static final org.apache.thrift.protocol.TField MSG_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("msg_id", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField ADDR_FIELD_DESC = new org.apache.thrift.protocol.TField("addr", org.apache.thrift.protocol.TType.STRING, (short)2);
+    private static final org.apache.thrift.protocol.TField LIGHT_FIELD_DESC = new org.apache.thrift.protocol.TField("light", org.apache.thrift.protocol.TType.BOOL, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new collect_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new collect_argsTupleSchemeFactory();
 
+    private long msg_id; // required
+    private java.lang.String addr; // required
     private boolean light; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      LIGHT((short)1, "light");
+      MSG_ID((short)1, "msg_id"),
+      ADDR((short)2, "addr"),
+      LIGHT((short)3, "light");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -7922,7 +8352,11 @@ public class IStorageModule {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // LIGHT
+          case 1: // MSG_ID
+            return MSG_ID;
+          case 2: // ADDR
+            return ADDR;
+          case 3: // LIGHT
             return LIGHT;
           default:
             return null;
@@ -7964,11 +8398,16 @@ public class IStorageModule {
     }
 
     // isset id assignments
-    private static final int __LIGHT_ISSET_ID = 0;
+    private static final int __MSG_ID_ISSET_ID = 0;
+    private static final int __LIGHT_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.MSG_ID, new org.apache.thrift.meta_data.FieldMetaData("msg_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.ADDR, new org.apache.thrift.meta_data.FieldMetaData("addr", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       tmpMap.put(_Fields.LIGHT, new org.apache.thrift.meta_data.FieldMetaData("light", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
@@ -7979,9 +8418,14 @@ public class IStorageModule {
     }
 
     public collect_args(
+      long msg_id,
+      java.lang.String addr,
       boolean light)
     {
       this();
+      this.msg_id = msg_id;
+      setMsg_idIsSet(true);
+      this.addr = addr;
       this.light = light;
       setLightIsSet(true);
     }
@@ -7991,6 +8435,10 @@ public class IStorageModule {
      */
     public collect_args(collect_args other) {
       __isset_bitfield = other.__isset_bitfield;
+      this.msg_id = other.msg_id;
+      if (other.isSetAddr()) {
+        this.addr = other.addr;
+      }
       this.light = other.light;
     }
 
@@ -8000,8 +8448,58 @@ public class IStorageModule {
 
     @Override
     public void clear() {
+      setMsg_idIsSet(false);
+      this.msg_id = 0;
+      this.addr = null;
       setLightIsSet(false);
       this.light = false;
+    }
+
+    public long getMsg_id() {
+      return this.msg_id;
+    }
+
+    public collect_args setMsg_id(long msg_id) {
+      this.msg_id = msg_id;
+      setMsg_idIsSet(true);
+      return this;
+    }
+
+    public void unsetMsg_id() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __MSG_ID_ISSET_ID);
+    }
+
+    /** Returns true if field msg_id is set (has been assigned a value) and false otherwise */
+    public boolean isSetMsg_id() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __MSG_ID_ISSET_ID);
+    }
+
+    public void setMsg_idIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __MSG_ID_ISSET_ID, value);
+    }
+
+    public java.lang.String getAddr() {
+      return this.addr;
+    }
+
+    public collect_args setAddr(java.lang.String addr) {
+      this.addr = addr;
+      return this;
+    }
+
+    public void unsetAddr() {
+      this.addr = null;
+    }
+
+    /** Returns true if field addr is set (has been assigned a value) and false otherwise */
+    public boolean isSetAddr() {
+      return this.addr != null;
+    }
+
+    public void setAddrIsSet(boolean value) {
+      if (!value) {
+        this.addr = null;
+      }
     }
 
     public boolean isLight() {
@@ -8029,6 +8527,22 @@ public class IStorageModule {
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case MSG_ID:
+        if (value == null) {
+          unsetMsg_id();
+        } else {
+          setMsg_id((java.lang.Long)value);
+        }
+        break;
+
+      case ADDR:
+        if (value == null) {
+          unsetAddr();
+        } else {
+          setAddr((java.lang.String)value);
+        }
+        break;
+
       case LIGHT:
         if (value == null) {
           unsetLight();
@@ -8042,6 +8556,12 @@ public class IStorageModule {
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case MSG_ID:
+        return getMsg_id();
+
+      case ADDR:
+        return getAddr();
+
       case LIGHT:
         return isLight();
 
@@ -8056,6 +8576,10 @@ public class IStorageModule {
       }
 
       switch (field) {
+      case MSG_ID:
+        return isSetMsg_id();
+      case ADDR:
+        return isSetAddr();
       case LIGHT:
         return isSetLight();
       }
@@ -8077,6 +8601,24 @@ public class IStorageModule {
       if (this == that)
         return true;
 
+      boolean this_present_msg_id = true;
+      boolean that_present_msg_id = true;
+      if (this_present_msg_id || that_present_msg_id) {
+        if (!(this_present_msg_id && that_present_msg_id))
+          return false;
+        if (this.msg_id != that.msg_id)
+          return false;
+      }
+
+      boolean this_present_addr = true && this.isSetAddr();
+      boolean that_present_addr = true && that.isSetAddr();
+      if (this_present_addr || that_present_addr) {
+        if (!(this_present_addr && that_present_addr))
+          return false;
+        if (!this.addr.equals(that.addr))
+          return false;
+      }
+
       boolean this_present_light = true;
       boolean that_present_light = true;
       if (this_present_light || that_present_light) {
@@ -8093,6 +8635,12 @@ public class IStorageModule {
     public int hashCode() {
       int hashCode = 1;
 
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(msg_id);
+
+      hashCode = hashCode * 8191 + ((isSetAddr()) ? 131071 : 524287);
+      if (isSetAddr())
+        hashCode = hashCode * 8191 + addr.hashCode();
+
       hashCode = hashCode * 8191 + ((light) ? 131071 : 524287);
 
       return hashCode;
@@ -8106,6 +8654,26 @@ public class IStorageModule {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetMsg_id()).compareTo(other.isSetMsg_id());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetMsg_id()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.msg_id, other.msg_id);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetAddr()).compareTo(other.isSetAddr());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetAddr()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.addr, other.addr);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = java.lang.Boolean.valueOf(isSetLight()).compareTo(other.isSetLight());
       if (lastComparison != 0) {
         return lastComparison;
@@ -8136,6 +8704,18 @@ public class IStorageModule {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("collect_args(");
       boolean first = true;
 
+      sb.append("msg_id:");
+      sb.append(this.msg_id);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("addr:");
+      if (this.addr == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.addr);
+      }
+      first = false;
+      if (!first) sb.append(", ");
       sb.append("light:");
       sb.append(this.light);
       first = false;
@@ -8184,7 +8764,23 @@ public class IStorageModule {
             break;
           }
           switch (schemeField.id) {
-            case 1: // LIGHT
+            case 1: // MSG_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.msg_id = iprot.readI64();
+                struct.setMsg_idIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // ADDR
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.addr = iprot.readString();
+                struct.setAddrIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // LIGHT
               if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
                 struct.light = iprot.readBool();
                 struct.setLightIsSet(true);
@@ -8207,6 +8803,14 @@ public class IStorageModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(MSG_ID_FIELD_DESC);
+        oprot.writeI64(struct.msg_id);
+        oprot.writeFieldEnd();
+        if (struct.addr != null) {
+          oprot.writeFieldBegin(ADDR_FIELD_DESC);
+          oprot.writeString(struct.addr);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldBegin(LIGHT_FIELD_DESC);
         oprot.writeBool(struct.light);
         oprot.writeFieldEnd();
@@ -8228,10 +8832,22 @@ public class IStorageModule {
       public void write(org.apache.thrift.protocol.TProtocol prot, collect_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetLight()) {
+        if (struct.isSetMsg_id()) {
           optionals.set(0);
         }
-        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetAddr()) {
+          optionals.set(1);
+        }
+        if (struct.isSetLight()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetMsg_id()) {
+          oprot.writeI64(struct.msg_id);
+        }
+        if (struct.isSetAddr()) {
+          oprot.writeString(struct.addr);
+        }
         if (struct.isSetLight()) {
           oprot.writeBool(struct.light);
         }
@@ -8240,8 +8856,16 @@ public class IStorageModule {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, collect_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
+          struct.msg_id = iprot.readI64();
+          struct.setMsg_idIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.addr = iprot.readString();
+          struct.setAddrIsSet(true);
+        }
+        if (incoming.get(2)) {
           struct.light = iprot.readBool();
           struct.setLightIsSet(true);
         }

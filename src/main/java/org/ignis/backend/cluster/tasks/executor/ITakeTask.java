@@ -89,7 +89,8 @@ public class ITakeTask extends IExecutorContextTask {
                 }
             }
             barrier.await();
-            ByteBuffer bytes = executor.getStorageModule().take(shared.count.get(executor), ligth);
+            ByteBuffer bytes = executor.getStorageModule()
+                    .take(executor.getId(), "none", shared.count.get(executor), ligth);//TODO
             if (ligth) {
                 shared.result.put(executor, bytes);
             }
@@ -113,19 +114,19 @@ public class ITakeTask extends IExecutorContextTask {
         }
     }
 
-    private void ligthMode(IExecutionContext context) throws Exception{
+    private void ligthMode(IExecutionContext context) throws Exception {
         if (barrier.await() == 0) {
-            int size = shared.result.values().stream().mapToInt(b->b.capacity()).sum();
+            int size = shared.result.values().stream().mapToInt(b -> b.capacity()).sum();
             ByteBuffer data = ByteBuffer.allocate(size);
             for (IExecutor e : executors) {
                 data.put(shared.result.get(e));
-            }    
+            }
             context.set("result", data);
         }
     }
 
-    private void directMode(IExecutionContext context) throws Exception{
-       throw new UnsupportedOperationException("Not supported yet."); 
+    private void directMode(IExecutionContext context) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //TODO
     }
 
 }

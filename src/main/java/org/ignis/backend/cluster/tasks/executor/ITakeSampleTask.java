@@ -90,7 +90,8 @@ public class ITakeSampleTask extends IExecutorContextTask {
             }
             barrier.await();
             long nExecutor = shared.count.get(executor);
-            ByteBuffer bytes = executor.getStorageModule().takeSample(nExecutor, withRemplacement, seed, ligth);
+            ByteBuffer bytes = executor.getStorageModule()
+                    .takeSample(executor.getId(), "none", nExecutor, withRemplacement, seed, ligth);//TODO
             if (ligth) {
                 shared.result.put(executor, null);
             }
@@ -187,7 +188,7 @@ public class ITakeSampleTask extends IExecutorContextTask {
     }
 
     private void directMode(IExecutionContext context) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");//TODO
     }
 
 }

@@ -79,10 +79,12 @@ public class IExecutionContext {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <V> void set(Object key, V value) {
         map.put(key, value);
     }
 
+    @SuppressWarnings("unchecked")
     public <V> V get(Object key) {
         return (V)map.get(key);
     }
