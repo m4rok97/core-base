@@ -16,7 +16,8 @@ RUN /tmp/python3/install && \
 	/tmp/pythrift/install && \
 	rm -fR /tmp/python3 && \
 	rm -fR /tmp/pythrift && \
-	pip3 install setuptools --upgrade
+	pip3 install setuptools --upgrade && \
+	pip3 install cloudpickle
 
 RUN { \
 		echo '#!/bin/bash'; \
