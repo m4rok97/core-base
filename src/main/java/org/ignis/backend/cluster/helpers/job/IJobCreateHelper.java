@@ -43,12 +43,12 @@ public final class IJobCreateHelper extends IJobHelper {
     public List<IExecutor> create() throws IgnisException {
         List<IExecutor> result = new ArrayList<>();
         ITaskScheduler.Builder sheduleBuilder = new ITaskScheduler.Builder(job.getLock());
+        sheduleBuilder.newDependency(job.getCluster().getScheduler());
         LOGGER.info(log() + "Registering job with " + job.getCluster().getContainers().size() + " executors");
         for (IContainer container : job.getCluster().getContainers()) {
             IExecutorStub stub = new IExecutorStub(job.getId(), job.getType(), container, properties);
             IExecutor executor = container.createExecutor(job.getId(), stub);
             sheduleBuilder.newTask(new IExecutorCreateTask(this, executor));
-            sheduleBuilder.newDependency(job.getCluster().getScheduler());
             result.add(executor);
         }
         job.putScheduler(sheduleBuilder.build());

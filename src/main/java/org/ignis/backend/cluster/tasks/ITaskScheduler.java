@@ -83,7 +83,7 @@ public class ITaskScheduler {
         execute(pool, new IExecutionContext());
         return context;
     }
-    
+
     protected void execute(IThreadPool pool, IExecutionContext context) throws IgnisException {
         for (int _try = 0;; _try++) {
             List<Future<ITaskScheduler>> depFutures = new ArrayList<>();
@@ -95,10 +95,10 @@ public class ITaskScheduler {
                 try {
                     depFutures.get(i).get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    if (error == null) {
-                        error = new IgnisException("Dependency execution failed", ex);
+                    if (ex.getCause() instanceof IgnisException) {
+                        error = (IgnisException) ex.getCause();
                     } else {
-                        LOGGER.warn("Dependency execution failed", ex);
+                        error = new IgnisException(ex.getMessage(), ex);
                     }
                 }
             }
@@ -110,9 +110,9 @@ public class ITaskScheduler {
             }
             try {
                 execute(pool, locks, context);
-            } catch (InterruptedException | ExecutionException ex) {
-                if (_try == pool.getMaxFailures() - 1) {
-                    throw new IgnisException("Execution failed", ex);
+            } catch (IgnisException ex) {
+                if (_try == pool.getMaxFailures()) {
+                    throw ex;
                 }
                 LOGGER.error("Failed execution attempt " + (_try + 1) + ", retrying", ex);
                 continue;
@@ -121,25 +121,23 @@ public class ITaskScheduler {
         }
     }
 
-    private void execute(IThreadPool pool, List<ILock> locks, IExecutionContext context) throws InterruptedException, ExecutionException {
+    private void execute(IThreadPool pool, List<ILock> locks, IExecutionContext context) throws IgnisException {
         if (locks.isEmpty()) {
             List<Future<ITask>> futures = new ArrayList<>(tasks.size());
             for (ITask task : tasks) {
-                futures.add(pool.submit(task,context));
+                futures.add(pool.submit(task, context));
             }
+            IgnisException error = null;
             for (int i = 0; i < futures.size(); i++) {
                 try {
                     futures.get(i).get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    for (int j = i + 1; j < futures.size(); j++) {
-                        try {
-                            futures.get(i).get();
-                        } catch (InterruptedException | ExecutionException ex2) {
-                            LOGGER.warn("Executor Fails", ex2);
-                        }
-                    }
-                    throw ex;
+                    error = new IgnisException("Execution failed", ex);
+                    LOGGER.warn(error.getMessage(), ex);
                 }
+            }
+            if (error != null) {
+                throw error;
             }
         } else {
             synchronized (locks.get(0)) {

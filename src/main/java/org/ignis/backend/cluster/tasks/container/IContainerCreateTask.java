@@ -43,7 +43,17 @@ public final class IContainerCreateTask extends IContainerTask {
                 LOGGER.info(log() + "Container already running");
                 return;
             } catch (TException ex) {
-                LOGGER.warn(log() + "Container dead");
+                LOGGER.info(log() + "Reconnecting to the container");
+                try {
+                    container.connect();
+                } catch (TException ex2) {
+                    LOGGER.warn(log() + "Container dead");
+                    try {
+                        container.getStub().destroy();
+                    } catch (TException ex3) {
+                        //Destroy in the allocator
+                    }
+                }
             }
         }
         LOGGER.info(log() + "Starting new container");
