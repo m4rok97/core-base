@@ -59,6 +59,7 @@ public final class Main {
         String type = properties.getProperty(IPropsKeys.ALLOCATOR_TYPE);
         switch (type) {
             case "ancoris":
+                loadVarEnv(properties, IPropsKeys.ALLOCATOR_URL, "ALLOCATOR_URL");
                 return new IAncorisAllocator(properties.getProperty(IPropsKeys.ALLOCATOR_URL));
             case "ignis":
                 throw new UnsupportedOperationException("Allocator not implemented yet.");
