@@ -65,7 +65,6 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
         LOGGER.info("Stopping Backend server");
         try {
             server.stop();
-            attributes.destroyClusters();
         } catch (Exception ex) {
             throw new IgnisException(ex.getLocalizedMessage(), ex);
         }

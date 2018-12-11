@@ -124,6 +124,9 @@ public final class Main {
             LOGGER.error("Error parsing server port, aborting", ex);
             return;
         }
+        if(!attributes.defaultProperties.isProperty(IPropsKeys.DEBUG)){
+            attributes.destroyClusters();
+        }
         LOGGER.info("Backend stopped");
     }
 
