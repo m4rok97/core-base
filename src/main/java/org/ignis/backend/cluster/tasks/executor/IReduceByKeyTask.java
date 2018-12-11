@@ -19,6 +19,7 @@ package org.ignis.backend.cluster.tasks.executor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,18 +79,19 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
             shared.msgs.put(executorWithKeys.getKey(), new HashMap<>());
         }
 
-        long maxKeys = keys.size() / (load.size() * 4);
-        IExecutor exWithMaxKeys = null;
+        long loadFactor = keys.size() / (load.size() * 10) + 1;
+        long maxKeys = loadFactor;
         for (Map.Entry<Long, Set<IExecutor>> keyInExecutors : keys.entrySet()) {
-            for (IExecutor target : keyInExecutors.getValue()) {
+            Iterator<IExecutor> targets = keyInExecutors.getValue().iterator();
+            while (targets.hasNext()) {
+                IExecutor target = targets.next();
                 long eload = load.get(target);
                 if (eload == maxKeys) {
-                    if (target == exWithMaxKeys && keyInExecutors.getValue().size() > 1) {
-                        break;
+                    if (targets.hasNext()) {
+                        continue;
                     }
-                    maxKeys += 10;
-                    maxKeys *= 1.25;
-                    exWithMaxKeys = target;
+                    maxKeys += loadFactor;
+                    targets = keyInExecutors.getValue().iterator();
                 }
 
                 for (IExecutor source : keyInExecutors.getValue()) {
@@ -102,11 +104,12 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
                 load.put(target, eload + 1);
                 break;
             }
-        }/*
-        for (Map.Entry<IExecutor, Map<IExecutor, List<Long>>> e1 : shared.msgs.entrySet()){
-            System.out.println(e1.getKey().getContainer().getId()+":");
-            for(Map.Entry<IExecutor, List<Long>> e2:e1.getValue().entrySet()){
-                System.out.println("\t"+e2.getKey().getContainer().getId()+" -> " + e2.getValue().toString());
+        }
+        /*
+        for (Map.Entry<IExecutor, Map<IExecutor, List<Long>>> e1 : shared.msgs.entrySet()) {
+            System.out.println(e1.getKey().getContainer().getId() + ":");
+            for (Map.Entry<IExecutor, List<Long>> e2 : e1.getValue().entrySet()) {
+                System.out.println("\t" + e2.getKey().getContainer().getId() + " -> " + e2.getValue().toString());
             }
         }*/
     }

@@ -56,8 +56,8 @@ public class KeysModuleTest extends BackendTest {
         List<List<Long>> keys = new ArrayList<>();
         for (int i = 0; i < instances; i++) {
             keys.add(new ArrayList<>());
-            for (int j = 0; j < 10; j++) {
-                keys.get(i).add((Long) (long) random.nextInt(20));
+            for (int j = 0; j < 100 + i; j++) {
+                keys.get(i).add((Long) (long) random.nextInt(20 * instances));
             }
         }
 
@@ -80,7 +80,10 @@ public class KeysModuleTest extends BackendTest {
             mockJob.setPostmanModule(Mockito.mock(IPostmanModule.Iface.class, a -> null));
             mockJob.setReducerModule(Mockito.mock(IReducerModule.Iface.class, a -> null));
             mockJob.setKeysModule(Mockito.mock(IKeysModule.Iface.class, a -> null));
-            Mockito.when(mockJob.getKeysModule().getKeys()).thenReturn(keys.get(0), keys.subList(0, keys.size()).toArray(new List[0]));
+            Mockito.when(mockJob.getKeysModule().getKeys()).thenReturn(
+                    keys.get(0), 
+                    keys.size() > 0 ? keys.subList(1, keys.size()).toArray(new List[0]) : new List[0]
+            );
             mockJob.mock();
 
             IDataId read = jobService.readFile(job, "src/test/resources/LoremIpsum.txt");
