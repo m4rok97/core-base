@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.helpers.IHelper;
@@ -37,8 +38,13 @@ public final class IContainerDestroyTask extends IContainerTask {
     @Override
     public void execute(IExecutionContext context) throws IgnisException {
         LOGGER.info(log() + "Destroying container");
-        if(container.getStub().isRunning()){
-            container.getStub().destroy();
+        try {
+            if (container.getStub().isRunning()) {
+                container.getStub().destroy();
+            }
+        } catch (TException ex) {
+            LOGGER.warn(log() + "Container destroyed " + ex);
+            throw new IgnisException("Container destroyed", ex);
         }
         LOGGER.info(log() + "Container destroyed");
     }
