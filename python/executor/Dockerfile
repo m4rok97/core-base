@@ -19,7 +19,8 @@ RUN /tmp/python3/install && \
 	pip3 install --upgrade pip && \
 	pip3 install setuptools --upgrade && \
 	pip3 install cloudpickle && \
-	python3 ${IGNIS_HOME}/core/python/setup.py develop
+	cd ${IGNIS_HOME}/core/python/ && \
+	python3 setup.py develop
 
 RUN { \
 		echo '#!/bin/bash'; \
