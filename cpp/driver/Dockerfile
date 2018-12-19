@@ -19,6 +19,12 @@ RUN \
 
 
 FROM ignisframework/base-driver
+COPY --from=builder /root/boost /root/boost
+COPY --from=builder /root/thrift /root/thrift
+
+RUN /root/boost/install && \
+	/root/thrift/install && \
+	rm -fr /root/boost /root/thrift
 
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 RUN cp -R ${IGNIS_HOME}/core/cpp/* /
