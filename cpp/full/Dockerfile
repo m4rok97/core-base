@@ -1,12 +1,8 @@
 
 FROM ignisframework/base-full
 
+RUN apt -y install rapidjson-dev
 COPY --from=ignisframework/cpp-executor ${IGNIS_HOME} ${IGNIS_HOME}
+RUN cp -R ${IGNIS_HOME}/core/cpp/* /
 
-COPY --from=ignisframework/cpp-builder /root/jsoncpp /root/jsoncpp
 
-RUN \
-	yum -y install libgomp && \
-	cp -R ${IGNIS_HOME}/core/cpp/* / && \
-	/root/jsoncpp/install && \
-	rm -fr /root/jsoncpp

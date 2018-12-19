@@ -1,10 +1,9 @@
 
-FROM centos:7
+FROM ubuntu:18.04
 
 LABEL ignis=true
 ENV IGNIS_HOME="/opt/ignis"
 ENV PATH="${IGNIS_HOME}/bin:${PATH}"
-ENV THRIFT_VERSION=0.11.0
 
 RUN mkdir -p \
 	${IGNIS_HOME}/bin \

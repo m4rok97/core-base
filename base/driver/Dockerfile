@@ -38,12 +38,5 @@ RUN \
 
 FROM ignisframework/base-skel
 
-RUN yum -y install java-1.8.0-openjdk
+RUN apt update && apt -y install openjdk-8-jdk gcc g++
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
-
-COPY --from=builder /root/boost /root/boost
-COPY --from=builder /root/thrift /root/thrift
-
-RUN /root/boost/install && \
-	/root/thrift/install && \
-	rm -fr /root/boost /root/thrift

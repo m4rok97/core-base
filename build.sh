@@ -20,8 +20,6 @@ cd base
 cd ..
 
 cd cpp
-	cd builder
-		docker build -t ignisframework/cpp-builder .
 	cd ..
 	cd driver
 		docker build -t ignisframework/cpp-driver .
@@ -35,8 +33,6 @@ cd cpp
 cd ..
 
 cd python
-	cd builder
-		docker build -t ignisframework/python-builder .
 	cd ..
 	cd driver
 		docker build -t ignisframework/python-driver .

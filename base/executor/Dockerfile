@@ -17,6 +17,7 @@ RUN \
 
 FROM ignisframework/base-skel
 
+RUN apt update && apt -y install gcc g++
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 
 COPY --from=builder /root/boost /root/boost

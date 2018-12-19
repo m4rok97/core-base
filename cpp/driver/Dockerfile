@@ -1,8 +1,9 @@
 
-FROM ignisframework/cpp-builder as builder
+FROM ignisframework/base-builder as builder
 
 ARG SOURCE_CACHE=1
 RUN \
+	apt -y install rapidjson-dev && \
 	mkdir -p /tmp/core-cpp && \ 
 	cd /tmp/core-cpp && \
 	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/core-cpp.git /tmp/core-cpp && \
@@ -20,8 +21,4 @@ RUN \
 FROM ignisframework/base-driver
 
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
-
-RUN \
-	yum -y install libgomp && \
-	cp -R ${IGNIS_HOME}/core/cpp/* / && \
-	ldconfig
+RUN cp -R ${IGNIS_HOME}/core/cpp/* /
