@@ -19,7 +19,8 @@ RUN apt update -y && \
 
 COPY --from=builder /tmp/get-pip.py /tmp/get-pip.py
 RUN python3 /tmp/get-pip.py && \
-	rm -f /tmp/get-pip.py 
+	rm -f /tmp/get-pip.py  && \
+	pip3 install thrift==0.11
 
 RUN mkdir /run/sshd && \
 	ssh-keygen -A && \ 
