@@ -23,6 +23,7 @@ RUN python3 /tmp/get-pip.py && \
 
 RUN mkdir /run/sshd && \
 	ssh-keygen -A && \ 
+	sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/'  /etc/ssh/sshd_config && \
 	echo "root:root" | chpasswd
 	#chage -d 0 root
 
