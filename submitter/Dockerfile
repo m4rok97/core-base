@@ -21,7 +21,8 @@ COPY --from=builder /tmp/get-pip.py /tmp/get-pip.py
 RUN python3 /tmp/get-pip.py && \
 	rm -f /tmp/get-pip.py 
 
-RUN ssh-keygen -A && \ 
+RUN mkdir /run/sshd && \
+	ssh-keygen -A && \ 
 	echo "root:root" | chpasswd
 	#chage -d 0 root
 
