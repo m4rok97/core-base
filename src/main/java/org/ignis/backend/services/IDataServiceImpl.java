@@ -192,6 +192,24 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
         return result.execute();
     }
 
+    public IDataId sort(IDataId data, boolean ascending) throws TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            IData target = source.sort(ascending);
+            return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        }
+    }
+
+    public IDataId sortBy(IDataId data, ISource _function, boolean ascending) throws TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            IData target = source.sortBy(_function, ascending);
+            return new IDataId(data.getCluster(), data.getJob(), target.getId());
+        }
+    }
+
     @Override
     public void saveAsTextFile(IDataId data, String path, boolean join) throws TException {
         ICluster cluster = attributes.getCluster(data.getCluster());

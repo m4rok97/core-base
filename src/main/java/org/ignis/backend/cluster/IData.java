@@ -27,6 +27,7 @@ import org.ignis.backend.cluster.helpers.data.IDataMapHelper;
 import org.ignis.backend.cluster.helpers.data.IDataReduceHelper;
 import org.ignis.backend.cluster.helpers.data.IDataSaveHelper;
 import org.ignis.backend.cluster.helpers.data.IDataShuffleHelper;
+import org.ignis.backend.cluster.helpers.data.IDataSortHelper;
 import org.ignis.backend.cluster.helpers.data.IDataValuesHelper;
 import org.ignis.backend.cluster.helpers.data.IDataTakeHelper;
 import org.ignis.backend.cluster.tasks.ICacheSheduler;
@@ -153,6 +154,14 @@ public final class IData {
 
     public ILazy<ByteBuffer> collect(boolean light) {
         return new IDataCollectHelper(this, job.getProperties()).collect(light);
+    }
+
+    public IData sort(boolean ascending) {
+        return new IDataSortHelper(this, job.getProperties()).sort(ascending);
+    }
+
+    public IData sortBy(ISource function, boolean ascending) {
+        return new IDataSortHelper(this, job.getProperties()).sortBy(function, ascending);
     }
 
     public ILazy<Void> saveAsTextFile(String path, boolean join) {

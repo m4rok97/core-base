@@ -53,6 +53,7 @@ public final class IPropsKeys {
     public static final String TRANSPORT_COMPRESSION = "ignis.transport.compression";
     public static final String TRANSPORT_PORT = "ignis.transport.port";
     public static final String TRANSPORT_SERIALIZATION = "ignis.transport.serialization";
-    public static final String TRANSPORT_THREADS = "ignis.transport.threads ";
+    public static final String TRANSPORT_THREADS = "ignis.transport.threads";
+    public static final String TRANSPORT_TYPE = "ignis.transport.type";
 
 }
