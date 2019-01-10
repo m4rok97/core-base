@@ -53,7 +53,7 @@ public final class IProperties {
     public String getString(String key) throws IgnisException {
         return IPropertyParser.getString(this, key);
     }
-    
+
     public boolean getBoolean(String key) throws IgnisException {
         return IPropertyParser.getBoolean(this, key);
     }
@@ -64,6 +64,14 @@ public final class IProperties {
 
     public long getLong(String key) throws IgnisException {
         return IPropertyParser.getLong(this, key);
+    }
+
+    public float getFloat(String key) throws IgnisException {
+        return IPropertyParser.getFloat(this, key);
+    }
+
+    public double getDouble(String key) throws IgnisException {
+        return IPropertyParser.getDouble(this, key);
     }
 
     public long getSILong(String key) throws IgnisException {
@@ -121,7 +129,7 @@ public final class IProperties {
 
     private String fixKey(String key) {
         if (key.startsWith("value")) {
-            if(key.length() == 5){
+            if (key.length() == 5) {
                 return "";
             }
             key = key.substring(6);

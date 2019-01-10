@@ -79,6 +79,21 @@ public class IExecutionContext {
         }
     }
 
+    public void removeContext(IExecutor e) throws IgnisException {
+        List<Long> ctx = contexts.get(e);
+        List<Long> ids = INDEXS.get(e);
+        if (ctx == null || ctx.isEmpty()) {
+            throw new IgnisException("Executor context error");
+        }
+        long id = ctx.remove(0);
+        ids.remove((Long) id);
+        try {
+            e.getStorageModule().removeContext(id);
+        } catch (TException ex) {
+            throw new IgnisException(ex.getMessage(), ex);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public <V> void set(Object key, V value) {
         map.put(key, value);
@@ -86,7 +101,7 @@ public class IExecutionContext {
 
     @SuppressWarnings("unchecked")
     public <V> V get(Object key) {
-        return (V)map.get(key);
+        return (V) map.get(key);
     }
 
 }

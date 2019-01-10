@@ -120,8 +120,8 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
             if (barrier.await() == 0) {
                 shared.count.clear();
                 shared.msgs.clear();
-                LOGGER.info(log() + "Executing reduceByKey");
             }
+            LOGGER.info(log() + "Executing reduceByKey");
             barrier.await();
             LOGGER.info(log() + "Reducing executor keys");
             executor.getKeysModule().reduceByKey(function);
@@ -146,7 +146,8 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
                 List<IExecutorKeys> executorKeys = new ArrayList<>();
                 for (Map.Entry<IExecutor, List<Long>> entry : shared.msgs.get(executor).entrySet()) {
                     String addr = addrManager.parseAddr(executor, entry.getKey());
-                    executorKeys.add(new IExecutorKeys(executor.getId(), addr, entry.getValue()));
+                    long msgId = executor.getId()* shared.count.size() + entry.getKey().getId();
+                    executorKeys.add(new IExecutorKeys(msgId, addr, entry.getValue()));
                     LOGGER.info(log() + entry.getValue().size() + " keys prepared to " + addr);
                 }
                 executor.getKeysModule().prepareKeys(executorKeys);
@@ -168,9 +169,8 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
                 executor.getKeysModule().reduceByKey(function);
             }
             LOGGER.info(log() + "Keys Reduced");
-            if (barrier.await() == 0) {
-                LOGGER.info(log() + "ReduceByKey Executed");
-            }
+            barrier.await();
+            LOGGER.info(log() + "ReduceByKey Executed");
         } catch (IgnisException ex) {
             barrier.fails();
             throw ex;

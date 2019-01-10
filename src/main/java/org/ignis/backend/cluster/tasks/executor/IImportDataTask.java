@@ -155,11 +155,11 @@ public final class IImportDataTask extends IExecutorContextTask {
             if (barrier.await() == 0) {
                 shared.count.clear();
                 shared.msgs.clear();
-                if (type == SHUFFLE) {
-                    LOGGER.info(log() + "Executing shuffle");
-                } else {
-                    LOGGER.info(log() + "Executing import");
-                }
+            }
+            if (type == SHUFFLE) {
+                LOGGER.info(log() + "Executing shuffle");
+            } else {
+                LOGGER.info(log() + "Executing import");
             }
             barrier.await();
             if (type == SEND || type == SHUFFLE) {
@@ -173,9 +173,7 @@ public final class IImportDataTask extends IExecutorContextTask {
             }
             barrier.await();
             if (shared.msgs.isEmpty()) {
-                if (barrier.await() == 0) {
-                    LOGGER.info(log() + "Aborting, shuffle is not necessary");
-                }
+                LOGGER.info(log() + "Aborting, shuffle is not necessary");
                 return;
             }
 
@@ -186,7 +184,8 @@ public final class IImportDataTask extends IExecutorContextTask {
                 List<ISplit> splits = new ArrayList<>();
                 for (Map.Entry<IExecutor, Long> msg : shared.msgs.get(executor).entrySet()) {
                     String addr = addrManager.parseAddr(executor, msg.getKey());
-                    splits.add(new ISplit(executor.getId(), addr, msg.getValue()));
+                    long msgId = executor.getId() * shared.count.size() + msg.getKey().getId();
+                    splits.add(new ISplit(msgId, addr, msg.getValue()));
                     LOGGER.info(log() + "Partition " + (i++) + " with " + msg.getValue() + " elements to " + addr);
                 }
                 executor.getShuffleModule().createSplits(splits);
@@ -218,12 +217,11 @@ public final class IImportDataTask extends IExecutorContextTask {
                 executor.getShuffleModule().joinSplits(order);
                 LOGGER.info(log() + "Partitions joined");
             }
-            if (barrier.await() == 0) {
-                if (type == SHUFFLE) {
-                    LOGGER.info(log() + "Shuffle executed");
-                } else {
-                    LOGGER.info(log() + "Import executed");
-                }
+            barrier.await();
+            if (type == SHUFFLE) {
+                LOGGER.info(log() + "Shuffle executed");
+            } else {
+                LOGGER.info(log() + "Import executed");
             }
         } catch (IgnisException ex) {
             barrier.fails();

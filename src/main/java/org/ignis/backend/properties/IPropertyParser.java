@@ -42,8 +42,20 @@ public class IPropertyParser {
         try {
             return Long.parseLong(getString(prop, key));
         } catch (NumberFormatException ex) {
-            throw new IgnisException("Property " + key + " is not a int", ex);
+            throw new IgnisException("Property " + key + " is not a integer", ex);
         }
+    }
+
+    public static double getDouble(IProperties prop, String key) throws IgnisException {
+        try {
+            return Double.parseDouble(getString(prop, key));
+        } catch (NumberFormatException ex) {
+            throw new IgnisException("Property " + key + " is not a number", ex);
+        }
+    }
+
+    public static float getFloat(IProperties prop, String key) throws IgnisException {
+        return (float) getDouble(prop, key);
     }
 
     public static int getInteger(IProperties prop, String key) throws IgnisException {

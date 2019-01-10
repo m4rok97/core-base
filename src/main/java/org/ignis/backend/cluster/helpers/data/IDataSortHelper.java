@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.ISortTask;
 import org.ignis.backend.properties.IProperties;
@@ -42,8 +43,11 @@ public final class IDataSortHelper extends IDataHelper {
         List<IExecutor> result = new ArrayList<>();
         ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
+        int executors = data.getExecutors().size();
+        ISortTask.Shared shared = new ISortTask.Shared();
+        IBarrier barrier = new IBarrier(executors);
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new ISortTask(this, executor, data.getExecutors().size(), ascending));
+            shedulerBuilder.newTask(new ISortTask(this, executor, data.getExecutors(), barrier, shared, ascending));
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());
@@ -55,8 +59,11 @@ public final class IDataSortHelper extends IDataHelper {
         List<IExecutor> result = new ArrayList<>();
         ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
         shedulerBuilder.newDependency(data.getScheduler());
+        int executors = data.getExecutors().size();
+        ISortTask.Shared shared = new ISortTask.Shared();
+        IBarrier barrier = new IBarrier(executors);
         for (IExecutor executor : data.getExecutors()) {
-            shedulerBuilder.newTask(new ISortTask(this, executor, data.getExecutors().size(), function, ascending));
+            shedulerBuilder.newTask(new ISortTask(this, executor, data.getExecutors(), barrier, shared, function, ascending));
             result.add(executor);
         }
         IData target = data.getJob().newData(result, shedulerBuilder.build());

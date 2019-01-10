@@ -31,6 +31,7 @@ public final class IPropsKeys {
     public static final String DRIVER_IMAGE = "ignis.driver.image";
     public static final String DRIVER_MEMORY = "ignis.driver.memory";
     public static final String DRIVER_RPC_PORT = "ignis.driver.rpc.port";
+    public static final String DRIVER_SORT_OVERSAMPLING = "ignis.driver.sort.oversampling";
     public static final String DRIVER_SWAP = "ignis.driver.swap";
     public static final String DRIVER_SWAPPINESS = "ignis.driver.swappiness";
     public static final String DRIVER_TASK_MAX_FAILURES = "ignis.driver.task.maxFailures";
