@@ -11,7 +11,8 @@ FROM ignisframework/base-executor
 COPY --from=builder /tmp/get-pip.py /tmp/get-pip.py
 RUN apt -y install python3  python3-distutils python3.6-dev ca-certificates && \
 	python3 /tmp/get-pip.py && \
-	rm -f /tmp/get-pip.py 
+	rm -f /tmp/get-pip.py && \
+	pip3 pip3 install numpy 
 
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
 RUN cd ${IGNIS_HOME}/core/python/ && \
