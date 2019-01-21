@@ -20,11 +20,11 @@ import java.nio.ByteBuffer;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.ISource;
 import org.ignis.rpc.driver.IDataId;
 import org.ignis.rpc.driver.IDataService;
-import org.ignis.backend.cluster.tasks.ILazy;
 
 /**
  *
@@ -166,6 +166,10 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
             result = source.take(n, light);
+        }
+        ByteBuffer bb = result.execute();
+        if(bb==null){
+            System.err.println("NULL return");
         }
         return result.execute();
     }

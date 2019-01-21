@@ -17,12 +17,12 @@
 package org.ignis.backend.cluster.helpers.data;
 
 import org.ignis.backend.cluster.IData;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.ISaveAsJsonFileTask;
 import org.ignis.backend.cluster.tasks.executor.ISaveAsTextFileTask;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
-import org.ignis.backend.cluster.tasks.ILazy;
 
 /**
  *

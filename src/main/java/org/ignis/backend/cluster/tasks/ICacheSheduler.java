@@ -16,15 +16,10 @@
  */
 package org.ignis.backend.cluster.tasks;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IExecutionContext;
-import org.ignis.backend.cluster.tasks.executor.ILoadCacheTask;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
@@ -36,24 +31,23 @@ public final class ICacheSheduler extends ITaskScheduler {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICacheSheduler.class);
 
-    private List<ITask> cache;
     private boolean executed;
+    private boolean cached;
+    private final List<ITask> cache;
     private final List<ITask> loadCache;
     private final List<ITask> uncache;
     private final ITaskScheduler dataScheduler;
 
-    public ICacheSheduler(ILock lock, List<ITask> loadCache, List<ITask> uncache, ITaskScheduler dataScheduler) {
+    public ICacheSheduler(ILock lock,List<ITask> cache, List<ITask> loadCache, List<ITask> uncache, ITaskScheduler dataScheduler) {
         super(Collections.emptyList(), Collections.singletonList(lock), Collections.singletonList(dataScheduler));
         this.loadCache = loadCache;
+        this.cache = cache;
         this.uncache = uncache;
         this.dataScheduler = dataScheduler;
     }
 
-    public void cache(List<ITask> cache) {
-        if (!isCache()) {
-            this.cache = cache;
-            executed = false;
-        }
+    public void cache() {
+        cached = true;
     }
 
     public void uncache() {
@@ -67,13 +61,13 @@ public final class ICacheSheduler extends ITaskScheduler {
                     }
                 }
             }
-            cache = null;
+            cached = false;
             executed = false;
         }
     }
 
     public boolean isCache() {
-        return cache != null;
+        return cached;
     }
 
     public ITaskScheduler getDataScheduler() {
@@ -91,10 +85,10 @@ public final class ICacheSheduler extends ITaskScheduler {
                 sheduler = new ITaskScheduler(cache, Collections.emptyList(), Collections.emptyList());
             }
             sheduler.execute(pool, context);
-            executed = true;
-        }else{
+        } else {
             super.execute(pool, context);
         }
+        executed = true;
     }
 
 }

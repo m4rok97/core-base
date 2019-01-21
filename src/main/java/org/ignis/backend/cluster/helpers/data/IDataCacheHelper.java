@@ -25,7 +25,6 @@ import org.ignis.backend.cluster.tasks.ITask;
 import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.ICacheTask;
 import org.ignis.backend.cluster.tasks.executor.ILoadCacheTask;
-import org.ignis.backend.cluster.tasks.executor.IMapTask;
 import org.ignis.backend.cluster.tasks.executor.IUncacheTask;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
@@ -43,21 +42,19 @@ public class IDataCacheHelper extends IDataHelper {
     }
 
     public ICacheSheduler create(ITaskScheduler scheduler) {
+        List<ITask> cache = new ArrayList<>();
         List<ITask> loadCache = new ArrayList<>();
         List<ITask> unCache = new ArrayList<>();
         for (IExecutor executor : data.getExecutors()) {
+            cache.add(new ICacheTask(this, executor, data.getId()));
             loadCache.add(new ILoadCacheTask(this, executor, data.getId()));
             unCache.add(new IUncacheTask(this, executor, data.getId()));
         }
-        return new ICacheSheduler(data.getLock(), loadCache, unCache, scheduler);
+        return new ICacheSheduler(data.getLock(), cache, loadCache, unCache, scheduler);
     }
 
     public void cache() {
-        List<ITask> cache = new ArrayList<>();
-        for (IExecutor executor : data.getExecutors()) {
-            cache.add(new ICacheTask(this, executor, data.getId()));
-        }
-        data.getCacheScheduler().cache(cache);
+        data.getCacheScheduler().cache();
     }
 
     public void uncache() {

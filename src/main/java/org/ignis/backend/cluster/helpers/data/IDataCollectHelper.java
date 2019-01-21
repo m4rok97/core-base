@@ -21,11 +21,11 @@ import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.tasks.IBarrier;
-import org.ignis.backend.properties.IProperties;
-import org.slf4j.LoggerFactory;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskScheduler;
 import org.ignis.backend.cluster.tasks.executor.ICollectTask;
+import org.ignis.backend.properties.IProperties;
+import org.slf4j.LoggerFactory;
 
 /**
  *

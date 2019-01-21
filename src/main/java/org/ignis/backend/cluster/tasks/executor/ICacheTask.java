@@ -17,8 +17,8 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
@@ -40,13 +40,13 @@ public class ICacheTask extends IExecutorTask {
 
     @Override
     public void execute(IExecutionContext context) throws IgnisException {
-        LOGGER.info(log() + "Loading cache");
+        LOGGER.info(log() + "Saving cache");
         try {
             executor.getStorageModule().cache(id);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Cache loaded");
+        LOGGER.info(log() + "Cache saved");
     }
 
 }
