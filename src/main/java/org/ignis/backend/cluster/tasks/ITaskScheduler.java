@@ -80,7 +80,7 @@ public class ITaskScheduler {
 
     public final IExecutionContext execute(IThreadPool pool) throws IgnisException {
         IExecutionContext context = new IExecutionContext();
-        execute(pool, new IExecutionContext());
+        execute(pool, context);
         return context;
     }
 

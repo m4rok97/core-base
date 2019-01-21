@@ -167,10 +167,6 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
             result = source.take(n, light);
         }
-        ByteBuffer bb = result.execute();
-        if(bb==null){
-            System.err.println("NULL return");
-        }
         return result.execute();
     }
 
