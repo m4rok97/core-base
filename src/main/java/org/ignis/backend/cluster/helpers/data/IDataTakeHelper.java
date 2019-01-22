@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.helpers.data;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 import org.ignis.backend.cluster.IData;
 import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.IExecutor;
@@ -40,7 +41,7 @@ public class IDataTakeHelper extends IDataHelper {
         super(data, properties);
     }
 
-    public ILazy<ByteBuffer> take(long n, boolean light) {
+    public ILazy<List<ByteBuffer>> take(long n, boolean light) {
         IBarrier barrier = new IBarrier(data.getPartitions());
         ITakeTask.Shared shared = new ITakeTask.Shared();
         ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
@@ -52,11 +53,11 @@ public class IDataTakeHelper extends IDataHelper {
         return () -> {
             IExecutionContext context = shedulerBuilder.build().execute(data.getPool());
             LOGGER.info(log() + "Take Done");
-            return context.<ByteBuffer>get("result");
+            return context.<List<ByteBuffer>>get("result");
         };
     }
 
-    public ILazy<ByteBuffer> takeSample(long n, boolean withRemplacement, int seed, boolean light) {
+    public ILazy<List<ByteBuffer>> takeSample(long n, boolean withRemplacement, int seed, boolean light) {
         IBarrier barrier = new IBarrier(data.getPartitions());
         ITakeSampleTask.Shared shared = new ITakeSampleTask.Shared();
         ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(data.getLock());
@@ -70,7 +71,7 @@ public class IDataTakeHelper extends IDataHelper {
         return () -> {
             IExecutionContext context = shedulerBuilder.build().execute(data.getPool());
             LOGGER.info(log() + "TakeSample Done");
-            return context.<ByteBuffer>get("result");
+            return context.<List<ByteBuffer>>get("result");
         };
     }
 

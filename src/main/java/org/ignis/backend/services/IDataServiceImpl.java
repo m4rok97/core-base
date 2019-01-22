@@ -17,6 +17,7 @@
 package org.ignis.backend.services;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IData;
@@ -160,9 +161,9 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     }
 
     @Override
-    public ByteBuffer take(IDataId data, long n, boolean light) throws IRemoteException, TException {
+    public List<ByteBuffer> take(IDataId data, long n, boolean light) throws IRemoteException, TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
-        ILazy<ByteBuffer> result;
+        ILazy<List<ByteBuffer>> result;
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
             result = source.take(n, light);
@@ -171,9 +172,9 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     }
 
     @Override
-    public ByteBuffer takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light) throws IRemoteException, TException {
+    public List<ByteBuffer> takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light) throws IRemoteException, TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
-        ILazy<ByteBuffer> result;
+        ILazy<List<ByteBuffer>> result;
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
             result = source.takeSample(n, withRemplacement, seed, light);
@@ -182,9 +183,9 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     }
 
     @Override
-    public ByteBuffer collect(IDataId data, boolean light) throws IRemoteException, TException {
+    public List<ByteBuffer> collect(IDataId data, boolean light) throws IRemoteException, TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
-        ILazy<ByteBuffer> result;
+        ILazy<List<ByteBuffer>> result;
         synchronized (cluster.getLock()) {
             IData source = cluster.getJob(data.getJob()).getData(data.getData());
             result = source.collect(light);

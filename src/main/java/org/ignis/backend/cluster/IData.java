@@ -144,15 +144,15 @@ public final class IData {
         return new IDataShuffleHelper(this, job.getProperties()).shuffle();
     }
 
-    public ILazy<ByteBuffer> take(long n, boolean light) {
+    public ILazy<List<ByteBuffer>> take(long n, boolean light) {
         return new IDataTakeHelper(this, job.getProperties()).take(n, light);
     }
 
-    public ILazy<ByteBuffer> takeSample(long n, boolean withRemplacement, int seed, boolean light) {
+    public ILazy<List<ByteBuffer>> takeSample(long n, boolean withRemplacement, int seed, boolean light) {
         return new IDataTakeHelper(this, job.getProperties()).takeSample(n, withRemplacement, seed, light);
     }
 
-    public ILazy<ByteBuffer> collect(boolean light) {
+    public ILazy<List<ByteBuffer>> collect(boolean light) {
         return new IDataCollectHelper(this, job.getProperties()).collect(light);
     }
 

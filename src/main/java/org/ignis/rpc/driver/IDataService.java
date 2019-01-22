@@ -37,11 +37,11 @@ public class IDataService {
 
     public IDataId parallelize() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public java.nio.ByteBuffer take(IDataId data, long n, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public java.util.List<java.nio.ByteBuffer> take(IDataId data, long n, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public java.nio.ByteBuffer takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public java.util.List<java.nio.ByteBuffer> takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
-    public java.nio.ByteBuffer collect(IDataId data, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
+    public java.util.List<java.nio.ByteBuffer> collect(IDataId data, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
     public IDataId sortBy(IDataId data, org.ignis.rpc.ISource funct, boolean ascending) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException;
 
@@ -85,11 +85,11 @@ public class IDataService {
 
     public void parallelize(org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
-    public void take(IDataId data, long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException;
+    public void take(IDataId data, long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException;
 
-    public void takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException;
+    public void takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException;
 
-    public void collect(IDataId data, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException;
+    public void collect(IDataId data, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException;
 
     public void sortBy(IDataId data, org.ignis.rpc.ISource funct, boolean ascending, org.apache.thrift.async.AsyncMethodCallback<IDataId> resultHandler) throws org.apache.thrift.TException;
 
@@ -473,7 +473,7 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "parallelize failed: unknown result");
     }
 
-    public java.nio.ByteBuffer take(IDataId data, long n, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.List<java.nio.ByteBuffer> take(IDataId data, long n, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_take(data, n, light);
       return recv_take();
@@ -488,7 +488,7 @@ public class IDataService {
       sendBase("take", args);
     }
 
-    public java.nio.ByteBuffer recv_take() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.List<java.nio.ByteBuffer> recv_take() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       take_result result = new take_result();
       receiveBase(result, "take");
@@ -501,7 +501,7 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "take failed: unknown result");
     }
 
-    public java.nio.ByteBuffer takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.List<java.nio.ByteBuffer> takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_takeSample(data, n, withRemplacement, seed, light);
       return recv_takeSample();
@@ -518,7 +518,7 @@ public class IDataService {
       sendBase("takeSample", args);
     }
 
-    public java.nio.ByteBuffer recv_takeSample() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.List<java.nio.ByteBuffer> recv_takeSample() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       takeSample_result result = new takeSample_result();
       receiveBase(result, "takeSample");
@@ -531,7 +531,7 @@ public class IDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "takeSample failed: unknown result");
     }
 
-    public java.nio.ByteBuffer collect(IDataId data, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.List<java.nio.ByteBuffer> collect(IDataId data, boolean light) throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       send_collect(data, light);
       return recv_collect();
@@ -545,7 +545,7 @@ public class IDataService {
       sendBase("collect", args);
     }
 
-    public java.nio.ByteBuffer recv_collect() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
+    public java.util.List<java.nio.ByteBuffer> recv_collect() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException
     {
       collect_result result = new collect_result();
       receiveBase(result, "collect");
@@ -1182,18 +1182,18 @@ public class IDataService {
       }
     }
 
-    public void take(IDataId data, long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
+    public void take(IDataId data, long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       take_call method_call = new take_call(data, n, light, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class take_call extends org.apache.thrift.async.TAsyncMethodCall<java.nio.ByteBuffer> {
+    public static class take_call extends org.apache.thrift.async.TAsyncMethodCall<java.util.List<java.nio.ByteBuffer>> {
       private IDataId data;
       private long n;
       private boolean light;
-      public take_call(IDataId data, long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public take_call(IDataId data, long n, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this.n = n;
@@ -1210,7 +1210,7 @@ public class IDataService {
         prot.writeMessageEnd();
       }
 
-      public java.nio.ByteBuffer getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
+      public java.util.List<java.nio.ByteBuffer> getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1220,20 +1220,20 @@ public class IDataService {
       }
     }
 
-    public void takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
+    public void takeSample(IDataId data, long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       takeSample_call method_call = new takeSample_call(data, n, withRemplacement, seed, light, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class takeSample_call extends org.apache.thrift.async.TAsyncMethodCall<java.nio.ByteBuffer> {
+    public static class takeSample_call extends org.apache.thrift.async.TAsyncMethodCall<java.util.List<java.nio.ByteBuffer>> {
       private IDataId data;
       private long n;
       private boolean withRemplacement;
       private int seed;
       private boolean light;
-      public takeSample_call(IDataId data, long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public takeSample_call(IDataId data, long n, boolean withRemplacement, int seed, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this.n = n;
@@ -1254,7 +1254,7 @@ public class IDataService {
         prot.writeMessageEnd();
       }
 
-      public java.nio.ByteBuffer getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
+      public java.util.List<java.nio.ByteBuffer> getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1264,17 +1264,17 @@ public class IDataService {
       }
     }
 
-    public void collect(IDataId data, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
+    public void collect(IDataId data, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       collect_call method_call = new collect_call(data, light, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class collect_call extends org.apache.thrift.async.TAsyncMethodCall<java.nio.ByteBuffer> {
+    public static class collect_call extends org.apache.thrift.async.TAsyncMethodCall<java.util.List<java.nio.ByteBuffer>> {
       private IDataId data;
       private boolean light;
-      public collect_call(IDataId data, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public collect_call(IDataId data, boolean light, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.data = data;
         this.light = light;
@@ -1289,7 +1289,7 @@ public class IDataService {
         prot.writeMessageEnd();
       }
 
-      public java.nio.ByteBuffer getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
+      public java.util.List<java.nio.ByteBuffer> getResult() throws org.ignis.rpc.IRemoteException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -3070,7 +3070,7 @@ public class IDataService {
       }
     }
 
-    public static class take<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, take_args, java.nio.ByteBuffer> {
+    public static class take<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, take_args, java.util.List<java.nio.ByteBuffer>> {
       public take() {
         super("take");
       }
@@ -3079,10 +3079,10 @@ public class IDataService {
         return new take_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer>() { 
-          public void onComplete(java.nio.ByteBuffer o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>>() { 
+          public void onComplete(java.util.List<java.nio.ByteBuffer> o) {
             take_result result = new take_result();
             result.success = o;
             try {
@@ -3130,12 +3130,12 @@ public class IDataService {
         return false;
       }
 
-      public void start(I iface, take_args args, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, take_args args, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException {
         iface.take(args.data, args.n, args.light,resultHandler);
       }
     }
 
-    public static class takeSample<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, takeSample_args, java.nio.ByteBuffer> {
+    public static class takeSample<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, takeSample_args, java.util.List<java.nio.ByteBuffer>> {
       public takeSample() {
         super("takeSample");
       }
@@ -3144,10 +3144,10 @@ public class IDataService {
         return new takeSample_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer>() { 
-          public void onComplete(java.nio.ByteBuffer o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>>() { 
+          public void onComplete(java.util.List<java.nio.ByteBuffer> o) {
             takeSample_result result = new takeSample_result();
             result.success = o;
             try {
@@ -3195,12 +3195,12 @@ public class IDataService {
         return false;
       }
 
-      public void start(I iface, takeSample_args args, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, takeSample_args args, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException {
         iface.takeSample(args.data, args.n, args.withRemplacement, args.seed, args.light,resultHandler);
       }
     }
 
-    public static class collect<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, collect_args, java.nio.ByteBuffer> {
+    public static class collect<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, collect_args, java.util.List<java.nio.ByteBuffer>> {
       public collect() {
         super("collect");
       }
@@ -3209,10 +3209,10 @@ public class IDataService {
         return new collect_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer>() { 
-          public void onComplete(java.nio.ByteBuffer o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>>() { 
+          public void onComplete(java.util.List<java.nio.ByteBuffer> o) {
             collect_result result = new collect_result();
             result.success = o;
             try {
@@ -3260,7 +3260,7 @@ public class IDataService {
         return false;
       }
 
-      public void start(I iface, collect_args args, org.apache.thrift.async.AsyncMethodCallback<java.nio.ByteBuffer> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, collect_args args, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException {
         iface.collect(args.data, args.light,resultHandler);
       }
     }
@@ -16371,13 +16371,13 @@ public class IDataService {
   public static class take_result implements org.apache.thrift.TBase<take_result, take_result._Fields>, java.io.Serializable, Cloneable, Comparable<take_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("take_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new take_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new take_resultTupleSchemeFactory();
 
-    private java.nio.ByteBuffer success; // required
+    private java.util.List<java.nio.ByteBuffer> success; // required
     private org.ignis.rpc.IRemoteException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -16446,7 +16446,8 @@ public class IDataService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING          , true)));
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING              , true))));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
@@ -16457,11 +16458,11 @@ public class IDataService {
     }
 
     public take_result(
-      java.nio.ByteBuffer success,
+      java.util.List<java.nio.ByteBuffer> success,
       org.ignis.rpc.IRemoteException ex)
     {
       this();
-      this.success = org.apache.thrift.TBaseHelper.copyBinary(success);
+      this.success = success;
       this.ex = ex;
     }
 
@@ -16470,7 +16471,8 @@ public class IDataService {
      */
     public take_result(take_result other) {
       if (other.isSetSuccess()) {
-        this.success = org.apache.thrift.TBaseHelper.copyBinary(other.success);
+        java.util.List<java.nio.ByteBuffer> __this__success = new java.util.ArrayList<java.nio.ByteBuffer>(other.success);
+        this.success = __this__success;
       }
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
@@ -16487,22 +16489,27 @@ public class IDataService {
       this.ex = null;
     }
 
-    public byte[] getSuccess() {
-      setSuccess(org.apache.thrift.TBaseHelper.rightSize(success));
-      return success == null ? null : success.array();
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
     }
 
-    public java.nio.ByteBuffer bufferForSuccess() {
-      return org.apache.thrift.TBaseHelper.copyBinary(success);
+    public java.util.Iterator<java.nio.ByteBuffer> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
     }
 
-    public take_result setSuccess(byte[] success) {
-      this.success = success == null ? (java.nio.ByteBuffer)null : java.nio.ByteBuffer.wrap(success.clone());
-      return this;
+    public void addToSuccess(java.nio.ByteBuffer elem) {
+      if (this.success == null) {
+        this.success = new java.util.ArrayList<java.nio.ByteBuffer>();
+      }
+      this.success.add(elem);
     }
 
-    public take_result setSuccess(java.nio.ByteBuffer success) {
-      this.success = org.apache.thrift.TBaseHelper.copyBinary(success);
+    public java.util.List<java.nio.ByteBuffer> getSuccess() {
+      return this.success;
+    }
+
+    public take_result setSuccess(java.util.List<java.nio.ByteBuffer> success) {
+      this.success = success;
       return this;
     }
 
@@ -16551,11 +16558,7 @@ public class IDataService {
         if (value == null) {
           unsetSuccess();
         } else {
-          if (value instanceof byte[]) {
-            setSuccess((byte[])value);
-          } else {
-            setSuccess((java.nio.ByteBuffer)value);
-          }
+          setSuccess((java.util.List<java.nio.ByteBuffer>)value);
         }
         break;
 
@@ -16755,8 +16758,18 @@ public class IDataService {
           }
           switch (schemeField.id) {
             case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.success = iprot.readBinary();
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.nio.ByteBuffer>(_list0.size);
+                  java.nio.ByteBuffer _elem1;
+                  for (int _i2 = 0; _i2 < _list0.size; ++_i2)
+                  {
+                    _elem1 = iprot.readBinary();
+                    struct.success.add(_elem1);
+                  }
+                  iprot.readListEnd();
+                }
                 struct.setSuccessIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -16788,7 +16801,14 @@ public class IDataService {
         oprot.writeStructBegin(STRUCT_DESC);
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          oprot.writeBinary(struct.success);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
+            for (java.nio.ByteBuffer _iter3 : struct.success)
+            {
+              oprot.writeBinary(_iter3);
+            }
+            oprot.writeListEnd();
+          }
           oprot.writeFieldEnd();
         }
         if (struct.ex != null) {
@@ -16822,7 +16842,13 @@ public class IDataService {
         }
         oprot.writeBitSet(optionals, 2);
         if (struct.isSetSuccess()) {
-          oprot.writeBinary(struct.success);
+          {
+            oprot.writeI32(struct.success.size());
+            for (java.nio.ByteBuffer _iter4 : struct.success)
+            {
+              oprot.writeBinary(_iter4);
+            }
+          }
         }
         if (struct.isSetEx()) {
           struct.ex.write(oprot);
@@ -16834,7 +16860,16 @@ public class IDataService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
-          struct.success = iprot.readBinary();
+          {
+            org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
+            struct.success = new java.util.ArrayList<java.nio.ByteBuffer>(_list5.size);
+            java.nio.ByteBuffer _elem6;
+            for (int _i7 = 0; _i7 < _list5.size; ++_i7)
+            {
+              _elem6 = iprot.readBinary();
+              struct.success.add(_elem6);
+            }
+          }
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
@@ -17608,13 +17643,13 @@ public class IDataService {
   public static class takeSample_result implements org.apache.thrift.TBase<takeSample_result, takeSample_result._Fields>, java.io.Serializable, Cloneable, Comparable<takeSample_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("takeSample_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new takeSample_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new takeSample_resultTupleSchemeFactory();
 
-    private java.nio.ByteBuffer success; // required
+    private java.util.List<java.nio.ByteBuffer> success; // required
     private org.ignis.rpc.IRemoteException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -17683,7 +17718,8 @@ public class IDataService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING          , true)));
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING              , true))));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
@@ -17694,11 +17730,11 @@ public class IDataService {
     }
 
     public takeSample_result(
-      java.nio.ByteBuffer success,
+      java.util.List<java.nio.ByteBuffer> success,
       org.ignis.rpc.IRemoteException ex)
     {
       this();
-      this.success = org.apache.thrift.TBaseHelper.copyBinary(success);
+      this.success = success;
       this.ex = ex;
     }
 
@@ -17707,7 +17743,8 @@ public class IDataService {
      */
     public takeSample_result(takeSample_result other) {
       if (other.isSetSuccess()) {
-        this.success = org.apache.thrift.TBaseHelper.copyBinary(other.success);
+        java.util.List<java.nio.ByteBuffer> __this__success = new java.util.ArrayList<java.nio.ByteBuffer>(other.success);
+        this.success = __this__success;
       }
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
@@ -17724,22 +17761,27 @@ public class IDataService {
       this.ex = null;
     }
 
-    public byte[] getSuccess() {
-      setSuccess(org.apache.thrift.TBaseHelper.rightSize(success));
-      return success == null ? null : success.array();
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
     }
 
-    public java.nio.ByteBuffer bufferForSuccess() {
-      return org.apache.thrift.TBaseHelper.copyBinary(success);
+    public java.util.Iterator<java.nio.ByteBuffer> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
     }
 
-    public takeSample_result setSuccess(byte[] success) {
-      this.success = success == null ? (java.nio.ByteBuffer)null : java.nio.ByteBuffer.wrap(success.clone());
-      return this;
+    public void addToSuccess(java.nio.ByteBuffer elem) {
+      if (this.success == null) {
+        this.success = new java.util.ArrayList<java.nio.ByteBuffer>();
+      }
+      this.success.add(elem);
     }
 
-    public takeSample_result setSuccess(java.nio.ByteBuffer success) {
-      this.success = org.apache.thrift.TBaseHelper.copyBinary(success);
+    public java.util.List<java.nio.ByteBuffer> getSuccess() {
+      return this.success;
+    }
+
+    public takeSample_result setSuccess(java.util.List<java.nio.ByteBuffer> success) {
+      this.success = success;
       return this;
     }
 
@@ -17788,11 +17830,7 @@ public class IDataService {
         if (value == null) {
           unsetSuccess();
         } else {
-          if (value instanceof byte[]) {
-            setSuccess((byte[])value);
-          } else {
-            setSuccess((java.nio.ByteBuffer)value);
-          }
+          setSuccess((java.util.List<java.nio.ByteBuffer>)value);
         }
         break;
 
@@ -17992,8 +18030,18 @@ public class IDataService {
           }
           switch (schemeField.id) {
             case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.success = iprot.readBinary();
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.nio.ByteBuffer>(_list8.size);
+                  java.nio.ByteBuffer _elem9;
+                  for (int _i10 = 0; _i10 < _list8.size; ++_i10)
+                  {
+                    _elem9 = iprot.readBinary();
+                    struct.success.add(_elem9);
+                  }
+                  iprot.readListEnd();
+                }
                 struct.setSuccessIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -18025,7 +18073,14 @@ public class IDataService {
         oprot.writeStructBegin(STRUCT_DESC);
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          oprot.writeBinary(struct.success);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
+            for (java.nio.ByteBuffer _iter11 : struct.success)
+            {
+              oprot.writeBinary(_iter11);
+            }
+            oprot.writeListEnd();
+          }
           oprot.writeFieldEnd();
         }
         if (struct.ex != null) {
@@ -18059,7 +18114,13 @@ public class IDataService {
         }
         oprot.writeBitSet(optionals, 2);
         if (struct.isSetSuccess()) {
-          oprot.writeBinary(struct.success);
+          {
+            oprot.writeI32(struct.success.size());
+            for (java.nio.ByteBuffer _iter12 : struct.success)
+            {
+              oprot.writeBinary(_iter12);
+            }
+          }
         }
         if (struct.isSetEx()) {
           struct.ex.write(oprot);
@@ -18071,7 +18132,16 @@ public class IDataService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
-          struct.success = iprot.readBinary();
+          {
+            org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
+            struct.success = new java.util.ArrayList<java.nio.ByteBuffer>(_list13.size);
+            java.nio.ByteBuffer _elem14;
+            for (int _i15 = 0; _i15 < _list13.size; ++_i15)
+            {
+              _elem14 = iprot.readBinary();
+              struct.success.add(_elem14);
+            }
+          }
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
@@ -18557,13 +18627,13 @@ public class IDataService {
   public static class collect_result implements org.apache.thrift.TBase<collect_result, collect_result._Fields>, java.io.Serializable, Cloneable, Comparable<collect_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("collect_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new collect_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new collect_resultTupleSchemeFactory();
 
-    private java.nio.ByteBuffer success; // required
+    private java.util.List<java.nio.ByteBuffer> success; // required
     private org.ignis.rpc.IRemoteException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -18632,7 +18702,8 @@ public class IDataService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING          , true)));
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING              , true))));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IRemoteException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
@@ -18643,11 +18714,11 @@ public class IDataService {
     }
 
     public collect_result(
-      java.nio.ByteBuffer success,
+      java.util.List<java.nio.ByteBuffer> success,
       org.ignis.rpc.IRemoteException ex)
     {
       this();
-      this.success = org.apache.thrift.TBaseHelper.copyBinary(success);
+      this.success = success;
       this.ex = ex;
     }
 
@@ -18656,7 +18727,8 @@ public class IDataService {
      */
     public collect_result(collect_result other) {
       if (other.isSetSuccess()) {
-        this.success = org.apache.thrift.TBaseHelper.copyBinary(other.success);
+        java.util.List<java.nio.ByteBuffer> __this__success = new java.util.ArrayList<java.nio.ByteBuffer>(other.success);
+        this.success = __this__success;
       }
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IRemoteException(other.ex);
@@ -18673,22 +18745,27 @@ public class IDataService {
       this.ex = null;
     }
 
-    public byte[] getSuccess() {
-      setSuccess(org.apache.thrift.TBaseHelper.rightSize(success));
-      return success == null ? null : success.array();
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
     }
 
-    public java.nio.ByteBuffer bufferForSuccess() {
-      return org.apache.thrift.TBaseHelper.copyBinary(success);
+    public java.util.Iterator<java.nio.ByteBuffer> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
     }
 
-    public collect_result setSuccess(byte[] success) {
-      this.success = success == null ? (java.nio.ByteBuffer)null : java.nio.ByteBuffer.wrap(success.clone());
-      return this;
+    public void addToSuccess(java.nio.ByteBuffer elem) {
+      if (this.success == null) {
+        this.success = new java.util.ArrayList<java.nio.ByteBuffer>();
+      }
+      this.success.add(elem);
     }
 
-    public collect_result setSuccess(java.nio.ByteBuffer success) {
-      this.success = org.apache.thrift.TBaseHelper.copyBinary(success);
+    public java.util.List<java.nio.ByteBuffer> getSuccess() {
+      return this.success;
+    }
+
+    public collect_result setSuccess(java.util.List<java.nio.ByteBuffer> success) {
+      this.success = success;
       return this;
     }
 
@@ -18737,11 +18814,7 @@ public class IDataService {
         if (value == null) {
           unsetSuccess();
         } else {
-          if (value instanceof byte[]) {
-            setSuccess((byte[])value);
-          } else {
-            setSuccess((java.nio.ByteBuffer)value);
-          }
+          setSuccess((java.util.List<java.nio.ByteBuffer>)value);
         }
         break;
 
@@ -18941,8 +19014,18 @@ public class IDataService {
           }
           switch (schemeField.id) {
             case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.success = iprot.readBinary();
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list16 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.nio.ByteBuffer>(_list16.size);
+                  java.nio.ByteBuffer _elem17;
+                  for (int _i18 = 0; _i18 < _list16.size; ++_i18)
+                  {
+                    _elem17 = iprot.readBinary();
+                    struct.success.add(_elem17);
+                  }
+                  iprot.readListEnd();
+                }
                 struct.setSuccessIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -18974,7 +19057,14 @@ public class IDataService {
         oprot.writeStructBegin(STRUCT_DESC);
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          oprot.writeBinary(struct.success);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
+            for (java.nio.ByteBuffer _iter19 : struct.success)
+            {
+              oprot.writeBinary(_iter19);
+            }
+            oprot.writeListEnd();
+          }
           oprot.writeFieldEnd();
         }
         if (struct.ex != null) {
@@ -19008,7 +19098,13 @@ public class IDataService {
         }
         oprot.writeBitSet(optionals, 2);
         if (struct.isSetSuccess()) {
-          oprot.writeBinary(struct.success);
+          {
+            oprot.writeI32(struct.success.size());
+            for (java.nio.ByteBuffer _iter20 : struct.success)
+            {
+              oprot.writeBinary(_iter20);
+            }
+          }
         }
         if (struct.isSetEx()) {
           struct.ex.write(oprot);
@@ -19020,7 +19116,16 @@ public class IDataService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
-          struct.success = iprot.readBinary();
+          {
+            org.apache.thrift.protocol.TList _list21 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
+            struct.success = new java.util.ArrayList<java.nio.ByteBuffer>(_list21.size);
+            java.nio.ByteBuffer _elem22;
+            for (int _i23 = 0; _i23 < _list21.size; ++_i23)
+            {
+              _elem22 = iprot.readBinary();
+              struct.success.add(_elem22);
+            }
+          }
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {

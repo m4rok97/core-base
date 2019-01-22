@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import org.ignis.backend.cluster.IExecutionContext;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
@@ -93,12 +94,7 @@ public class ICollectTask extends IExecutorContextTask {
 
     private void ligthMode(IExecutionContext context) throws Exception {
         if (barrier.await() == 0) {
-            int size = shared.result.values().stream().mapToInt(b -> b.capacity()).sum();
-            ByteBuffer data = ByteBuffer.allocate(size);
-            for (IExecutor e : executors) {
-                data.put(shared.result.get(e));
-            }
-            context.set("result", data);
+            context.set("result", executors.stream().map(e -> shared.result.get(e)).collect(Collectors.toList()));
         }
     }
 
