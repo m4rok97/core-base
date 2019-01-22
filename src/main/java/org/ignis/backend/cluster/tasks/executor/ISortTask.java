@@ -163,6 +163,7 @@ public final class ISortTask extends IExecutorContextTask {
                     LOGGER.info(log() + "Sending partitions");
                     executor.getPostmanModule().sendAll();
                     LOGGER.info(log() + "Partitions sent");
+                    barrier.await();
                 } finally {
                     executor.getPostmanModule().stop();
                     if(contextSaved){
