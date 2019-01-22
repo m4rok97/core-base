@@ -117,10 +117,13 @@ public final class ISortTask extends IExecutorContextTask {
                     executor.getSortModule().localSort(ascending);
                 }
                 barrier.await();
+                long available = executor.getStorageModule().count();
                 long elements = shared.count.values().stream().reduce(0l, (a, b) -> a + b);
                 long sampleSize = (long) Math.ceil((executors.size() - 1)
                         * (1 + executor.getProperties().getDouble(IPropsKeys.DRIVER_SORT_OVERSAMPLING)));
-                long sampleExecutorSize = sampleSize * (long) Math.ceil(shared.count.get(executor) / (elements * 1.0));
+                long sampleExecutorSize = Math.min(
+                        sampleSize * (long) Math.ceil(shared.count.get(executor) / (elements * 1.0)), available
+                );
                 LOGGER.info(log() + "Sampling " + sampleExecutorSize + " elements");
                 IAddrManager addrManager = new IAddrManager();
                 String addr = addrManager.parseAddr(executor, shared.master);
@@ -166,7 +169,7 @@ public final class ISortTask extends IExecutorContextTask {
                     barrier.await();
                 } finally {
                     executor.getPostmanModule().stop();
-                    if(contextSaved){
+                    if (contextSaved) {
                         context.removeContext(executor);
                     }
                 }
