@@ -81,7 +81,7 @@ public class ITakeSampleTask extends IExecutorContextTask {
             shared.count.put(executor, executor.getStorageModule().count());
             if (barrier.await() == 0 && !withRemplacement) {
                 long elems = shared.count.values().stream().reduce(0l, Long::sum);
-                if (elems > n) {
+                if (elems < n) {
                     throw new IgnisException("There are not enough elements");
                 }
             }
@@ -93,7 +93,7 @@ public class ITakeSampleTask extends IExecutorContextTask {
             ByteBuffer bytes = executor.getStorageModule()
                     .takeSample(executor.getId(), "none", nExecutor, withRemplacement, seed, ligth);//TODO
             if (ligth) {
-                shared.result.put(executor, null);
+                shared.result.put(executor, bytes);
             }
             barrier.await();
             if (ligth) {
