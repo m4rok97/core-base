@@ -8,7 +8,7 @@ RUN \
 	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/manager.git src && \
 	cd src && \
 	cmake . && \
-	make && \
+	make -j 4 && \
 	chmod +x ignismanager && \ 
 	mv ignismanager ${IGNIS_HOME}/bin/ignis-manager && \ 
 	cd / && \
