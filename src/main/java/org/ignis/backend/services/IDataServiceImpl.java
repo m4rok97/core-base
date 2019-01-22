@@ -146,6 +146,17 @@ public final class IDataServiceImpl extends IService implements IDataService.Ifa
     }
 
     @Override
+    public long count(IDataId data) throws IRemoteException, TException {
+        ICluster cluster = attributes.getCluster(data.getCluster());
+        ILazy<Long> result;
+        synchronized (cluster.getLock()) {
+            IData source = cluster.getJob(data.getJob()).getData(data.getData());
+            result = source.count();
+        }
+        return result.execute();
+    }
+
+    @Override
     public IDataId shuffle(IDataId data) throws IRemoteException, TException {
         ICluster cluster = attributes.getCluster(data.getCluster());
         synchronized (cluster.getLock()) {

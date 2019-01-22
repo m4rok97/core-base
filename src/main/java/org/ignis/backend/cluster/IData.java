@@ -20,6 +20,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import org.ignis.backend.cluster.helpers.data.IDataCacheHelper;
 import org.ignis.backend.cluster.helpers.data.IDataCollectHelper;
+import org.ignis.backend.cluster.helpers.data.IDataCountHelper;
 import org.ignis.backend.cluster.helpers.data.IDataFilterHelper;
 import org.ignis.backend.cluster.helpers.data.IDataFlatmapHelper;
 import org.ignis.backend.cluster.helpers.data.IDataKeyByHelper;
@@ -138,6 +139,10 @@ public final class IData {
 
     public IData values() {
         return new IDataValuesHelper(this, job.getProperties()).values();
+    }
+
+    public ILazy<Long> count() {
+        return new IDataCountHelper(this, job.getProperties()).count();
     }
 
     public IData shuffle() {
