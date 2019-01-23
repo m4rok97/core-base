@@ -136,11 +136,9 @@ public final class ISortTask extends IExecutorContextTask {
                     LOGGER.info(log() + "Preparing to recive data");
                     executor.getPostmanModule().start();
                     barrier.await();
-                    if (executor != shared.master) {
-                        LOGGER.info(log() + "Preparing to send samples");
-                        executor.getPostmanModule().sendAll();
-                        LOGGER.info(log() + "Samples sent");
-                    }
+                    LOGGER.info(log() + "Preparing to send samples");
+                    executor.getPostmanModule().sendAll();
+                    LOGGER.info(log() + "Samples sent");
                     barrier.await();
                     if (executor == shared.master) {
                         LOGGER.info(log() + "Merging samples");
