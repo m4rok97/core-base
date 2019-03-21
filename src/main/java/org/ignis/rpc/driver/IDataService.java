@@ -4987,6 +4987,9 @@ public class IDataService {
       if (data != null) {
         data.validate();
       }
+      if (_function != null) {
+        _function.validate();
+      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -5932,6 +5935,9 @@ public class IDataService {
       // check for sub-struct validity
       if (data != null) {
         data.validate();
+      }
+      if (_function != null) {
+        _function.validate();
       }
     }
 
@@ -6879,6 +6885,9 @@ public class IDataService {
       if (data != null) {
         data.validate();
       }
+      if (_function != null) {
+        _function.validate();
+      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -7824,6 +7833,9 @@ public class IDataService {
       // check for sub-struct validity
       if (data != null) {
         data.validate();
+      }
+      if (_function != null) {
+        _function.validate();
       }
     }
 
@@ -8847,6 +8859,9 @@ public class IDataService {
       // check for sub-struct validity
       if (data != null) {
         data.validate();
+      }
+      if (_function != null) {
+        _function.validate();
       }
     }
 
@@ -9894,6 +9909,9 @@ public class IDataService {
       if (data != null) {
         data.validate();
       }
+      if (_function != null) {
+        _function.validate();
+      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -10939,6 +10957,9 @@ public class IDataService {
       // check for sub-struct validity
       if (data != null) {
         data.validate();
+      }
+      if (_function != null) {
+        _function.validate();
       }
     }
 
@@ -11986,6 +12007,9 @@ public class IDataService {
       if (data != null) {
         data.validate();
       }
+      if (_function != null) {
+        _function.validate();
+      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -12954,6 +12978,9 @@ public class IDataService {
       // check for sub-struct validity
       if (data != null) {
         data.validate();
+      }
+      if (_function != null) {
+        _function.validate();
       }
     }
 
@@ -20549,6 +20576,9 @@ public class IDataService {
       // check for sub-struct validity
       if (data != null) {
         data.validate();
+      }
+      if (funct != null) {
+        funct.validate();
       }
     }
 
