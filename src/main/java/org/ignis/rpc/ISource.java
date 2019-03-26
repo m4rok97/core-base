@@ -102,6 +102,8 @@ public class ISource implements org.apache.thrift.TBase<ISource, ISource._Fields
   }
 
   public ISource() {
+    this._args = new java.util.HashMap<java.lang.String,java.nio.ByteBuffer>();
+
   }
 
   public ISource(
@@ -139,7 +141,8 @@ public class ISource implements org.apache.thrift.TBase<ISource, ISource._Fields
   public void clear() {
     this.name = null;
     this.bytes = null;
-    this._args = null;
+    this._args = new java.util.HashMap<java.lang.String,java.nio.ByteBuffer>();
+
   }
 
   public java.lang.String getName() {
