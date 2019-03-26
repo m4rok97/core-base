@@ -38,5 +38,5 @@ RUN \
 
 FROM ignisframework/base-skel
 
-RUN apt update && apt -y install openjdk-8-jdk gcc g++
+RUN apt update && apt -y install openjdk-8-jdk gcc g++ openssl
 COPY --from=builder ${IGNIS_HOME} ${IGNIS_HOME}
