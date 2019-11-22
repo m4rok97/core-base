@@ -55,3 +55,6 @@ RUN { \
 		echo 'wait'; \
 	} > /bin/start-mesos.sh  && chmod +x /bin/start-mesos.sh
 
+RUN apt clean && \
+	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+

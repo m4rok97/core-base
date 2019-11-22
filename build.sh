@@ -2,47 +2,54 @@
 cd "$(dirname "$0")"
 
 cd base
-	cd skel
-		docker build -t ignisframework/base-skel .
-	cd ..
-	cd builder
-		docker build -t ignisframework/base-builder .
-	cd ..
-	cd driver
-		docker build -t ignisframework/base-driver .
-	cd ..
-	cd executor
-		docker build -t ignisframework/base-executor .
-	cd ..
-	cd full
-		docker build -t ignisframework/base-full .
-	cd ..
+	docker build -t ignishpc/base .
+cd ..
+
+cd builder
+	docker build -t ignishpc/builder .
+cd ..
+
+cd driver-builder
+	docker build -t ignishpc/driver-builder .
+cd ..
+
+cd executor-builder
+	docker build -t ignishpc/executor-builder .
+cd ..
+
+cd base-driver
+	docker build -t ignishpc/base-driver .
+cd ..
+
+cd base-executor
+	docker build -t ignishpc/base-executor .
+cd ..
+
+cd base-full
+	docker build -t ignishpc/base-full .
 cd ..
 
 cd cpp
+	cd builder
+		docker build -t ignishpc/cpp-builder .
+	cd ..
 	cd driver
-		docker build -t ignisframework/cpp-driver .
+		docker build -t ignishpc/cpp-driver .
 	cd ..
 	cd executor
-		docker build -t ignisframework/cpp-executor .
+		docker build -t ignishpc/cpp-executor .
 	cd ..
 	cd full
-		docker build -t ignisframework/cpp-full .
+		docker build -t ignishpc/cpp-full .
 	cd ..
 cd ..
 
-cd python
-	cd driver
-		docker build -t ignisframework/python-driver .
-	cd ..
-	cd executor
-		docker build -t ignisframework/python-executor .
-	cd ..
-	cd full
-		docker build -t ignisframework/python-full .
-	cd ..
+cd mesos
+	docker build -t ignishpc/mesos .
 cd ..
 
-cd submitter
-	docker build -t ignisframework/submitter .
+cd zookeeper
+	docker build -t ignishpc/zookerper .
+cd ..
+
 
