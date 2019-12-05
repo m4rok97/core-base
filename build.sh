@@ -49,7 +49,7 @@ cd mesos
 cd ..
 
 cd zookeeper
-	docker build -t ignishpc/zookerper .
+	docker build -t ignishpc/zookeeper .
 cd ..
 
 

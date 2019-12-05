@@ -1,0 +1,34 @@
+
+FROM ignishpc/base
+
+COPY --from=ignishpc/driver-builder ${IGNIS_HOME} ${IGNIS_HOME}
+RUN ${IGNIS_HOME}/bin/driver-install.sh && \
+	rm -f ${IGNIS_HOME}/bin/driver-install.sh && \
+	rm -f ${IGNIS_HOME}/bin/ignis-backend && \
+	apt update && \
+	apt install -y \
+		git \
+		wget \
+		unzip \
+		openssh-server \
+		openjdk-8-jre \
+		python3 \
+		python3-distutils && \
+	wget https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py && \
+	python3 /tmp/get-pip.py && \
+	rm -f /tmp/get-pip.py && \
+	mkdir /var/run/sshd && \
+	sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+	cd ${IGNIS_HOME}/bin && \
+	{ \
+		echo '#!/bin/bash'; \
+		echo 'export -p >> /etc/profile'; \
+		echo 'mkdir -p ~/.ssh'; \
+		echo '/usr/sbin/sshd -D'; \
+	} > ignis-sshd  && \
+	chmod +x ignis-sshd && \
+	{ \
+		echo '#!/bin/bash'; \
+		echo 'exec java -cp "${IGNIS_HOME}/lib/java/*" org.ignis.backend.Submit "$@"'; \
+	} > ignis-submit  && \
+	chmod +x ignis-submit
