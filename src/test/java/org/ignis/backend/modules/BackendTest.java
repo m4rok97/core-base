@@ -18,8 +18,6 @@ package org.ignis.backend.modules;
 
 import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.allocator.IContainerStub;
-import org.ignis.backend.allocator.local.ILocalAllocator;
-import org.ignis.backend.allocator.local.ILocalContainerStub;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.services.IAttributes;
 import org.ignis.backend.services.IClusterServiceImpl;
@@ -45,7 +43,7 @@ public class BackendTest {
     protected IDataServiceImpl dataService;
 
     public BackendTest() {
-        try {
+        /*try {
             allocator = Mockito.spy(ILocalAllocator.class);
             Mockito.doAnswer(a -> {
                 IContainerStub stub = Mockito.spy(new ILocalContainerStub(a.getArgument(0)));
@@ -62,7 +60,7 @@ public class BackendTest {
             dataService = new IDataServiceImpl(attributes);
         } catch (IgnisException ex) {
             LOGGER.error(ex.getMessage(), ex);
-        }
+        }*/
     }
 
 }

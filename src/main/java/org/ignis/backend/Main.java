@@ -19,8 +19,6 @@ package org.ignis.backend;
 import java.io.File;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.allocator.IAllocator;
-import org.ignis.backend.allocator.ancoris.IAncorisAllocator;
-import org.ignis.backend.allocator.local.ILocalAllocator;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IPropsKeys;
@@ -60,11 +58,11 @@ public final class Main {
         switch (type) {
             case "ancoris":
                 loadVarEnv(properties, IPropsKeys.ALLOCATOR_URL, "ALLOCATOR_URL");
-                return new IAncorisAllocator(properties.getProperty(IPropsKeys.ALLOCATOR_URL));
+                //return new IAncorisAllocator(properties.getProperty(IPropsKeys.ALLOCATOR_URL));
             case "ignis":
                 throw new UnsupportedOperationException("Allocator not implemented yet.");
             case "local":
-                return new ILocalAllocator();
+                //return new ILocalAllocator();
             default:
                 LOGGER.error(type + " is not a valid allocator, aborting");
                 System.exit(-1);

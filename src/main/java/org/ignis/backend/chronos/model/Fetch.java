@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2019 César Pomar
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,34 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.allocator.local;
+package org.ignis.backend.chronos.model;
 
-import org.ignis.backend.allocator.IAllocator;
-import org.ignis.backend.allocator.IContainerStub;
-import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IProperties;
+import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
  *
  * @author César Pomar
  */
-public final class ILocalAllocator implements IAllocator{
+@Getter
+@Builder
+@AllArgsConstructor
+public class Fetch implements Serializable{
 
-    @Override
-    public void ping() throws IgnisException {
-        //Same machine
-    }
-
-    @Override
-    public String getName() {
-        return "local";
-    }
-
-    @Override
-    public IContainerStub getContainer(IProperties prop) throws IgnisException {
-        return new ILocalContainerStub(prop);
-    }
-
-   
-    
+    private String uri;
+    private String output_file;
+    private boolean executable;
+    private boolean cache;
+    private boolean extract;
 }
