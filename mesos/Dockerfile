@@ -1,5 +1,5 @@
 
-FROM ubuntu:18.04 as builder
+FROM ubuntu:18.04
 
 RUN apt update && \
 	apt install -y \
@@ -30,7 +30,7 @@ RUN mkdir /tmp/mesos && \
 	wget www.apache.org/dist/mesos/${_MESOS_VERSION}/mesos-${_MESOS_VERSION}.tar.gz && \
 	tar -zxf mesos-${_MESOS_VERSION}.tar.gz && \
 	cd mesos-${_MESOS_VERSION} && \
-	./configure --prefix /root/mesos && \
+	./configure && \
 	make -j 4 && \
 	make install && \
 	rm -fR /tmp/mesos
@@ -43,27 +43,20 @@ RUN mkdir /tmp/chronos/ && \
 	cd chronos-${_CHRONOS_VERSION} && \
 	mvn package -DskipTests && \
 	mkdir /opt/chronos && \
-	mv target /root/chronos && \
+	mv target/* /opt/chronos/ && \
 	rm -fR /tmp/chronos/
 
-FROM ubuntu:18.04
-
-RUN apt update && \
+RUN rm -fR ~/.m2 && \
+		apt purge -y \
+		build-essential \
+		openjdk-8-jdk && \
+	apt autoremove -y && \
 	apt install -y \
-		openjdk-8-jre \
-		nodejs \
-		libcurl4-nss-dev \ 
-		libsasl2-dev \
-		libsasl2-modules \ 
-		libapr1-dev \ 
-		libsvn-dev \
-		libghc-zlib-dev
+		openjdk-8-jre 
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjre-amd64
 ENV MESOS_NATIVE_JAVA_LIBRARY=/usr/local/lib/libmesos.so
 
-COPY --from=builder /root/mesos /usr/local
-COPY --from=builder /root/chronos /opt/chronos
 
 RUN { \
 		echo '#!/bin/bash'; \
