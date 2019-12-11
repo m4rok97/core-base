@@ -52,6 +52,7 @@ RUN rm -fR ~/.m2 && \
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjre-amd64
 ENV MESOS_NATIVE_JAVA_LIBRARY=/usr/local/lib/libmesos.so
+ENV MESOS_CGROUPS_ENABLE_CFS=false
 
 
 RUN { \
@@ -60,7 +61,7 @@ RUN { \
 		echo '  mesos master --work_dir=/var/lib/mesos/master --port=${PORT_MASTER} --zk=${ZOOKEEPER}/mesos &'; \
 		echo 'fi'; \
 		echo 'mesos agent --work_dir=/var/lib/mesos/agent --port=${PORT_AGENT} --no-switch_user \'; \
-		echo '   --master=${ZOOKEEPER}/mesos --containerizers=docker,mesos &'; \
+		echo '   --master=${ZOOKEEPER}/mesos --containerizers=docker,mesos --isolation=cgroups/all &'; \
 		echo '/opt/marathon/bin/marathon --master ${ZOOKEEPER}/mesos --zk ${ZOOKEEPER}/marathon --http_port ${PORT_MARATHON} &'; \
 		echo 'wait'; \
 	} > /bin/start-mesos.sh  && chmod +x /bin/start-mesos.sh && \
