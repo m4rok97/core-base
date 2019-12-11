@@ -34,7 +34,3 @@ RUN { \
 		echo 'quit'; \
 		echo 'EOF'; \
 	} > /opt/zookeeper/bin/auth-cli.sh  && chmod +x /opt/zookeeper/bin/auth-cli.sh
-
-RUN apt clean && \
-	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
-

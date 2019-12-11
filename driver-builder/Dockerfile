@@ -24,7 +24,7 @@ RUN \
 ARG SOURCE_CACHE=1
 RUN mkdir ${IGNIS_HOME}/lib/java && \
 	mkdir /tmp/backend && \ 
-	git clone https://ignis-ro:ghqvbdWcAfpDTLwLHgSf@gitlab.com/ignis-framework/ignis/backend.git /tmp/backend && \
+	git clone https://ignis:aTCXjiyroiGyrh5XNbhS@gitlab.com/ignis-hpc/backend.git /tmp/backend && \
 	cd /tmp/backend && \
 	gradle jarAndLibs && \
 	rm -rf ~/.gradle && \

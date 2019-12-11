@@ -44,6 +44,14 @@ cd cpp
 	cd ..
 cd ..
 
+cd full
+	docker build -t ignishpc/full .
+cd ..
+
+cd submitter
+	docker build -t ignishpc/submitter .
+cd ..
+
 cd mesos
 	docker build -t ignishpc/mesos .
 cd ..

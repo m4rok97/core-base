@@ -35,16 +35,12 @@ RUN mkdir /tmp/mesos && \
 	make install && \
 	rm -fR /tmp/mesos
 
-ENV _CHRONOS_VERSION=2.5.0
-RUN mkdir /tmp/chronos/ && \
-	cd /tmp/chronos/ && \
-	wget https://github.com/mesos/chronos/archive/${_CHRONOS_VERSION}.zip  && \
-	unzip ${_CHRONOS_VERSION}.zip && \
-	cd chronos-${_CHRONOS_VERSION} && \
-	mvn package -DskipTests && \
-	mkdir /opt/chronos && \
-	mv target/* /opt/chronos/ && \
-	rm -fR /tmp/chronos/
+ENV _MARATHON_VERSION=1.8.222-86475ddac
+RUN cd /tmp && \
+	wget https://downloads.mesosphere.com/marathon/builds/${_MARATHON_VERSION}/marathon-${_MARATHON_VERSION}.tgz  && \
+	tar -zxf marathon-${_MARATHON_VERSION}.tgz  && \
+	rm -f marathon-${_MARATHON_VERSION}.tgz && \
+	mv $(ls | grep marathon-${_MARATHON_VERSION}*) /opt/marathon
 
 RUN rm -fR ~/.m2 && \
 		apt purge -y \
@@ -65,8 +61,7 @@ RUN { \
 		echo 'fi'; \
 		echo 'mesos agent --work_dir=/var/lib/mesos/agent --port=${PORT_AGENT} --no-switch_user \'; \
 		echo '   --master=${ZOOKEEPER}/mesos --containerizers=docker,mesos &'; \
-		echo 'java -cp /opt/chronos/chronos*.jar org.apache.mesos.chronos.scheduler.Main --master ${ZOOKEEPER}/mesos \
-		--zk_hosts ${ZOOKEEPER} --hostname ${MESOS_ADVERSTISE_IP} --http_port ${PORT_CHRONOS} &'; \
+		echo '/opt/marathon/bin/marathon --master ${ZOOKEEPER}/mesos --zk ${ZOOKEEPER}/marathon --http_port ${PORT_MARATHON} &'; \
 		echo 'wait'; \
 	} > /bin/start-mesos.sh  && chmod +x /bin/start-mesos.sh && \
 	ldconfig

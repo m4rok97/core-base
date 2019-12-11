@@ -23,12 +23,15 @@ RUN mkdir /tmp/boost && \
 	mv stage/lib /root/boost/ && \
 	rm -fR /tmp/boost
 
+COPY mpich_static_port.c /tmp/mpich_static_port.c
 ENV MPICH_VERSION=3.3.2
 RUN mkdir /tmp/mpi && \
 	cd /tmp/mpi && \
 	wget https://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz && \
 	tar -zxf mpich-${MPICH_VERSION}.tar.gz && \
 	cd mpich-${MPICH_VERSION} && \
+	sed -e '/.*MPL_listen_anyport.*/ {' -e 'r /tmp/mpich_static_port.c' -e 'd' -e '}' -i $(find . -name mpl_sockaddr.c) && \
+	rm -f /tmp/mpich_static_port.c && \
 	./configure --disable-fortran --prefix /root/mpi && \
 	make -j 4 && \
 	make install && \

@@ -33,8 +33,6 @@ RUN cd ${IGNIS_HOME} && \
 	cp -R /root/mpi/include/* core/cpp/include/ && \
 	cp -R /root/mpi/lib/* lib/native/ && \
 	cp -R /usr/include/rapidjson core/cpp/include/ && \
-	cp /usr/include/zlib.h core/cpp/include/ && \
-	cp /usr/include/zconf.h core/cpp/include/ && \
 	rm -f lib/native/*.a 
 
 ARG SOURCE_CACHE=1
