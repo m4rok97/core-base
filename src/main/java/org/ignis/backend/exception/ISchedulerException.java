@@ -14,12 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.chronos.model;
+package org.ignis.backend.exception;
 
 /**
  *
  * @author César Pomar
  */
-public enum ContainerType {
-    DOCKER, MESOS;
+public class ISchedulerException extends RuntimeException {
+
+    public ISchedulerException(String message) {
+        super(message);
+    }
+
+    public ISchedulerException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

@@ -16,7 +16,7 @@
  */
 package org.ignis.backend.modules;
 
-import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.rpc.MockClusterServices;
 import org.ignis.backend.rpc.MockJobServices;
 import org.ignis.rpc.ISource;
@@ -47,7 +47,7 @@ public class MapperModuleTest extends BackendTest {
     public void testMap(int instances) {
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));
@@ -75,7 +75,7 @@ public class MapperModuleTest extends BackendTest {
     public void testStreamingMap(int instances) {
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));
@@ -103,7 +103,7 @@ public class MapperModuleTest extends BackendTest {
     public void testFlatmap(int instances) {
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));
@@ -131,7 +131,7 @@ public class MapperModuleTest extends BackendTest {
     public void testStreamingFlatmap(int instances) {
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));
@@ -159,7 +159,7 @@ public class MapperModuleTest extends BackendTest {
     public void testFilter(int instances) {
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));
@@ -187,7 +187,7 @@ public class MapperModuleTest extends BackendTest {
     public void testStreamingFilter(int instances) {
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));
@@ -215,7 +215,7 @@ public class MapperModuleTest extends BackendTest {
         public void testKeyBy(int instances) {
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));

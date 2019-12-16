@@ -16,130 +16,213 @@
  */
 package org.ignis.backend.properties;
 
-import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collections;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import org.ignis.backend.exception.IgnisException;
+import java.util.Properties;
+import java.util.function.BiConsumer;
+import java.util.regex.Pattern;
+import org.ignis.backend.exception.IPropertyException;
 
 /**
  *
  * @author César Pomar
  */
 public final class IProperties {
-
-    private Map<String, String> properties;
-
+    
+    private final static Pattern BOOLEAN = Pattern.compile("y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON");
+    private final Properties inner;
+    
+    public IProperties(IProperties src, IProperties defaults) {
+        inner = new Properties(defaults.inner);
+        inner.putAll((Map) src.inner);
+    }
+    
     public IProperties(IProperties defaults) {
-        this();
-        fromMap(defaults.properties);
+        inner = new Properties(defaults.inner);
     }
-
+    
     public IProperties() {
-        properties = new HashMap<>();
+        inner = new Properties();
     }
-
+    
+    private String noNull(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value;
+    }
+    
     public String setProperty(String key, String value) {
-        String oldValue = properties.put(fixKey(key), value == null ? "" : value);
-        return oldValue == null ? "" : oldValue;
+        return (String) inner.setProperty(noNull(key), noNull(key));
     }
-
-    public String getProperty(String key) {
-        String value = properties.get(fixKey(key));
-        return value == null ? "" : value;
+    
+    public String getProperty(String key) throws IPropertyException {
+        String value = inner.getProperty(noNull(key));
+        if (value == null) {
+            throw new IPropertyException(noNull(key), " not found");
+        }
+        return value;
     }
-
-    public String getString(String key) throws IgnisException {
-        return IPropertyParser.getString(this, key);
+    
+    public boolean getBoolean(String key) throws IPropertyException {
+        return BOOLEAN.matcher(getProperty(key)).matches();
     }
-
-    public boolean getBoolean(String key) throws IgnisException {
-        return IPropertyParser.getBoolean(this, key);
+    
+    public int getInteger(String key) throws IPropertyException {
+        try {
+            return Integer.parseInt(getProperty(key));
+        } catch (NumberFormatException ex) {
+            throw new IPropertyException(noNull(key), ex.getMessage());
+        }
     }
-
-    public int getInteger(String key) throws IgnisException {
-        return IPropertyParser.getInteger(this, key);
+    
+    public long getLong(String key) throws IPropertyException {
+        try {
+            return Long.parseLong(getProperty(key));
+        } catch (NumberFormatException ex) {
+            throw new IPropertyException(noNull(key), ex.getMessage());
+        }
     }
-
-    public long getLong(String key) throws IgnisException {
-        return IPropertyParser.getLong(this, key);
+    
+    public float getFloat(String key) throws IPropertyException {
+        try {
+            return Float.parseFloat(getProperty(key));
+        } catch (NumberFormatException ex) {
+            throw new IPropertyException(noNull(key), ex.getMessage());
+        }
     }
-
-    public float getFloat(String key) throws IgnisException {
-        return IPropertyParser.getFloat(this, key);
+    
+    public double getDouble(String key) throws IPropertyException {
+        try {
+            return Double.parseDouble(getProperty(key));
+        } catch (NumberFormatException ex) {
+            throw new IPropertyException(noNull(key), ex.getMessage());
+        }
     }
-
-    public double getDouble(String key) throws IgnisException {
-        return IPropertyParser.getDouble(this, key);
+    
+    public String getString(String key) throws IPropertyException {
+        return getProperty(key);
     }
-
-    public long getSILong(String key) throws IgnisException {
-        return IPropertyParser.getSILong(this, key);
+    
+    public boolean contains(String key) {
+        return inner.containsKey(noNull(key));
     }
-
-    public boolean isProperty(String key) {
-        return properties.containsKey(fixKey(key));
-    }
-
+    
     public Map<String, String> toMap() {
-        return Collections.unmodifiableMap(properties);
+        return new HashMap<>((Map) inner);
     }
-
-    public void fromMap(Map<String, String> map) {
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            setProperty(entry.getKey(), entry.getValue());
+    
+    public void load(String path) throws IOException {
+        try (InputStream in = new BufferedInputStream(new FileInputStream(path))) {
+            load(in);
         }
     }
-
-    public void toFile(String path) throws IgnisException {
-        try {
-            toTree().save(new File(path));
-        } catch (IOException ex) {
-            throw new IgnisException("Fails to save properties", ex);
+    
+    public void load(InputStream in) throws IOException {
+        inner.load(in);
+    }
+    
+    public void store(String path) throws IOException {
+        try (OutputStream out = new BufferedOutputStream(new FileOutputStream(path))) {
+            store(out);
         }
     }
-
-    public void fromFile(String path) throws IgnisException {
-        try {
-            ITreeProperties tree = new ITreeProperties();
-            tree.load(new File(path));
-            tree.toMap(properties);
-        } catch (IOException ex) {
-            throw new IgnisException("Fails to load properties", ex);
-        }
+    
+    public void store(OutputStream out) throws IOException {
+        inner.store(out, "Ignis Job properties");
     }
-
-    public ITreeProperties.Entry getEntry(String key) {
-        return toTree().getEntry(key);
+    
+    public void clear() {
+        inner.clear();
     }
-
-    public ITreeProperties.Entry getRootEntry() {
-        return toTree().getRoot();
-    }
-
-    public void reset(IProperties defaults) {
-        properties.clear();
-        fromMap(properties);
-    }
-
-    public IProperties copy() {
-        return new IProperties(this);
-    }
-
-    private String fixKey(String key) {
-        if (key.startsWith("value")) {
-            if (key.length() == 5) {
-                return "";
+    
+    public void fromEnv(Map<String, String> env) {
+        for (Map.Entry<String, String> entry : env.entrySet()) {
+            if (entry.getKey().startsWith("IGNIS_")) {
+                setProperty(entry.getKey().replace('_', '.'), entry.getValue());
+            } else if (entry.getKey().startsWith("IGNISU_")) {
+                setProperty(entry.getKey().substring("IGNISU_".length()).replace('_', '.'), entry.getValue());
             }
-            key = key.substring(6);
         }
-        return key.replace(".value", "");
     }
-
-    private ITreeProperties toTree() {
-        ITreeProperties tree = new ITreeProperties();
-        tree.fromMap(properties);
-        return tree;
+    
+    public Map<String, String> toEnv() {
+        Map<String, String> env = new HashMap<>();
+        inner.forEach((Object ok, Object ov) -> {
+            String k = (String) ok;
+            if (k.startsWith("ignis.")) {
+                k = k.toUpperCase();
+            }else{
+                k = "IGNISU." + k;
+            }
+            env.put(k.replace('.', '_'), (String) ov);
+        });
+        return env;
     }
+    
+    public long getSILong(String key) throws IPropertyException {
+        String str = getProperty(key).trim();
+        final String UNITS = "KMGTPEZY";
+        double num;
+        int base;
+        int exp = 0;
+        boolean decimal = false;
+        int i = 0;
+        int len = str.length();
+        char[] cs = str.toCharArray();
+        while (i < len && cs[i] == ' ') {
+        }
+        while (i < len) {
+            if (cs[i] >= '0' && cs[i] <= '9') {
+                i++;
+            } else if (!decimal && (cs[i] == '.' || cs[i] == ',')) {
+                i++;
+                decimal = true;
+            } else {
+                break;
+            }
+        }
+        num = Double.parseDouble(str.substring(0, i));
+        if (i < len) {
+            if (cs[i] == ' ') {
+                i++;
+            }
+        }
+        if (i < len) {
+            exp = UNITS.indexOf(Character.toUpperCase(cs[i])) + 1;
+            if (exp > 0) {
+                i++;
+            }
+        }
+        if (i < len && exp > 0 && cs[i] == 'i') {
+            i++;
+            base = 1024;
+        } else {
+            base = 1000;
+        }
+        if (i < len) {
+            switch (cs[i++]) {
+                case 'B':
+                    //Nothing
+                    break;
+                case 'b':
+                    num = num / 8;
+                    break;
+                default:
+                    throw new IPropertyException(key, " has an invalid value");
+            }
+        }
+        if (i != len) {
+            throw new IPropertyException(key, " has an invalid value");
+        }
+        return (long) Math.ceil(num * Math.pow(base, exp));
+    }
+    
 }

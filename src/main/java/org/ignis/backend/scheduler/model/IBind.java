@@ -14,33 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.chronos;
+package org.ignis.backend.scheduler.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
  *
  * @author César Pomar
  */
-public class ChronosException extends RuntimeException {
+@Getter
+@Builder
+@AllArgsConstructor
+public class IBind {
 
-    private final int status;
-    private final String message;
-
-    public ChronosException(int status, String message) {
-        this.status = status;
-        this.message = message;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    @Override
-    public String getMessage() {
-        return message + " (http status: " + status + ")";
-    }
-
-    @Override
-    public String toString() {
-        return message + " (http status: " + status + ")";
-    }
+    private String hostPath;
+    private String containerPath;
+    private boolean readOnly;
 }

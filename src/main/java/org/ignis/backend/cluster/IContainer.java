@@ -26,7 +26,7 @@ import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.allocator.IExecutorStub;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.rpc.manager.IFileManager;
 import org.ignis.rpc.manager.IRegisterManager;
 import org.ignis.rpc.manager.IServerManager;
@@ -50,7 +50,7 @@ public final class IContainer {
         this.stub = stub;
         this.transport = new ITransportDecorator(null);// null before connect
         this.protocol = new TCompactProtocol(new TZlibTransport(transport,
-                stub.getProperties().getInteger(IPropsKeys.MANAGER_RPC_COMPRESSION)));
+                stub.getProperties().getInteger(IKeys.MANAGER_RPC_COMPRESSION)));
         this.serverManager = new IServerManager.Client(new TMultiplexedProtocol(protocol, "server"));
         this.registerManager = new IRegisterManager.Client(new TMultiplexedProtocol(protocol, "register"));
         this.fileManager = new IFileManager.Client(new TMultiplexedProtocol(protocol, "file"));
@@ -62,7 +62,7 @@ public final class IContainer {
 
     public void connect() throws IgnisException {
         TSocket socket = new TSocket(
-                stub.getHost(), stub.getHostPort(stub.getProperties().getInteger(IPropsKeys.MANAGER_RPC_PORT)));
+                stub.getHost(), stub.getHostPort(stub.getProperties().getInteger(IKeys.MANAGER_RPC_PORT)));
         transport.setTransport(socket);
 
         for (int i = 0; i < 10; i++) {

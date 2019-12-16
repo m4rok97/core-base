@@ -17,7 +17,7 @@
 package org.ignis.backend.modules;
 
 import java.util.Arrays;
-import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.rpc.MockClusterServices;
 import org.ignis.backend.rpc.MockJobServices;
 import org.ignis.rpc.driver.IDataId;
@@ -49,7 +49,7 @@ public class ShuffleModuleTest extends BackendTest {
     public void testShuffle(int instances, Long[] count) {
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));
@@ -84,7 +84,7 @@ public class ShuffleModuleTest extends BackendTest {
             }
 
             long prop1 = propertiesService.newInstance();
-            attributes.getProperties(prop1).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(from));
+            attributes.getProperties(prop1).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(from));
 
             long cluster1 = clusterService.newInstance(prop1);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster1));
@@ -105,7 +105,7 @@ public class ShuffleModuleTest extends BackendTest {
             //////////////
 
             long prop2 = propertiesService.newInstance();
-            attributes.getProperties(prop2).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(to));
+            attributes.getProperties(prop2).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(to));
 
             long cluster2 = clusterService.newInstance(prop2);
             MockClusterServices mockCluster2 = new MockClusterServices(attributes.getCluster(cluster2));

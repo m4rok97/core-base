@@ -16,7 +16,7 @@
  */
 package org.ignis.backend.modules;
 
-import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.rpc.MockClusterServices;
 import org.ignis.backend.rpc.MockJobServices;
 import org.ignis.rpc.driver.IDataId;
@@ -45,7 +45,7 @@ public class FilesModuleTest extends BackendTest {
     public void testReadAndWrite(int instances) {
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));

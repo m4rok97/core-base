@@ -16,12 +16,11 @@
  */
 package org.ignis.backend;
 
-import java.io.File;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.services.IAttributes;
 import org.ignis.backend.services.IBackendServiceImpl;
 import org.ignis.backend.services.IClusterServiceImpl;
@@ -54,11 +53,11 @@ public final class Main {
     }
 
     public static IAllocator loadAllocator(IProperties properties) {
-        String type = properties.getProperty(IPropsKeys.ALLOCATOR_TYPE);
+        String type = properties.getProperty(IKeys.SCHEDULER_TYPE);
         switch (type) {
             case "ancoris":
-                loadVarEnv(properties, IPropsKeys.ALLOCATOR_URL, "ALLOCATOR_URL");
-                //return new IAncorisAllocator(properties.getProperty(IPropsKeys.ALLOCATOR_URL));
+                loadVarEnv(properties, IKeys.SCHEDULER_URL, "ALLOCATOR_URL");
+                //return new IAncorisAllocator(properties.getProperty(IKeys.ALLOCATOR_URL));
             case "ignis":
                 throw new UnsupportedOperationException("Allocator not implemented yet.");
             case "local":
@@ -78,17 +77,17 @@ public final class Main {
         IAttributes attributes = new IAttributes();
 
         LOGGER.info("Loading environment variables");
-        String home = loadVarEnv(attributes.defaultProperties, IPropsKeys.HOME, "IGNIS_HOME");
-        loadVarEnv(attributes.defaultProperties, IPropsKeys.DFS_HOME, "DFS_HOME");
-        loadVarEnv(attributes.defaultProperties, IPropsKeys.DFS_ID, "DFS_ID");
+        String home = loadVarEnv(attributes.defaultProperties, IKeys.HOME, "IGNIS_HOME");
+        loadVarEnv(attributes.defaultProperties, IKeys.DFS_HOME, "DFS_HOME");
+        loadVarEnv(attributes.defaultProperties, IKeys.DFS_ID, "DFS_ID");
 
         LOGGER.info("Loading configuration file");
-        try {
+        /*try {
             attributes.defaultProperties.fromFile(new File(home, "etc/ignis.yaml").getPath());
         } catch (IgnisException ex) {
             LOGGER.error("Error loading ignis.yaml, aborting", ex);
             return;
-        }
+        }*/
 
         LOGGER.info("Loading allocator");
         IAllocator allocator = loadAllocator(attributes.defaultProperties);
@@ -113,18 +112,18 @@ public final class Main {
             LOGGER.error("Error starting services, aborting", ex);
             return;
         }
-
+/*
         try {
-            Integer port = attributes.defaultProperties.getInteger(IPropsKeys.DRIVER_RPC_PORT);
+            Integer port = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT);
             System.out.println(port);
             backend.start(processor, port);
         } catch (IgnisException ex) {
             LOGGER.error("Error parsing server port, aborting", ex);
             return;
         }
-        if(!attributes.defaultProperties.isProperty(IPropsKeys.DEBUG)){
+        if(!attributes.defaultProperties.isProperty(IKeys.DEBUG)){
             attributes.destroyClusters();
-        }
+        }*/
         LOGGER.info("Backend stopped");
     }
 

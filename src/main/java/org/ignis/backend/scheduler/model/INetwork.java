@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.chronos.model;
+package org.ignis.backend.scheduler.model;
 
-import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 
 /**
@@ -26,10 +27,17 @@ import lombok.Getter;
  * @author César Pomar
  */
 @Getter
-@Builder
-@AllArgsConstructor
-public class Parameter implements Serializable {
+public class INetwork {
 
-    private String key;
-    private String value;
+    public INetwork() {
+        tcpMap = new HashMap<>();
+        udpMap = new HashMap<>();
+        tcpPorts = new ArrayList<>();
+        udpPorts = new ArrayList<>();
+    }
+
+    private final Map<Integer, Integer> tcpMap;
+    private final Map<Integer, Integer> udpMap;
+    private final List<Integer> tcpPorts;
+    private final List<Integer> udpPorts;
 }

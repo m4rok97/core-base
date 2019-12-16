@@ -19,7 +19,7 @@ package org.ignis.backend.modules;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.rpc.MockClusterServices;
 import org.ignis.backend.rpc.MockJobServices;
 import org.ignis.rpc.ISource;
@@ -63,7 +63,7 @@ public class KeysModuleTest extends BackendTest {
 
         try {
             long prop = propertiesService.newInstance();
-            attributes.getProperties(prop).setProperty(IPropsKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
+            attributes.getProperties(prop).setProperty(IKeys.EXECUTOR_INSTANCES, String.valueOf(instances));
 
             long cluster = clusterService.newInstance(prop);
             MockClusterServices mockCluster = new MockClusterServices(attributes.getCluster(cluster));

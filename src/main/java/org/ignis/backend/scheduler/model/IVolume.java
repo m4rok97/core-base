@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.chronos.model;
+package org.ignis.backend.scheduler.model;
 
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,8 +27,9 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Label implements Serializable{
+public class IVolume {
 
-    private String key;
-    private String value;
+    private String containerPath;
+    private Long size;
+
 }

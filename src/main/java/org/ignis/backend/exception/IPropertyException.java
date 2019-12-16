@@ -14,25 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.chronos.model;
-
-import java.io.Serializable;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+package org.ignis.backend.exception;
 
 /**
  *
  * @author César Pomar
  */
-@Getter
-@Builder
-@AllArgsConstructor
-public class Network implements Serializable {
+public class IPropertyException extends RuntimeException {
 
-    private String name;
-    private ProtocolType protocol;
-    private List<Label> labels;
-    private List<PortMapping> portMappings;
+    public IPropertyException(String key, String msg) {
+        super("'" + key + "'" + msg);
+    }
 }

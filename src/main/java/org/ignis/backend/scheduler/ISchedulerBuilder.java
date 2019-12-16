@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.chronos.model;
+package org.ignis.backend.scheduler;
 
-import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
 
 /**
  *
  * @author César Pomar
  */
-@Getter
-@Builder
-@AllArgsConstructor
-public class Fetch implements Serializable{
+public class ISchedulerBuilder {
 
-    private String uri;
-    private String output_file;
-    private boolean executable;
-    private boolean cache;
-    private boolean extract;
+    public static IScheduler create(String type, String url) {
+        if (type != null) {
+            type = type.toLowerCase();
+        }
+        switch (type) {
+            case "0":
+                return new IMarathonScheduler(url);
+            default:
+                throw new RuntimeException("Scheduler " + type + " not found");//TODO change exception type    
+        }
+    }
+
 }

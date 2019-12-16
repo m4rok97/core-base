@@ -22,7 +22,7 @@ import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IClusterService;
 
@@ -37,8 +37,8 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     
     public IClusterServiceImpl(IAttributes attributes, IAllocator allocator) throws IgnisException {
         super(attributes);
-        int minWorkers = attributes.defaultProperties.getInteger(IPropsKeys.DRIVER_TASK_MIN_WORKERS);
-        int maxFailures = attributes.defaultProperties.getInteger(IPropsKeys.DRIVER_TASK_MAX_FAILURES);
+        int minWorkers = attributes.defaultProperties.getInteger(IKeys.DRIVER_TASK_MIN_WORKERS);
+        int maxFailures = attributes.defaultProperties.getInteger(IKeys.DRIVER_TASK_MAX_FAILURES);
         this.threadPool = new IThreadPool(minWorkers, maxFailures);
         this.allocator = allocator;
     }
@@ -48,7 +48,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
         IProperties propertiesObject = attributes.getProperties(properties);
         IProperties propertiesCopy;
         synchronized (propertiesObject) {
-            propertiesCopy = propertiesObject.copy();
+            propertiesCopy = new IProperties(propertiesObject, attributes.defaultProperties);
         }
         long id = attributes.newIdCluster();
         attributes.addCluster(new ICluster(id, propertiesCopy, threadPool, allocator));

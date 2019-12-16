@@ -52,7 +52,7 @@ public final class IJobServiceImpl extends IService implements IJobService.Iface
         IProperties propertiesObject = attributes.getProperties(properties);
         IProperties propertiesCopy;
         synchronized (propertiesObject) {
-            propertiesCopy = propertiesObject.copy();
+            propertiesCopy = new IProperties(propertiesObject, attributes.defaultProperties);
         }
         synchronized (clusterObject.getLock()) {
             IJob job = clusterObject.createJob(type, propertiesCopy);

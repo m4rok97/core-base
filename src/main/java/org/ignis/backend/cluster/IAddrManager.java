@@ -17,7 +17,7 @@
 package org.ignis.backend.cluster;
 
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IKeys;
 
 /**
  *
@@ -35,7 +35,7 @@ public class IAddrManager {
     }
 
     private int getSocketPort(IExecutor e) throws IgnisException {
-        int port = e.getContainer().getProperties().getInteger(IPropsKeys.TRANSPORT_PORT);
+        int port = e.getContainer().getProperties().getInteger(IKeys.TRANSPORT_PORT);
         return e.getContainer().getExposePort(port);
     }
 
@@ -60,12 +60,11 @@ public class IAddrManager {
     }
 
     private String parseContainerMemoryBuffer(IExecutor source, IExecutor target) throws IgnisException {
-        return joinFields(
-                MEMORY_BUFFER,
+        return joinFields(MEMORY_BUFFER,
                 target.getContainer().getHost(),
                 String.valueOf(getSocketPort(target)),
                 "/dev/shm",
-                String.valueOf(source.getContainer().getProperties().getSILong(IPropsKeys.TRANSPORT_BUFFER))
+                String.valueOf(source.getContainer().getProperties().getSILong(IKeys.TRANSPORT_BUFFER))
         );
     }
 
@@ -81,7 +80,7 @@ public class IAddrManager {
         if (source.equals(target)) {
             return parseLocal(source, target);
         }
-        String type = source.getProperties().getProperty(IPropsKeys.TRANSPORT_TYPE);
+        String type = source.getProperties().getProperty(IKeys.TRANSPORT_TYPE);
         if (source.getContainer().equals(target.getContainer())) {
             if (MEMORY_BUFFER.equals(type)) {
                 parseContainerMemoryBuffer(source, target);

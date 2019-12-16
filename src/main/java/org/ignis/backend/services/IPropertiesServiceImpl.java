@@ -67,7 +67,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     public boolean isProperty(long id, String key) throws IRemoteException, TException {
         IProperties properties = attributes.getProperties(id);
         synchronized (properties) {
-            return properties.isProperty(key);
+            return properties.contains(key);
         }
     }
 
@@ -83,7 +83,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     public void fromMap(long id, Map<String, String> _map) throws IRemoteException, TException {
         IProperties properties = attributes.getProperties(id);
         synchronized (properties) {
-            properties.fromMap(_map);
+            //properties.fromMap(_map);
         }
     }
 
@@ -91,7 +91,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     public void toFile(long id, String path) throws IRemoteException, TException {
         IProperties properties = attributes.getProperties(id);
         synchronized (properties) {
-            properties.toFile(path);
+            //properties.store(path);
         }
     }
 
@@ -99,7 +99,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     public void fromFile(long id, String path) throws IRemoteException, TException {
         IProperties properties = attributes.getProperties(id);
         synchronized (properties) {
-            properties.fromFile(path);
+            //properties.load(path);
         }
     }
 
@@ -107,7 +107,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     public void reset(long id) throws IRemoteException, TException {
         IProperties properties = attributes.getProperties(id);
         synchronized (properties) {
-            properties.reset(attributes.defaultProperties);
+            //properties.reset(attributes.defaultProperties);
         }
     }
 

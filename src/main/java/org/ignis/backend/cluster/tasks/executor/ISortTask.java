@@ -28,7 +28,7 @@ import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IPropsKeys;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
@@ -120,7 +120,7 @@ public final class ISortTask extends IExecutorContextTask {
                 long available = executor.getStorageModule().count();
                 long elements = shared.count.values().stream().reduce(0l, (a, b) -> a + b);
                 long sampleSize = (long) Math.ceil((executors.size() - 1)
-                        * (1 + executor.getProperties().getDouble(IPropsKeys.DRIVER_SORT_OVERSAMPLING)));
+                        * (1 + executor.getProperties().getDouble(IKeys.MODULES_SORT_SAMPLES)));
                 long sampleExecutorSize = Math.min(
                         sampleSize * (long) Math.ceil(shared.count.get(executor) / (elements * 1.0)), available
                 );

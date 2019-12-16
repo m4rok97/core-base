@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.backend.chronos.model;
+package org.ignis.backend.scheduler.model;
 
-import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,9 +29,29 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class PortMapping implements Serializable {
+public class IJobContainer {
 
-    private int hostPort;
-    private int containerPort;
-    private String protocol;
+    public static enum ContainerStatus{
+        ACCEPTED,
+        RUNNING,
+        ERROR,
+        FINISHED,
+        DESTROYED,
+        UNKNOWN
+    }
+    
+    private final ContainerStatus status;
+    private final String id;
+    private final String host;
+    private final String image;
+    private final String command;
+    private final List<String> arguments;
+    private final int cpus;
+    private final long memory;
+    private final Boolean hostDns;
+    private final INetwork network;
+    private final List<IBind> binds;
+    private final List<IVolume> volumes;
+    private final List<String> preferedHosts;
+    private final Map<String, String> environmentVariables;
 }
