@@ -3,8 +3,9 @@ FROM ignishpc/builder
 
 COPY driver-install.sh ${IGNIS_HOME}/bin
 RUN chmod +x ${IGNIS_HOME}/bin/driver-install.sh && \
-	mv /root/mpi/bin/ ${IGNIS_HOME}/bin && \
-	mv /root/mpi/lib/ ${IGNIS_HOME}/lib/native
+	mv /root/mpi/bin/* ${IGNIS_HOME}/bin && \
+	mkdir ${IGNIS_HOME}/lib/native && \
+	mv /root/mpi/lib/* ${IGNIS_HOME}/lib/native
 
 RUN apt update && \
 	apt -y install openjdk-8-jdk
