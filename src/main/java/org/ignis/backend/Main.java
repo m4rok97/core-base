@@ -16,16 +16,22 @@
  */
 package org.ignis.backend;
 
+import java.io.File;
+import java.io.IOException;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.allocator.IAllocator;
+import org.ignis.backend.exception.IPropertyException;
+import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IKeys;
+import org.ignis.backend.scheduler.IScheduler;
+import org.ignis.backend.scheduler.ISchedulerBuilder;
 import org.ignis.backend.services.IAttributes;
 import org.ignis.backend.services.IBackendServiceImpl;
 import org.ignis.backend.services.IClusterServiceImpl;
-import org.ignis.backend.services.IDataServiceImpl;
-import org.ignis.backend.services.IJobServiceImpl;
+import org.ignis.backend.services.IDataFrameServiceImpl;
+import org.ignis.backend.services.IWorkerServiceImpl;
 import org.ignis.backend.services.IPropertiesServiceImpl;
 import org.ignis.rpc.driver.IBackendService;
 import org.ignis.rpc.driver.IClusterService;
@@ -42,33 +48,6 @@ public final class Main {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-    public static String loadVarEnv(IProperties properties, String key, String var) {
-        String value = System.getenv(var);
-        if (value == null) {
-            LOGGER.error(var + " not exists, aborting");
-            System.exit(-1);
-        }
-        properties.setProperty(key, value);
-        return value;
-    }
-
-    public static IAllocator loadAllocator(IProperties properties) {
-        String type = properties.getProperty(IKeys.SCHEDULER_TYPE);
-        switch (type) {
-            case "ancoris":
-                loadVarEnv(properties, IKeys.SCHEDULER_URL, "ALLOCATOR_URL");
-                //return new IAncorisAllocator(properties.getProperty(IKeys.ALLOCATOR_URL));
-            case "ignis":
-                throw new UnsupportedOperationException("Allocator not implemented yet.");
-            case "local":
-                //return new ILocalAllocator();
-            default:
-                LOGGER.error(type + " is not a valid allocator, aborting");
-                System.exit(-1);
-        }
-        return null;
-    }
-
     /**
      * @param args the command line arguments
      */
@@ -77,54 +56,68 @@ public final class Main {
         IAttributes attributes = new IAttributes();
 
         LOGGER.info("Loading environment variables");
-        String home = loadVarEnv(attributes.defaultProperties, IKeys.HOME, "IGNIS_HOME");
-        loadVarEnv(attributes.defaultProperties, IKeys.DFS_HOME, "DFS_HOME");
-        loadVarEnv(attributes.defaultProperties, IKeys.DFS_ID, "DFS_ID");
+        attributes.defaultProperties.fromEnv(System.getenv());//Only for IGNIS_HOME
 
         LOGGER.info("Loading configuration file");
-        /*try {
-            attributes.defaultProperties.fromFile(new File(home, "etc/ignis.yaml").getPath());
-        } catch (IgnisException ex) {
-            LOGGER.error("Error loading ignis.yaml, aborting", ex);
-            return;
-        }*/
-
-        LOGGER.info("Loading allocator");
-        IAllocator allocator = loadAllocator(attributes.defaultProperties);
         try {
-            LOGGER.info("Checking allocator");
-            allocator.ping();
-            LOGGER.info("Allocator " + allocator.getName() + " ... OK");
-        } catch (IgnisException ex) {
-            LOGGER.error("Allocator " + allocator.getName() + " ... Fails\n" + ex);
+            String conf = new File(attributes.defaultProperties.getString(IKeys.HOME), "etc/ignis.conf").getPath();
+            attributes.defaultProperties.load(conf);
+        } catch (IPropertyException | IOException ex) {
+            LOGGER.error("Error loading ignis.conf, aborting", ex);
+            System.exit(-1);
+        }
+
+        LOGGER.info("Loading scheduler");
+        IScheduler scheduler = null;
+        String schedulerType = null;
+        String schedulerUrl = null;
+        try {
+            schedulerType = attributes.defaultProperties.getString(IKeys.SCHEDULER_TYPE);
+            schedulerUrl = attributes.defaultProperties.getString(IKeys.SCHEDULER_URL);
+        } catch (IPropertyException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            System.exit(-1);
+        }
+        try {
+            LOGGER.info("Checking scheduler " + schedulerType);
+            scheduler = ISchedulerBuilder.create(schedulerType, schedulerUrl);
+            scheduler.healthCheck();
+            LOGGER.info("Scheduler " + schedulerType + " " + schedulerUrl + " ... OK");
+        } catch (ISchedulerException ex) {
+            LOGGER.error("Scheduler " + schedulerType + " " + schedulerUrl + " ... Fails\n" + ex);
             System.exit(-1);
         }
 
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
-        IBackendServiceImpl backend;
+        IBackendServiceImpl backend = null;
+        
         try {
             processor.registerProcessor("backend", new IBackendService.Processor<>(backend = new IBackendServiceImpl(attributes)));
-            processor.registerProcessor("cluster", new IClusterService.Processor<>(new IClusterServiceImpl(attributes, allocator)));
-            processor.registerProcessor("job", new IJobService.Processor<>(new IJobServiceImpl(attributes)));
-            processor.registerProcessor("data", new IDataService.Processor<>(new IDataServiceImpl(attributes)));
+            processor.registerProcessor("cluster", new IClusterService.Processor<>(new IClusterServiceImpl(attributes, scheduler)));
+            processor.registerProcessor("worker", new IJobService.Processor<>(new IWorkerServiceImpl(attributes)));
+            processor.registerProcessor("dataframe", new IDataService.Processor<>(new IDataFrameServiceImpl(attributes)));
             processor.registerProcessor("properties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(attributes)));
-        } catch (IgnisException ex) {
+        } catch (Exception ex) {
             LOGGER.error("Error starting services, aborting", ex);
-            return;
+            System.exit(-1);
         }
-/*
+
         try {
             Integer port = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT);
+            Integer compression = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_COMPRESSION);
             System.out.println(port);
+            System.out.println(compression);
             backend.start(processor, port);
-        } catch (IgnisException ex) {
-            LOGGER.error("Error parsing server port, aborting", ex);
-            return;
+
+            if (!attributes.defaultProperties.contains(IKeys.DEBUG)) {
+                attributes.destroyClusters();
+            }
+            LOGGER.info("Backend stopped");
+
+        } catch (Exception ex) {
+            LOGGER.error("Server error, aborting", ex);
+            System.exit(-1);
         }
-        if(!attributes.defaultProperties.isProperty(IKeys.DEBUG)){
-            attributes.destroyClusters();
-        }*/
-        LOGGER.info("Backend stopped");
     }
 
 }

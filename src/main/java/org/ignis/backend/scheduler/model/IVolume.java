@@ -30,6 +30,6 @@ import lombok.Getter;
 public class IVolume {
 
     private String containerPath;
-    private Long size;
+    private Long size;//MiB
 
 }

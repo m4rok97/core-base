@@ -26,6 +26,7 @@ public final class IKeys {
     public static final String DEBUG = "ignis.debug";
     public static final String HOME = "ignis.home";
     public static final String GROUP = "ignis.group";
+    public static final String OPTIONS = "ignis.options";
     /*JOB*/
     public static final String JOB_NAME = "ignis.job.name";
     public static final String JOB_DIRECTORY = "ignis.job.directory";
@@ -36,12 +37,23 @@ public final class IKeys {
     public static final String SCHEDULER_URL = "ignis.scheduler.url";
     public static final String SCHEDULER_TYPE = "ignis.scheduler.type";
     public static final String SCHEDULER_CONTAINER = "ignis.scheduler.container";
+    public static final String SCHEDULER_DNS = "ignis.scheduler.dns";
     /*DRIVER*/
     public static final String DRIVER_IMAGE = "ignis.driver.image";
     public static final String DRIVER_CORES = "ignis.driver.cores";
     public static final String DRIVER_MEMORY = "ignis.driver.memory";
     public static final String DRIVER_RPC_PORT = "ignis.driver.rpc.port";
     public static final String DRIVER_RPC_COMPRESSION = "ignis.driver.rpc.compression";
+    public static final String DRIVER_PORT = "ignis.driver.port";
+    public static final String DRIVER_PORTS = "ignis.driver.ports";
+    public static final String DRIVER_BIND = "ignis.driver.bind";
+    public static final String DRIVER_VOLUME = "ignis.driver.volume";
+    public static final String DRIVER_HOSTS = "ignis.driver.hosts";
+    public static final String DRIVER_ENV = "ignis.driver.env";
+    public static final String DRIVER_HEALTHCHECK_PORT = "ignis.driver.healthcheck.port";
+    public static final String DRIVER_HEALTHCHECK_INTERVAL = "ignis.driver.healthcheck.interval";
+    public static final String DRIVER_HEALTHCHECK_TIMEOUT = "ignis.driver.healthcheck.timeout";
+    public static final String DRIVER_HEALTHCHECK_RETRIES = "ignis.driver.healthcheck.retries";
     /*EXECUTOR*/
     public static final String EXECUTOR_IMAGE = "ignis.executor.image";
     public static final String EXECUTOR_CORES = "ignis.executor.cores";
@@ -60,13 +72,12 @@ public final class IKeys {
     public static final String TRANSPORT_PORT = "ignis.transport.port";
     public static final String TRANSPORT_PORTS = "ignis.transport.ports";
     /*MODULES*/
-    /*  IO*/
+ /*  IO*/
     public static final String MODULES_IO_OVERWRITE = "ignis.modules.io.overwrite";
     public static final String MODULES_IO_COMPRESSION = "ignis.modules.io.compression";
     /*  SORT*/
     public static final String MODULES_SORT_SAMPLES = "ignis.modules.sort.samples";
-    
-    
+
     /*DEPRECATED*/
     public static final String DRIVER_SWAP = "ignis.driver.swap";
     public static final String DRIVER_SWAPPINESS = "ignis.driver.swappiness";

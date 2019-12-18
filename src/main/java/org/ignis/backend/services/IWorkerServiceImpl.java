@@ -31,9 +31,9 @@ import org.ignis.rpc.driver.IJobService;
  *
  * @author César Pomar
  */
-public final class IJobServiceImpl extends IService implements IJobService.Iface {
+public final class IWorkerServiceImpl extends IService implements IJobService.Iface {
     
-    public IJobServiceImpl(IAttributes attributes) {
+    public IWorkerServiceImpl(IAttributes attributes) {
         super(attributes);
     }
     

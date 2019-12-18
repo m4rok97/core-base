@@ -31,9 +31,9 @@ import org.ignis.rpc.driver.IDataService;
  *
  * @author César Pomar
  */
-public final class IDataServiceImpl extends IService implements IDataService.Iface {
+public final class IDataFrameServiceImpl extends IService implements IDataService.Iface {
 
-    public IDataServiceImpl(IAttributes attributes) {
+    public IDataFrameServiceImpl(IAttributes attributes) {
         super(attributes);
     }
 

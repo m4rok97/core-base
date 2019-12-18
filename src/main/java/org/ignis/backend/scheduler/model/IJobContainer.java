@@ -40,15 +40,13 @@ public class IJobContainer {
         UNKNOWN
     }
     
-    private final ContainerStatus status;
     private final String id;
     private final String host;
     private final String image;
     private final String command;
     private final List<String> arguments;
     private final int cpus;
-    private final long memory;
-    private final Boolean hostDns;
+    private final long memory;//MiB
     private final INetwork network;
     private final List<IBind> binds;
     private final List<IVolume> volumes;

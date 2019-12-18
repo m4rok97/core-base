@@ -16,6 +16,8 @@
  */
 package org.ignis.backend.scheduler;
 
+import org.ignis.backend.exception.ISchedulerException;
+
 
 /**
  *
@@ -24,14 +26,14 @@ package org.ignis.backend.scheduler;
 public class ISchedulerBuilder {
 
     public static IScheduler create(String type, String url) {
-        if (type != null) {
-            type = type.toLowerCase();
-        }
+         type = type.toLowerCase();
         switch (type) {
-            case "0":
+            case "ancoris":
+                return new IAncorisScheduler(url);
+            case "marathon":
                 return new IMarathonScheduler(url);
             default:
-                throw new RuntimeException("Scheduler " + type + " not found");//TODO change exception type    
+                throw new ISchedulerException("Scheduler " + type + " not found");
         }
     }
 

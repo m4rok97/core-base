@@ -16,19 +16,23 @@
  */
 package org.ignis.backend;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.ByteArrayInputStream;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.action.AppendArgumentAction;
 import net.sourceforge.argparse4j.inf.Argument;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.scheduler.IMarathonScheduler;
+import org.ignis.backend.scheduler.IScheduler;
+import org.ignis.backend.scheduler.ISchedulerBuilder;
+import static org.ignis.backend.scheduler.ISchedulerParser.parseBinds;
+import static org.ignis.backend.scheduler.ISchedulerParser.parseEnv;
+import static org.ignis.backend.scheduler.ISchedulerParser.parseNetwork;
+import static org.ignis.backend.scheduler.ISchedulerParser.parseVolumes;
 import org.ignis.backend.scheduler.model.IJobContainer;
-import org.ignis.backend.scheduler.model.INetwork;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -43,17 +47,6 @@ public class Submit {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        IJobContainer container = IJobContainer.builder().
-                cpus(1).memory(100l).image("ubuntu:18.04").command("sleep").arguments(Arrays.asList("infinity"))
-                .network(new INetwork()).build();
-        container.getNetwork().getTcpMap().put(61751, 0);
-        IMarathonScheduler scheduler = new IMarathonScheduler("http://localhost:8080");
-        String group = scheduler.createGroup("grupo");
-        List<String> id = scheduler.createContainerIntances(group, "hola", container, null, 2);
-        scheduler.getContainer(id.get(0));
-        scheduler.restartContainer(id.get(0));
-
-        //args = new String[]{"-p","a=b","-p","a=b","image","cmd"};
         ArgumentParser parser = ArgumentParsers.newFor("ignis-submit").build();
         Namespace ns = null;
         try {
@@ -62,6 +55,7 @@ public class Submit {
             parser.addArgument("cmd").help("Driver executable");
             parser.addArgument("args").nargs("*").help("Driver executable arguments");
 
+            parser.addArgument("--name").metavar("str").help("Job name");
             parser.addArgument("-p", "--property").metavar("key=value").action(new AppendArgumentAction())
                     .type((ArgumentParser ap, Argument arg, String value) -> {
                         String array[] = value.split("=");
@@ -85,6 +79,10 @@ public class Submit {
         try {
             IProperties props = new IProperties();
             props.fromEnv(System.getenv());
+            if (props.contains(IKeys.OPTIONS)) {
+                props.load(new ByteArrayInputStream(props.getProperty(IKeys.OPTIONS).getBytes()));
+            }
+
             props.setProperty(IKeys.DRIVER_IMAGE, ns.getString("image"));
             if (ns.get("property-file") != null) {
                 props.load("property-file");
@@ -95,6 +93,35 @@ public class Submit {
                 }
             }
 
+            
+            IScheduler scheduler = ISchedulerBuilder.create(props.getProperty(IKeys.SCHEDULER_TYPE),
+                    props.getProperty(IKeys.SCHEDULER_URL));
+
+            IJobContainer.IJobContainerBuilder builder = IJobContainer.builder();
+            builder.image(props.getProperty(IKeys.DRIVER_IMAGE));
+            builder.cpus(props.getInteger(IKeys.DRIVER_CORES));
+            builder.memory((long) Math.ceil(props.getSILong(IKeys.DRIVER_MEMORY) / 1024 / 1024));
+            builder.command(ns.getString("cmd"));
+            builder.arguments(ns.getList("args"));
+            builder.network(parseNetwork(props, IKeys.DRIVER_PORT));
+            builder.binds(parseBinds(props, IKeys.DRIVER_BIND));
+            builder.volumes(parseVolumes(props, IKeys.DRIVER_VOLUME));
+            builder.environmentVariables(parseEnv(props, IKeys.DRIVER_ENV));
+            if (props.contains(IKeys.DRIVER_HOSTS)) {
+                builder.preferedHosts(props.getStringList(IKeys.DRIVER_HOSTS));
+            }
+
+            String group = null;
+            try {
+                group = scheduler.createGroup(ns.get("name") != null ? ns.get("name") : "ignis");
+                props.setProperty(IKeys.GROUP, group);
+                scheduler.createSingleContainer(group, "driver", builder.build(), props);
+            } catch (ISchedulerException ex) {
+                if (group != null) {
+                    scheduler.destroyGroup(group);
+                }
+                throw ex;
+            }
         } catch (Exception ex) {
             LOGGER.error(ex.getLocalizedMessage());
         }

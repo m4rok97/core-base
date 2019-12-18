@@ -22,12 +22,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mesosphere.marathon.client.Marathon;
 import mesosphere.marathon.client.MarathonClient;
 import mesosphere.marathon.client.MarathonException;
@@ -42,6 +41,7 @@ import mesosphere.marathon.client.model.v2.Task;
 import mesosphere.marathon.client.model.v2.VersionedApp;
 import mesosphere.marathon.client.model.v2.Volume;
 import org.ignis.backend.exception.ISchedulerException;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IBind;
 import org.ignis.backend.scheduler.model.IJobContainer;
@@ -141,12 +141,16 @@ public class IMarathonScheduler implements IScheduler {
             }
         }
         
-        if (container.getHostDns()) {
+        if (props.contains(IKeys.SCHEDULER_DNS) && props.getString(IKeys.SCHEDULER_DNS).toLowerCase().equals("host")) {
             LocalVolume vol = new LocalVolume();
             vol.setHostPath("/etc/hosts");
             vol.setContainerPath("/etc/hosts");
             vol.setMode("RO");
             app.getContainer().getVolumes().add(vol);
+        }
+        
+        if (props.contains(IKeys.SCHEDULER_CONTAINER)) {
+            app.getContainer().setType(props.getString(IKeys.SCHEDULER_CONTAINER));
         }
         
         if (container.getBinds() != null) {
@@ -181,7 +185,7 @@ public class IMarathonScheduler implements IScheduler {
     }
     
     private String taskId(Task task) throws ISchedulerException {
-        return task.getId().split("-")[3];
+        return task.getId().split(".")[2];
     }
     
     private Task getTask(App app, String id) throws ISchedulerException {
@@ -209,12 +213,18 @@ public class IMarathonScheduler implements IScheduler {
             if (app.getContainer().getPortMappings() != null) {
                 INetwork network = new INetwork();
                 builder.network(network);
+                Iterator<Integer> ports = task.getPorts().iterator();
                 for (Port port : app.getContainer().getPortMappings()) {
+                    int portHost = ports.next();
+                    int portContainer = port.getContainerPort();
+                    if (portContainer == 0) {
+                        portContainer = portHost;
+                    }
                     if (port.getProtocol().equals("tcp")) {
-                        network.getTcpMap().put(port.getContainerPort(), port.getHostPort());
+                        network.getTcpMap().put(portContainer, portHost);
                         network.getTcpPorts().add(port.getContainerPort());
                     } else {
-                        network.getUdpMap().put(port.getContainerPort(), port.getHostPort());
+                        network.getUdpMap().put(portContainer, portHost);
                         network.getUdpPorts().add(port.getContainerPort());
                     }
                 }
@@ -227,10 +237,6 @@ public class IMarathonScheduler implements IScheduler {
                 for (Volume absVol : app.getContainer().getVolumes()) {
                     if (absVol instanceof LocalVolume) {
                         LocalVolume vol = (LocalVolume) absVol;
-                        if (vol.getContainerPath().equals("/etc/hosts") && vol.getContainerPath().equals(vol.getHostPath())) {
-                            builder.hostDns(true);
-                            continue;
-                        }
                         binds.add(IBind.builder().
                                 containerPath(vol.getContainerPath()).
                                 hostPath(vol.getHostPath()).
@@ -241,9 +247,9 @@ public class IMarathonScheduler implements IScheduler {
                         PersistentLocalVolume vol = (PersistentLocalVolume) absVol;
                         Long sz = 0l;
                         try {  //Fix access bug
-                            Field field = ((Object)vol.getPersistentLocalVolumeInfo()).getClass().getDeclaredField("size");
+                            Field field = ((Object) vol.getPersistentLocalVolumeInfo()).getClass().getDeclaredField("size");
                             field.setAccessible(true);
-                            sz = (Long)field.get(vol.getPersistentLocalVolumeInfo());
+                            sz = (Long) field.get(vol.getPersistentLocalVolumeInfo());
                         } catch (Exception ex) {
                         }
                         volumes.add(IVolume.builder()
@@ -329,7 +335,8 @@ public class IMarathonScheduler implements IScheduler {
             }
             String taskId = taskAssignment.get(id);
             if (taskId == null) {
-                return IJobContainer.ContainerStatus.ERROR;
+                getContainer(id);
+                taskId = taskAssignment.get(id);
             }
             Task task;
             try {
@@ -417,6 +424,15 @@ public class IMarathonScheduler implements IScheduler {
             VersionedApp app = marathon.getApp(appId).getApp();
             marathon.deleteAppTask(appId, getTask(app, taskId).getId(), "true");
         } catch (MarathonException ex) {
+            throw new ISchedulerException(ex.getMessage(), ex);
+        }
+    }
+    
+    @Override
+    public void healthCheck() throws ISchedulerException {
+        try {
+            marathon.getServerInfo();
+        } catch (Exception ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }

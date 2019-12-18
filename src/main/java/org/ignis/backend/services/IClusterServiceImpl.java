@@ -17,12 +17,12 @@
 package org.ignis.backend.services;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IKeys;
+import org.ignis.backend.scheduler.IScheduler;
 import org.ignis.rpc.IRemoteException;
 import org.ignis.rpc.driver.IClusterService;
 
@@ -33,14 +33,14 @@ import org.ignis.rpc.driver.IClusterService;
 public final class IClusterServiceImpl extends IService implements IClusterService.Iface {
 
     private final IThreadPool threadPool;
-    private final IAllocator allocator;
+    private final IScheduler scheduler;
     
-    public IClusterServiceImpl(IAttributes attributes, IAllocator allocator) throws IgnisException {
+    public IClusterServiceImpl(IAttributes attributes, IScheduler scheduler) throws IgnisException {
         super(attributes);
         int minWorkers = attributes.defaultProperties.getInteger(IKeys.DRIVER_TASK_MIN_WORKERS);
         int maxFailures = attributes.defaultProperties.getInteger(IKeys.DRIVER_TASK_MAX_FAILURES);
         this.threadPool = new IThreadPool(minWorkers, maxFailures);
-        this.allocator = allocator;
+        this.scheduler = scheduler;
     }
 
     @Override
@@ -51,7 +51,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
             propertiesCopy = new IProperties(propertiesObject, attributes.defaultProperties);
         }
         long id = attributes.newIdCluster();
-        attributes.addCluster(new ICluster(id, propertiesCopy, threadPool, allocator));
+        attributes.addCluster(new ICluster(id, propertiesCopy, threadPool, null));//TODO
         return id;
     }
 

@@ -33,4 +33,27 @@ public final class ILock implements Comparable<ILock> {
         return (int) (id - lock.id);
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj != null && obj instanceof ILock) {
+            return id == ((ILock) obj).id;
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
 }

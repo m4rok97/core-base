@@ -23,11 +23,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.BiConsumer;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.ignis.backend.exception.IPropertyException;
 
 /**
@@ -83,9 +87,25 @@ public final class IProperties {
         }
     }
     
+    public List<Integer> getIntegerList(String key) throws IPropertyException {
+        try {
+            return getStringList(key).stream().map((String value) -> Integer.parseInt(value)).collect(Collectors.toList());
+        } catch (NumberFormatException ex) {
+            throw new IPropertyException(noNull(key), ex.getMessage());
+        }
+    }
+    
     public long getLong(String key) throws IPropertyException {
         try {
             return Long.parseLong(getProperty(key));
+        } catch (NumberFormatException ex) {
+            throw new IPropertyException(noNull(key), ex.getMessage());
+        }
+    }
+    
+    public List<Long> getLongList(String key) throws IPropertyException {
+        try {
+            return getStringList(key).stream().map((String value) -> Long.parseLong(value)).collect(Collectors.toList());
         } catch (NumberFormatException ex) {
             throw new IPropertyException(noNull(key), ex.getMessage());
         }
@@ -99,6 +119,14 @@ public final class IProperties {
         }
     }
     
+    public List<Float> getFloatList(String key) throws IPropertyException {
+        try {
+            return getStringList(key).stream().map((String value) -> Float.parseFloat(value)).collect(Collectors.toList());
+        } catch (NumberFormatException ex) {
+            throw new IPropertyException(noNull(key), ex.getMessage());
+        }
+    }
+    
     public double getDouble(String key) throws IPropertyException {
         try {
             return Double.parseDouble(getProperty(key));
@@ -107,8 +135,25 @@ public final class IProperties {
         }
     }
     
+    public List<Double> getDoubleList(String key) throws IPropertyException {
+        try {
+            return getStringList(key).stream().map((String value) -> Double.parseDouble(value)).collect(Collectors.toList());
+        } catch (NumberFormatException ex) {
+            throw new IPropertyException(noNull(key), ex.getMessage());
+        }
+    }
+    
     public String getString(String key) throws IPropertyException {
         return getProperty(key);
+    }
+    
+    public List<String> getStringList(String key) throws IPropertyException {
+        return Arrays.asList(getProperty(key).split(","));
+    }
+    
+    public Collection<String> getKeysPrefix(String prefix){
+        return ((Set<String>)(Set)inner.keySet()).stream()
+                .filter((String key) -> key.startsWith(prefix)).collect(Collectors.toList());
     }
     
     public boolean contains(String key) {
@@ -146,25 +191,9 @@ public final class IProperties {
     public void fromEnv(Map<String, String> env) {
         for (Map.Entry<String, String> entry : env.entrySet()) {
             if (entry.getKey().startsWith("IGNIS_")) {
-                setProperty(entry.getKey().replace('_', '.'), entry.getValue());
-            } else if (entry.getKey().startsWith("IGNISU_")) {
-                setProperty(entry.getKey().substring("IGNISU_".length()).replace('_', '.'), entry.getValue());
+                setProperty(entry.getKey().replace('_', '.').toLowerCase(), entry.getValue());
             }
         }
-    }
-    
-    public Map<String, String> toEnv() {
-        Map<String, String> env = new HashMap<>();
-        inner.forEach((Object ok, Object ov) -> {
-            String k = (String) ok;
-            if (k.startsWith("ignis.")) {
-                k = k.toUpperCase();
-            }else{
-                k = "IGNISU." + k;
-            }
-            env.put(k.replace('.', '_'), (String) ov);
-        });
-        return env;
     }
     
     public long getSILong(String key) throws IPropertyException {

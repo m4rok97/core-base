@@ -105,4 +105,10 @@ public interface IScheduler {
      */
     public void destroyContainer(String id) throws ISchedulerException;
 
+    /**
+     *
+     * @throws ISchedulerException
+     */
+    public void healthCheck() throws ISchedulerException;
+
 }

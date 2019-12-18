@@ -21,8 +21,8 @@ import org.ignis.backend.allocator.IContainerStub;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.services.IAttributes;
 import org.ignis.backend.services.IClusterServiceImpl;
-import org.ignis.backend.services.IDataServiceImpl;
-import org.ignis.backend.services.IJobServiceImpl;
+import org.ignis.backend.services.IDataFrameServiceImpl;
+import org.ignis.backend.services.IWorkerServiceImpl;
 import org.ignis.backend.services.IPropertiesServiceImpl;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
@@ -39,8 +39,8 @@ public class BackendTest {
     protected IAttributes attributes;
     protected IPropertiesServiceImpl propertiesService;
     protected IClusterServiceImpl clusterService;
-    protected IJobServiceImpl jobService;
-    protected IDataServiceImpl dataService;
+    protected IWorkerServiceImpl jobService;
+    protected IDataFrameServiceImpl dataService;
 
     public BackendTest() {
         /*try {
@@ -56,8 +56,8 @@ public class BackendTest {
             attributes.defaultProperties.fromFile("src/test/resources/ignis.yaml");
             propertiesService = new IPropertiesServiceImpl(attributes);
             clusterService = new IClusterServiceImpl(attributes, allocator);
-            jobService = new IJobServiceImpl(attributes);
-            dataService = new IDataServiceImpl(attributes);
+            jobService = new IWorkerServiceImpl(attributes);
+            dataService = new IDataFrameServiceImpl(attributes);
         } catch (IgnisException ex) {
             LOGGER.error(ex.getMessage(), ex);
         }*/
