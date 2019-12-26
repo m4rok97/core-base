@@ -16,11 +16,14 @@
  */
 package org.ignis.backend.services;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import org.ignis.backend.cluster.ICluster;
+import org.ignis.backend.cluster.IDriver;
+import org.ignis.backend.cluster.ISSH;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 
 /**
@@ -30,69 +33,59 @@ import org.ignis.backend.properties.IProperties;
 public final class IAttributes {
 
     public final IProperties defaultProperties;
-    private final AtomicLong idClusterGen;
-    private final AtomicLong idPropertiesGen;
-    private final Map<Long, ICluster> clustersMap;
-    private final Map<Long, IProperties> propertiesMap;
+    public final ISSH ssh;
+    public final IDriver driver;
+    private final List<ICluster> clusterList;
+    private final List<IProperties> propertiesList;
 
     public IAttributes() {
         this.defaultProperties = new IProperties();
-        this.clustersMap = new HashMap<>();
-        this.propertiesMap = new HashMap<>();
-        this.idClusterGen = new AtomicLong();
-        this.idPropertiesGen = new AtomicLong();
+        this.clusterList = new ArrayList<>();
+        this.propertiesList = new ArrayList<>();
+        this.ssh = new ISSH(defaultProperties.getInteger(IKeys.EXECUTOR_RPC_PORT));
+        this.driver= new IDriver(defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT));
     }
 
     public IProperties getProperties(long id) throws IgnisException {
-        IProperties properties;
-        synchronized (propertiesMap) {
-            properties = propertiesMap.get(id);
+        synchronized (propertiesList) {
+            if (propertiesList.size() > id) {
+                return propertiesList.get((int) id);
+            }
         }
-        if (properties == null) {
-            throw new IgnisException("Properties doesn't exist");
-        }
-        return properties;
+        throw new IgnisException("Properties doesn't exist");
     }
 
     public long addProperties(IProperties properties) {
-        long id = idPropertiesGen.incrementAndGet();
-        synchronized (propertiesMap) {
-            propertiesMap.put(id, properties);
+        synchronized (propertiesList) {
+            propertiesList.add(properties);
+            return propertiesList.size();
         }
-        return id;
     }
 
     public ICluster getCluster(long id) throws IgnisException {
-        ICluster cluster;
-        synchronized (clustersMap) {
-            cluster = clustersMap.get(id);
-        }
-        if (cluster == null) {
-            throw new IgnisException("Cluster doesn't exist");
-        }
-        return cluster;
-    }
-
-    public long newIdCluster() {
-        return idClusterGen.getAndIncrement();
-    }
-
-    public void addCluster(ICluster cluster) {
-        synchronized (clustersMap) {
-            clustersMap.put(cluster.getId(), cluster);
-        }
-    }
-
-    public void destroyClusters() {
-        synchronized (clustersMap) {
-            for (ICluster cluster : clustersMap.values()) {
-                try {
-                    cluster.destroy();
-                } catch (IgnisException ex) {
-                }
+        synchronized (clusterList) {
+            if (clusterList.size() > id) {
+                return clusterList.get((int) id);
             }
-            clustersMap.clear();
         }
+        throw new IgnisException("Cluster doesn't exist");
+    }
+
+    public long newCluster() {
+        synchronized (clusterList) {
+            clusterList.add(null);
+            return clusterList.size();
+        }
+    }
+
+    public void setCluster(ICluster cluster) {
+        synchronized (clusterList) {
+            clusterList.set((int) cluster.getId(), cluster);
+        }
+    }
+
+    public Collection<ICluster> getClusters() {
+        return clusterList;
     }
 
 }

@@ -16,9 +16,8 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.exception.IgnisException;
 
 /**
@@ -27,26 +26,26 @@ import org.ignis.backend.exception.IgnisException;
  */
 public abstract class IExecutorContextTask extends IExecutorTask {
 
-    public enum Mode {
+    protected enum Mode {
         LOAD, SAVE, LOAD_AND_SAVE
     }
 
     private final Mode mode;
 
-    public IExecutorContextTask(IHelper helper, IExecutor executor, Mode mode) {
-        super(helper, executor);
+    public IExecutorContextTask(String name, IExecutor executor, Mode mode) {
+        super(name, executor);
         this.mode = mode;
     }
 
     @Override
-    public final void loadContext(IExecutionContext context) throws IgnisException {
+    protected final void before(ITaskContext context) throws IgnisException {
         if (mode == Mode.LOAD || mode == Mode.LOAD_AND_SAVE) {
             context.loadContext(executor);
         }
     }
 
     @Override
-    public final void saveContext(IExecutionContext context) throws IgnisException {
+    protected final void after(ITaskContext context) throws IgnisException {
         if (mode == Mode.SAVE || mode == Mode.LOAD_AND_SAVE) {
             context.saveContext(executor);
         }

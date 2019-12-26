@@ -19,7 +19,7 @@ package org.ignis.backend.scheduler;
 import java.util.List;
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.scheduler.model.IJobContainer;
+import org.ignis.backend.scheduler.model.IContainerDetails;
 
 /**
  *
@@ -51,7 +51,7 @@ public interface IScheduler {
      * @return
      * @throws ISchedulerException
      */
-    public String createSingleContainer(String group, String name, IJobContainer container, IProperties props)
+    public String createSingleContainer(String group, String name, IContainerDetails container, IProperties props)
             throws ISchedulerException;
 
     /**
@@ -64,7 +64,7 @@ public interface IScheduler {
      * @return
      * @throws ISchedulerException
      */
-    public List<String> createContainerIntances(String group, String name, IJobContainer container,
+    public List<String> createContainerIntances(String group, String name, IContainerDetails container,
             IProperties props, int instances) throws ISchedulerException;
 
     /**
@@ -73,7 +73,7 @@ public interface IScheduler {
      * @return
      * @throws ISchedulerException
      */
-    public IJobContainer.ContainerStatus getStatus(String id) throws ISchedulerException;
+    public IContainerDetails.ContainerStatus getStatus(String id) throws ISchedulerException;
 
     /**
      *
@@ -81,7 +81,7 @@ public interface IScheduler {
      * @return
      * @throws ISchedulerException
      */
-    public IJobContainer getContainer(String id) throws ISchedulerException;
+    public IContainerDetails getContainer(String id) throws ISchedulerException;
 
     /**
      *
@@ -89,7 +89,7 @@ public interface IScheduler {
      * @return
      * @throws ISchedulerException
      */
-    public List<IJobContainer> getContainerInstances(List<String> ids) throws ISchedulerException;
+    public List<IContainerDetails> getContainerInstances(List<String> ids) throws ISchedulerException;
 
     /**
      *

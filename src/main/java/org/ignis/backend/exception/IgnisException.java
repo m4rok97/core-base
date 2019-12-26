@@ -16,50 +16,25 @@
  */
 package org.ignis.backend.exception;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
-import org.ignis.rpc.IRemoteException;
-
 /**
  *
  * @author César Pomar
  */
-public final class IgnisException extends IRemoteException {
+public class IgnisException extends Exception {
 
-    private final Throwable cause;
-
-    public IgnisException(String msg) {
-        super(msg, stackToString());
-        this.cause = this;
+    public IgnisException() {
     }
 
-    public IgnisException(String msg, Throwable cause) {
-        super(msg, stackToString() + "\nCaused by: " + exToString(cause));
-        this.cause = cause;
+    public IgnisException(String message) {
+        super(message);
     }
 
-    private static String exToString(Throwable ex) {
-        StringWriter writer = new StringWriter();
-        ex.printStackTrace(new PrintWriter(writer));
-        return writer.toString();
+    public IgnisException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    private static String stackToString() {
-        Throwable t = new Throwable().fillInStackTrace();
-        t.setStackTrace(Arrays.copyOfRange(t.getStackTrace(), 2, t.getStackTrace().length));
-        String stack = exToString(t);
-        return stack.substring(stack.indexOf('\n') + 1);
-    }
-
-    @Override
-    public Throwable getCause() {
-        return cause;
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getName() + ": " + getMessage() + "\n" + getStack();
+    public IgnisException(Throwable cause) {
+        super(cause);
     }
 
 }

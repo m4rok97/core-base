@@ -19,7 +19,7 @@ package org.ignis.backend.scheduler;
 import java.util.List;
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.backend.scheduler.model.IJobContainer;
+import org.ignis.backend.scheduler.model.IContainerDetails;
 
 /**
  *
@@ -42,29 +42,29 @@ public class IAncorisScheduler implements IScheduler {
     }
 
     @Override
-    public String createSingleContainer(String group, String name, IJobContainer container,
+    public String createSingleContainer(String group, String name, IContainerDetails container,
             IProperties props) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<String> createContainerIntances(String group, String name, IJobContainer container,
+    public List<String> createContainerIntances(String group, String name, IContainerDetails container,
             IProperties props, int instances) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public IJobContainer.ContainerStatus getStatus(String id) throws ISchedulerException {
+    public IContainerDetails.ContainerStatus getStatus(String id) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public IJobContainer getContainer(String id) throws ISchedulerException {
+    public IContainerDetails getContainer(String id) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<IJobContainer> getContainerInstances(List<String> ids) throws ISchedulerException {
+    public List<IContainerDetails> getContainerInstances(List<String> ids) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -17,10 +17,13 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.cluster.tasks.executor.IExecutorContextTask;
+import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.IExecutorException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
@@ -34,16 +37,18 @@ public final class IMapTask extends IExecutorContextTask {
 
     private final ISource function;
 
-    public IMapTask(IHelper helper, IExecutor executor, ISource function) {
-        super(helper, executor, Mode.LOAD_AND_SAVE);
+    public IMapTask(String name, IExecutor executor, ISource function) {
+        super(name, executor, Mode.LOAD_AND_SAVE);
         this.function = function;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
+    public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "Executing map");
         try {
-            executor.getMapperModule()._map(function);
+            executor.getGeneralModule().map_(function);
+        } catch (IExecutorException ex) {
+            throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }

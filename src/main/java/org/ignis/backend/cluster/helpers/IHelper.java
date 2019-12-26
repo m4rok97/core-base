@@ -30,10 +30,10 @@ public abstract class IHelper {
         this.properties = properties;
     }
 
-    public abstract String logHeader();
+    protected abstract String getName();
 
-    public String log() {
-        return logHeader() + ": ";
+    protected String log() {
+        return getName() + ": ";
     }
 
 }

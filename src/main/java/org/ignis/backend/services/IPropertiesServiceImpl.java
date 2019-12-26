@@ -18,8 +18,7 @@ package org.ignis.backend.services;
 
 import java.util.Map;
 import org.apache.thrift.TException;
-import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.IRemoteException;
+import org.ignis.rpc.IDriverException;
 import org.ignis.rpc.driver.IPropertiesService;
 
 /**
@@ -32,6 +31,57 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
         super(attributes);
     }
 
+    @Override
+    public long newInstance() throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public long newInstance2(long id) throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String setProperty(long id, String key, String value) throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getProperty(long id, String key) throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean contains(long id, String key) throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Map<String, String> toMap(long id, boolean defaults) throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void fromMap(long id, Map<String, String> _map) throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void load(long id, String path) throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void store(long id, String path) throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void clear(long id) throws IDriverException, TException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /*
     @Override
     public long newInstance() throws TException {
         synchronized (attributes.defaultProperties) {
@@ -109,6 +159,5 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
         synchronized (properties) {
             //properties.reset(attributes.defaultProperties);
         }
-    }
-
+    }*/
 }

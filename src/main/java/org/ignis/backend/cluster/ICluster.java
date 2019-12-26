@@ -18,15 +18,14 @@ package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterDestroyHelper;
-import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
 import org.ignis.backend.cluster.tasks.ILock;
-import org.ignis.backend.cluster.tasks.ITaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
+import org.ignis.backend.scheduler.IScheduler;
 
 /**
  *
@@ -34,25 +33,25 @@ import org.ignis.backend.properties.IProperties;
  */
 public final class ICluster {
 
+    private String name;
     private final long id;
+    private final ILock lock;
+    private final ITaskGroup tasks;
     private final IThreadPool pool;
     private final IProperties properties;
     private final List<IContainer> containers;
-    private final List<IJob> jobs;
-    private final ILock lock;
-    private final List<ITaskScheduler> schedulers;
-    private String name;
-    private boolean keep;
+    private final List<IWorker> workers;
 
-    public ICluster(long id, IProperties properties, IThreadPool pool, IAllocator allocator) throws IgnisException {
+    public ICluster(String name, long id, IProperties properties, IThreadPool pool, IScheduler scheduler, ISSH ssh)
+            throws IgnisException {
         this.id = id;
         this.properties = properties;
         this.pool = pool;
-        this.jobs = new ArrayList<>();
+        this.containers = new ArrayList<>();
+        this.workers = new ArrayList<>();
         this.lock = new ILock(id);
-        this.schedulers = new ArrayList<>();
-        setName("");
-        this.containers = new IClusterCreateHelper(this, properties).create(allocator);//Must be the last
+        setName(name);
+        this.tasks = new IClusterCreateHelper(this, properties).create(scheduler, ssh);//Must be the last
     }
 
     public long getId() {
@@ -78,14 +77,8 @@ public final class ICluster {
         this.name = name;
     }
 
-    public void putScheduler(ITaskScheduler scheduler) {
-        if (scheduler != null) {
-            schedulers.add(scheduler);
-        }
-    }
-
-    public ITaskScheduler getScheduler() {
-        return schedulers.get(schedulers.size() - 1);
+    public ITaskGroup getTasks() {
+        return tasks;
     }
 
     public IProperties getProperties() {
@@ -96,42 +89,23 @@ public final class ICluster {
         return containers;
     }
 
-    public IJob createJob(String type, IProperties properties) throws IgnisException {
-        IJob job = new IJob(jobs.size(), this, type, properties);
-        jobs.add(job);
-        return job;
+    public IWorker createWorker(String name, String type, int cores) throws IgnisException {
+        IWorker worker = new IWorker(name, workers.size(), this, type, cores);
+        workers.add(worker);
+        return worker;
     }
 
-    public IJob createJob(String type) throws IgnisException {
-        return createJob(type, properties);
-    }
-
-    public IJob getJob(long id) throws IgnisException {
-        IJob job = jobs.get((int) id);
-        if (job == null) {
-            throw new IgnisException("Job doesn't exist");
+    public IWorker getWorker(long id) throws IgnisException {
+        synchronized (lock) {
+            if (workers.size() > id) {
+                return workers.get((int) id);
+            }
         }
-        return job;
+        throw new IgnisException("Worker doesn't exist");
     }
 
-    public int sendFiles(String source, String target) throws IgnisException {
-        return new IClusterFileHelper(this, properties).sendFiles(source, target);
-    }
-
-    public int sendCompressedFile(String source, String target) throws IgnisException {
-        return new IClusterFileHelper(this, properties).sendCompressedFile(source, target);
-    }
-    
-    public void destroy() throws IgnisException{
-        new IClusterDestroyHelper(this, properties).destroy();
-    }
-
-    public boolean isKeep() {
-        return keep;
-    }
-
-    public void setKeep(boolean keep) {
-        this.keep = keep;
+    public void destroy(IScheduler scheduler) throws IgnisException {
+        new IClusterDestroyHelper(this, properties).destroy(scheduler);
     }
 
 }

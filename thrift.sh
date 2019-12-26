@@ -10,6 +10,6 @@ fi
 out="src/main/java/"
 rm -fr "$out/org/ignis/rpc"
 for file in `find $1/ignis -name "*thrift"`; do
-    thrift --gen java:private-members,handle_runtime_exceptions,generated_annotations=suppress -out $out $file &
+    thrift --gen java:private-members,generated_annotations=suppress -out $out $file &
 done
 wait

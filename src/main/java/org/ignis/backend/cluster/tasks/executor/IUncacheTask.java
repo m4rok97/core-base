@@ -17,10 +17,11 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -33,16 +34,18 @@ public class IUncacheTask extends IExecutorTask {
     
     private final long id;
 
-    public IUncacheTask(IHelper helper, IExecutor executor, long id) {
-        super(helper, executor);
+    public IUncacheTask(String name, IExecutor executor, long id) {
+        super(name, executor);
         this.id = id;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
+    public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "Deleting cache");
         try {
-            executor.getStorageModule().uncache(id);
+            executor.getCacheContextModule().uncache(id);
+        } catch (IExecutorException ex) {
+            throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }

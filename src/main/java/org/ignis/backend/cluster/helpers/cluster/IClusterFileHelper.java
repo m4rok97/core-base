@@ -16,21 +16,11 @@
  */
 package org.ignis.backend.cluster.helpers.cluster;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.ITaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.container.ISendCompressedFileTask;
-import org.ignis.backend.cluster.tasks.container.ISendFilesTask;
+import org.ignis.backend.cluster.tasks.container.ISendFileTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
@@ -47,46 +37,24 @@ public final class IClusterFileHelper extends IClusterHelper {
         super(cluster, properties);
     }
 
-    private ByteBuffer loadFile(File file) throws IgnisException {
-        LOGGER.info(log() + "Loading " + file.getPath() + " " + file.length() + " bytes");
-        ByteArrayOutputStream out = new ByteArrayOutputStream((int) file.length());
-        try (FileInputStream in = new FileInputStream(file)) {
-            IOUtils.copy(in, out);
-        } catch (IOException ex) {
-            throw new IgnisException(ex.getMessage(), ex);
+    public void sendFile(String source, String target) throws IgnisException {
+        LOGGER.info(log() + "Registering sendfile from " + source + " to " + target);
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
+        builder.newDependency(cluster.getTasks());
+        for (IContainer container : cluster.getContainers()) {
+            builder.newTask(new ISendFileTask(getName(), container, source, target));
         }
-        return ByteBuffer.wrap(out.toByteArray());
+        cluster.getTasks().getSubTasksGroup().add(builder.build());
     }
 
-    public int sendFiles(String source, String target) throws IgnisException {
-        LOGGER.info(log() + "Loading files from " + source + " to " + target);
-        File wd = new File(".");
-        FileFilter fileFilter = new WildcardFileFilter(source);
-        Map<String, ByteBuffer> files = new HashMap<>();
-        for (File file : wd.listFiles(fileFilter)) {
-            files.put(new File(target, file.getName()).getPath(), loadFile(file));
-        }
-        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(cluster.getLock());
-        shedulerBuilder.newDependency(cluster.getScheduler());
+    public void sendCompressedFile(String source, String target) throws IgnisException {
+        LOGGER.info(log() + "Registering sendCompressedFile file from " + source + " to " + target);
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
+        builder.newDependency(cluster.getTasks());
         for (IContainer container : cluster.getContainers()) {
-            shedulerBuilder.newTask(new ISendFilesTask(this, container, files));
+            builder.newTask(new ISendCompressedFileTask(getName(), container, source, target));
         }
-        cluster.putScheduler(shedulerBuilder.build());
-        return files.size();
-    }
-
-    public int sendCompressedFile(String source, String target) throws IgnisException {
-        LOGGER.info(log() + "Loading compressed file from " + source + " to " + target);
-        File file = new File(source);
-        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(cluster.getLock());
-        shedulerBuilder.newDependency(cluster.getScheduler());
-        for (IContainer container : cluster.getContainers()) {
-            shedulerBuilder.newTask(new ISendCompressedFileTask(this, container,
-                    new File(target, file.getName()).getPath(), loadFile(new File(source)))
-            );
-        }
-        cluster.putScheduler(shedulerBuilder.build());
-        return 1;
+        cluster.getTasks().getSubTasksGroup().add(builder.build());
     }
 
 }

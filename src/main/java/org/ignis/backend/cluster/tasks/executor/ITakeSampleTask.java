@@ -17,16 +17,19 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
+import org.ignis.backend.cluster.tasks.executor.IExecutorContextTask;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
@@ -40,38 +43,36 @@ public class ITakeSampleTask extends IExecutorContextTask {
 
     public static class Shared {
 
-        //Executor -> Count (Multiple Write, One Read)
-        private final Map<IExecutor, Long> count = new ConcurrentHashMap<>();
-        //Executor -> Result (Multiple Write, One Read)
-        private final Map<IExecutor, ByteBuffer> result = new ConcurrentHashMap<>();
+        public Shared(int executors) {
+            count = new ArrayList<>(Collections.nCopies(executors, 0l));
+            result = new ArrayList<>(Collections.nCopies(executors, null));
+            barrier = new IBarrier(executors);
+        }
+
+        private final List<Long> count;
+        private final List<List<ByteBuffer>> result;
+        private final IBarrier barrier;
 
     }
 
-    private final List<IExecutor> executors;
-    private final IBarrier barrier;
-    private final IExecutor driver;
     private final Shared shared;
+    private final boolean driver;
     private final long n;
     private final boolean withRemplacement;
     private final int seed;
-    private final boolean ligth;
 
-    public ITakeSampleTask(IHelper helper, IExecutor executor, List<IExecutor> executors, IBarrier barrier,
-            ITakeSampleTask.Shared shared, IExecutor driver, long n, boolean withRemplacement, int seed, boolean ligth) {
-        super(helper, executor, Mode.LOAD);
-        this.executors = executors;
-        this.barrier = barrier;
+    public ITakeSampleTask(String name, IExecutor executor, Shared shared, boolean driver, long n, boolean withRemplacement, int seed) {
+        super(name, executor, Mode.LOAD);
         this.driver = driver;
         this.shared = shared;
         this.n = n;
         this.withRemplacement = withRemplacement;
         this.seed = seed;
-        this.ligth = ligth;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
-        try {
+    public void run(ITaskContext context) throws IgnisException {
+        /*try {//TODO
             if (barrier.await() == 0) {
                 shared.count.clear();
                 shared.result.clear();
@@ -112,10 +113,10 @@ public class ITakeSampleTask extends IExecutorContextTask {
         } catch (Exception ex) {
             barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
-        }
+        }*/
     }
-
-    private void sample(IExecutionContext context) throws Exception {
+/*
+    private void sample(ITaskContext context) throws Exception {
         if (executors.size() == 1) {
             shared.count.put(executor, n);
             return;
@@ -176,14 +177,14 @@ public class ITakeSampleTask extends IExecutorContextTask {
         }
     }
 
-    private void ligthMode(IExecutionContext context) throws Exception {
+    private void ligthMode(ITaskContext context) throws Exception {
         if (barrier.await() == 0) {
             context.set("result", executors.stream().map(e -> shared.result.get(e)).collect(Collectors.toList()));
         }
     }
 
-    private void directMode(IExecutionContext context) throws Exception {
+    private void directMode(ITaskContext context) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");//TODO
-    }
+    }*/
 
 }

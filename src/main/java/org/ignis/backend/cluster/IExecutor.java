@@ -16,19 +16,20 @@
  */
 package org.ignis.backend.cluster;
 
+import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
-import org.ignis.backend.allocator.IExecutorStub;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TZlibTransport;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.executor.IFilesModule;
-import org.ignis.rpc.executor.IKeysModule;
-import org.ignis.rpc.executor.IMapperModule;
-import org.ignis.rpc.executor.IPostmanModule;
-import org.ignis.rpc.executor.IReducerModule;
-import org.ignis.rpc.executor.IServerModule;
-import org.ignis.rpc.executor.IShuffleModule;
-import org.ignis.rpc.executor.ISortModule;
-import org.ignis.rpc.executor.IStorageModule;
+import org.ignis.rpc.executor.ICacheContextModule;
+import org.ignis.rpc.executor.IExecutorServerModule;
+import org.ignis.rpc.executor.IGeneralActionModule;
+import org.ignis.rpc.executor.IGeneralModule;
+import org.ignis.rpc.executor.IIOModule;
+import org.ignis.rpc.executor.IMathModule;
 
 /**
  *
@@ -36,41 +37,42 @@ import org.ignis.rpc.executor.IStorageModule;
  */
 public final class IExecutor {
 
-    private final long job;
+    private final long worker;
+    private final int port;
     private final IContainer container;
-    private final IExecutorStub stub;
+    private final TTransport transport;
     private final TProtocol protocol;
-    private final IFilesModule.Iface filesModule;
-    private final IKeysModule.Iface keysModule;
-    private final IMapperModule.Iface mapperModule;
-    private final IPostmanModule.Iface postmanModule;
-    private final IReducerModule.Iface reducerModule;
-    private final IServerModule.Iface serverModule;
-    private final IShuffleModule.Iface shuffleModule;
-    private final ISortModule.Iface sortModule;
-    private final IStorageModule.Iface storageModule;
+    private final IExecutorServerModule.Iface executorServerModule;
+    private final IGeneralModule.Iface generalModule;
+    private final IGeneralActionModule.Iface generalActionModule;
+    private final IMathModule.Iface mathModule;
+    private final IIOModule.Iface ioModule;
+    private final ICacheContextModule.Iface cacheContextModule;
+    private int pid;
 
-    public IExecutor(long job, IContainer container, IExecutorStub stub, TProtocol protocol) {
-        this.job = job;
+    public IExecutor(long worker, IContainer container, int port) {
+        this.worker = worker;
         this.container = container;
-        this.stub = stub;
-        this.protocol = protocol;
-        this.filesModule = new IFilesModule.Client(new TMultiplexedProtocol(protocol, "files" + job));
-        this.keysModule = new IKeysModule.Client(new TMultiplexedProtocol(protocol, "keys" + job));
-        this.mapperModule = new IMapperModule.Client(new TMultiplexedProtocol(protocol, "mapper" + job));
-        this.postmanModule = new IPostmanModule.Client(new TMultiplexedProtocol(protocol, "postman" + job));
-        this.reducerModule = new IReducerModule.Client(new TMultiplexedProtocol(protocol, "reducer" + job));
-        this.serverModule = new IServerModule.Client(new TMultiplexedProtocol(protocol, "server" + job));
-        this.shuffleModule = new IShuffleModule.Client(new TMultiplexedProtocol(protocol, "shuffle" + job));
-        this.sortModule = new ISortModule.Client(new TMultiplexedProtocol(protocol, "sort" + job));
-        this.storageModule = new IStorageModule.Client(new TMultiplexedProtocol(protocol, "storage" + job));
+        this.port = port;
+        this.transport = new TSocket("localhost", port);
+        this.protocol = new TCompactProtocol(new TZlibTransport(transport,
+                container.getProperties().getInteger(IKeys.MANAGER_RPC_COMPRESSION)));
+        executorServerModule = new IExecutorServerModule.Client(new TMultiplexedProtocol(protocol, "IExecutorServer"));
+        generalModule = new IGeneralModule.Client(new TMultiplexedProtocol(protocol, "IGeneral"));
+        generalActionModule = new IGeneralActionModule.Client(new TMultiplexedProtocol(protocol, "IGeneralAction"));
+        mathModule = new IMathModule.Client(new TMultiplexedProtocol(protocol, "IMath"));
+        ioModule = new IIOModule.Client(new TMultiplexedProtocol(protocol, "IIO"));
+        cacheContextModule = new ICacheContextModule.Client(new TMultiplexedProtocol(protocol, "ICacheContext"));
     }
 
-    public long getJob() {
-        return job;
+    public long getWorker() {
+        return worker;
     }
 
     public long getId() {
+        if (container == null) {
+            return 0;
+        }
         return container.getId();
     }
 
@@ -78,52 +80,51 @@ public final class IExecutor {
         return container;
     }
 
+    public int getPort() {
+        return port;
+    }
+
     public IProperties getProperties() {
-        return stub.getProperties();
+        if (container == null) {
+            return null;
+        }
+        return container.getProperties();
     }
 
-    public TProtocol getProtocol() {
-        return protocol;
+    public TTransport getTransport() {
+        return transport;
     }
 
-    public IExecutorStub getStub() {
-        return stub;
+    public int getPid() {
+        return pid;
     }
 
-    public IFilesModule.Iface getFilesModule() {
-        return filesModule;
+    public void setPid(int pid) {
+        this.pid = pid;
     }
 
-    public IKeysModule.Iface getKeysModule() {
-        return keysModule;
+    public IExecutorServerModule.Iface getExecutorServerModule() {
+        return executorServerModule;
     }
 
-    public IMapperModule.Iface getMapperModule() {
-        return mapperModule;
+    public IGeneralModule.Iface getGeneralModule() {
+        return generalModule;
     }
 
-    public IPostmanModule.Iface getPostmanModule() {
-        return postmanModule;
+    public IGeneralActionModule.Iface getGeneralActionModule() {
+        return generalActionModule;
     }
 
-    public IReducerModule.Iface getReducerModule() {
-        return reducerModule;
+    public IMathModule.Iface getMathModule() {
+        return mathModule;
     }
 
-    public IServerModule.Iface getServerModule() {
-        return serverModule;
+    public IIOModule.Iface getIoModule() {
+        return ioModule;
     }
 
-    public ISortModule.Iface getSortModule() {
-        return sortModule;
-    }
-
-    public IShuffleModule.Iface getShuffleModule() {
-        return shuffleModule;
-    }
-
-    public IStorageModule.Iface getStorageModule() {
-        return storageModule;
+    public ICacheContextModule.Iface getCacheContextModule() {
+        return cacheContextModule;
     }
 
 }

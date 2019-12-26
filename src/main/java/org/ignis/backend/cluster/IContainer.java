@@ -16,20 +16,11 @@
  */
 package org.ignis.backend.cluster;
 
-import org.apache.thrift.protocol.TCompactProtocol;
-import org.apache.thrift.protocol.TMultiplexedProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransportException;
-import org.apache.thrift.transport.TZlibTransport;
-import org.ignis.backend.allocator.IContainerStub;
-import org.ignis.backend.allocator.IExecutorStub;
+
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IKeys;
-import org.ignis.rpc.manager.IFileManager;
-import org.ignis.rpc.manager.IRegisterManager;
-import org.ignis.rpc.manager.IServerManager;
+import org.ignis.backend.scheduler.model.IContainerDetails;
 
 /**
  *
@@ -38,80 +29,45 @@ import org.ignis.rpc.manager.IServerManager;
 public final class IContainer {
 
     private final long id;
-    private final IContainerStub stub;
-    private final ITransportDecorator transport;
-    private final TProtocol protocol;
-    private final IServerManager.Iface serverManager;
-    private final IRegisterManager.Iface registerManager;
-    private final IFileManager.Iface fileManager;
+    private final ITunnel tunnel;
+    private final IProperties properties;
+    private IContainerDetails info;
 
-    public IContainer(long id, IContainerStub stub) throws IgnisException {
+    public IContainer(long id, ITunnel tunnel, IProperties properties) throws IgnisException {
         this.id = id;
-        this.stub = stub;
-        this.transport = new ITransportDecorator(null);// null before connect
-        this.protocol = new TCompactProtocol(new TZlibTransport(transport,
-                stub.getProperties().getInteger(IKeys.MANAGER_RPC_COMPRESSION)));
-        this.serverManager = new IServerManager.Client(new TMultiplexedProtocol(protocol, "server"));
-        this.registerManager = new IRegisterManager.Client(new TMultiplexedProtocol(protocol, "register"));
-        this.fileManager = new IFileManager.Client(new TMultiplexedProtocol(protocol, "file"));
+        this.tunnel = tunnel;
+        this.properties = properties;
     }
 
     public long getId() {
         return id;
     }
 
-    public void connect() throws IgnisException {
-        TSocket socket = new TSocket(
-                stub.getHost(), stub.getHostPort(stub.getProperties().getInteger(IKeys.MANAGER_RPC_PORT)));
-        transport.setTransport(socket);
-
-        for (int i = 0; i < 10; i++) {
-            try {
-                socket.open();
-                break;
-            } catch (TTransportException ex) {
-                if (i == 9) {
-                    throw new IgnisException(ex.getMessage(), ex);
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex1) {
-                    throw new IgnisException(ex.getMessage(), ex);
-                }
-            }
-        }
+    public ITunnel getTunnel() {
+        return tunnel;
     }
 
-    public IExecutor createExecutor(long job, IExecutorStub stub) {
-        return new IExecutor(job, this, stub, protocol);
+    public IContainerDetails getInfo() {
+        return info;
     }
 
-    public IServerManager.Iface getServerManager() {
-        return serverManager;
-    }
-
-    public IRegisterManager.Iface getRegisterManager() {
-        return registerManager;
-    }
-
-    public IFileManager.Iface getFileManager() {
-        return fileManager;
-    }
-
-    public IContainerStub getStub() {
-        return stub;
+    public void setInfo(IContainerDetails info) {
+        this.info = info;
     }
 
     public IProperties getProperties() {
-        return stub.getProperties();
+        return properties;
     }
 
-    public String getHost() {
-        return stub.getHost();
+    public boolean testConnection(){
+        return tunnel.test();
+    }
+    
+    public void connect() throws IgnisException {
+        tunnel.open(info.getHost(), info.getNetwork().getTcpMap().get(properties.getInteger(IKeys.DRIVER_RPC_PORT)));
     }
 
-    public int getExposePort(int port) {
-        return stub.getHostPort(port);
+    public IExecutor createExecutor(long worker) throws IgnisException{
+        return new IExecutor(worker, this, tunnel.registerPort());
     }
-
 }

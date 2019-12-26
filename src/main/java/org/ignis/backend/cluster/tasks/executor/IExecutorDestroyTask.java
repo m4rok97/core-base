@@ -17,9 +17,9 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.cluster.tasks.executor.IExecutorTask;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
@@ -31,18 +31,26 @@ public final class IExecutorDestroyTask extends IExecutorTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IExecutorDestroyTask.class);
 
-    public IExecutorDestroyTask(IHelper helper, IExecutor executor) {
-        super(helper, executor);
+    public IExecutorDestroyTask(String name, IExecutor executor) {
+        super(name, executor);
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
+    public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "Destroying executor");
         try {
-            executor.getContainer().getRegisterManager().destroy(executor.getJob());
+            executor.getExecutorServerModule().stop();
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
+        try {
+            String killScript = "#!/bin/bash\n"
+                    + "timeout 10 wait " + executor.getPid() + " || kill -9  " + executor.getPid();
+            executor.getContainer().getTunnel().execute(killScript);
+        } catch (IgnisException ex) {
+            LOGGER.warn(log() + ex.toString());
+        }
+        executor.setPid(-1);
         LOGGER.info(log() + "Executor destroyed");
     }
 

@@ -16,11 +16,15 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IKeys;
+import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -31,30 +35,73 @@ public final class IExecutorCreateTask extends IExecutorTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IExecutorCreateTask.class);
 
-    public IExecutorCreateTask(IHelper helper, IExecutor executor) {
-        super(helper, executor);
+    private final String type;
+    private final int cores;
+
+    public IExecutorCreateTask(String name, IExecutor executor, String type, int cores) {
+        super(name, executor);
+        this.type = type;
+        this.cores = cores;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
-        if (executor.getStub().isRunning()) {
+    public void run(ITaskContext context) throws IgnisException {
+        if (executor.getTransport().isOpen()) {
             try {
-                executor.getStub().test();
+                executor.getExecutorServerModule().test();
                 LOGGER.info(log() + "Executor already running");
                 return;
-            } catch (IgnisException ex) {
+            } catch (TException ex) {
                 LOGGER.warn(log() + "Executor dead " + ex);
             }
+
         }
         LOGGER.info(log() + "Starting new executor");
-        executor.getStub().create();
-        try {
-            executor.getServerModule().updateProperties(executor.getProperties().toMap());
-        } catch (TException ex) {
+        StringBuilder startScript = new StringBuilder();
+        startScript.append("#!/bin/bash\n");
+
+        startScript.append("export MPICH_STATIC_PORTS='");
+        int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
+        List<Integer> tcpPorts = executor.getContainer().getInfo().getNetwork().getTcpPorts();
+        List<Integer> mpiPorts = tcpPorts.subList(tcpPorts.size() - mpiMaxPorts, tcpPorts.size());
+        startScript.append(mpiPorts.stream().map(String::valueOf).collect(Collectors.joining(" ")));
+        startScript.append("'\n");
+
+        startScript.append("nohup ignis-executor ");
+        startScript.append(type).append(' ');
+        startScript.append(executor.getPort()).append(' ');
+        startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
+        if (executor.getProperties().getString(IKeys.SCHEDULER_CONTAINER).equals("docker")) {
+            /*Redirect to docker log */
+            startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2");
+        }
+        startScript.append("& \n");
+        startScript.append("echo $!");/*get PID*/
+
+        String output = executor.getContainer().getTunnel().execute(startScript.toString());
+
+        for (int i = 0; i < 10; i++) {
             try {
-                executor.getStub().destroy();
-            } catch (TException ex2) {
+                executor.getTransport().open();
+                break;
+            } catch (TException ex) {
+                if (i == 9) {
+                    throw new IgnisException(ex.getMessage(), ex);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    throw new IgnisException(ex.getMessage(), ex);
+                }
             }
+        }
+
+        executor.setPid(Integer.parseInt(output));
+        try {
+            executor.getExecutorServerModule().updateProperties(executor.getProperties().toMap());
+        } catch (IExecutorException ex) {
+            throw new IExecutorExceptionWrapper(ex);
+        } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
     }

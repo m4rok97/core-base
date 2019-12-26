@@ -19,11 +19,8 @@ package org.ignis.backend;
 import java.io.File;
 import java.io.IOException;
 import org.apache.thrift.TMultiplexedProcessor;
-import org.ignis.backend.allocator.IAllocator;
 import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.exception.ISchedulerException;
-import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.scheduler.IScheduler;
 import org.ignis.backend.scheduler.ISchedulerBuilder;
@@ -35,9 +32,9 @@ import org.ignis.backend.services.IWorkerServiceImpl;
 import org.ignis.backend.services.IPropertiesServiceImpl;
 import org.ignis.rpc.driver.IBackendService;
 import org.ignis.rpc.driver.IClusterService;
-import org.ignis.rpc.driver.IDataService;
-import org.ignis.rpc.driver.IJobService;
+import org.ignis.rpc.driver.IDataFrameService;
 import org.ignis.rpc.driver.IPropertiesService;
+import org.ignis.rpc.driver.IWorkerService;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -90,12 +87,13 @@ public final class Main {
 
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
         IBackendServiceImpl backend = null;
-        
+        IClusterServiceImpl clusters = null;
+
         try {
             processor.registerProcessor("backend", new IBackendService.Processor<>(backend = new IBackendServiceImpl(attributes)));
-            processor.registerProcessor("cluster", new IClusterService.Processor<>(new IClusterServiceImpl(attributes, scheduler)));
-            processor.registerProcessor("worker", new IJobService.Processor<>(new IWorkerServiceImpl(attributes)));
-            processor.registerProcessor("dataframe", new IDataService.Processor<>(new IDataFrameServiceImpl(attributes)));
+            processor.registerProcessor("cluster", new IClusterService.Processor<>(clusters = new IClusterServiceImpl(attributes, scheduler)));
+            processor.registerProcessor("worker", new IWorkerService.Processor<>(new IWorkerServiceImpl(attributes)));
+            processor.registerProcessor("dataframe", new IDataFrameService.Processor<>(new IDataFrameServiceImpl(attributes)));
             processor.registerProcessor("properties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(attributes)));
         } catch (Exception ex) {
             LOGGER.error("Error starting services, aborting", ex);
@@ -103,17 +101,21 @@ public final class Main {
         }
 
         try {
-            Integer port = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT);
-            Integer compression = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_COMPRESSION);
-            System.out.println(port);
-            System.out.println(compression);
-            backend.start(processor, port);
+            Integer backendPort = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT);
+            Integer backendCompression = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_COMPRESSION);
+            Integer driverPort = attributes.defaultProperties.getInteger(IKeys.EXECUTOR_RPC_PORT);
+            Integer driverCompression = attributes.defaultProperties.getInteger(IKeys.EXECUTOR_RPC_COMPRESSION);
+            System.out.println(backendPort);
+            System.out.println(backendCompression);
+            System.out.println(driverPort);
+            System.out.println(driverCompression);
+            backend.start(processor, backendPort, backendCompression);
 
             if (!attributes.defaultProperties.contains(IKeys.DEBUG)) {
-                attributes.destroyClusters();
+                clusters.destroyClusters();
             }
             LOGGER.info("Backend stopped");
-
+            System.exit(0);
         } catch (Exception ex) {
             LOGGER.error("Server error, aborting", ex);
             System.exit(-1);

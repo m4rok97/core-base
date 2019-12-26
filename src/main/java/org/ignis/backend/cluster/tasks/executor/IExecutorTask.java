@@ -17,7 +17,6 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.ITask;
 
 /**
@@ -28,13 +27,17 @@ public abstract class IExecutorTask extends ITask {
 
     protected final IExecutor executor;
 
-    public IExecutorTask(IHelper helper, IExecutor executor) {
-        super(helper);
+    public IExecutorTask(String name, IExecutor executor) {
+        super(name);
         this.executor = executor;
     }
 
+    public IExecutor getExecutor() {
+        return executor;
+    }
+
     protected String log() {
-        return helper.logHeader() + " " + executor.getId() + ": ";
+        return name + " " + executor.getId() + ": ";
     }
 
 }

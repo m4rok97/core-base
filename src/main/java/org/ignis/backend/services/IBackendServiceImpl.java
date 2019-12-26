@@ -16,6 +16,11 @@
  */
 package org.ignis.backend.services;
 
+import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import org.apache.thrift.TException;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TCompactProtocol;
@@ -23,9 +28,14 @@ import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
+import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
+import org.apache.thrift.transport.TTransportFactory;
+import org.apache.thrift.transport.TZlibTransport;
+import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.IRemoteException;
+import org.ignis.backend.properties.IKeys;
+import org.ignis.rpc.IDriverException;
 import org.ignis.rpc.driver.IBackendService;
 import org.slf4j.LoggerFactory;
 
@@ -39,18 +49,26 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
 
     private TServerTransport transport;
     private TServer server;
+    private HttpServer healthEndpoint;
 
     public IBackendServiceImpl(IAttributes attributes) {
         super(attributes);
     }
 
-    public void start(TProcessor processor, int port) {
+    public void start(TProcessor processor, int port, int compression) {
         LOGGER.info("Backend server started on port " + port);
-        driverLifeCheck();
+        driverHealthCheck();
+        startHealthServer();
         try {
             transport = new TServerSocket(port);
             server = new TThreadPoolServer(new TThreadPoolServer.Args(transport)
                     .protocolFactory(new TCompactProtocol.Factory())
+                    .transportFactory(new TTransportFactory() {
+                        @Override
+                        public TTransport getTransport(TTransport base) {
+                            return new TZlibTransport(base, compression);
+                        }
+                    })
                     .processor(processor));
             server.serve();
         } catch (TTransportException ex) {
@@ -61,16 +79,17 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     }
 
     @Override
-    public void stop() throws IRemoteException, TException {
+    public void stop() throws IDriverException, TException {
         LOGGER.info("Stopping Backend server");
         try {
+            stopHealthServer();
             server.stop();
         } catch (Exception ex) {
-            throw new IgnisException(ex.getLocalizedMessage(), ex);
+            throw new IDriverExceptionImpl(ex);
         }
     }
 
-    private void driverLifeCheck() {
+    private void driverHealthCheck() {
         Thread lc = new Thread(() -> {
             try {
                 System.in.read();
@@ -81,8 +100,36 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
             } catch (TException ex) {
             }
         });
-        lc.setDaemon(true);
         lc.start();
+    }
+
+    private void startHealthServer() {
+        try {
+            int port = attributes.defaultProperties.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
+            healthEndpoint = HttpServer.create(new InetSocketAddress(port), 0);
+            HttpContext context = healthEndpoint.createContext("/");
+            context.setHandler((HttpExchange exchange) -> {
+                String response = "Ok\n";
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+                try ( OutputStream os = exchange.getResponseBody()) {
+                    os.write(response.getBytes());
+                }
+            });
+            healthEndpoint.start();
+            LOGGER.info("Backend health server started");
+        } catch (Exception ex) {
+            LOGGER.info("Backend health server error");
+        }
+    }
+
+    private void stopHealthServer() {
+        try {
+            if (healthEndpoint != null) {
+                healthEndpoint.stop(10);
+            }
+            LOGGER.info("Backend health server stopped");
+        } catch (Exception ex) {
+        }
     }
 
 }

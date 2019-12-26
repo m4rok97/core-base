@@ -32,11 +32,11 @@ public class IPropertiesServiceTest {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPropertiesServiceTest.class);
 
-    @BeforeAll 
-    public static  void info() {
+    @BeforeAll
+    public static void info() {
         LOGGER.info("----|----|----|----IPropertiesServiceTest----|----|----|----");
-    }        
-    
+    }
+
     @Test
     public void newInstance() throws Exception {
         LOGGER.info("----|----newInstance----|----");
@@ -110,8 +110,8 @@ public class IPropertiesServiceTest {
         long id1 = service.newInstance();
         attributes.getProperties(id1).setProperty("key", "value");
 
-        Assert.assertTrue(service.isProperty(id1, "key"));
-        Assert.assertFalse(service.isProperty(id1, "key2"));
+        Assert.assertTrue(service.contains(id1, "key"));
+        Assert.assertFalse(service.contains(id1, "key2"));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class IPropertiesServiceTest {
         attributes.getProperties(id1).setProperty("key3", "value3");
         attributes.getProperties(id1).setProperty("key4", "value4");
 
-        Map<String, String> map = service.toMap(id1);
+        Map<String, String> map = service.toMap(id1, false);
 
         Assert.assertEquals(4, map.size());
         Assert.assertEquals("value", map.get("key"));
@@ -168,15 +168,15 @@ public class IPropertiesServiceTest {
         attributes.getProperties(id1).setProperty("key.keyB", "value1");
         attributes.getProperties(id1).setProperty("key.keyB.keyC", "value2");
         attributes.getProperties(id1).setProperty("key2.keyB", "value3");
-        service.toFile(id1, tmp.getAbsolutePath());
+        service.store(id1, tmp.getAbsolutePath());
 
         //From file
         long id2 = service.newInstance();
-        service.fromFile(id2, tmp.getAbsolutePath());
+        service.load(id2, tmp.getAbsolutePath());
 
-        for(String key: new String[]{"key.keyB","key2.keyB","key.keyB.keyC"}){
+        for (String key : new String[]{"key.keyB", "key2.keyB", "key.keyB.keyC"}) {
             Assert.assertEquals(
-                    attributes.getProperties(id1).getProperty(key), 
+                    attributes.getProperties(id1).getProperty(key),
                     attributes.getProperties(id2).getProperty(key)
             );
         }
@@ -184,14 +184,14 @@ public class IPropertiesServiceTest {
 
     @Test
     public void reset() throws Exception {
-        LOGGER.info("----|----reset----|----");
+        LOGGER.info("----|----clear----|----");
         IAttributes attributes = new IAttributes();
         IPropertiesServiceImpl service = new IPropertiesServiceImpl(attributes);
 
         long id1 = service.newInstance();
         attributes.getProperties(id1).setProperty("key", "value");
-        service.reset(id1);
-        
+        service.clear(id1);
+
         Assert.assertEquals("", service.getProperty(id1, "key"));
     }
 

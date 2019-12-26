@@ -58,12 +58,12 @@ public final class IKeys {
     public static final String EXECUTOR_IMAGE = "ignis.executor.image";
     public static final String EXECUTOR_CORES = "ignis.executor.cores";
     public static final String EXECUTOR_MEMORY = "ignis.executor.memory";
-    public static final String EXECUTOR_SSH_PORT = "ignis.executor.ssh.port";
     public static final String EXECUTOR_RPC_PORT = "ignis.executor.rpc.port";
     public static final String EXECUTOR_RPC_COMPRESSION = "ignis.executor.rpc.compression";
+    public static final String EXECUTOR_ISOLATION = "ignis.executor.isolation";
     /*PARTITION*/
     public static final String PARTITION_TYPE = "ignis.partition.type";
-    public static final String PARTITION_MINSIZE = "ignis.partition.minsize";
+    public static final String PARTITION_MINIMAL = "ignis.partition.minimal";
     public static final String PARTITION_COMPRESSION = "ignis.partition.compression";
     public static final String PARTITION_SERIALIZATION = "ignis.partition.serialization";
     public static final String PARTITION_DIRECTORY = "ignis.partition.directory";
@@ -71,6 +71,7 @@ public final class IKeys {
     public static final String TRANSPORT_TYPE = "ignis.transport.type";
     public static final String TRANSPORT_PORT = "ignis.transport.port";
     public static final String TRANSPORT_PORTS = "ignis.transport.ports";
+    public static final String TRANSPORT_MINIMAL = "ignis.transport.minimal";
     /*MODULES*/
  /*  IO*/
     public static final String MODULES_IO_OVERWRITE = "ignis.modules.io.overwrite";

@@ -16,21 +16,16 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import org.ignis.backend.cluster.IAddrManager;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
+import org.ignis.backend.cluster.tasks.executor.IExecutorContextTask;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.executor.ISplit;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -41,12 +36,17 @@ public final class IImportDataTask extends IExecutorContextTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IImportDataTask.class);
 
-    public static final byte SEND = 0;
-    public static final byte RECEIVE = 1;
-    public static final byte SHUFFLE = 2;
-
     public static class Shared {
 
+        public Shared(List<IExecutor> sources, List<IExecutor> targets) {
+            this.sources = sources;
+            this.targets = targets;
+            barrier = new IBarrier(sources.size() + targets.size());
+        }
+
+        private final List<IExecutor> sources;
+        private final List<IExecutor> targets;
+        private final IBarrier barrier;
         //Executor -> Count (Multiple Write, One Read)
         private final Map<IExecutor, Long> count = new ConcurrentHashMap<>();
 
@@ -54,28 +54,19 @@ public final class IImportDataTask extends IExecutorContextTask {
         private final Map<IExecutor, LinkedHashMap<IExecutor, Long>> msgs = new HashMap<>();
     }
 
-    private final IBarrier barrier;
     private final Shared shared;
-    private final List<IExecutor> sources;
-    private final List<IExecutor> targets;
-    private final byte type;
-    private final float ratio;
+    private final boolean source;
 
-    public IImportDataTask(IHelper helper, IExecutor executor, IBarrier barrier, Shared shared, byte type,
-            List<IExecutor> sources, List<IExecutor> targets) {
-        super(helper, executor, Mode.SAVE);
-        this.barrier = barrier;
+    public IImportDataTask(String name, IExecutor executor, Shared shared, boolean source) {
+        super(name, executor, Mode.SAVE);
         this.shared = shared;
-        this.type = type;
-        this.sources = sources;
-        this.targets = targets;
-        this.ratio = 0.10f;
+        this.source = source;
     }
 
     /*
     *Select an executor in the same machine
      */
-    private IExecutor nextHostExecutor(List<IExecutor> executors, IExecutor source) {
+   /* private IExecutor nextHostExecutor(List<IExecutor> executors, IExecutor source) {
         String host = source.getContainer().getHost();
         for (int i = 0; i < executors.size(); i++) {
             if (executors.get(i).getContainer().getHost().equals(host)) {
@@ -147,11 +138,11 @@ public final class IImportDataTask extends IExecutorContextTask {
         //Reorder Executors
         targets.clear();
         targets.addAll(orderTargets);
-    }
+    }*/
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
-        try {
+    public void run(ITaskContext context) throws IgnisException {
+        /*try {//TODO
             if (barrier.await() == 0) {
                 shared.count.clear();
                 shared.msgs.clear();
@@ -231,7 +222,7 @@ public final class IImportDataTask extends IExecutorContextTask {
         } catch (Exception ex) {
             barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
-        }
+        }*/
     }
 
 }

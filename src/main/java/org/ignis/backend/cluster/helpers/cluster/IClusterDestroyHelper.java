@@ -18,10 +18,11 @@ package org.ignis.backend.cluster.helpers.cluster;
 
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.ITaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.container.IContainerDestroyTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
+import org.ignis.backend.scheduler.IScheduler;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -36,20 +37,14 @@ public final class IClusterDestroyHelper extends IClusterHelper {
         super(cluster, properties);
     }
 
-    public void destroy() throws IgnisException {
+    public void destroy(IScheduler scheduler) throws IgnisException {
         LOGGER.info(log() + "Preparing cluster to destroy");
-        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(cluster.getLock());
-        int instances = 0;
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
         for (IContainer container : cluster.getContainers()) {
-            if (container.getStub().isRunning()) {
-                instances++;
-                shedulerBuilder.newTask(new IContainerDestroyTask(this, container));
-            }
+            builder.newTask(new IContainerDestroyTask(getName(), container, scheduler));
         }
-        if (instances > 0) {
-            LOGGER.info(log() + "Destroying " + instances + " instances");
-            shedulerBuilder.build().execute(cluster.getPool());
-        }
+        LOGGER.info(log() + "Destroying cluster with " + cluster.getContainers().size() + " containers");
+        builder.build().start(cluster.getPool());
         LOGGER.info(log() + "Cluster destroyed");
     }
 

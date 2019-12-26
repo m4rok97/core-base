@@ -17,10 +17,14 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.cluster.tasks.ICache;
+import org.ignis.backend.cluster.tasks.executor.IExecutorTask;
+import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -30,19 +34,21 @@ import org.slf4j.LoggerFactory;
 public class ICacheTask extends IExecutorTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IFlatmapTask.class);
-    
-    private final long id;
 
-    public ICacheTask(IHelper helper, IExecutor executor, long id) {
-        super(helper, executor);
-        this.id = id;
+    private final ICache cache;
+
+    public ICacheTask(String name, IExecutor executor, ICache cache) {
+        super(name, executor);
+        this.cache = cache;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
+    public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "Saving cache");
         try {
-            executor.getStorageModule().cache(id);
+            executor.getCacheContextModule().cache(cache.getId(), cache.getLevel());
+        } catch (IExecutorException ex) {
+            throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }

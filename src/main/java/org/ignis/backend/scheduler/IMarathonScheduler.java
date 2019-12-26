@@ -21,12 +21,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import mesosphere.marathon.client.Marathon;
 import mesosphere.marathon.client.MarathonClient;
 import mesosphere.marathon.client.MarathonException;
@@ -44,7 +44,7 @@ import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IBind;
-import org.ignis.backend.scheduler.model.IJobContainer;
+import org.ignis.backend.scheduler.model.IContainerDetails;
 import org.ignis.backend.scheduler.model.INetwork;
 import org.ignis.backend.scheduler.model.IVolume;
 
@@ -57,33 +57,33 @@ public class IMarathonScheduler implements IScheduler {
     private final Marathon marathon;
     private final Map<String, String> taskAssignment;
     private final Set<String> taskAssigned;
-    private final static Map<String, IJobContainer.ContainerStatus> TASK_STATUS
-            = new HashMap<String, IJobContainer.ContainerStatus>() {
+    private final static Map<String, IContainerDetails.ContainerStatus> TASK_STATUS
+            = new HashMap<String, IContainerDetails.ContainerStatus>() {
         {
-            put("TASK_DROPPED", IJobContainer.ContainerStatus.ERROR);
-            put("TASK_ERROR", IJobContainer.ContainerStatus.ERROR);
-            put("TASK_FAILED", IJobContainer.ContainerStatus.ERROR);
-            put("TASK_FINISHED", IJobContainer.ContainerStatus.FINISHED);
-            put("TASK_GONE", IJobContainer.ContainerStatus.FINISHED);
-            put("TASK_GONE_BY_OPERATOR", IJobContainer.ContainerStatus.UNKNOWN);
-            put("TASK_KILLED", IJobContainer.ContainerStatus.DESTROYED);
-            put("TASK_KILLING", IJobContainer.ContainerStatus.DESTROYED);
-            put("TASK_LOST", IJobContainer.ContainerStatus.DESTROYED);
-            put("TASK_RUNNING", IJobContainer.ContainerStatus.RUNNING);
-            put("TASK_STAGING", IJobContainer.ContainerStatus.ACCEPTED);
-            put("TASK_STARTING", IJobContainer.ContainerStatus.ACCEPTED);
-            put("TASK_UNKNOWN", IJobContainer.ContainerStatus.UNKNOWN);
-            put("TASK_UNREACHABLE", IJobContainer.ContainerStatus.UNKNOWN);
+            put("TASK_DROPPED", IContainerDetails.ContainerStatus.ERROR);
+            put("TASK_ERROR", IContainerDetails.ContainerStatus.ERROR);
+            put("TASK_FAILED", IContainerDetails.ContainerStatus.ERROR);
+            put("TASK_FINISHED", IContainerDetails.ContainerStatus.FINISHED);
+            put("TASK_GONE", IContainerDetails.ContainerStatus.FINISHED);
+            put("TASK_GONE_BY_OPERATOR", IContainerDetails.ContainerStatus.UNKNOWN);
+            put("TASK_KILLED", IContainerDetails.ContainerStatus.DESTROYED);
+            put("TASK_KILLING", IContainerDetails.ContainerStatus.DESTROYED);
+            put("TASK_LOST", IContainerDetails.ContainerStatus.DESTROYED);
+            put("TASK_RUNNING", IContainerDetails.ContainerStatus.RUNNING);
+            put("TASK_STAGING", IContainerDetails.ContainerStatus.ACCEPTED);
+            put("TASK_STARTING", IContainerDetails.ContainerStatus.ACCEPTED);
+            put("TASK_UNKNOWN", IContainerDetails.ContainerStatus.UNKNOWN);
+            put("TASK_UNREACHABLE", IContainerDetails.ContainerStatus.UNKNOWN);
         }
     };
     
     public IMarathonScheduler(String url) {
         marathon = MarathonClient.getInstance(url);
-        taskAssignment = new HashMap<>();
-        taskAssigned = new HashSet<>();
+        taskAssignment = new ConcurrentHashMap<>();
+        taskAssigned = ConcurrentHashMap.<String>newKeySet();
     }
     
-    private App createApp(String group, String name, IJobContainer container, IProperties props) {
+    private App createApp(String group, String name, IContainerDetails container, IProperties props) {
         App app = new App();
         app.setArgs(new ArrayList<>());
         app.setContainer(new Container());
@@ -197,8 +197,8 @@ public class IMarathonScheduler implements IScheduler {
         throw new ISchedulerException("not found");
     }
     
-    private IJobContainer parseTaks(App app, Task task) {
-        IJobContainer.IJobContainerBuilder builder = IJobContainer.builder();
+    private IContainerDetails parseTaks(App app, Task task) {
+        IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
         builder.image(app.getContainer().getDocker().getImage());
         builder.cpus(app.getCpus().intValue());
         builder.memory(app.getMem().longValue());
@@ -305,12 +305,12 @@ public class IMarathonScheduler implements IScheduler {
     }
     
     @Override
-    public String createSingleContainer(String group, String name, IJobContainer container, IProperties props) throws ISchedulerException {
+    public String createSingleContainer(String group, String name, IContainerDetails container, IProperties props) throws ISchedulerException {
         return createContainerIntances(group, name, container, props, 1).get(0);
     }
     
     @Override
-    public List<String> createContainerIntances(String group, String name, IJobContainer container, IProperties props, int instances) throws ISchedulerException {
+    public List<String> createContainerIntances(String group, String name, IContainerDetails container, IProperties props, int instances) throws ISchedulerException {
         App app = createApp(group, name, container, props);
         app.setInstances(instances);
         try {
@@ -326,12 +326,12 @@ public class IMarathonScheduler implements IScheduler {
     }
     
     @Override
-    public IJobContainer.ContainerStatus getStatus(String id) throws ISchedulerException {
+    public IContainerDetails.ContainerStatus getStatus(String id) throws ISchedulerException {
         String appId = id.split(";")[0];
         try {
             VersionedApp app = marathon.getApp(appId).getApp();
             if (app.getInstances() == 0) {
-                return IJobContainer.ContainerStatus.DESTROYED;
+                return IContainerDetails.ContainerStatus.DESTROYED;
             }
             String taskId = taskAssignment.get(id);
             if (taskId == null) {
@@ -342,7 +342,7 @@ public class IMarathonScheduler implements IScheduler {
             try {
                 task = getTask(app, taskId);
             } catch (ISchedulerException ex) {
-                return IJobContainer.ContainerStatus.DESTROYED;
+                return IContainerDetails.ContainerStatus.DESTROYED;
             }
             return TASK_STATUS.get(task.getState());
         } catch (MarathonException ex) {
@@ -351,7 +351,7 @@ public class IMarathonScheduler implements IScheduler {
     }
     
     @Override
-    public IJobContainer getContainer(String id) throws ISchedulerException {
+    public IContainerDetails getContainer(String id) throws ISchedulerException {
         return getContainerInstances(Arrays.asList(id)).get(0);
     }
 
@@ -362,7 +362,7 @@ public class IMarathonScheduler implements IScheduler {
      * @throws ISchedulerException
      */
     @Override
-    public List<IJobContainer> getContainerInstances(List<String> ids) throws ISchedulerException {
+    public List<IContainerDetails> getContainerInstances(List<String> ids) throws ISchedulerException {
         if (ids.isEmpty()) {
             return new ArrayList<>();
         }
@@ -373,7 +373,7 @@ public class IMarathonScheduler implements IScheduler {
             }
         }
         try {
-            List<IJobContainer> containers = new ArrayList<>(ids.size());
+            List<IContainerDetails> containers = new ArrayList<>(ids.size());
             VersionedApp app;
             int time = 1;
             int i = 0;

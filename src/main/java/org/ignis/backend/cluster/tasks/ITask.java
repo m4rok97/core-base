@@ -16,8 +16,7 @@
  */
 package org.ignis.backend.cluster.tasks;
 
-import org.ignis.backend.cluster.IExecutionContext;
-import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 
 /**
@@ -26,17 +25,26 @@ import org.ignis.backend.exception.IgnisException;
  */
 public abstract class ITask {
 
-    protected final IHelper helper;
+    protected final String name;
 
-    public ITask(IHelper helper) {
-        this.helper = helper;
+    public ITask(String name) {
+        this.name = name;
     }
 
-    public void loadContext(IExecutionContext context) throws IgnisException {
+    public String getName() {
+        return name;
     }
+    
+    protected void before(ITaskContext context) throws IgnisException {}
 
-    public abstract void execute(IExecutionContext context) throws IgnisException;
+    protected abstract void run(ITaskContext context) throws IgnisException;
 
-    public void saveContext(IExecutionContext context) throws IgnisException {
+    protected void after(ITaskContext context) throws IgnisException {}
+
+    public void start(ITaskContext context) throws IgnisException {
+        before(context);
+        run(context);
+        after(context);
+
     }
 }

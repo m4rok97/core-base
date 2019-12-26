@@ -19,7 +19,7 @@ package org.ignis.backend.rpc;
 import java.util.List;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.ITaskScheduler;
+import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.manager.IFileManager;
 import org.ignis.rpc.manager.IRegisterManager;
@@ -67,7 +67,7 @@ public class MockClusterServices {
 
     public void mock() {
         List<IContainer> containers = cluster.getContainers();
-        cluster.putScheduler(new ITaskScheduler.Builder(cluster.getLock()).build());//Avoid Create Task
+        cluster.putScheduler(new ITaskGroup.Builder(cluster.getLock()).build());//Avoid Create Task
         
         for (int i = 0; i < containers.size(); i++) {
             IContainer container = Mockito.spy(containers.get(i));

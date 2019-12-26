@@ -16,13 +16,11 @@
  */
 package org.ignis.backend.cluster.tasks;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 
 /**
  *
@@ -31,65 +29,33 @@ import org.ignis.backend.cluster.IExecutionContext;
 public final class IThreadPool {
 
     private final ThreadPoolExecutor pool;
-    private final int maxFailures;
+    private final int retries;
 
-    public IThreadPool(int threads, int maxFailures) {
-        pool = new ThreadPoolExecutor(threads, Integer.MAX_VALUE, 10, TimeUnit.SECONDS, new SynchronousQueue<>(), new DaemonThreadFactory());
-        this.maxFailures = maxFailures;
+    public IThreadPool(int threads, int retries) {
+        pool = new ThreadPoolExecutor(threads, Integer.MAX_VALUE, 10, TimeUnit.SECONDS, new SynchronousQueue<>());
+        this.retries = retries;
     }
 
-    public synchronized void increase(int threads) {
-        int newSize = pool.getPoolSize() + threads;
-        if (newSize > 0) {
-            pool.setCorePoolSize(newSize);
-        } else {
-            pool.setCorePoolSize(1);
-        }
+    int getRetries() {
+        return retries;
     }
 
-    public synchronized void decrease(int threads) {
-        increase(-threads);
-    }
-
-    int getMaxFailures() {
-        return maxFailures;
-    }
-
-    Future<ITaskScheduler> submit(ITaskScheduler scheduler, IExecutionContext context) {
+    Future<ITaskGroup> submit(ITaskGroup scheduler, ITaskContext context) {
         return pool.submit(() -> {
-            scheduler.execute(this, context);
+            scheduler.start(this, context, retries);
             return scheduler;
         });
     }
 
-    Future<ITask> submit(ITask task, IExecutionContext context) {
+    Future<ITask> submit(ITask task, ITaskContext context) {
         return pool.submit(() -> {
-            task.loadContext(context);
-            task.execute(context);
-            task.saveContext(context);
+            task.start(context);
             return task;
         });
     }
 
     public void destroy() {
         pool.shutdownNow();
-    }
-
-    private class DaemonThreadFactory implements ThreadFactory {
-
-        private final ThreadFactory factory;
-
-        public DaemonThreadFactory() {
-            factory = Executors.defaultThreadFactory();
-        }
-
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread t = factory.newThread(r);
-            t.setDaemon(true);
-            return t;
-        }
-
     }
 
 }

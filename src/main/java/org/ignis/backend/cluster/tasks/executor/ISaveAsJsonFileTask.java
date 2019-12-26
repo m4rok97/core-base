@@ -16,11 +16,17 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutionContext;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.cluster.tasks.IBarrier;
+import org.ignis.backend.cluster.tasks.executor.IExecutorContextTask;
+import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -31,26 +37,50 @@ public final class ISaveAsJsonFileTask extends IExecutorContextTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsJsonFileTask.class);
 
-    private final String path;
-    private final boolean arrayStart;
-    private final boolean arrayEnd;
+    public static class Shared {
 
-    public ISaveAsJsonFileTask(IHelper helper, IExecutor executor, String path, boolean arrayStart, boolean arrayEnd) {
-        super(helper, executor, Mode.LOAD);
+        public Shared(int executors) {
+            partitions = new ArrayList<>(Collections.nCopies(executors, 0l));
+            barrier = new IBarrier(executors);
+        }
+
+        private final List<Long> partitions;
+        private final IBarrier barrier;
+
+    }
+
+    private final Shared shared;
+    private final String path;
+
+    public ISaveAsJsonFileTask(String name, IExecutor executor, Shared shared, String path) {
+        super(name, executor, Mode.LOAD);
+        this.shared = shared;
         this.path = path;
-        this.arrayStart = arrayStart;
-        this.arrayEnd = arrayEnd;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
-        LOGGER.info(log() + "Saving json file");
+    public void run(ITaskContext context) throws IgnisException {
+        LOGGER.info(log() + "Saving text file");
+        int id = (int) executor.getId();
         try {
-            executor.getFilesModule().saveJson(path, arrayStart, arrayEnd);
-        } catch (TException ex) {
+            shared.partitions.set(id, executor.getIoModule().partitionCount());
+            shared.barrier.await();
+            long first = 0;
+            for (int i = 1; i < id; i++) {
+                first += shared.partitions.get(i - 1);
+            }
+            executor.getIoModule().saveAsJsonFile(path, first);
+        } catch (IExecutorException ex) {
+            shared.barrier.fails();
+            throw new IExecutorExceptionWrapper(ex);
+        } catch (BrokenBarrierException ex) {
+            //Other Task has failed
+        } catch (Exception ex) {
+            shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
         LOGGER.info(log() + "File saved");
     }
+
 
 }

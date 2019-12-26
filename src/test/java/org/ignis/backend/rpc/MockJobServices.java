@@ -18,7 +18,7 @@ package org.ignis.backend.rpc;
 
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.IJob;
+import org.ignis.backend.cluster.IWorker;
 import org.ignis.rpc.executor.IFilesModule;
 import org.ignis.rpc.executor.IKeysModule;
 import org.ignis.rpc.executor.IMapperModule;
@@ -36,7 +36,7 @@ import org.mockito.Mockito;
  */
 public class MockJobServices {
 
-    private final IJob job;
+    private final IWorker job;
     private IFilesModule.Iface filesModule;
     private IKeysModule.Iface keysModule;
     private IMapperModule.Iface mapperModule;
@@ -47,7 +47,7 @@ public class MockJobServices {
     private ISortModule.Iface sortModule;
     private IStorageModule.Iface storageModule;
 
-    public MockJobServices(IJob job) {
+    public MockJobServices(IWorker job) {
         this.job = job;
     }
 

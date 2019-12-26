@@ -17,10 +17,11 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -30,19 +31,21 @@ import org.slf4j.LoggerFactory;
 public class ILoadCacheTask extends IExecutorContextTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IFlatmapTask.class);
-    
+
     private final long id;
 
-    public ILoadCacheTask(IHelper helper, IExecutor executor, long id) {
-        super(helper, executor, Mode.SAVE);
+    public ILoadCacheTask(String name, IExecutor executor, long id) {
+        super(name, executor, Mode.SAVE);
         this.id = id;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
+    public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "Loading cache");
         try {
-            executor.getStorageModule().loadCache(id);
+            executor.getCacheContextModule().loadCache(id);
+        } catch (IExecutorException ex) {
+            throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }

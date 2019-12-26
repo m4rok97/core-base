@@ -34,7 +34,7 @@ public abstract class IClusterHelper extends IHelper {
     }
 
     @Override
-    public String logHeader() {
+    protected String getName() {
         return cluster.getName();
     }
 

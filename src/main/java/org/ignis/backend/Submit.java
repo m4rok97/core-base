@@ -32,7 +32,7 @@ import static org.ignis.backend.scheduler.ISchedulerParser.parseBinds;
 import static org.ignis.backend.scheduler.ISchedulerParser.parseEnv;
 import static org.ignis.backend.scheduler.ISchedulerParser.parseNetwork;
 import static org.ignis.backend.scheduler.ISchedulerParser.parseVolumes;
-import org.ignis.backend.scheduler.model.IJobContainer;
+import org.ignis.backend.scheduler.model.IContainerDetails;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -97,7 +97,7 @@ public class Submit {
             IScheduler scheduler = ISchedulerBuilder.create(props.getProperty(IKeys.SCHEDULER_TYPE),
                     props.getProperty(IKeys.SCHEDULER_URL));
 
-            IJobContainer.IJobContainerBuilder builder = IJobContainer.builder();
+            IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
             builder.image(props.getProperty(IKeys.DRIVER_IMAGE));
             builder.cpus(props.getInteger(IKeys.DRIVER_CORES));
             builder.memory((long) Math.ceil(props.getSILong(IKeys.DRIVER_MEMORY) / 1024 / 1024));

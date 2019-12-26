@@ -16,11 +16,11 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
-import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.IExecutionContext;
-import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.cluster.ITaskContext;
+import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.scheduler.IScheduler;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -31,20 +31,46 @@ public final class IContainerDestroyTask extends IContainerTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IContainerDestroyTask.class);
 
-    public IContainerDestroyTask(IHelper helper, IContainer container) {
-        super(helper, container);
+    private final IScheduler scheduler;
+
+    public IContainerDestroyTask(String name, IContainer container, IScheduler scheduler) {
+        super(name, container);
+        this.scheduler = scheduler;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
+    public void run(ITaskContext context) throws IgnisException {
+        LOGGER.info(log() + "Check if container status");
+        if (container.getInfo() == null) {
+            LOGGER.info(log() + "Continer is not started");
+            return;
+        }
+
+        switch (scheduler.getStatus(container.getInfo().getId())) {
+            case ACCEPTED:
+                LOGGER.info(log() + "Container is not launched yet");
+                break;
+            case RUNNING:
+                LOGGER.info(log() + "Continer is running");
+                break;
+            case ERROR:
+                LOGGER.info(log() + "Continer has an error");
+                break;
+            case FINISHED:
+                LOGGER.info(log() + "Continer is finieshed");
+                break;
+            case DESTROYED:
+                LOGGER.info(log() + "Continer already destroyed");
+                return;
+            case UNKNOWN:
+                LOGGER.info(log() + "Continer has a unknown status");
+                break;
+        }
         LOGGER.info(log() + "Destroying container");
         try {
-            if (container.getStub().isRunning()) {
-                container.getStub().destroy();
-            }
-        } catch (TException ex) {
+            scheduler.destroyContainer(container.getInfo().getId());
+        } catch (ISchedulerException ex) {
             LOGGER.warn(log() + "Container destroyed " + ex);
-            throw new IgnisException("Container destroyed", ex);
         }
         LOGGER.info(log() + "Container destroyed");
     }

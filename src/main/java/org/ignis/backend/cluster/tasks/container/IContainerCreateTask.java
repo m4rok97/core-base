@@ -16,11 +16,14 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
-import org.apache.thrift.TException;
+import java.util.ArrayList;
+import java.util.List;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.IExecutionContext;
-import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IKeys;
+import org.ignis.backend.scheduler.IScheduler;
+import org.ignis.backend.scheduler.model.IContainerDetails;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -31,34 +34,66 @@ public final class IContainerCreateTask extends IContainerTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IContainerCreateTask.class);
 
-    public IContainerCreateTask(IHelper helper, IContainer container) {
-        super(helper, container);
+    private final List<IContainer> containers;
+    private final IScheduler scheduler;
+
+    public IContainerCreateTask(String name, IContainer container, IScheduler scheduler, List<IContainer> containers) {
+        super(name, container);
+        this.containers = containers;
+        this.scheduler = scheduler;
+    }
+    
+    private IContainerDetails parseContainer(){
+        IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
+        //TODO
+        return builder.build();
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {
-        if (container.getStub().isRunning()) {
-            try {
-                container.getServerManager().test();
-                LOGGER.info(log() + "Container already running");
-                return;
-            } catch (TException ex) {
-                LOGGER.info(log() + "Reconnecting to the container");
-                try {
-                    container.connect();
-                } catch (TException ex2) {
-                    LOGGER.warn(log() + "Container dead");
-                    try {
-                        container.getStub().destroy();
-                    } catch (TException ex3) {
-                        //Destroy in the allocator
-                    }
+    public void run(ITaskContext context) throws IgnisException {
+        List<Integer> stopped = new ArrayList<>();
+        if (container.getInfo() != null) {
+             for (int i = 0; i < containers.size(); i++) {
+                switch (scheduler.getStatus(container.getInfo().getId())) {
+                    case DESTROYED:
+                    case FINISHED:
+                    case ERROR:
+                        stopped.add(i);
+                        break;
+                    default:
+                        LOGGER.info(log() + "Container "+i+" already running");
+                        if(!containers.get(i).testConnection()){
+                            LOGGER.info(log() + "Reconnecting to the container " + i);
+                            try{
+                            containers.get(i).connect();
+                            }catch(IgnisException ex){
+                                LOGGER.warn(log() + "Container "+i+" dead");
+                                stopped.add(i);
+                            }
+                        }
                 }
             }
+        }else{
+            for (int i = 0; i < containers.size(); i++) {
+                stopped.add(i);
+            }
         }
-        LOGGER.info(log() + "Starting new container");
-        container.getStub().request();
-        LOGGER.info(log() + "Connecting to the container");
-        container.connect();
+        
+        if(stopped.isEmpty()){
+            return;
+        }
+         LOGGER.info(log() + "Starting new containers");   
+
+        String group = container.getProperties().getString(IKeys.GROUP);
+        List<String> ids = scheduler.createContainerIntances(group, name, parseContainer(), container.getProperties(), containers.size());
+        List<IContainerDetails> details = scheduler.getContainerInstances(ids);
+        for (int i = 0; i < containers.size(); i++) {
+            containers.get(i).setInfo(details.get(i));
+        }
+        LOGGER.info(log() + "Connecting to the containers");
+        for (int i = 0; i < containers.size(); i++) {
+            containers.get(i).connect();
+        }
+
     }
 }

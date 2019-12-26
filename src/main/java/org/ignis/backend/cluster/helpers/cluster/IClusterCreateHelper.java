@@ -16,17 +16,16 @@
  */
 package org.ignis.backend.cluster.helpers.cluster;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.ignis.backend.allocator.IAllocator;
-import org.ignis.backend.allocator.IContainerStub;
+
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
-import org.ignis.backend.cluster.tasks.ITaskScheduler;
+import org.ignis.backend.cluster.ISSH;
+import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IKeys;
+import org.ignis.backend.scheduler.IScheduler;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -41,19 +40,22 @@ public final class IClusterCreateHelper extends IClusterHelper {
         super(cluster, properties);
     }
 
-    public List<IContainer> create(IAllocator allocator) throws IgnisException {
+    public ITaskGroup create(IScheduler scheduler, ISSH ssh) throws IgnisException {
         int instances = properties.getInteger(IKeys.EXECUTOR_INSTANCES);
-        List<IContainer> result = new ArrayList<>();
-        ITaskScheduler.Builder shedulerBuilder = new ITaskScheduler.Builder(cluster.getLock());
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
         LOGGER.info(log() + "Registering cluster with " + instances + " containers");
+
         for (int i = 0; i < instances; i++) {
-            IContainerStub stub = allocator.getContainer(properties);
-            IContainer container = new IContainer(i, stub);
-            shedulerBuilder.newTask(new IContainerCreateTask(this, container));
-            result.add(container);
+            IContainer container = new IContainer(i, ssh.createTunnel(scheduler), properties);
+            cluster.getContainers().add(container);
         }
-        cluster.putScheduler(shedulerBuilder.build());
-        return result;
+
+        if (instances > 0) {// All containers are created in single task, faster in some schedulers
+            builder.newTask(new IContainerCreateTask(getName(), cluster.getContainers().get(0),
+                    scheduler, cluster.getContainers()));
+        }
+
+        return builder.build();
     }
 
 }

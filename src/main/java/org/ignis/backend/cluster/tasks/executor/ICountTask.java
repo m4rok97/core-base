@@ -23,11 +23,14 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-import org.ignis.backend.cluster.IExecutionContext;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.cluster.tasks.IBarrier;
+import org.ignis.backend.cluster.tasks.executor.IExecutorContextTask;
+import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -40,39 +43,42 @@ public class ICountTask extends IExecutorContextTask {
 
     public static class Shared {
 
-        private final AtomicLong result = new AtomicLong();
+        public Shared(int executors) {
+            result = new AtomicLong();
+            barrier = new IBarrier(executors);
+        }
+
+        private final AtomicLong result;
+        private final IBarrier barrier;
 
     }
 
     private final Shared shared;
-    private final IBarrier barrier;
 
-    public ICountTask(IHelper helper, IExecutor executor, IBarrier barrier, Shared shared) {
-        super(helper, executor, Mode.LOAD);
-        this.barrier = barrier;
+    public ICountTask(String name, IExecutor executor, Shared shared) {
+        super(name, executor, Mode.LOAD);
         this.shared = shared;
     }
 
     @Override
-    public void execute(IExecutionContext context) throws IgnisException {      
+    public void run(ITaskContext context) throws IgnisException {
         try {
-            if (barrier.await() == 0) {
+            if (shared.barrier.await() == 0) {
                 shared.result.set(0);
                 LOGGER.info(log() + "Executing count");
             }
-            barrier.await();
-            shared.result.addAndGet(executor.getStorageModule().count());
-            if (barrier.await() == 0) {
+            shared.result.addAndGet(executor.getMathModule().count());
+            if (shared.barrier.await() == 0) {
                 context.set("result", shared.result.get());
                 LOGGER.info(log() + "Count executed");
             }
-        } catch (IgnisException ex) {
-            barrier.fails();
-            throw ex;
+        } catch (IExecutorException ex) {
+            shared.barrier.fails();
+            throw new IExecutorExceptionWrapper(ex);
         } catch (BrokenBarrierException ex) {
             //Other Task has failed
         } catch (Exception ex) {
-            barrier.fails();
+            shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
     }
