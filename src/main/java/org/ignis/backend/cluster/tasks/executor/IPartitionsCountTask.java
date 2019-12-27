@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class ICountTask extends IExecutorContextTask {
+public class IPartitionsCountTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICountTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPartitionsCountTask.class);
 
     public static class Shared {
 
@@ -48,7 +48,7 @@ public class ICountTask extends IExecutorContextTask {
 
     private final Shared shared;
 
-    public ICountTask(String name, IExecutor executor, Shared shared) {
+    public IPartitionsCountTask(String name, IExecutor executor, Shared shared) {
         super(name, executor, Mode.LOAD);
         this.shared = shared;
     }
@@ -60,9 +60,9 @@ public class ICountTask extends IExecutorContextTask {
                 shared.result.set(0);
                 LOGGER.info(log() + "Executing count");
             }
-            shared.result.addAndGet(executor.getMathModule().count());
+            shared.result.addAndGet(executor.getIoModule().partitionCount());
             if (shared.barrier.await() == 0) {
-                context.set("result", shared.result.get());
+                context.<Long>set("result", shared.result.get());
                 LOGGER.info(log() + "Count executed");
             }
         } catch (IExecutorException ex) {

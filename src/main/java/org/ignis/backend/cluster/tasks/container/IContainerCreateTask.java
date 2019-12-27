@@ -17,13 +17,17 @@
 package org.ignis.backend.cluster.tasks.container;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
+import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.IScheduler;
+import org.ignis.backend.scheduler.ISchedulerParser;
 import org.ignis.backend.scheduler.model.IContainerDetails;
+import org.ignis.backend.scheduler.model.INetwork;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -44,8 +48,25 @@ public final class IContainerCreateTask extends IContainerTask {
     }
     
     private IContainerDetails parseContainer(){
+        IProperties props = container.getProperties();
         IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
-        //TODO
+
+        builder.image(props.getProperty(IKeys.EXECUTOR_IMAGE));
+        builder.cpus(props.getInteger(IKeys.EXECUTOR_CORES));
+        builder.memory((long) Math.ceil(props.getSILong(IKeys.EXECUTOR_MEMORY) / 1024 / 1024));
+        builder.command("ignis-server");
+        builder.arguments(Arrays.asList(props.getString(IKeys.DRIVER_RPC_PORT)));
+        INetwork network;
+        builder.network(network = ISchedulerParser.parseNetwork(props, IKeys.EXECUTOR_PORT));
+        builder.binds(ISchedulerParser.parseBinds(props, IKeys.EXECUTOR_BIND));
+        builder.volumes(ISchedulerParser.parseVolumes(props, IKeys.EXECUTOR_VOLUME));
+        builder.environmentVariables(ISchedulerParser.parseEnv(props, IKeys.EXECUTOR_ENV));
+        if (props.contains(IKeys.EXECUTOR_HOSTS)) {
+            builder.preferedHosts(props.getStringList(IKeys.EXECUTOR_HOSTS));
+        }
+        
+        network.getTcpMap().put(props.getInteger(IKeys.DRIVER_RPC_PORT), 0);
+        
         return builder.build();
     }
 

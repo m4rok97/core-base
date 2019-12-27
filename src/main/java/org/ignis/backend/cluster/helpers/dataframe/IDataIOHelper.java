@@ -18,8 +18,13 @@ package org.ignis.backend.cluster.helpers.dataframe;
 
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
+import org.ignis.backend.cluster.tasks.executor.IPartitionsCountTask;
+import org.ignis.backend.cluster.tasks.executor.ISaveAsJsonFileTask;
+import org.ignis.backend.cluster.tasks.executor.ISaveAsPartitionObjectFile;
+import org.ignis.backend.cluster.tasks.executor.ISaveAsTextFileTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
@@ -36,12 +41,35 @@ public final class IDataIOHelper extends IDataHelper {
         super(data, properties);
     }
 
-    public ILazy<Void> saveAsPartitionObjectFile(String path, byte compression) throws IgnisException{
+    public IDataFrame repartition(long numPartitions) {
+        throw new UnsupportedOperationException("Not supported yet."); //TODO
+    }
+
+    public IDataFrame coalesce(long numPartitions, boolean shuffle) {
+        throw new UnsupportedOperationException("Not supported yet."); //TODO
+    }
+
+    public ILazy<Long> partitions() {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getWorker().getTasks());
+        LOGGER.info(log() + "Registering partitions count");
+        IPartitionsCountTask.Shared shared = new IPartitionsCountTask.Shared(data.getExecutors().size());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IPartitionsCountTask(getName(), executor, shared));
+        }
+        return () -> {
+            ITaskContext context = builder.build().start(data.getPool());
+            return context.<Long>get("result");
+        };
+    }
+
+    public ILazy<Void> saveAsPartitionObjectFile(String path, byte compression) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getWorker().getTasks());
         LOGGER.info(log() + "Registering saveAsPartitionObjectFile path: " + path + ", compression: " + compression);
-        for (IExecutor executors : data.getExecutors()) {
-             //builder.newTask(null);//TODO
+        ISaveAsPartitionObjectFile.Shared shared = new ISaveAsPartitionObjectFile.Shared(data.getExecutors().size());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new ISaveAsPartitionObjectFile(getName(), executor, shared, path));
         }
         return () -> {
             builder.build().start(data.getPool());
@@ -49,12 +77,13 @@ public final class IDataIOHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Void> saveAsTextFile(String path) throws IgnisException{
+    public ILazy<Void> saveAsTextFile(String path) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getWorker().getTasks());
         LOGGER.info(log() + "Registering saveAsTextFile path: " + path);
-        for (IExecutor executors : data.getExecutors()) {
-             //builder.newTask(null);//TODO
+        ISaveAsTextFileTask.Shared shared = new ISaveAsTextFileTask.Shared(data.getExecutors().size());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new ISaveAsTextFileTask(getName(), executor, shared, path));
         }
         return () -> {
             builder.build().start(data.getPool());
@@ -62,12 +91,13 @@ public final class IDataIOHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Void> saveAsJsonFile(String path) throws IgnisException{
+    public ILazy<Void> saveAsJsonFile(String path) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getWorker().getTasks());
         LOGGER.info(log() + "Registering saveAsJsonFile path: " + path);
-        for (IExecutor executors : data.getExecutors()) {
-            //builder.newTask(null);//TODO
+        ISaveAsJsonFileTask.Shared shared = new ISaveAsJsonFileTask.Shared(data.getExecutors().size());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new ISaveAsJsonFileTask(getName(), executor, shared, path));
         }
         return () -> {
             builder.build().start(data.getPool());

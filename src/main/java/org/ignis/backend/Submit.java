@@ -28,10 +28,7 @@ import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.IScheduler;
 import org.ignis.backend.scheduler.ISchedulerBuilder;
-import static org.ignis.backend.scheduler.ISchedulerParser.parseBinds;
-import static org.ignis.backend.scheduler.ISchedulerParser.parseEnv;
-import static org.ignis.backend.scheduler.ISchedulerParser.parseNetwork;
-import static org.ignis.backend.scheduler.ISchedulerParser.parseVolumes;
+import org.ignis.backend.scheduler.ISchedulerParser;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 import org.slf4j.LoggerFactory;
 
@@ -103,10 +100,10 @@ public class Submit {
             builder.memory((long) Math.ceil(props.getSILong(IKeys.DRIVER_MEMORY) / 1024 / 1024));
             builder.command(ns.getString("cmd"));
             builder.arguments(ns.getList("args"));
-            builder.network(parseNetwork(props, IKeys.DRIVER_PORT));
-            builder.binds(parseBinds(props, IKeys.DRIVER_BIND));
-            builder.volumes(parseVolumes(props, IKeys.DRIVER_VOLUME));
-            builder.environmentVariables(parseEnv(props, IKeys.DRIVER_ENV));
+            builder.network(ISchedulerParser.parseNetwork(props, IKeys.DRIVER_PORT));
+            builder.binds(ISchedulerParser.parseBinds(props, IKeys.DRIVER_BIND));
+            builder.volumes(ISchedulerParser.parseVolumes(props, IKeys.DRIVER_VOLUME));
+            builder.environmentVariables(ISchedulerParser.parseEnv(props, IKeys.DRIVER_ENV));
             if (props.contains(IKeys.DRIVER_HOSTS)) {
                 builder.preferedHosts(props.getStringList(IKeys.DRIVER_HOSTS));
             }

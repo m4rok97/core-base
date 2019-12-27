@@ -31,6 +31,7 @@ public final class ISendCompressedFileTask extends IContainerTask {
 
     private final String source;
     private final String target;
+    private int attempt;
 
     public ISendCompressedFileTask(String name, IContainer container, String source, String target) {
         super(name, container);
@@ -62,11 +63,15 @@ public final class ISendCompressedFileTask extends IContainerTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
+        if (attempt == container.getResets()) {
+            return;
+        }
         LOGGER.info(log() + "Sending file" + source + " to " + target);
         container.getTunnel().sendFile(source, target);
         LOGGER.info(log() + "File sent, extracting");
         container.getTunnel().execute(EXTRACTING_SCRIPT.replace("{file}", target));
         LOGGER.info(log() + "File extracted successfully");
+        attempt = container.getResets();
     }
 
 }

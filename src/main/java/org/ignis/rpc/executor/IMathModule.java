@@ -11,9 +11,9 @@ public class IMathModule {
 
   public interface Iface {
 
-    public void sample(boolean withReplacement, double fraction, long seed) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void sample(boolean withReplacement, double fraction, int seed) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void takeSample(boolean withReplacement, double fraction, long seed) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void takeSample(boolean withReplacement, double fraction, int seed) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
     public long count() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
@@ -25,9 +25,9 @@ public class IMathModule {
 
   public interface AsyncIface {
 
-    public void sample(boolean withReplacement, double fraction, long seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void sample(boolean withReplacement, double fraction, int seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void takeSample(boolean withReplacement, double fraction, long seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void takeSample(boolean withReplacement, double fraction, int seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void count(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
@@ -57,13 +57,13 @@ public class IMathModule {
       super(iprot, oprot);
     }
 
-    public void sample(boolean withReplacement, double fraction, long seed) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void sample(boolean withReplacement, double fraction, int seed) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
       send_sample(withReplacement, fraction, seed);
       recv_sample();
     }
 
-    public void send_sample(boolean withReplacement, double fraction, long seed) throws org.apache.thrift.TException
+    public void send_sample(boolean withReplacement, double fraction, int seed) throws org.apache.thrift.TException
     {
       sample_args args = new sample_args();
       args.setWithReplacement(withReplacement);
@@ -82,13 +82,13 @@ public class IMathModule {
       return;
     }
 
-    public void takeSample(boolean withReplacement, double fraction, long seed) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void takeSample(boolean withReplacement, double fraction, int seed) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
       send_takeSample(withReplacement, fraction, seed);
       recv_takeSample();
     }
 
-    public void send_takeSample(boolean withReplacement, double fraction, long seed) throws org.apache.thrift.TException
+    public void send_takeSample(boolean withReplacement, double fraction, int seed) throws org.apache.thrift.TException
     {
       takeSample_args args = new takeSample_args();
       args.setWithReplacement(withReplacement);
@@ -196,7 +196,7 @@ public class IMathModule {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void sample(boolean withReplacement, double fraction, long seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void sample(boolean withReplacement, double fraction, int seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       sample_call method_call = new sample_call(withReplacement, fraction, seed, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -206,8 +206,8 @@ public class IMathModule {
     public static class sample_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private boolean withReplacement;
       private double fraction;
-      private long seed;
-      public sample_call(boolean withReplacement, double fraction, long seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private int seed;
+      public sample_call(boolean withReplacement, double fraction, int seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.withReplacement = withReplacement;
         this.fraction = fraction;
@@ -234,7 +234,7 @@ public class IMathModule {
       }
     }
 
-    public void takeSample(boolean withReplacement, double fraction, long seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void takeSample(boolean withReplacement, double fraction, int seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       takeSample_call method_call = new takeSample_call(withReplacement, fraction, seed, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -244,8 +244,8 @@ public class IMathModule {
     public static class takeSample_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private boolean withReplacement;
       private double fraction;
-      private long seed;
-      public takeSample_call(boolean withReplacement, double fraction, long seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private int seed;
+      public takeSample_call(boolean withReplacement, double fraction, int seed, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.withReplacement = withReplacement;
         this.fraction = fraction;
@@ -882,14 +882,14 @@ public class IMathModule {
 
     private static final org.apache.thrift.protocol.TField WITH_REPLACEMENT_FIELD_DESC = new org.apache.thrift.protocol.TField("withReplacement", org.apache.thrift.protocol.TType.BOOL, (short)1);
     private static final org.apache.thrift.protocol.TField FRACTION_FIELD_DESC = new org.apache.thrift.protocol.TField("fraction", org.apache.thrift.protocol.TType.DOUBLE, (short)2);
-    private static final org.apache.thrift.protocol.TField SEED_FIELD_DESC = new org.apache.thrift.protocol.TField("seed", org.apache.thrift.protocol.TType.I64, (short)3);
+    private static final org.apache.thrift.protocol.TField SEED_FIELD_DESC = new org.apache.thrift.protocol.TField("seed", org.apache.thrift.protocol.TType.I32, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new sample_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sample_argsTupleSchemeFactory();
 
     private boolean withReplacement; // required
     private double fraction; // required
-    private long seed; // required
+    private int seed; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -970,7 +970,7 @@ public class IMathModule {
       tmpMap.put(_Fields.FRACTION, new org.apache.thrift.meta_data.FieldMetaData("fraction", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.DOUBLE)));
       tmpMap.put(_Fields.SEED, new org.apache.thrift.meta_data.FieldMetaData("seed", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sample_args.class, metaDataMap);
     }
@@ -981,7 +981,7 @@ public class IMathModule {
     public sample_args(
       boolean withReplacement,
       double fraction,
-      long seed)
+      int seed)
     {
       this();
       this.withReplacement = withReplacement;
@@ -1062,11 +1062,11 @@ public class IMathModule {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __FRACTION_ISSET_ID, value);
     }
 
-    public long getSeed() {
+    public int getSeed() {
       return this.seed;
     }
 
-    public sample_args setSeed(long seed) {
+    public sample_args setSeed(int seed) {
       this.seed = seed;
       setSeedIsSet(true);
       return this;
@@ -1107,7 +1107,7 @@ public class IMathModule {
         if (value == null) {
           unsetSeed();
         } else {
-          setSeed((java.lang.Long)value);
+          setSeed((java.lang.Integer)value);
         }
         break;
 
@@ -1200,7 +1200,7 @@ public class IMathModule {
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(fraction);
 
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(seed);
+      hashCode = hashCode * 8191 + seed;
 
       return hashCode;
     }
@@ -1337,8 +1337,8 @@ public class IMathModule {
               }
               break;
             case 3: // SEED
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.seed = iprot.readI64();
+              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+                struct.seed = iprot.readI32();
                 struct.setSeedIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -1366,7 +1366,7 @@ public class IMathModule {
         oprot.writeDouble(struct.fraction);
         oprot.writeFieldEnd();
         oprot.writeFieldBegin(SEED_FIELD_DESC);
-        oprot.writeI64(struct.seed);
+        oprot.writeI32(struct.seed);
         oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
@@ -1403,7 +1403,7 @@ public class IMathModule {
           oprot.writeDouble(struct.fraction);
         }
         if (struct.isSetSeed()) {
-          oprot.writeI64(struct.seed);
+          oprot.writeI32(struct.seed);
         }
       }
 
@@ -1420,7 +1420,7 @@ public class IMathModule {
           struct.setFractionIsSet(true);
         }
         if (incoming.get(2)) {
-          struct.seed = iprot.readI64();
+          struct.seed = iprot.readI32();
           struct.setSeedIsSet(true);
         }
       }
@@ -1805,14 +1805,14 @@ public class IMathModule {
 
     private static final org.apache.thrift.protocol.TField WITH_REPLACEMENT_FIELD_DESC = new org.apache.thrift.protocol.TField("withReplacement", org.apache.thrift.protocol.TType.BOOL, (short)1);
     private static final org.apache.thrift.protocol.TField FRACTION_FIELD_DESC = new org.apache.thrift.protocol.TField("fraction", org.apache.thrift.protocol.TType.DOUBLE, (short)2);
-    private static final org.apache.thrift.protocol.TField SEED_FIELD_DESC = new org.apache.thrift.protocol.TField("seed", org.apache.thrift.protocol.TType.I64, (short)3);
+    private static final org.apache.thrift.protocol.TField SEED_FIELD_DESC = new org.apache.thrift.protocol.TField("seed", org.apache.thrift.protocol.TType.I32, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new takeSample_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new takeSample_argsTupleSchemeFactory();
 
     private boolean withReplacement; // required
     private double fraction; // required
-    private long seed; // required
+    private int seed; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -1893,7 +1893,7 @@ public class IMathModule {
       tmpMap.put(_Fields.FRACTION, new org.apache.thrift.meta_data.FieldMetaData("fraction", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.DOUBLE)));
       tmpMap.put(_Fields.SEED, new org.apache.thrift.meta_data.FieldMetaData("seed", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(takeSample_args.class, metaDataMap);
     }
@@ -1904,7 +1904,7 @@ public class IMathModule {
     public takeSample_args(
       boolean withReplacement,
       double fraction,
-      long seed)
+      int seed)
     {
       this();
       this.withReplacement = withReplacement;
@@ -1985,11 +1985,11 @@ public class IMathModule {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __FRACTION_ISSET_ID, value);
     }
 
-    public long getSeed() {
+    public int getSeed() {
       return this.seed;
     }
 
-    public takeSample_args setSeed(long seed) {
+    public takeSample_args setSeed(int seed) {
       this.seed = seed;
       setSeedIsSet(true);
       return this;
@@ -2030,7 +2030,7 @@ public class IMathModule {
         if (value == null) {
           unsetSeed();
         } else {
-          setSeed((java.lang.Long)value);
+          setSeed((java.lang.Integer)value);
         }
         break;
 
@@ -2123,7 +2123,7 @@ public class IMathModule {
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(fraction);
 
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(seed);
+      hashCode = hashCode * 8191 + seed;
 
       return hashCode;
     }
@@ -2260,8 +2260,8 @@ public class IMathModule {
               }
               break;
             case 3: // SEED
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.seed = iprot.readI64();
+              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+                struct.seed = iprot.readI32();
                 struct.setSeedIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -2289,7 +2289,7 @@ public class IMathModule {
         oprot.writeDouble(struct.fraction);
         oprot.writeFieldEnd();
         oprot.writeFieldBegin(SEED_FIELD_DESC);
-        oprot.writeI64(struct.seed);
+        oprot.writeI32(struct.seed);
         oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
@@ -2326,7 +2326,7 @@ public class IMathModule {
           oprot.writeDouble(struct.fraction);
         }
         if (struct.isSetSeed()) {
-          oprot.writeI64(struct.seed);
+          oprot.writeI32(struct.seed);
         }
       }
 
@@ -2343,7 +2343,7 @@ public class IMathModule {
           struct.setFractionIsSet(true);
         }
         if (incoming.get(2)) {
-          struct.seed = iprot.readI64();
+          struct.seed = iprot.readI32();
           struct.setSeedIsSet(true);
         }
       }

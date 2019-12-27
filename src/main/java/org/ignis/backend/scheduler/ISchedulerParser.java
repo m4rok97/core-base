@@ -17,10 +17,12 @@
 package org.ignis.backend.scheduler;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.ignis.backend.exception.IPropertyException;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IBind;
 import org.ignis.backend.scheduler.model.INetwork;
@@ -35,6 +37,9 @@ public class ISchedulerParser {
     public static INetwork parseNetwork(IProperties props, String prefix) {
         INetwork network = new INetwork();
         Collection<String> ports = props.getKeysPrefix(prefix + ".");
+        
+        int transportPorts = props.getInteger(IKeys.TRANSPORT_PORTS);
+        network.getTcpPorts().addAll(Collections.nCopies(transportPorts, 0));
 
         for (String key : ports) {
             String subkey = key.substring((prefix + ".").length());
@@ -80,6 +85,7 @@ public class ISchedulerParser {
                 network.getUdpPorts().addAll(props.getIntegerList(key));
             }
         }
+
         return network;
     }
 

@@ -85,6 +85,15 @@ public final class Main {
             System.exit(-1);
         }
 
+        try {
+            LOGGER.info("Getting Driver container info from scheduler");
+            attributes.driver.initInfo(scheduler.getContainer(scheduler.getThisContainerId()));
+            LOGGER.info("Driver container info found");
+        } catch (ISchedulerException ex) {
+            LOGGER.error("Not found", ex);
+            System.exit(-1);
+        }
+
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
         IBackendServiceImpl backend = null;
         IClusterServiceImpl clusters = null;

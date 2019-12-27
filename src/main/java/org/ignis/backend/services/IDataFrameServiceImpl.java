@@ -20,9 +20,11 @@ import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IWorker;
+import org.ignis.backend.cluster.helpers.dataframe.IDataCacheHelper;
 import org.ignis.backend.cluster.helpers.dataframe.IDataGeneralActionHelper;
 import org.ignis.backend.cluster.helpers.dataframe.IDataGeneralHelper;
 import org.ignis.backend.cluster.helpers.dataframe.IDataIOHelper;
+import org.ignis.backend.cluster.helpers.dataframe.IDataMathHelper;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.rpc.IDriverException;
@@ -48,6 +50,99 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             synchronized (worker.getLock()) {
                 worker.getDataFrame(id.getDataFrame()).setName(name);
             }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void persist(IDataFrameId id, byte level) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            synchronized (worker.getLock()) {
+                new IDataCacheHelper(data, worker.getProperties()).persist(level);
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void cache(IDataFrameId id) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            synchronized (worker.getLock()) {
+                new IDataCacheHelper(data, worker.getProperties()).cache();
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void unpersist(IDataFrameId id) throws IDriverException, TException {
+        uncache(id);
+    }
+
+    @Override
+    public void uncache(IDataFrameId id) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            synchronized (worker.getLock()) {
+                new IDataCacheHelper(data, worker.getProperties()).uncache();
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId repartition(IDataFrameId id, long numPartitions) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            synchronized (worker.getLock()) {
+                IDataFrame result = new IDataIOHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).repartition(numPartitions);
+                return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId coalesce(IDataFrameId id, long numPartitions, boolean shuffle) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            synchronized (worker.getLock()) {
+                IDataFrame result = new IDataIOHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).coalesce(numPartitions, shuffle);
+                return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public long partitions(IDataFrameId id) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            ILazy<Long> result;
+            synchronized (worker.getLock()) {
+                result = new IDataIOHelper(data, worker.getProperties()).partitions();
+            }
+            return result.execute();
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }
@@ -466,6 +561,85 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             ILazy<Long> result;
             synchronized (worker.getLock()) {
                 result = new IDataGeneralActionHelper(data, worker.getProperties()).top(num, cmp);
+            }
+            return result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId sample(IDataFrameId id, boolean withReplacement, double fraction, int seed) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            synchronized (worker.getLock()) {
+                IDataFrame result = new IDataMathHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).sample(withReplacement, fraction, seed);
+                return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public long takeSample(IDataFrameId id, boolean withReplacement, long num, int seed) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            ILazy<Long> result;
+            synchronized (worker.getLock()) {
+                result = new IDataMathHelper(data, worker.getProperties()).takeSample(attributes.driver, withReplacement, num, seed);
+            }
+            return result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public long count(IDataFrameId id) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            ILazy<Long> result;
+            synchronized (worker.getLock()) {
+                result = new IDataMathHelper(data, worker.getProperties()).count();
+            }
+            return result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public long max(IDataFrameId id, ISource cmp) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            ILazy<Long> result;
+            synchronized (worker.getLock()) {
+                result = new IDataMathHelper(data, worker.getProperties()).max(attributes.driver, cmp);
+            }
+            return result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public long min(IDataFrameId id, ISource cmp) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            ILazy<Long> result;
+            synchronized (worker.getLock()) {
+                result = new IDataMathHelper(data, worker.getProperties()).min(attributes.driver, cmp);
             }
             return result.execute();
         } catch (Exception ex) {

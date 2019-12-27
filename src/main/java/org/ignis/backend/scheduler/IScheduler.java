@@ -44,6 +44,13 @@ public interface IScheduler {
 
     /**
      *
+     * @return
+     * @throws ISchedulerException
+     */
+    public String getThisContainerId() throws ISchedulerException;
+    
+    /**
+     *
      * @param group
      * @param name
      * @param container

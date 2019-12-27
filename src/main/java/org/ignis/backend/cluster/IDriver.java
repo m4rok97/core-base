@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster;
 
 import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.scheduler.model.IContainerDetails;
 
 /**
  *
@@ -27,11 +28,22 @@ public final class IDriver {
     private final int port;
     private final ILock lock;
     private final IExecutor executor;
+    private IContainerDetails info;
 
     public IDriver(int port) {
         this.port = port;
         this.lock = new ILock(-1);
         this.executor = new IExecutor(0, null, port);
+    }
+
+    public void initInfo(IContainerDetails info) {
+        if (this.info == null) {
+            this.info = info;
+        }
+    }
+
+    public IContainerDetails getInfo() {
+        return info;
     }
 
     public int getPort() {
@@ -45,8 +57,8 @@ public final class IDriver {
     public IExecutor getExecutor() {
         return executor;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return "driver";
     }
 

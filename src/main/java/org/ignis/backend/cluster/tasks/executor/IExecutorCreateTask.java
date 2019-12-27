@@ -63,7 +63,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
         startScript.append("export MPICH_STATIC_PORTS='");
         int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
         List<Integer> tcpPorts = executor.getContainer().getInfo().getNetwork().getTcpPorts();
-        List<Integer> mpiPorts = tcpPorts.subList(tcpPorts.size() - mpiMaxPorts, tcpPorts.size());
+        List<Integer> mpiPorts = tcpPorts.subList(0, mpiMaxPorts);
         startScript.append(mpiPorts.stream().map(String::valueOf).collect(Collectors.joining(" ")));
         startScript.append("'\n");
 

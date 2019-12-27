@@ -19,6 +19,7 @@ package org.ignis.backend.cluster.helpers.dataframe;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IDriver;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.executor.ICollectTask;
@@ -59,8 +60,8 @@ public final class IDataGeneralActionHelper extends IDataHelper {
 
         LOGGER.info(log() + "Registering collect");
         return () -> {
-            builder.build().start(data.getPool());
-            return null;
+            ITaskContext context = builder.build().start(data.getPool());
+            return context.<Long>get("result");
         };
     }
 

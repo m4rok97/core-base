@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
+import java.util.List;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -25,29 +26,26 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class ISendFileTask extends IContainerTask {
+public final class IExecuteCmdTask extends IContainerTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISendFileTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IExecuteCmdTask.class);
 
-    private final String source;
-    private final String target;
+    private final List<String> cmd;
     private int attempt;
 
-    public ISendFileTask(String name, IContainer container, String source, String target) {
+    public IExecuteCmdTask(String name, IContainer container, List<String> cmd) {
         super(name, container);
-        this.source = source;
-        this.target = target;
+        this.cmd = cmd;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        if(attempt == container.getResets()){
+        if (attempt == container.getResets()) {
             return;
         }
-        
-        LOGGER.info(log() + "Sending file" + source + " to " + target);
-        container.getTunnel().sendFile(source, target);
-        LOGGER.info(log() + "File sent");
+        LOGGER.info(log() + "Executing cmd \"" + String.join("\" ", cmd) + "\"");
+        container.getTunnel().execute(cmd);
+        LOGGER.info(log() + "Cmd executed");
         attempt = container.getResets();
     }
 

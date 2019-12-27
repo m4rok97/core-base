@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.cluster;
 
-
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IKeys;
@@ -32,11 +31,13 @@ public final class IContainer {
     private final ITunnel tunnel;
     private final IProperties properties;
     private IContainerDetails info;
+    private int resets;
 
     public IContainer(long id, ITunnel tunnel, IProperties properties) throws IgnisException {
         this.id = id;
         this.tunnel = tunnel;
         this.properties = properties;
+        this.resets = -1;
     }
 
     public long getId() {
@@ -53,21 +54,26 @@ public final class IContainer {
 
     public void setInfo(IContainerDetails info) {
         this.info = info;
+        resets++;
+    }
+
+    public int getResets() {
+        return resets;
     }
 
     public IProperties getProperties() {
         return properties;
     }
 
-    public boolean testConnection(){
+    public boolean testConnection() {
         return tunnel.test();
     }
-    
+
     public void connect() throws IgnisException {
         tunnel.open(info.getHost(), info.getNetwork().getTcpMap().get(properties.getInteger(IKeys.DRIVER_RPC_PORT)));
     }
 
-    public IExecutor createExecutor(long worker) throws IgnisException{
+    public IExecutor createExecutor(long worker) throws IgnisException {
         return new IExecutor(worker, this, tunnel.registerPort());
     }
 }

@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
+import java.util.List;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -25,29 +26,26 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class ISendFileTask extends IContainerTask {
+public final class IExecuteScriptTask extends IContainerTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISendFileTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IExecuteScriptTask.class);
 
-    private final String source;
-    private final String target;
+    private final String script;
     private int attempt;
 
-    public ISendFileTask(String name, IContainer container, String source, String target) {
+    public IExecuteScriptTask(String name, IContainer container, String script) {
         super(name, container);
-        this.source = source;
-        this.target = target;
+        this.script = script;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        if(attempt == container.getResets()){
+        if (attempt == container.getResets()) {
             return;
         }
-        
-        LOGGER.info(log() + "Sending file" + source + " to " + target);
-        container.getTunnel().sendFile(source, target);
-        LOGGER.info(log() + "File sent");
+        LOGGER.info(log() + "Executing script:\n\t" + script.replace("\n", "\t\n"));
+        container.getTunnel().execute(script);
+        LOGGER.info(log() + "Script executed");
         attempt = container.getResets();
     }
 

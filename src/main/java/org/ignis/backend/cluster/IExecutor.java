@@ -49,14 +49,16 @@ public final class IExecutor {
     private final IIOModule.Iface ioModule;
     private final ICacheContextModule.Iface cacheContextModule;
     private int pid;
+    private int resets;
 
     public IExecutor(long worker, IContainer container, int port) {
         this.worker = worker;
         this.container = container;
         this.port = port;
+        this.resets = -1;
         this.transport = new TSocket("localhost", port);
         this.protocol = new TCompactProtocol(new TZlibTransport(transport,
-                container.getProperties().getInteger(IKeys.MANAGER_RPC_COMPRESSION)));
+                container.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)));
         executorServerModule = new IExecutorServerModule.Client(new TMultiplexedProtocol(protocol, "IExecutorServer"));
         generalModule = new IGeneralModule.Client(new TMultiplexedProtocol(protocol, "IGeneral"));
         generalActionModule = new IGeneralActionModule.Client(new TMultiplexedProtocol(protocol, "IGeneralAction"));
@@ -101,6 +103,11 @@ public final class IExecutor {
 
     public void setPid(int pid) {
         this.pid = pid;
+        resets++;
+    }
+
+    public int getResets() {
+        return resets;
     }
 
     public IExecutorServerModule.Iface getExecutorServerModule() {

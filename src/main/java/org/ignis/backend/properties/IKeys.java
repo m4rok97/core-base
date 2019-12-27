@@ -44,6 +44,7 @@ public final class IKeys {
     public static final String DRIVER_MEMORY = "ignis.driver.memory";
     public static final String DRIVER_RPC_PORT = "ignis.driver.rpc.port";
     public static final String DRIVER_RPC_COMPRESSION = "ignis.driver.rpc.compression";
+    public static final String DRIVER_RPC_POOL = "ignis.driver.pool";
     public static final String DRIVER_PORT = "ignis.driver.port";
     public static final String DRIVER_PORTS = "ignis.driver.ports";
     public static final String DRIVER_BIND = "ignis.driver.bind";
@@ -55,12 +56,20 @@ public final class IKeys {
     public static final String DRIVER_HEALTHCHECK_TIMEOUT = "ignis.driver.healthcheck.timeout";
     public static final String DRIVER_HEALTHCHECK_RETRIES = "ignis.driver.healthcheck.retries";
     /*EXECUTOR*/
+    public static final String EXECUTOR_INSTANCES = "ignis.executor.instances";
+    public static final String EXECUTOR_ATTEMPTS = "ignis.executor.attempts";
     public static final String EXECUTOR_IMAGE = "ignis.executor.image";
     public static final String EXECUTOR_CORES = "ignis.executor.cores";
     public static final String EXECUTOR_MEMORY = "ignis.executor.memory";
     public static final String EXECUTOR_RPC_PORT = "ignis.executor.rpc.port";
     public static final String EXECUTOR_RPC_COMPRESSION = "ignis.executor.rpc.compression";
     public static final String EXECUTOR_ISOLATION = "ignis.executor.isolation";
+    public static final String EXECUTOR_PORT = "ignis.executor.port";
+    public static final String EXECUTOR_PORTS = "ignis.executor.ports";
+    public static final String EXECUTOR_BIND = "ignis.executor.bind";
+    public static final String EXECUTOR_VOLUME = "ignis.executor.volume";
+    public static final String EXECUTOR_HOSTS = "ignis.executor.hosts";
+    public static final String EXECUTOR_ENV = "ignis.executor.env";
     /*PARTITION*/
     public static final String PARTITION_TYPE = "ignis.partition.type";
     public static final String PARTITION_MINIMAL = "ignis.partition.minimal";
@@ -78,25 +87,5 @@ public final class IKeys {
     public static final String MODULES_IO_COMPRESSION = "ignis.modules.io.compression";
     /*  SORT*/
     public static final String MODULES_SORT_SAMPLES = "ignis.modules.sort.samples";
-
-    /*DEPRECATED*/
-    public static final String DRIVER_SWAP = "ignis.driver.swap";
-    public static final String DRIVER_SWAPPINESS = "ignis.driver.swappiness";
-    public static final String DRIVER_TASK_MAX_FAILURES = "ignis.driver.task.maxFailures";
-    public static final String DRIVER_TASK_MIN_WORKERS = "ignis.driver.task.minWorkers";
-    public static final String EXECUTOR_CORES_BUFFER = "ignis.executor.cores.buffer";
-    public static final String EXECUTOR_INSTANCES = "ignis.executor.instances";
-    public static final String EXECUTOR_LOG = "ignis.executor.log";
-    public static final String EXECUTOR_STORAGE_COMPRESSION = "ignis.executor.storage.compression";
-    public static final String EXECUTOR_STORAGE = "ignis.executor.storage";
-    public static final String EXECUTOR_SWAP = "ignis.executor.swap";
-    public static final String EXECUTOR_SWAPPINESS = "ignis.executor.swappiness";
-    public static final String MANAGER_EXECUTORS_PORT = "ignis.manager.executors.port";
-    public static final String MANAGER_RPC_COMPRESSION = "ignis.manager.rpc.compression";
-    public static final String MANAGER_RPC_PORT = "ignis.manager.rpc.port";
-    public static final String TRANSPORT_BUFFER = "ignis.transport.buffer";
-    public static final String TRANSPORT_COMPRESSION = "ignis.transport.compression";
-    public static final String TRANSPORT_SERIALIZATION = "ignis.transport.serialization";
-    public static final String TRANSPORT_THREADS = "ignis.transport.threads";
 
 }

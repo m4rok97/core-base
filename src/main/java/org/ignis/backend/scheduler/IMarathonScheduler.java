@@ -53,7 +53,7 @@ import org.ignis.backend.scheduler.model.IVolume;
  * @author César Pomar
  */
 public class IMarathonScheduler implements IScheduler {
-    
+
     private final Marathon marathon;
     private final Map<String, String> taskAssignment;
     private final Set<String> taskAssigned;
@@ -76,13 +76,13 @@ public class IMarathonScheduler implements IScheduler {
             put("TASK_UNREACHABLE", IContainerDetails.ContainerStatus.UNKNOWN);
         }
     };
-    
+
     public IMarathonScheduler(String url) {
         marathon = MarathonClient.getInstance(url);
         taskAssignment = new ConcurrentHashMap<>();
         taskAssigned = ConcurrentHashMap.<String>newKeySet();
     }
-    
+
     private App createApp(String group, String name, IContainerDetails container, IProperties props) {
         App app = new App();
         app.setArgs(new ArrayList<>());
@@ -91,7 +91,7 @@ public class IMarathonScheduler implements IScheduler {
         app.setConstraints(new ArrayList<>());
         app.getContainer().setVolumes(new ArrayList<>());
         app.getContainer().setPortMappings(new ArrayList<>());
-        
+
         if (group != null) {
             app.setId(group + "/" + name + "-" + UUID.randomUUID().toString());
         } else {
@@ -102,11 +102,11 @@ public class IMarathonScheduler implements IScheduler {
         app.setCpus((double) container.getCpus());
         app.setMem((double) container.getMemory());
         app.getArgs().add(container.getCommand());
-        
+
         if (container.getArguments() != null) {
             app.getArgs().addAll(container.getArguments());
         }
-        
+
         if (container.getNetwork() != null) {
             app.setRequirePorts(true);
             for (Map.Entry<Integer, Integer> port : container.getNetwork().getTcpMap().entrySet()) {
@@ -123,7 +123,7 @@ public class IMarathonScheduler implements IScheduler {
                 port2.setProtocol("udp");
                 app.getContainer().getPortMappings().add(port2);
             }
-            
+
             for (Integer port : container.getNetwork().getTcpPorts()) {
                 Port port2 = new Port();
                 port2.setHostPort(0);
@@ -131,7 +131,7 @@ public class IMarathonScheduler implements IScheduler {
                 port2.setProtocol("tcp");
                 app.getContainer().getPortMappings().add(port2);
             }
-            
+
             for (Integer port : container.getNetwork().getUdpPorts()) {
                 Port port2 = new Port();
                 port2.setHostPort(0);
@@ -140,7 +140,7 @@ public class IMarathonScheduler implements IScheduler {
                 app.getContainer().getPortMappings().add(port2);
             }
         }
-        
+
         if (props.contains(IKeys.SCHEDULER_DNS) && props.getString(IKeys.SCHEDULER_DNS).toLowerCase().equals("host")) {
             LocalVolume vol = new LocalVolume();
             vol.setHostPath("/etc/hosts");
@@ -148,11 +148,11 @@ public class IMarathonScheduler implements IScheduler {
             vol.setMode("RO");
             app.getContainer().getVolumes().add(vol);
         }
-        
+
         if (props.contains(IKeys.SCHEDULER_CONTAINER)) {
             app.getContainer().setType(props.getString(IKeys.SCHEDULER_CONTAINER));
         }
-        
+
         if (container.getBinds() != null) {
             for (IBind bind : container.getBinds()) {
                 LocalVolume vol = new LocalVolume();
@@ -162,7 +162,7 @@ public class IMarathonScheduler implements IScheduler {
                 app.getContainer().getVolumes().add(vol);
             }
         }
-        
+
         if (container.getVolumes() != null) {
             for (IVolume vol : container.getVolumes()) {
                 String json = "{persistent:{size: " + vol.getSize() + "}}";//Fix access bug
@@ -172,22 +172,22 @@ public class IMarathonScheduler implements IScheduler {
                 app.getContainer().getVolumes().add(vol2);
             }
         }
-        
+
         if (container.getPreferedHosts() != null) {
             app.getConstraints().add(Arrays.asList("hostname", "LIKE", String.join("|", container.getPreferedHosts())));
         }
-        
+
         if (container.getEnvironmentVariables() != null) {
             app.setEnv((Map) container.getEnvironmentVariables());
         }
-        
+
         return app;
     }
-    
+
     private String taskId(Task task) throws ISchedulerException {
         return task.getId().split(".")[2];
     }
-    
+
     private Task getTask(App app, String id) throws ISchedulerException {
         for (Task t : app.getTasks()) {
             if (id.equals(taskId(t))) {
@@ -196,20 +196,20 @@ public class IMarathonScheduler implements IScheduler {
         }
         throw new ISchedulerException("not found");
     }
-    
+
     private IContainerDetails parseTaks(App app, Task task) {
         IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
         builder.image(app.getContainer().getDocker().getImage());
         builder.cpus(app.getCpus().intValue());
         builder.memory(app.getMem().longValue());
-        
+
         if (app.getArgs() != null && !app.getArgs().isEmpty()) {
             builder.command(app.getArgs().get(0));
             builder.arguments(app.getArgs().subList(1, app.getArgs().size()));
         }
-        
+
         if (app.getContainer() != null) {
-            
+
             if (app.getContainer().getPortMappings() != null) {
                 INetwork network = new INetwork();
                 builder.network(network);
@@ -229,11 +229,11 @@ public class IMarathonScheduler implements IScheduler {
                     }
                 }
             }
-            
+
             if (app.getContainer().getVolumes() != null) {
                 List<IBind> binds = new ArrayList<>();
                 List<IVolume> volumes = new ArrayList<>();
-                
+
                 for (Volume absVol : app.getContainer().getVolumes()) {
                     if (absVol instanceof LocalVolume) {
                         LocalVolume vol = (LocalVolume) absVol;
@@ -242,7 +242,7 @@ public class IMarathonScheduler implements IScheduler {
                                 hostPath(vol.getHostPath()).
                                 readOnly(vol.getMode().equals("RO")).
                                 build());
-                        
+
                     } else if (absVol instanceof PersistentLocalVolume) {
                         PersistentLocalVolume vol = (PersistentLocalVolume) absVol;
                         Long sz = 0l;
@@ -261,13 +261,13 @@ public class IMarathonScheduler implements IScheduler {
                 if (!binds.isEmpty()) {
                     builder.binds(binds);
                 }
-                
+
                 if (!volumes.isEmpty()) {
                     builder.volumes(volumes);
                 }
             }
         }
-        
+
         if (app.getConstraints() != null) {
             for (List<String> constraint : app.getConstraints()) {
                 if (constraint.size() == 3 && constraint.get(0).equals("hostname") && constraint.get(1).equals("LIKE")) {
@@ -276,14 +276,14 @@ public class IMarathonScheduler implements IScheduler {
                 }
             }
         }
-        
+
         if (app.getEnv() != null) {
             builder.environmentVariables((Map) app.getEnv());
         }
-        
+
         return builder.build();
     }
-    
+
     @Override
     public String createGroup(String name) throws ISchedulerException {
         try {
@@ -294,7 +294,7 @@ public class IMarathonScheduler implements IScheduler {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public void destroyGroup(String group) throws ISchedulerException {
         try {
@@ -303,12 +303,21 @@ public class IMarathonScheduler implements IScheduler {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
-    
+
+    @Override
+    public String getThisContainerId() throws ISchedulerException {
+        String id = System.getProperty("MARATHON_APP_ID");
+        if (id == null) {
+            throw new ISchedulerException("id not found, is this a container launched by marathon?");
+        }
+        return id + ";0";
+    }
+
     @Override
     public String createSingleContainer(String group, String name, IContainerDetails container, IProperties props) throws ISchedulerException {
         return createContainerIntances(group, name, container, props, 1).get(0);
     }
-    
+
     @Override
     public List<String> createContainerIntances(String group, String name, IContainerDetails container, IProperties props, int instances) throws ISchedulerException {
         App app = createApp(group, name, container, props);
@@ -324,7 +333,7 @@ public class IMarathonScheduler implements IScheduler {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public IContainerDetails.ContainerStatus getStatus(String id) throws ISchedulerException {
         String appId = id.split(";")[0];
@@ -349,7 +358,7 @@ public class IMarathonScheduler implements IScheduler {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public IContainerDetails getContainer(String id) throws ISchedulerException {
         return getContainerInstances(Arrays.asList(id)).get(0);
@@ -376,19 +385,25 @@ public class IMarathonScheduler implements IScheduler {
             List<IContainerDetails> containers = new ArrayList<>(ids.size());
             VersionedApp app;
             int time = 1;
-            int i = 0;
             do {
                 app = marathon.getApp(appId).getApp();
-                for (Task t : app.getTasks()) {
-                    String taskId = taskId(t);
-                    if (taskAssigned.contains(taskId)) {
-                        continue;
-                    } else if (containers.size() == ids.size()) {
-                        break;
+                Iterator<Task> it = app.getTasks().iterator();
+
+                while (it.hasNext()) {
+                    if (taskAssignment.containsKey(ids.get(containers.size()))) {
+                        containers.add(parseTaks(app, getTask(app, taskAssignment.get(ids.get(containers.size())))));
+                    } else {
+                        Task t = it.next();
+                        String taskId = taskId(t);
+                        if (taskAssigned.contains(taskId)) {
+                            continue;
+                        } else if (containers.size() == ids.size()) {
+                            break;
+                        }
+                        taskAssigned.add(taskId);
+                        taskAssignment.put(ids.get(containers.size()), taskId);
+                        containers.add(parseTaks(app, t));
                     }
-                    taskAssigned.add(taskId);
-                    taskAssignment.put(ids.get(i), taskId);
-                    containers.add(parseTaks(app, t));
                 }
                 Thread.sleep(time * 1000);
                 if (time < 30) {
@@ -401,9 +416,9 @@ public class IMarathonScheduler implements IScheduler {
         } catch (InterruptedException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
-        
+
     }
-    
+
     @Override
     public void restartContainer(String id) throws ISchedulerException {
         String appId = id.split(";")[0];
@@ -415,7 +430,7 @@ public class IMarathonScheduler implements IScheduler {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public void destroyContainer(String id) throws ISchedulerException {
         String appId = id.split(";")[0];
@@ -427,7 +442,7 @@ public class IMarathonScheduler implements IScheduler {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public void healthCheck() throws ISchedulerException {
         try {

@@ -57,16 +57,16 @@ public class ITakeSampleTask extends IExecutorContextTask {
 
     private final Shared shared;
     private final boolean driver;
-    private final long n;
     private final boolean withRemplacement;
+    private final long num;
     private final int seed;
 
-    public ITakeSampleTask(String name, IExecutor executor, Shared shared, boolean driver, long n, boolean withRemplacement, int seed) {
+    public ITakeSampleTask(String name, IExecutor executor, Shared shared, boolean driver,  boolean withRemplacement,long num, int seed) {
         super(name, executor, Mode.LOAD);
         this.driver = driver;
         this.shared = shared;
-        this.n = n;
         this.withRemplacement = withRemplacement;
+        this.num = num;
         this.seed = seed;
     }
 

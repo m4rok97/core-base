@@ -26,6 +26,7 @@ import org.ignis.backend.cluster.tasks.ITaskGroupCache;
 import org.ignis.backend.cluster.tasks.executor.IUncacheTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
+import org.ignis.rpc.driver.IDataFrameId;
 import org.slf4j.LoggerFactory;
 
 /**

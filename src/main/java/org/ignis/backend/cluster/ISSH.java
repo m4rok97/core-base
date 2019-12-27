@@ -34,8 +34,8 @@ public class ISSH {
     private final AtomicInteger localPort;
     private final int remotePortInit;
 
-    public ISSH(int remotePortInit) {
-        localPort = new AtomicInteger(remotePortInit);
+    public ISSH(int localPortinit, int remotePortInit) {
+        localPort = new AtomicInteger(localPortinit);
         this.remotePortInit = remotePortInit;
         ByteArrayOutputStream privateKeyBuff = new ByteArrayOutputStream(2048);
         ByteArrayOutputStream publicKeyBuff = new ByteArrayOutputStream(2048);

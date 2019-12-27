@@ -20,6 +20,8 @@ import java.util.List;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
+import org.ignis.backend.cluster.tasks.container.IExecuteCmdTask;
+import org.ignis.backend.cluster.tasks.container.IExecuteScriptTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
@@ -41,7 +43,7 @@ public final class IClusterExecuteHelper extends IClusterHelper {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
         builder.newDependency(cluster.getTasks());
         for (IContainer container : cluster.getContainers()) {
-            //builder.newTask(null);//TODO
+            builder.newTask(new IExecuteCmdTask(getName(), container, cmd));
         }
         cluster.getTasks().getSubTasksGroup().add(builder.build());
     }
@@ -51,7 +53,7 @@ public final class IClusterExecuteHelper extends IClusterHelper {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
         builder.newDependency(cluster.getTasks());
         for (IContainer container : cluster.getContainers()) {
-            //builder.newTask(null);//TODO
+            builder.newTask(new IExecuteScriptTask(script, container, script));
         }
         cluster.getTasks().getSubTasksGroup().add(builder.build());
     }

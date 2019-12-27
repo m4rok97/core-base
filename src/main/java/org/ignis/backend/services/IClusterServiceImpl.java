@@ -41,9 +41,9 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
 
     public IClusterServiceImpl(IAttributes attributes, IScheduler scheduler) throws IgnisException {
         super(attributes);
-        int minWorkers = attributes.defaultProperties.getInteger(IKeys.DRIVER_TASK_MIN_WORKERS);
-        int maxFailures = attributes.defaultProperties.getInteger(IKeys.DRIVER_TASK_MAX_FAILURES);
-        this.threadPool = new IThreadPool(minWorkers, maxFailures);
+        int minWorkers = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_POOL);
+        int attempts = attributes.defaultProperties.getInteger(IKeys.EXECUTOR_ATTEMPTS);
+        this.threadPool = new IThreadPool(minWorkers, attempts);
         this.scheduler = scheduler;
     }
 
