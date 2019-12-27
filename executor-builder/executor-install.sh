@@ -7,12 +7,12 @@ apt install -y openssh-server curl
 mkdir /var/run/sshd
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-cat > ${IGNIS_HOME}/bin/ignis-executor << 'EOL'
+cat > ${IGNIS_HOME}/bin/ignis-server << 'EOL'
 #!/bin/bash
 export -p >> /etc/profile
 mkdir -p ~/.ssh
 echo ${IGNIS_DRIVER_PUBLIC_KEY} >> ~/.ssh/authorized_keys
-/usr/sbin/sshd
+/usr/sbin/sshd -p $1
 
 interval=${IGNIS_DRIVER_HEALTHCHECK_INTERVAL}
 timeout=${IGNIS_DRIVER_HEALTHCHECK_TIMEOUT}
@@ -36,4 +36,4 @@ while true; do
 done
 
 EOL
-chmod +x ${IGNIS_HOME}/bin/ignis-executor
+chmod +x ${IGNIS_HOME}/bin/ignis-server
