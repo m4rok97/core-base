@@ -16,64 +16,80 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.atomic.AtomicLong;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
-import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.IExecutorException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class ICountTask extends IExecutorContextTask {
+public class IAggregateTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICountTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IAggregateTask.class);
 
     public static class Shared {
 
         public Shared(int executors) {
-            result = new AtomicLong();
             barrier = new IBarrier(executors);
         }
 
-        private final AtomicLong result;
         private final IBarrier barrier;
 
     }
 
     private final Shared shared;
+    private final boolean driver;
 
-    public ICountTask(String name, IExecutor executor, Shared shared) {
+    public IAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp) {
         super(name, executor, Mode.LOAD);
         this.shared = shared;
+        this.driver = driver;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        try {
-            if (shared.barrier.await() == 0) {
-                shared.result.set(0);
-                LOGGER.info(log() + "Executing count");
+        /*try {//TODO
+            if (barrier.await() == 0) {
+                shared.result.clear();
+                LOGGER.info(log() + "Executing " + (ligth ? "ligth " : "") + "collect");
             }
-            shared.result.addAndGet(executor.getMathModule().count());
-            if (shared.barrier.await() == 0) {
-                context.set("result", shared.result.get());
-                LOGGER.info(log() + "Count executed");
+            barrier.await();
+            ByteBuffer bytes = executor.getStorageModule().collect(executor.getId(), "none", ligth);//TODO
+            if (ligth) {
+                shared.result.put(executor, bytes);
             }
-        } catch (IExecutorException ex) {
-            shared.barrier.fails();
-            throw new IExecutorExceptionWrapper(ex);
+            barrier.await();
+            if (ligth) {
+                ligthMode(context);
+            } else {
+                directMode(context);
+            }
+            if (barrier.await() == 0) {
+                LOGGER.info(log() + "Collect executed");
+            }
+        } catch (IgnisException ex) {
+            barrier.fails();
+            throw ex;
         } catch (BrokenBarrierException ex) {
             //Other Task has failed
         } catch (Exception ex) {
-            shared.barrier.fails();
+            barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
-        }
+        }*/
+    }
+
+    private void ligthMode(ITaskContext context) throws Exception {
+        /*if (barrier.await() == 0) {
+            context.set("result", executors.stream().map(e -> shared.result.get(e)).collect(Collectors.toList()));
+        }*/
+    }
+
+    private void directMode(ITaskContext context) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");//TODO
     }
 
 }

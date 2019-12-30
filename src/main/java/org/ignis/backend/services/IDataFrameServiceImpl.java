@@ -384,7 +384,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).reduce(src);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).reduce(src, attributes.driver);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -393,14 +393,30 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long treeReduce(IDataFrameId id, ISource src, long depth) throws IDriverException, TException {
+    public long treeReduce(IDataFrameId id, ISource src) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeReduce(src);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeReduce(src, attributes.driver);
+            }
+            return result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public long treeReduce3(IDataFrameId id, ISource src, long depth) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            ILazy<Long> result;
+            synchronized (worker.getLock()) {
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeReduce(src, depth, attributes.driver);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -432,7 +448,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).aggregate(seqOp, combOp);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).aggregate(seqOp, combOp, attributes.driver);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -448,7 +464,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeAggregate(seqOp, combOp);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeAggregate(seqOp, combOp, attributes.driver);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -464,7 +480,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeAggregate(seqOp, combOp, depth);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeAggregate(seqOp, combOp, depth, attributes.driver);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -480,7 +496,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).fold(src);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).fold(src, attributes.driver);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -496,7 +512,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).take(num);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).take(num, attributes.driver);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -544,7 +560,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).top(num);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).top(num, attributes.driver);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -560,7 +576,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).top(num, cmp);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).top(num, cmp, attributes.driver);
             }
             return result.execute();
         } catch (Exception ex) {

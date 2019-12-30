@@ -21,10 +21,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
-import org.ignis.backend.cluster.tasks.executor.IExecutorContextTask;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 

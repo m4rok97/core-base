@@ -17,11 +17,9 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.IHelper;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.ICache;
-import org.ignis.backend.cluster.tasks.executor.IExecutorTask;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IExecutorException;
@@ -44,15 +42,15 @@ public class ICacheTask extends IExecutorTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Saving cache");
+        LOGGER.info(log() + "updating cache from " + cache.getActualLevel() + " to " + cache.getNextLevel());
         try {
-            executor.getCacheContextModule().cache(cache.getId(), cache.getLevel());
+            executor.getCacheContextModule().cache(cache.getId(), (byte)cache.getNextLevel().getInt());
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Cache saved");
+        LOGGER.info(log() + "Cache updated");
     }
 
 }

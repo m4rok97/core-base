@@ -16,46 +16,79 @@
  */
 package org.ignis.backend.cluster.tasks;
 
+import org.ignis.backend.exception.IgnisException;
+
 /**
  *
  * @author César Pomar
  */
 public class ICache {
 
-    public static byte NO_CACHE = 0;
-    public static byte PRESERVE = 1;
-    public static byte MEMORY = 2;
-    public static byte RAW_MEMORY = 3;
-    public static byte DISK = 4;
+    public static enum Level {
+        NO_CACHE(0),
+        PRESERVE(1),
+        MEMORY(2),
+        RAW_MEMORY(3),
+        DISK(4);
+        
+        private int level;
+        
+        private Level(int level){
+            this.level=level;
+        }
+        
+        public int getInt(){
+            return level;
+        }
+        
+        public static Level fromInt(int level) throws IgnisException{
+            switch(level){
+                    case 0: return NO_CACHE;
+                    case 1: return PRESERVE;
+                    case 2: return MEMORY;
+                    case 3: return RAW_MEMORY;
+                    case 4: return DISK;
+                    default: throw new IgnisException("Level "+level+" not found");
+            }
+        }
+    }
 
     private final long id;
-    private byte level;
-    private boolean cached;
+    private Level actualLevel;
+    private Level nextLevel;
 
     public ICache(long id) {
-        this.id = id;
-        level = 0;
-        cached = false;
+        this. id = id;
+        actualLevel = Level.NO_CACHE;
+        nextLevel = Level.NO_CACHE;
     }
 
     public long getId() {
         return id;
     }
-
-    public byte getLevel() {
-        return level;
+    
+    public Level getActualLevel() {
+        return actualLevel;
     }
 
-    public void setLevel(byte level) {
-        this.level = level;
+    public void setActualLevel(Level actualLevel) {
+        if(actualLevel != null){
+            this.actualLevel = actualLevel;
+        }
     }
 
-    public boolean isCached() {
-        return cached;
+    public Level getNextLevel() {
+        return nextLevel;
     }
 
-    public void setCached(boolean cached) {
-        this.cached = cached;
+    public void setNextLevel(Level nextLevel) {
+        if(nextLevel != null){
+            this.nextLevel = nextLevel;
+        }
+    }
+    
+    public boolean isCached(){
+        return actualLevel != Level.NO_CACHE;
     }
 
 }

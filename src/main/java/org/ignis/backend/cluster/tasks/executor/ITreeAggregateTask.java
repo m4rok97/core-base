@@ -16,82 +16,53 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class ITakeTask extends IExecutorContextTask {
+public class ITreeAggregateTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITakeTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITreeAggregateTask.class);
 
     public static class Shared {
 
         public Shared(int executors) {
-            count = new ArrayList<>(Collections.nCopies(executors, 0l));
-            result = new ArrayList<>(Collections.nCopies(executors, null));
             barrier = new IBarrier(executors);
         }
 
-        private final List<Long> count;
-        private final List<List<ByteBuffer>> result;
         private final IBarrier barrier;
 
     }
 
     private final Shared shared;
     private final boolean driver;
-    private final long n;
 
-    public ITakeTask(String name, IExecutor executor, Shared shared, boolean driver, long n) {
+    public ITreeAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp) {
+        this(name, executor, shared, driver, seqOp, combOp, 2);
+    }
+    
+    public ITreeAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp,long depth) {
         super(name, executor, Mode.LOAD);
         this.shared = shared;
         this.driver = driver;
-        this.n = n;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
         /*try {//TODO
             if (barrier.await() == 0) {
-                shared.count.clear();
                 shared.result.clear();
-                LOGGER.info(log() + "Executing " + (ligth ? "ligth " : "") + "take");
+                LOGGER.info(log() + "Executing " + (ligth ? "ligth " : "") + "collect");
             }
             barrier.await();
-            shared.count.put(executor, executor.getStorageModule().count());
-            if (barrier.await() == 0) {
-                long elems = n;
-                for (IExecutor e : executors) {
-                    long ecount = shared.count.get(e);
-                    if (ecount > elems) {
-                        shared.count.put(e, elems);
-                        elems = 0;
-                    } else {
-                        elems -= ecount;
-                    }
-                }
-                if (elems > 0) {
-                    throw new IgnisException("There are not enough elements");
-                }
-            }
-            barrier.await();
-            long elems = shared.count.get(executor);
-            ByteBuffer bytes;
-            if (elems > 0) {
-                bytes = executor.getStorageModule().take(executor.getId(), "none", elems, ligth);//TODO
-            } else {
-                bytes = ByteBuffer.allocate(0);
-            }
+            ByteBuffer bytes = executor.getStorageModule().collect(executor.getId(), "none", ligth);//TODO
             if (ligth) {
                 shared.result.put(executor, bytes);
             }
@@ -102,7 +73,7 @@ public class ITakeTask extends IExecutorContextTask {
                 directMode(context);
             }
             if (barrier.await() == 0) {
-                LOGGER.info(log() + "Take executed");
+                LOGGER.info(log() + "Collect executed");
             }
         } catch (IgnisException ex) {
             barrier.fails();
@@ -122,7 +93,7 @@ public class ITakeTask extends IExecutorContextTask {
     }
 
     private void directMode(ITaskContext context) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //TODO
+        throw new UnsupportedOperationException("Not supported yet.");//TODO
     }
 
 }

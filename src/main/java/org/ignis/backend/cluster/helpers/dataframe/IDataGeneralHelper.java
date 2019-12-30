@@ -19,9 +19,13 @@ package org.ignis.backend.cluster.helpers.dataframe;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
+import org.ignis.backend.cluster.tasks.executor.IApplyPartitionTask;
 import org.ignis.backend.cluster.tasks.executor.IFilterTask;
 import org.ignis.backend.cluster.tasks.executor.IFlatmapTask;
+import org.ignis.backend.cluster.tasks.executor.IMapPartitionsTask;
+import org.ignis.backend.cluster.tasks.executor.IMapPartitionsWithIndexTask;
 import org.ignis.backend.cluster.tasks.executor.IMapTask;
+import org.ignis.backend.cluster.tasks.executor.ISortTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.ISource;
@@ -73,39 +77,94 @@ public final class IDataGeneralHelper extends IDataHelper {
     }
 
     public IDataFrame mapPartitions(ISource src) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IMapPartitionsTask(getName(), executor, src));
+        }
+        IDataFrame target = data.createDataFrame("", builder.build());
+        LOGGER.info(log() + "Registering mapPartitions -> " + target.getName());
+        return target;
     }
 
     public IDataFrame mapPartitionsWithIndex(ISource src) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IMapPartitionsWithIndexTask(getName(), executor, src));
+        }
+        IDataFrame target = data.createDataFrame("", builder.build());
+        LOGGER.info(log() + "Registering mapPartitionsWithIndex -> " + target.getName());
+        return target;
     }
 
     public IDataFrame applyPartition(ISource src) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IApplyPartitionTask(getName(), executor, src));
+        }
+        IDataFrame target = data.createDataFrame("", builder.build());
+        LOGGER.info(log() + "Registering applyPartition -> " + target.getName());
+        return target;
     }
 
     public IDataFrame groupBy(ISource src) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported on this version."); //TODO next version
     }
 
     public IDataFrame groupBy(ISource src, long numPartitions) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported on this version."); //TODO next version
     }
 
     public IDataFrame sort(boolean ascending) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new ISortTask(getName(), executor, ascending));
+        }
+        IDataFrame target = data.createDataFrame("", builder.build());
+        LOGGER.info(log() + "Registering sort ascending: " + ascending + " -> " + target.getName()
+        );
+        return target;
     }
 
     public IDataFrame sort(boolean ascending, long numPartitions) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new ISortTask(getName(), executor, ascending, numPartitions));
+        }
+        IDataFrame target = data.createDataFrame("", builder.build());
+        LOGGER.info(log() + "Registering sort ascending: " + ascending + ", numPartitions: " + numPartitions
+                + " -> " + target.getName()
+        );
+        return target;
     }
 
     public IDataFrame sortBy(ISource src, boolean ascending) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new ISortTask(getName(), executor, src, ascending));
+        }
+        IDataFrame target = data.createDataFrame("", builder.build());
+        LOGGER.info(log() + "Registering sortBy ascending: " + ascending + " -> " + target.getName()
+        );
+        return target;
     }
 
     public IDataFrame sortBy(ISource src, boolean ascending, long numPartitions) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new ISortTask(getName(), executor, src, ascending, numPartitions));
+        }
+        IDataFrame target = data.createDataFrame("", builder.build());
+        LOGGER.info(log() + "Registering sortBy ascending: " + ascending + ", numPartitions: " + numPartitions
+                + " -> " + target.getName()
+        );
+        return target;
     }
 
 }

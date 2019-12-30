@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.scheduler;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,12 +90,17 @@ public class ISchedulerParser {
         return network;
     }
 
-    public static List<IBind> parseBinds(IProperties props, String prefix) {
-        return null;//TODO
+    public static List<IBind> parseBinds(IProperties props, String prefix) {//TODO User volumes
+        List<IBind> binds = new ArrayList<>();
+        binds.add(IBind.builder()
+                .hostPath(props.getString(IKeys.DFS_ID))
+                .containerPath(props.getString(IKeys.DFS_HOME))
+                .readOnly(false).build());
+        return binds;
     }
 
-    public static List<IVolume> parseVolumes(IProperties props, String prefix) {
-        return null;//TODO
+    public static List<IVolume> parseVolumes(IProperties props, String prefix) {//TODO User binds
+        return new ArrayList<>(); 
     }
 
     public static Map<String, String> parseEnv(IProperties props, String prefix) {

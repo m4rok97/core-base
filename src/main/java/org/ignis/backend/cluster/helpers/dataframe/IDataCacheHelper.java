@@ -18,15 +18,11 @@ package org.ignis.backend.cluster.helpers.dataframe;
 
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IExecutor;
-import org.ignis.backend.cluster.helpers.dataframe.IDataHelper;
 import org.ignis.backend.cluster.tasks.ICache;
-import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.ITaskGroupCache;
-import org.ignis.backend.cluster.tasks.executor.IUncacheTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.driver.IDataFrameId;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -41,7 +37,7 @@ public class IDataCacheHelper extends IDataHelper {
         super(data, properties);
     }
 
-    public ITaskGroup create(ITaskGroup group, ICache cache) throws IgnisException{
+    public ITaskGroup create(ITaskGroup group, ICache cache) throws IgnisException {
         ITaskGroupCache.Builder builder = new ITaskGroupCache.Builder(data.getLock(), cache, group);
         for (IExecutor executor : data.getExecutors()) {
             builder.addExecutor(getName(), executor);
@@ -49,29 +45,21 @@ public class IDataCacheHelper extends IDataHelper {
         return builder.build();
     }
 
-    public void persist(byte level) throws IgnisException{//TODO change level cache when isCached
-        data.getCache().setLevel(level);
+    public void persist(byte level) throws IgnisException {
+        data.getCache().setNextLevel(ICache.Level.fromInt(level));
     }
 
-    public void cache() throws IgnisException{
-        data.getCache().setLevel(ICache.PRESERVE);
+    public void cache() throws IgnisException {
+        data.getCache().setNextLevel(ICache.Level.PRESERVE);
     }
 
     public void uncache() throws IgnisException {
-        if(!data.getCache().isCached()){
-            data.getCache().setLevel(ICache.NO_CACHE);
+        data.getCache().setNextLevel(ICache.Level.NO_CACHE);
+        if (!data.getCache().isCached()) {
             return;
-        }        
-        
-        ITaskGroup.Builder builder = new ITaskGroup.Builder();
-        builder.newDependency(data.getTasks());
-        for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IUncacheTask(getName(), executor, data.getCache().getId()));
         }
 
-        builder.build().start(data.getPool());
-        data.getCache().setLevel(ICache.NO_CACHE);
-        data.getCache().setCached(false);
+        data.getTasks().start(data.getPool());
     }
 
 }

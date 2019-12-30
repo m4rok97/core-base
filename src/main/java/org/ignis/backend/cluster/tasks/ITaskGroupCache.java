@@ -68,28 +68,41 @@ public final class ITaskGroupCache extends ITaskGroup {
     private final ICache cache;
     private final ITaskGroup loadCache;
     private final ITaskGroup noCache;
+    private final ITaskGroup updateCache;
 
     private ITaskGroupCache(Set<ILock> locks, List<ITaskGroup> depencencies, ICache cache,
             List<ITask> loadTasks, List<ITask> saveTasks) {
         super(saveTasks, locks, depencencies);
         loadCache = new ITaskGroup(loadTasks, locks, new ArrayList<>());
+        updateCache = new ITaskGroup(saveTasks, locks, new ArrayList<>());
         noCache = depencencies.get(0);
         this.cache = cache;
     }
 
     @Override
     protected void start(IThreadPool pool, ITaskContext context, int retries) throws IgnisException {
-        if (cache.isCached()) {
-            loadCache.start(pool, context, retries);
-        } else if (cache.getLevel() > 0) {
-            try {
-                super.start(pool, context, retries);
-                cache.setCached(true);
-            } catch (IgnisCacheException ex) {
-                LOGGER.warn("Cache lost, preparing dependencies", ex);
-                noCache.start(pool, context, retries);
+        if (cache.isCached()) { 
+            if (cache.getActualLevel() != cache.getNextLevel()) {//Cache update or destruction
+                updateCache.start(pool, context, retries);
+                cache.setActualLevel(cache.getNextLevel());
             }
-        } else {
+            if (cache.isCached()) { //No run in cache destruction
+                try {
+                    loadCache.start(pool, context, retries);
+                    return;
+                } catch (IgnisCacheException ex) {//Cache not found
+                    LOGGER.warn("Cache error, loading dependencies", ex);
+                    cache.setActualLevel(ICache.Level.NO_CACHE);
+                }
+            }else{
+                return; 
+            }
+        } 
+        
+        if (cache.getActualLevel() != cache.getNextLevel()) {//Create cache
+            super.start(pool, context, retries);
+            cache.setActualLevel(cache.getNextLevel());
+        }else{
             noCache.start(pool, context, retries);
         }
     }

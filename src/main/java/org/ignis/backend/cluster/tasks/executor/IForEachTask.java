@@ -16,9 +16,12 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
+import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.IExecutorException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
@@ -26,22 +29,28 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class IMaxTask extends IExecutorContextTask {
+public final class IForEachTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMaxTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IForEachTask.class);
 
-    private final boolean driver;
-    private final ISource cmp;
+    private final ISource function;
 
-    public IMaxTask(String name, IExecutor executor, boolean driver, ISource cmp) {
+    public IForEachTask(String name, IExecutor executor, ISource function) {
         super(name, executor, Mode.LOAD);
-        this.driver = driver;
-        this.cmp = cmp;
+        this.function = function;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        //TODO
+        LOGGER.info(log() + "Executing foreach");
+        try {
+            executor.getGeneralActionModule().foreach_(function);
+        } catch (IExecutorException ex) {
+            throw new IExecutorExceptionWrapper(ex);
+        } catch (TException ex) {
+            throw new IgnisException(ex.getMessage(), ex);
+        }
+        LOGGER.info(log() + "Foreach executed");
     }
 
 }

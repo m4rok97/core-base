@@ -151,8 +151,9 @@ public final class IProperties {
         return Arrays.asList(getProperty(key).split(","));
     }
     
+    @SuppressWarnings("unchecked")
     public Collection<String> getKeysPrefix(String prefix){
-        return ((Set<String>)(Set)inner.keySet()).stream()
+        return ((Set<String>)(Object)inner.keySet()).stream()
                 .filter((String key) -> key.startsWith(prefix)).collect(Collectors.toList());
     }
     
@@ -160,6 +161,7 @@ public final class IProperties {
         return inner.containsKey(noNull(key));
     }
     
+    @SuppressWarnings("unchecked")
     public Map<String, String> toMap() {
         return new HashMap<>((Map) inner);
     }

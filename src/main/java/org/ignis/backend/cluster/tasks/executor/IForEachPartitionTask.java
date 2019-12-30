@@ -17,39 +17,40 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import org.apache.thrift.TException;
-import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IExecutorException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public class IUncacheTask extends IExecutorTask {
+public final class IForEachPartitionTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IFlatmapTask.class);
-    
-    private final long id;
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IForEachPartitionTask.class);
 
-    public IUncacheTask(String name, IExecutor executor, long id) {
-        super(name, executor);
-        this.id = id;
+    private final ISource function;
+
+    public IForEachPartitionTask(String name, IExecutor executor, ISource function) {
+        super(name, executor, Mode.LOAD);
+        this.function = function;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Deleting cache");
+        LOGGER.info(log() + "Executing foreachPartition");
         try {
-            executor.getCacheContextModule().uncache(id);
+            executor.getGeneralActionModule().foreachPartition(function);
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Cache deleted");
+        LOGGER.info(log() + "ForeachPartition executed");
     }
 
 }

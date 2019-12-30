@@ -32,7 +32,7 @@ import org.ignis.rpc.IExecutorException;
 public class ITaskContext {
 
     private final Map<IExecutor, List<Long>> contexts;
-    private final Map vars;
+    private final Map<String, Object> vars;
 
     public ITaskContext() {
         contexts = new ConcurrentHashMap<>();
@@ -71,11 +71,12 @@ public class ITaskContext {
         }
     }
 
-    public <V> void set(Object key, V value) {
+    public void set(String key, Object value) {
         vars.put(key, value);
     }
 
-    public <V> V get(Object key) {
+    @SuppressWarnings("unchecked")
+    public <V> V get(String key) {
         return (V) vars.get(key);
     }
 

@@ -17,8 +17,8 @@
 package org.ignis.backend.cluster;
 
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.properties.IKeys;
+import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 
 /**

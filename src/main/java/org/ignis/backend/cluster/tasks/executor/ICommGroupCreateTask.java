@@ -16,8 +16,8 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class ICommGroupCreate extends IExecutorTask {
+public final class ICommGroupCreateTask extends IExecutorTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICommGroupCreate.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICommGroupCreateTask.class);
 
     public static class Shared {
 
@@ -42,7 +42,7 @@ public final class ICommGroupCreate extends IExecutorTask {
 
     private final Shared shared;
 
-    public ICommGroupCreate(String name, IExecutor executor, Shared shared) {
+    public ICommGroupCreateTask(String name, IExecutor executor, Shared shared) {
         super(name, executor);
         this.shared = shared;
     }

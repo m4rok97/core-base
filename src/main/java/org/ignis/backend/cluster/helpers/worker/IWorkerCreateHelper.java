@@ -20,7 +20,7 @@ import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IWorker;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
-import org.ignis.backend.cluster.tasks.executor.ICommGroupCreate;
+import org.ignis.backend.cluster.tasks.executor.ICommGroupCreateTask;
 import org.ignis.backend.cluster.tasks.executor.IExecutorCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -41,14 +41,14 @@ public final class IWorkerCreateHelper extends IWorkerHelper {
     public ITaskGroup create() throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         ITaskGroup.Builder commBuilder = new ITaskGroup.Builder();
-        ICommGroupCreate.Shared commShared = new ICommGroupCreate.Shared(worker.getCluster().getContainers().size());
+        ICommGroupCreateTask.Shared commShared = new ICommGroupCreateTask.Shared(worker.getCluster().getContainers().size());
 
         builder.newDependency(worker.getCluster().getTasks());
         LOGGER.info(log() + "Registering worker with " + worker.getCluster().getContainers().size() + " executors");
         for (IContainer container : worker.getCluster().getContainers()) {
             IExecutor executor = container.createExecutor(worker.getId());
             builder.newTask(new IExecutorCreateTask(getName(), executor, worker.getType(), worker.getCores()));
-            commBuilder.newTask(new ICommGroupCreate(getName(), executor, commShared));
+            commBuilder.newTask(new ICommGroupCreateTask(getName(), executor, commShared));
             worker.getExecutors().add(executor);
         }
 

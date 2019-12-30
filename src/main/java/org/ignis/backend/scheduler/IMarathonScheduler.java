@@ -83,6 +83,7 @@ public class IMarathonScheduler implements IScheduler {
         taskAssigned = ConcurrentHashMap.<String>newKeySet();
     }
 
+    @SuppressWarnings("unchecked")
     private App createApp(String group, String name, IContainerDetails container, IProperties props) {
         App app = new App();
         app.setArgs(new ArrayList<>());
@@ -197,6 +198,7 @@ public class IMarathonScheduler implements IScheduler {
         throw new ISchedulerException("not found");
     }
 
+    @SuppressWarnings("unchecked")
     private IContainerDetails parseTaks(App app, Task task) {
         IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
         builder.image(app.getContainer().getDocker().getImage());

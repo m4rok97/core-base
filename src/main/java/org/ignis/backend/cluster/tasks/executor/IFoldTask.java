@@ -16,69 +16,80 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
-import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.IExecutorException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public final class ISaveAsTextFileTask extends IExecutorContextTask {
+public class IFoldTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsTextFileTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IFoldTask.class);
 
     public static class Shared {
 
         public Shared(int executors) {
-            partitions = new ArrayList<>(Collections.nCopies(executors, 0l));
             barrier = new IBarrier(executors);
         }
 
-        private final List<Long> partitions;
         private final IBarrier barrier;
 
     }
 
     private final Shared shared;
-    private final String path;
+    private final boolean driver;
 
-    public ISaveAsTextFileTask(String name, IExecutor executor, Shared shared, String path) {
+    public IFoldTask(String name, IExecutor executor, Shared shared, boolean driver,ISource src) {
         super(name, executor, Mode.LOAD);
         this.shared = shared;
-        this.path = path;
+        this.driver = driver;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Saving text file");
-        int id = (int) executor.getId();
-        try {
-            shared.partitions.set(id, executor.getIoModule().partitionCount());
-            shared.barrier.await();
-            long first = 0;
-            for (int i = 1; i < id; i++) {
-                first += shared.partitions.get(i - 1);
+        /*try {//TODO
+            if (barrier.await() == 0) {
+                shared.result.clear();
+                LOGGER.info(log() + "Executing " + (ligth ? "ligth " : "") + "collect");
             }
-            executor.getIoModule().saveAsTextFile(path, first);
-        } catch (IExecutorException ex) {
-            shared.barrier.fails();
-            throw new IExecutorExceptionWrapper(ex);
+            barrier.await();
+            ByteBuffer bytes = executor.getStorageModule().collect(executor.getId(), "none", ligth);//TODO
+            if (ligth) {
+                shared.result.put(executor, bytes);
+            }
+            barrier.await();
+            if (ligth) {
+                ligthMode(context);
+            } else {
+                directMode(context);
+            }
+            if (barrier.await() == 0) {
+                LOGGER.info(log() + "Collect executed");
+            }
+        } catch (IgnisException ex) {
+            barrier.fails();
+            throw ex;
         } catch (BrokenBarrierException ex) {
             //Other Task has failed
         } catch (Exception ex) {
-            shared.barrier.fails();
+            barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
-        }
-        LOGGER.info(log() + "File saved");
+        }*/
+    }
+
+    private void ligthMode(ITaskContext context) throws Exception {
+        /*if (barrier.await() == 0) {
+            context.set("result", executors.stream().map(e -> shared.result.get(e)).collect(Collectors.toList()));
+        }*/
+    }
+
+    private void directMode(ITaskContext context) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");//TODO
     }
 
 }

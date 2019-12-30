@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
-import java.util.List;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;

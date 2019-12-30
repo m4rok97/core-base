@@ -33,7 +33,6 @@ import org.apache.thrift.transport.TTransportException;
 import org.apache.thrift.transport.TTransportFactory;
 import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.exception.IDriverExceptionImpl;
-import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.rpc.IDriverException;
 import org.ignis.rpc.driver.IBackendService;

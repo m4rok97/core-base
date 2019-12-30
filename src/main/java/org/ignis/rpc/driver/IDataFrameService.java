@@ -59,7 +59,9 @@ public class IDataFrameService {
 
     public long reduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
-    public long treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, long depth) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long treeReduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+
+    public long treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
     public long collect(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
@@ -143,7 +145,9 @@ public class IDataFrameService {
 
     public void reduce(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+
+    public void treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
     public void collect(IDataFrameId id, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
@@ -826,18 +830,17 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "reduce failed: unknown result");
     }
 
-    public long treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, long depth) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long treeReduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
     {
-      send_treeReduce(id, src, depth);
+      send_treeReduce(id, src);
       return recv_treeReduce();
     }
 
-    public void send_treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, long depth) throws org.apache.thrift.TException
+    public void send_treeReduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
     {
       treeReduce_args args = new treeReduce_args();
       args.setId(id);
       args.setSrc(src);
-      args.setDepth(depth);
       sendBase("treeReduce", args);
     }
 
@@ -852,6 +855,34 @@ public class IDataFrameService {
         throw result.ex;
       }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "treeReduce failed: unknown result");
+    }
+
+    public long treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    {
+      send_treeReduce3(id, src, depth);
+      return recv_treeReduce3();
+    }
+
+    public void send_treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth) throws org.apache.thrift.TException
+    {
+      treeReduce3_args args = new treeReduce3_args();
+      args.setId(id);
+      args.setSrc(src);
+      args.setDepth(depth);
+      sendBase("treeReduce3", args);
+    }
+
+    public long recv_treeReduce3() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    {
+      treeReduce3_result result = new treeReduce3_result();
+      receiveBase(result, "treeReduce3");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "treeReduce3 failed: unknown result");
     }
 
     public long collect(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
@@ -2133,9 +2164,9 @@ public class IDataFrameService {
       }
     }
 
-    public void treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      treeReduce_call method_call = new treeReduce_call(id, src, depth, resultHandler, this, ___protocolFactory, ___transport);
+      treeReduce_call method_call = new treeReduce_call(id, src, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2143,8 +2174,43 @@ public class IDataFrameService {
     public static class treeReduce_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private org.ignis.rpc.ISource src;
+      public treeReduce_call(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.id = id;
+        this.src = src;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("treeReduce", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        treeReduce_args args = new treeReduce_args();
+        args.setId(id);
+        args.setSrc(src);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_treeReduce();
+      }
+    }
+
+    public void treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      treeReduce3_call method_call = new treeReduce3_call(id, src, depth, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class treeReduce3_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
+      private IDataFrameId id;
+      private org.ignis.rpc.ISource src;
       private long depth;
-      public treeReduce_call(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public treeReduce3_call(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.src = src;
@@ -2152,8 +2218,8 @@ public class IDataFrameService {
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("treeReduce", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        treeReduce_args args = new treeReduce_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("treeReduce3", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        treeReduce3_args args = new treeReduce3_args();
         args.setId(id);
         args.setSrc(src);
         args.setDepth(depth);
@@ -2167,7 +2233,7 @@ public class IDataFrameService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_treeReduce();
+        return (new Client(prot)).recv_treeReduce3();
       }
     }
 
@@ -2755,6 +2821,7 @@ public class IDataFrameService {
       processMap.put("sortBy3", new sortBy3());
       processMap.put("reduce", new reduce());
       processMap.put("treeReduce", new treeReduce());
+      processMap.put("treeReduce3", new treeReduce3());
       processMap.put("collect", new collect());
       processMap.put("aggregate", new aggregate());
       processMap.put("treeAggregate", new treeAggregate());
@@ -3492,7 +3559,37 @@ public class IDataFrameService {
       public treeReduce_result getResult(I iface, treeReduce_args args) throws org.apache.thrift.TException {
         treeReduce_result result = new treeReduce_result();
         try {
-          result.success = iface.treeReduce(args.id, args.src, args.depth);
+          result.success = iface.treeReduce(args.id, args.src);
+          result.setSuccessIsSet(true);
+        } catch (org.ignis.rpc.IDriverException ex) {
+          result.ex = ex;
+        }
+        return result;
+      }
+    }
+
+    public static class treeReduce3<I extends Iface> extends org.apache.thrift.ProcessFunction<I, treeReduce3_args> {
+      public treeReduce3() {
+        super("treeReduce3");
+      }
+
+      public treeReduce3_args getEmptyArgsInstance() {
+        return new treeReduce3_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean rethrowUnhandledExceptions() {
+        return false;
+      }
+
+      public treeReduce3_result getResult(I iface, treeReduce3_args args) throws org.apache.thrift.TException {
+        treeReduce3_result result = new treeReduce3_result();
+        try {
+          result.success = iface.treeReduce3(args.id, args.src, args.depth);
           result.setSuccessIsSet(true);
         } catch (org.ignis.rpc.IDriverException ex) {
           result.ex = ex;
@@ -3986,6 +4083,7 @@ public class IDataFrameService {
       processMap.put("sortBy3", new sortBy3());
       processMap.put("reduce", new reduce());
       processMap.put("treeReduce", new treeReduce());
+      processMap.put("treeReduce3", new treeReduce3());
       processMap.put("collect", new collect());
       processMap.put("aggregate", new aggregate());
       processMap.put("treeAggregate", new treeAggregate());
@@ -5620,7 +5718,73 @@ public class IDataFrameService {
       }
 
       public void start(I iface, treeReduce_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.treeReduce(args.id, args.src, args.depth,resultHandler);
+        iface.treeReduce(args.id, args.src,resultHandler);
+      }
+    }
+
+    public static class treeReduce3<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, treeReduce3_args, java.lang.Long> {
+      public treeReduce3() {
+        super("treeReduce3");
+      }
+
+      public treeReduce3_args getEmptyArgsInstance() {
+        return new treeReduce3_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.Long>() { 
+          public void onComplete(java.lang.Long o) {
+            treeReduce3_result result = new treeReduce3_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            treeReduce3_result result = new treeReduce3_result();
+            if (e instanceof org.ignis.rpc.IDriverException) {
+              result.ex = (org.ignis.rpc.IDriverException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, treeReduce3_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+        iface.treeReduce3(args.id, args.src, args.depth,resultHandler);
       }
     }
 
@@ -29162,20 +29326,17 @@ public class IDataFrameService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)2);
-    private static final org.apache.thrift.protocol.TField DEPTH_FIELD_DESC = new org.apache.thrift.protocol.TField("depth", org.apache.thrift.protocol.TType.I64, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeReduce_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeReduce_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src; // required
-    private long depth; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      SRC((short)2, "src"),
-      DEPTH((short)3, "depth");
+      SRC((short)2, "src");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -29195,8 +29356,6 @@ public class IDataFrameService {
             return ID;
           case 2: // SRC
             return SRC;
-          case 3: // DEPTH
-            return DEPTH;
           default:
             return null;
         }
@@ -29238,8 +29397,6 @@ public class IDataFrameService {
     }
 
     // isset id assignments
-    private static final int __DEPTH_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -29247,8 +29404,6 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
-      tmpMap.put(_Fields.DEPTH, new org.apache.thrift.meta_data.FieldMetaData("depth", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeReduce_args.class, metaDataMap);
     }
@@ -29258,28 +29413,23 @@ public class IDataFrameService {
 
     public treeReduce_args(
       IDataFrameId id,
-      org.ignis.rpc.ISource src,
-      long depth)
+      org.ignis.rpc.ISource src)
     {
       this();
       this.id = id;
       this.src = src;
-      this.depth = depth;
-      setDepthIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public treeReduce_args(treeReduce_args other) {
-      __isset_bitfield = other.__isset_bitfield;
       if (other.isSetId()) {
         this.id = new IDataFrameId(other.id);
       }
       if (other.isSetSrc()) {
         this.src = new org.ignis.rpc.ISource(other.src);
       }
-      this.depth = other.depth;
     }
 
     public treeReduce_args deepCopy() {
@@ -29290,8 +29440,6 @@ public class IDataFrameService {
     public void clear() {
       this.id = null;
       this.src = null;
-      setDepthIsSet(false);
-      this.depth = 0;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -29344,29 +29492,6 @@ public class IDataFrameService {
       }
     }
 
-    public long getDepth() {
-      return this.depth;
-    }
-
-    public treeReduce_args setDepth(long depth) {
-      this.depth = depth;
-      setDepthIsSet(true);
-      return this;
-    }
-
-    public void unsetDepth() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __DEPTH_ISSET_ID);
-    }
-
-    /** Returns true if field depth is set (has been assigned a value) and false otherwise */
-    public boolean isSetDepth() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __DEPTH_ISSET_ID);
-    }
-
-    public void setDepthIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __DEPTH_ISSET_ID, value);
-    }
-
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -29385,14 +29510,6 @@ public class IDataFrameService {
         }
         break;
 
-      case DEPTH:
-        if (value == null) {
-          unsetDepth();
-        } else {
-          setDepth((java.lang.Long)value);
-        }
-        break;
-
       }
     }
 
@@ -29404,9 +29521,6 @@ public class IDataFrameService {
 
       case SRC:
         return getSrc();
-
-      case DEPTH:
-        return getDepth();
 
       }
       throw new java.lang.IllegalStateException();
@@ -29423,8 +29537,6 @@ public class IDataFrameService {
         return isSetId();
       case SRC:
         return isSetSrc();
-      case DEPTH:
-        return isSetDepth();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -29462,15 +29574,6 @@ public class IDataFrameService {
           return false;
       }
 
-      boolean this_present_depth = true;
-      boolean that_present_depth = true;
-      if (this_present_depth || that_present_depth) {
-        if (!(this_present_depth && that_present_depth))
-          return false;
-        if (this.depth != that.depth)
-          return false;
-      }
-
       return true;
     }
 
@@ -29485,8 +29588,6 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetSrc()) ? 131071 : 524287);
       if (isSetSrc())
         hashCode = hashCode * 8191 + src.hashCode();
-
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(depth);
 
       return hashCode;
     }
@@ -29515,16 +29616,6 @@ public class IDataFrameService {
       }
       if (isSetSrc()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.src, other.src);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetDepth()).compareTo(other.isSetDepth());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetDepth()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.depth, other.depth);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -29565,10 +29656,6 @@ public class IDataFrameService {
         sb.append(this.src);
       }
       first = false;
-      if (!first) sb.append(", ");
-      sb.append("depth:");
-      sb.append(this.depth);
-      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -29594,8 +29681,6 @@ public class IDataFrameService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -29638,14 +29723,6 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 3: // DEPTH
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.depth = iprot.readI64();
-                struct.setDepthIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -29671,9 +29748,6 @@ public class IDataFrameService {
           struct.src.write(oprot);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(DEPTH_FIELD_DESC);
-        oprot.writeI64(struct.depth);
-        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -29698,25 +29772,19 @@ public class IDataFrameService {
         if (struct.isSetSrc()) {
           optionals.set(1);
         }
-        if (struct.isSetDepth()) {
-          optionals.set(2);
-        }
-        oprot.writeBitSet(optionals, 3);
+        oprot.writeBitSet(optionals, 2);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetSrc()) {
           struct.src.write(oprot);
         }
-        if (struct.isSetDepth()) {
-          oprot.writeI64(struct.depth);
-        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, treeReduce_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
+        java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -29726,10 +29794,6 @@ public class IDataFrameService {
           struct.src = new org.ignis.rpc.ISource();
           struct.src.read(iprot);
           struct.setSrcIsSet(true);
-        }
-        if (incoming.get(2)) {
-          struct.depth = iprot.readI64();
-          struct.setDepthIsSet(true);
         }
       }
     }
@@ -30191,6 +30255,1059 @@ public class IDataFrameService {
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, treeReduce_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.success = iprot.readI64();
+          struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class treeReduce3_args implements org.apache.thrift.TBase<treeReduce3_args, treeReduce3_args._Fields>, java.io.Serializable, Cloneable, Comparable<treeReduce3_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeReduce3_args");
+
+    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField DEPTH_FIELD_DESC = new org.apache.thrift.protocol.TField("depth", org.apache.thrift.protocol.TType.I64, (short)3);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeReduce3_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeReduce3_argsTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src; // required
+    private long depth; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      ID((short)1, "id"),
+      SRC((short)2, "src"),
+      DEPTH((short)3, "depth");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // ID
+            return ID;
+          case 2: // SRC
+            return SRC;
+          case 3: // DEPTH
+            return DEPTH;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __DEPTH_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
+      tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.DEPTH, new org.apache.thrift.meta_data.FieldMetaData("depth", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeReduce3_args.class, metaDataMap);
+    }
+
+    public treeReduce3_args() {
+    }
+
+    public treeReduce3_args(
+      IDataFrameId id,
+      org.ignis.rpc.ISource src,
+      long depth)
+    {
+      this();
+      this.id = id;
+      this.src = src;
+      this.depth = depth;
+      setDepthIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public treeReduce3_args(treeReduce3_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      if (other.isSetId()) {
+        this.id = new IDataFrameId(other.id);
+      }
+      if (other.isSetSrc()) {
+        this.src = new org.ignis.rpc.ISource(other.src);
+      }
+      this.depth = other.depth;
+    }
+
+    public treeReduce3_args deepCopy() {
+      return new treeReduce3_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.id = null;
+      this.src = null;
+      setDepthIsSet(false);
+      this.depth = 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public IDataFrameId getId() {
+      return this.id;
+    }
+
+    public treeReduce3_args setId(@org.apache.thrift.annotation.Nullable IDataFrameId id) {
+      this.id = id;
+      return this;
+    }
+
+    public void unsetId() {
+      this.id = null;
+    }
+
+    /** Returns true if field id is set (has been assigned a value) and false otherwise */
+    public boolean isSetId() {
+      return this.id != null;
+    }
+
+    public void setIdIsSet(boolean value) {
+      if (!value) {
+        this.id = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getSrc() {
+      return this.src;
+    }
+
+    public treeReduce3_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
+      this.src = src;
+      return this;
+    }
+
+    public void unsetSrc() {
+      this.src = null;
+    }
+
+    /** Returns true if field src is set (has been assigned a value) and false otherwise */
+    public boolean isSetSrc() {
+      return this.src != null;
+    }
+
+    public void setSrcIsSet(boolean value) {
+      if (!value) {
+        this.src = null;
+      }
+    }
+
+    public long getDepth() {
+      return this.depth;
+    }
+
+    public treeReduce3_args setDepth(long depth) {
+      this.depth = depth;
+      setDepthIsSet(true);
+      return this;
+    }
+
+    public void unsetDepth() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __DEPTH_ISSET_ID);
+    }
+
+    /** Returns true if field depth is set (has been assigned a value) and false otherwise */
+    public boolean isSetDepth() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __DEPTH_ISSET_ID);
+    }
+
+    public void setDepthIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __DEPTH_ISSET_ID, value);
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case ID:
+        if (value == null) {
+          unsetId();
+        } else {
+          setId((IDataFrameId)value);
+        }
+        break;
+
+      case SRC:
+        if (value == null) {
+          unsetSrc();
+        } else {
+          setSrc((org.ignis.rpc.ISource)value);
+        }
+        break;
+
+      case DEPTH:
+        if (value == null) {
+          unsetDepth();
+        } else {
+          setDepth((java.lang.Long)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case ID:
+        return getId();
+
+      case SRC:
+        return getSrc();
+
+      case DEPTH:
+        return getDepth();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case ID:
+        return isSetId();
+      case SRC:
+        return isSetSrc();
+      case DEPTH:
+        return isSetDepth();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof treeReduce3_args)
+        return this.equals((treeReduce3_args)that);
+      return false;
+    }
+
+    public boolean equals(treeReduce3_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_id = true && this.isSetId();
+      boolean that_present_id = true && that.isSetId();
+      if (this_present_id || that_present_id) {
+        if (!(this_present_id && that_present_id))
+          return false;
+        if (!this.id.equals(that.id))
+          return false;
+      }
+
+      boolean this_present_src = true && this.isSetSrc();
+      boolean that_present_src = true && that.isSetSrc();
+      if (this_present_src || that_present_src) {
+        if (!(this_present_src && that_present_src))
+          return false;
+        if (!this.src.equals(that.src))
+          return false;
+      }
+
+      boolean this_present_depth = true;
+      boolean that_present_depth = true;
+      if (this_present_depth || that_present_depth) {
+        if (!(this_present_depth && that_present_depth))
+          return false;
+        if (this.depth != that.depth)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
+      if (isSetId())
+        hashCode = hashCode * 8191 + id.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetSrc()) ? 131071 : 524287);
+      if (isSetSrc())
+        hashCode = hashCode * 8191 + src.hashCode();
+
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(depth);
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(treeReduce3_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetSrc()).compareTo(other.isSetSrc());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSrc()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.src, other.src);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetDepth()).compareTo(other.isSetDepth());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetDepth()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.depth, other.depth);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeReduce3_args(");
+      boolean first = true;
+
+      sb.append("id:");
+      if (this.id == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.id);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("src:");
+      if (this.src == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.src);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("depth:");
+      sb.append(this.depth);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (id != null) {
+        id.validate();
+      }
+      if (src != null) {
+        src.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class treeReduce3_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeReduce3_argsStandardScheme getScheme() {
+        return new treeReduce3_argsStandardScheme();
+      }
+    }
+
+    private static class treeReduce3_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeReduce3_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, treeReduce3_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.id = new IDataFrameId();
+                struct.id.read(iprot);
+                struct.setIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // SRC
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.src = new org.ignis.rpc.ISource();
+                struct.src.read(iprot);
+                struct.setSrcIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // DEPTH
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.depth = iprot.readI64();
+                struct.setDepthIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, treeReduce3_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.id != null) {
+          oprot.writeFieldBegin(ID_FIELD_DESC);
+          struct.id.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.src != null) {
+          oprot.writeFieldBegin(SRC_FIELD_DESC);
+          struct.src.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldBegin(DEPTH_FIELD_DESC);
+        oprot.writeI64(struct.depth);
+        oprot.writeFieldEnd();
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class treeReduce3_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeReduce3_argsTupleScheme getScheme() {
+        return new treeReduce3_argsTupleScheme();
+      }
+    }
+
+    private static class treeReduce3_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeReduce3_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, treeReduce3_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetId()) {
+          optionals.set(0);
+        }
+        if (struct.isSetSrc()) {
+          optionals.set(1);
+        }
+        if (struct.isSetDepth()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetId()) {
+          struct.id.write(oprot);
+        }
+        if (struct.isSetSrc()) {
+          struct.src.write(oprot);
+        }
+        if (struct.isSetDepth()) {
+          oprot.writeI64(struct.depth);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, treeReduce3_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(3);
+        if (incoming.get(0)) {
+          struct.id = new IDataFrameId();
+          struct.id.read(iprot);
+          struct.setIdIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.src = new org.ignis.rpc.ISource();
+          struct.src.read(iprot);
+          struct.setSrcIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.depth = iprot.readI64();
+          struct.setDepthIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class treeReduce3_result implements org.apache.thrift.TBase<treeReduce3_result, treeReduce3_result._Fields>, java.io.Serializable, Cloneable, Comparable<treeReduce3_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeReduce3_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeReduce3_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeReduce3_resultTupleSchemeFactory();
+
+    private long success; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX((short)1, "ex");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          case 1: // EX
+            return EX;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeReduce3_result.class, metaDataMap);
+    }
+
+    public treeReduce3_result() {
+    }
+
+    public treeReduce3_result(
+      long success,
+      org.ignis.rpc.IDriverException ex)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+      this.ex = ex;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public treeReduce3_result(treeReduce3_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+      }
+    }
+
+    public treeReduce3_result deepCopy() {
+      return new treeReduce3_result(this);
+    }
+
+    @Override
+    public void clear() {
+      setSuccessIsSet(false);
+      this.success = 0;
+      this.ex = null;
+    }
+
+    public long getSuccess() {
+      return this.success;
+    }
+
+    public treeReduce3_result setSuccess(long success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.IDriverException getEx() {
+      return this.ex;
+    }
+
+    public treeReduce3_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.Long)value);
+        }
+        break;
+
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IDriverException)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      case EX:
+        return getEx();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      case EX:
+        return isSetEx();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof treeReduce3_result)
+        return this.equals((treeReduce3_result)that);
+      return false;
+    }
+
+    public boolean equals(treeReduce3_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(success);
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(treeReduce3_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeReduce3_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class treeReduce3_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeReduce3_resultStandardScheme getScheme() {
+        return new treeReduce3_resultStandardScheme();
+      }
+    }
+
+    private static class treeReduce3_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeReduce3_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, treeReduce3_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.success = iprot.readI64();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, treeReduce3_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeI64(struct.success);
+          oprot.writeFieldEnd();
+        }
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class treeReduce3_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeReduce3_resultTupleScheme getScheme() {
+        return new treeReduce3_resultTupleScheme();
+      }
+    }
+
+    private static class treeReduce3_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeReduce3_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, treeReduce3_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        if (struct.isSetEx()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetSuccess()) {
+          oprot.writeI64(struct.success);
+        }
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, treeReduce3_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
