@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -52,6 +53,14 @@ public class ITaskContext {
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
+    }
+
+    public List<Long> contextStack(IExecutor e) {
+        List<Long> executorContext = contexts.get(e);
+        if (executorContext != null) {
+            return Collections.unmodifiableList(executorContext);
+        }
+        return null;
     }
 
     public void loadContext(IExecutor e) throws IgnisException {

@@ -17,9 +17,11 @@
 package org.ignis.backend.cluster.helpers.worker;
 
 import org.ignis.backend.cluster.IDataFrame;
+import org.ignis.backend.cluster.IDriver;
 import org.ignis.backend.cluster.IWorker;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -34,8 +36,11 @@ public final class IWorkerParallelizeDataHelper extends IWorkerHelper {
         super(job, properties);
     }
 
-    public IDataFrame importData(IDataFrame source) throws IgnisException{
+    public IDataFrame parallelize(IDriver driver) throws IgnisException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public IDataFrame parallelize(IDriver driver, ISource src) throws IgnisException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

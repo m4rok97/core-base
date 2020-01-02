@@ -21,6 +21,7 @@ import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IWorker;
 import org.ignis.backend.cluster.helpers.worker.IWorkerImportDataHelper;
+import org.ignis.backend.cluster.helpers.worker.IWorkerParallelizeDataHelper;
 import org.ignis.backend.cluster.helpers.worker.IWorkerReadFileHelper;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.exception.IDriverExceptionImpl;
@@ -94,7 +95,22 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerReadFileHelper(worker, cluster.getProperties()).parallelize();
+                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver);
+                return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+
+    }
+
+    @Override
+    public IDataFrameId parallelize2(IWorkerId id, ISource src) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            synchronized (worker.getLock()) {
+                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver, src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {
@@ -172,12 +188,12 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId openPartitionObjectFile(IWorkerId id, String path, long partitions) throws IDriverException, TException {
+    public IDataFrameId partitionObjectFile(IWorkerId id, String path, long partitions) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).openPartitionObjectFile(path, partitions);
+                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionObjectFile(path, partitions);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {
@@ -186,12 +202,12 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId openPartitionObjectFileFunction(IWorkerId id, ISource src, String path, long partitions) throws IDriverException, TException {
+    public IDataFrameId partitionObjectFile4(IWorkerId id, String path, long partitions, ISource src) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).openPartitionObjectFileFunction(path, src, partitions);
+                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionObjectFile(path, src, partitions);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {

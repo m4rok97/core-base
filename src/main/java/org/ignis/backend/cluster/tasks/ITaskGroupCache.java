@@ -37,30 +37,33 @@ public final class ITaskGroupCache extends ITaskGroup {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITaskGroupCache.class);
 
-    public static class Builder {
+    public static class Builder extends ITaskGroup.Builder {
 
         private final ICache cache;
-        private final ILock lock;
-        private final ITaskGroup dependency;
+        private final ITaskGroup noCache;
         private final List<ITask> loadTasks;
-        private final List<ITask> saveTasks;
 
-        public Builder(ILock lock, ICache cache, ITaskGroup dependency) {
+        public Builder(ILock lock, ICache cache, ITaskGroup noCache) {
+            super(lock);
             this.cache = cache;
-            this.lock = lock;
-            this.dependency = dependency;
+            this.noCache = noCache;
             loadTasks = new ArrayList<>();
-            saveTasks = new ArrayList<>();
+        }
+
+        @Override
+        public Builder newTask(ITask task) {
+            throw new UnsupportedOperationException("use addExecutor instead");
         }
 
         public Builder addExecutor(String name, IExecutor e) {
             loadTasks.add(new ILoadCacheTask(name, e, cache.getId()));
-            saveTasks.add(new ICacheTask(name, e, cache));
+            super.newTask(new ICacheTask(name, e, cache));
             return this;
         }
 
+        @Override
         public ITaskGroup build() {
-            return new ITaskGroupCache(Collections.singleton(lock), Arrays.asList(dependency), cache, loadTasks, saveTasks);
+            return new ITaskGroupCache(locks, Arrays.asList(noCache), cache, loadTasks, tasks, depencencies);
         }
 
     }
@@ -70,18 +73,18 @@ public final class ITaskGroupCache extends ITaskGroup {
     private final ITaskGroup noCache;
     private final ITaskGroup updateCache;
 
-    private ITaskGroupCache(Set<ILock> locks, List<ITaskGroup> depencencies, ICache cache,
-            List<ITask> loadTasks, List<ITask> saveTasks) {
-        super(saveTasks, locks, depencencies);
-        loadCache = new ITaskGroup(loadTasks, locks, new ArrayList<>());
-        updateCache = new ITaskGroup(saveTasks, locks, new ArrayList<>());
-        noCache = depencencies.get(0);
+    private ITaskGroupCache(Set<ILock> locks, List<ITaskGroup> noCache, ICache cache,
+            List<ITask> loadTasks, List<ITask> saveTasks, List<ITaskGroup> dependencies) {
+        super(saveTasks, locks, noCache);
+        this.loadCache = new ITaskGroup(loadTasks, locks, dependencies);
+        this.updateCache = new ITaskGroup(saveTasks, locks, dependencies);
+        this.noCache = noCache.get(0);
         this.cache = cache;
     }
 
     @Override
     protected void start(IThreadPool pool, ITaskContext context, int retries) throws IgnisException {
-        if (cache.isCached()) { 
+        if (cache.isCached()) {
             if (cache.getActualLevel() != cache.getNextLevel()) {//Cache update or destruction
                 updateCache.start(pool, context, retries);
                 cache.setActualLevel(cache.getNextLevel());
@@ -94,15 +97,15 @@ public final class ITaskGroupCache extends ITaskGroup {
                     LOGGER.warn("Cache error, loading dependencies", ex);
                     cache.setActualLevel(ICache.Level.NO_CACHE);
                 }
-            }else{
-                return; 
+            } else {
+                return;
             }
-        } 
-        
+        }
+
         if (cache.getActualLevel() != cache.getNextLevel()) {//Create cache
             super.start(pool, context, retries);
             cache.setActualLevel(cache.getNextLevel());
-        }else{
+        } else {
             noCache.start(pool, context, retries);
         }
     }

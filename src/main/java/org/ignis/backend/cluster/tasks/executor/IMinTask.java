@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import java.util.concurrent.BrokenBarrierException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -26,22 +27,36 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class IMinTask extends IExecutorContextTask {
+public class IMinTask extends IDriverTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMinTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMaxTask.class);
 
-    private final boolean driver;
     private final ISource cmp;
 
-    public IMinTask(String name, IExecutor executor, boolean driver, ISource cmp) {
-        super(name, executor, Mode.LOAD);
-        this.driver = driver;
+    public IMinTask(String name, IExecutor executor, IDriverTask.Shared shared, boolean driver, ISource cmp) {
+        super(name, executor, shared, driver);
         this.cmp = cmp;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        //TODO
+        LOGGER.info(log() + "Executing max");
+        try {
+            if (!driver) {
+                executor.getMathModule().min(cmp);
+            }
+            shared.barrier.await();
+            gather(context, true);
+        } catch (IgnisException ex) {
+            shared.barrier.fails();
+            throw ex;
+        } catch (BrokenBarrierException ex) {
+            //Other Task has failed
+        } catch (Exception ex) {
+            shared.barrier.fails();
+            throw new IgnisException(ex.getMessage(), ex);
+        }
+        LOGGER.info(log() + "Max executed");
     }
 
 }

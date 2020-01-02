@@ -27,7 +27,7 @@ import org.ignis.backend.exception.IgnisException;
 public abstract class IExecutorContextTask extends IExecutorTask {
 
     protected enum Mode {
-        LOAD, SAVE, LOAD_AND_SAVE
+        LOAD, SAVE, LOAD_AND_SAVE, NONE
     }
 
     private final Mode mode;

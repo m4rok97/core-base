@@ -13,23 +13,25 @@ public class ICommModule {
 
     public java.lang.String createGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void joinGroup(java.lang.String group, boolean member) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void joinGroupMembers(java.lang.String group, long size) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void destroyGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void joinToGroup(java.lang.String group, java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void createDriverGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public boolean hasGroup(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void joinDriverGroup(java.lang.String group, boolean member, long id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void destroyGroup(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void destroyDriverGroup(long id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void destroyGroups() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
     public java.util.List<java.nio.ByteBuffer> getPartitions() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
     public void setPartitions(java.util.List<java.nio.ByteBuffer> partitions) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void driverGather(long id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void driverGather(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void driverScatter(long id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void driverGather0(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+
+    public void driverScatter(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
   }
 
@@ -37,23 +39,25 @@ public class ICommModule {
 
     public void createGroup(org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException;
 
-    public void joinGroup(java.lang.String group, boolean member, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void joinGroupMembers(java.lang.String group, long size, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void destroyGroup(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void joinToGroup(java.lang.String group, java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void createDriverGroup(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void hasGroup(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<java.lang.Boolean> resultHandler) throws org.apache.thrift.TException;
 
-    public void joinDriverGroup(java.lang.String group, boolean member, long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void destroyGroup(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void destroyDriverGroup(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void destroyGroups(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void getPartitions(org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.nio.ByteBuffer>> resultHandler) throws org.apache.thrift.TException;
 
     public void setPartitions(java.util.List<java.nio.ByteBuffer> partitions, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void driverGather(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void driverGather(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void driverScatter(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void driverGather0(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+
+    public void driverScatter(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -102,39 +106,90 @@ public class ICommModule {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "createGroup failed: unknown result");
     }
 
-    public void joinGroup(java.lang.String group, boolean member) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void joinGroupMembers(java.lang.String group, long size) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
-      send_joinGroup(group, member);
-      recv_joinGroup();
+      send_joinGroupMembers(group, size);
+      recv_joinGroupMembers();
     }
 
-    public void send_joinGroup(java.lang.String group, boolean member) throws org.apache.thrift.TException
+    public void send_joinGroupMembers(java.lang.String group, long size) throws org.apache.thrift.TException
     {
-      joinGroup_args args = new joinGroup_args();
+      joinGroupMembers_args args = new joinGroupMembers_args();
       args.setGroup(group);
-      args.setMember(member);
-      sendBase("joinGroup", args);
+      args.setSize(size);
+      sendBase("joinGroupMembers", args);
     }
 
-    public void recv_joinGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void recv_joinGroupMembers() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
-      joinGroup_result result = new joinGroup_result();
-      receiveBase(result, "joinGroup");
+      joinGroupMembers_result result = new joinGroupMembers_result();
+      receiveBase(result, "joinGroupMembers");
       if (result.ex != null) {
         throw result.ex;
       }
       return;
     }
 
-    public void destroyGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void joinToGroup(java.lang.String group, java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
-      send_destroyGroup();
+      send_joinToGroup(group, id);
+      recv_joinToGroup();
+    }
+
+    public void send_joinToGroup(java.lang.String group, java.lang.String id) throws org.apache.thrift.TException
+    {
+      joinToGroup_args args = new joinToGroup_args();
+      args.setGroup(group);
+      args.setId(id);
+      sendBase("joinToGroup", args);
+    }
+
+    public void recv_joinToGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    {
+      joinToGroup_result result = new joinToGroup_result();
+      receiveBase(result, "joinToGroup");
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      return;
+    }
+
+    public boolean hasGroup(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    {
+      send_hasGroup(id);
+      return recv_hasGroup();
+    }
+
+    public void send_hasGroup(java.lang.String id) throws org.apache.thrift.TException
+    {
+      hasGroup_args args = new hasGroup_args();
+      args.setId(id);
+      sendBase("hasGroup", args);
+    }
+
+    public boolean recv_hasGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    {
+      hasGroup_result result = new hasGroup_result();
+      receiveBase(result, "hasGroup");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "hasGroup failed: unknown result");
+    }
+
+    public void destroyGroup(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    {
+      send_destroyGroup(id);
       recv_destroyGroup();
     }
 
-    public void send_destroyGroup() throws org.apache.thrift.TException
+    public void send_destroyGroup(java.lang.String id) throws org.apache.thrift.TException
     {
       destroyGroup_args args = new destroyGroup_args();
+      args.setId(id);
       sendBase("destroyGroup", args);
     }
 
@@ -148,70 +203,22 @@ public class ICommModule {
       return;
     }
 
-    public void createDriverGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void destroyGroups() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
-      send_createDriverGroup();
-      recv_createDriverGroup();
+      send_destroyGroups();
+      recv_destroyGroups();
     }
 
-    public void send_createDriverGroup() throws org.apache.thrift.TException
+    public void send_destroyGroups() throws org.apache.thrift.TException
     {
-      createDriverGroup_args args = new createDriverGroup_args();
-      sendBase("createDriverGroup", args);
+      destroyGroups_args args = new destroyGroups_args();
+      sendBase("destroyGroups", args);
     }
 
-    public void recv_createDriverGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void recv_destroyGroups() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
-      createDriverGroup_result result = new createDriverGroup_result();
-      receiveBase(result, "createDriverGroup");
-      if (result.ex != null) {
-        throw result.ex;
-      }
-      return;
-    }
-
-    public void joinDriverGroup(java.lang.String group, boolean member, long id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
-    {
-      send_joinDriverGroup(group, member, id);
-      recv_joinDriverGroup();
-    }
-
-    public void send_joinDriverGroup(java.lang.String group, boolean member, long id) throws org.apache.thrift.TException
-    {
-      joinDriverGroup_args args = new joinDriverGroup_args();
-      args.setGroup(group);
-      args.setMember(member);
-      args.setId(id);
-      sendBase("joinDriverGroup", args);
-    }
-
-    public void recv_joinDriverGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
-    {
-      joinDriverGroup_result result = new joinDriverGroup_result();
-      receiveBase(result, "joinDriverGroup");
-      if (result.ex != null) {
-        throw result.ex;
-      }
-      return;
-    }
-
-    public void destroyDriverGroup(long id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
-    {
-      send_destroyDriverGroup(id);
-      recv_destroyDriverGroup();
-    }
-
-    public void send_destroyDriverGroup(long id) throws org.apache.thrift.TException
-    {
-      destroyDriverGroup_args args = new destroyDriverGroup_args();
-      args.setId(id);
-      sendBase("destroyDriverGroup", args);
-    }
-
-    public void recv_destroyDriverGroup() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
-    {
-      destroyDriverGroup_result result = new destroyDriverGroup_result();
-      receiveBase(result, "destroyDriverGroup");
+      destroyGroups_result result = new destroyGroups_result();
+      receiveBase(result, "destroyGroups");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -266,13 +273,13 @@ public class ICommModule {
       return;
     }
 
-    public void driverGather(long id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void driverGather(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
       send_driverGather(id);
       recv_driverGather();
     }
 
-    public void send_driverGather(long id) throws org.apache.thrift.TException
+    public void send_driverGather(java.lang.String id) throws org.apache.thrift.TException
     {
       driverGather_args args = new driverGather_args();
       args.setId(id);
@@ -289,13 +296,36 @@ public class ICommModule {
       return;
     }
 
-    public void driverScatter(long id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void driverGather0(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    {
+      send_driverGather0(id);
+      recv_driverGather0();
+    }
+
+    public void send_driverGather0(java.lang.String id) throws org.apache.thrift.TException
+    {
+      driverGather0_args args = new driverGather0_args();
+      args.setId(id);
+      sendBase("driverGather0", args);
+    }
+
+    public void recv_driverGather0() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    {
+      driverGather0_result result = new driverGather0_result();
+      receiveBase(result, "driverGather0");
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      return;
+    }
+
+    public void driverScatter(java.lang.String id) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
       send_driverScatter(id);
       recv_driverScatter();
     }
 
-    public void send_driverScatter(long id) throws org.apache.thrift.TException
+    public void send_driverScatter(java.lang.String id) throws org.apache.thrift.TException
     {
       driverScatter_args args = new driverScatter_args();
       args.setId(id);
@@ -359,27 +389,27 @@ public class ICommModule {
       }
     }
 
-    public void joinGroup(java.lang.String group, boolean member, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void joinGroupMembers(java.lang.String group, long size, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      joinGroup_call method_call = new joinGroup_call(group, member, resultHandler, this, ___protocolFactory, ___transport);
+      joinGroupMembers_call method_call = new joinGroupMembers_call(group, size, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class joinGroup_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class joinGroupMembers_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private java.lang.String group;
-      private boolean member;
-      public joinGroup_call(java.lang.String group, boolean member, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private long size;
+      public joinGroupMembers_call(java.lang.String group, long size, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.group = group;
-        this.member = member;
+        this.size = size;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("joinGroup", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        joinGroup_args args = new joinGroup_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("joinGroupMembers", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        joinGroupMembers_args args = new joinGroupMembers_args();
         args.setGroup(group);
-        args.setMember(member);
+        args.setSize(size);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -394,87 +424,90 @@ public class ICommModule {
       }
     }
 
-    public void destroyGroup(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void joinToGroup(java.lang.String group, java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      destroyGroup_call method_call = new destroyGroup_call(resultHandler, this, ___protocolFactory, ___transport);
+      joinToGroup_call method_call = new joinToGroup_call(group, id, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class joinToGroup_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+      private java.lang.String group;
+      private java.lang.String id;
+      public joinToGroup_call(java.lang.String group, java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.group = group;
+        this.id = id;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("joinToGroup", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        joinToGroup_args args = new joinToGroup_args();
+        args.setGroup(group);
+        args.setId(id);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public Void getResult() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return null;
+      }
+    }
+
+    public void hasGroup(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<java.lang.Boolean> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      hasGroup_call method_call = new hasGroup_call(id, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class hasGroup_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Boolean> {
+      private java.lang.String id;
+      public hasGroup_call(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<java.lang.Boolean> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.id = id;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("hasGroup", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        hasGroup_args args = new hasGroup_args();
+        args.setId(id);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public java.lang.Boolean getResult() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_hasGroup();
+      }
+    }
+
+    public void destroyGroup(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      destroyGroup_call method_call = new destroyGroup_call(id, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class destroyGroup_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      public destroyGroup_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private java.lang.String id;
+      public destroyGroup_call(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.id = id;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("destroyGroup", org.apache.thrift.protocol.TMessageType.CALL, 0));
         destroyGroup_args args = new destroyGroup_args();
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public Void getResult() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new java.lang.IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
-      }
-    }
-
-    public void createDriverGroup(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      createDriverGroup_call method_call = new createDriverGroup_call(resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class createDriverGroup_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      public createDriverGroup_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("createDriverGroup", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        createDriverGroup_args args = new createDriverGroup_args();
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public Void getResult() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new java.lang.IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
-      }
-    }
-
-    public void joinDriverGroup(java.lang.String group, boolean member, long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      joinDriverGroup_call method_call = new joinDriverGroup_call(group, member, id, resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class joinDriverGroup_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private java.lang.String group;
-      private boolean member;
-      private long id;
-      public joinDriverGroup_call(java.lang.String group, boolean member, long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-        this.group = group;
-        this.member = member;
-        this.id = id;
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("joinDriverGroup", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        joinDriverGroup_args args = new joinDriverGroup_args();
-        args.setGroup(group);
-        args.setMember(member);
         args.setId(id);
         args.write(prot);
         prot.writeMessageEnd();
@@ -490,24 +523,21 @@ public class ICommModule {
       }
     }
 
-    public void destroyDriverGroup(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void destroyGroups(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      destroyDriverGroup_call method_call = new destroyDriverGroup_call(id, resultHandler, this, ___protocolFactory, ___transport);
+      destroyGroups_call method_call = new destroyGroups_call(resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class destroyDriverGroup_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private long id;
-      public destroyDriverGroup_call(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class destroyGroups_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+      public destroyGroups_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.id = id;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("destroyDriverGroup", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        destroyDriverGroup_args args = new destroyDriverGroup_args();
-        args.setId(id);
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("destroyGroups", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        destroyGroups_args args = new destroyGroups_args();
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -583,7 +613,7 @@ public class ICommModule {
       }
     }
 
-    public void driverGather(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void driverGather(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       driverGather_call method_call = new driverGather_call(id, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -591,8 +621,8 @@ public class ICommModule {
     }
 
     public static class driverGather_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private long id;
-      public driverGather_call(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private java.lang.String id;
+      public driverGather_call(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
       }
@@ -615,7 +645,39 @@ public class ICommModule {
       }
     }
 
-    public void driverScatter(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void driverGather0(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      driverGather0_call method_call = new driverGather0_call(id, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class driverGather0_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+      private java.lang.String id;
+      public driverGather0_call(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.id = id;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("driverGather0", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        driverGather0_args args = new driverGather0_args();
+        args.setId(id);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public Void getResult() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return null;
+      }
+    }
+
+    public void driverScatter(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       driverScatter_call method_call = new driverScatter_call(id, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -623,8 +685,8 @@ public class ICommModule {
     }
 
     public static class driverScatter_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      private long id;
-      public driverScatter_call(long id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private java.lang.String id;
+      public driverScatter_call(java.lang.String id, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
       }
@@ -661,14 +723,15 @@ public class ICommModule {
 
     private static <I extends Iface> java.util.Map<java.lang.String,  org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> getProcessMap(java.util.Map<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
       processMap.put("createGroup", new createGroup());
-      processMap.put("joinGroup", new joinGroup());
+      processMap.put("joinGroupMembers", new joinGroupMembers());
+      processMap.put("joinToGroup", new joinToGroup());
+      processMap.put("hasGroup", new hasGroup());
       processMap.put("destroyGroup", new destroyGroup());
-      processMap.put("createDriverGroup", new createDriverGroup());
-      processMap.put("joinDriverGroup", new joinDriverGroup());
-      processMap.put("destroyDriverGroup", new destroyDriverGroup());
+      processMap.put("destroyGroups", new destroyGroups());
       processMap.put("getPartitions", new getPartitions());
       processMap.put("setPartitions", new setPartitions());
       processMap.put("driverGather", new driverGather());
+      processMap.put("driverGather0", new driverGather0());
       processMap.put("driverScatter", new driverScatter());
       return processMap;
     }
@@ -702,13 +765,13 @@ public class ICommModule {
       }
     }
 
-    public static class joinGroup<I extends Iface> extends org.apache.thrift.ProcessFunction<I, joinGroup_args> {
-      public joinGroup() {
-        super("joinGroup");
+    public static class joinGroupMembers<I extends Iface> extends org.apache.thrift.ProcessFunction<I, joinGroupMembers_args> {
+      public joinGroupMembers() {
+        super("joinGroupMembers");
       }
 
-      public joinGroup_args getEmptyArgsInstance() {
-        return new joinGroup_args();
+      public joinGroupMembers_args getEmptyArgsInstance() {
+        return new joinGroupMembers_args();
       }
 
       protected boolean isOneway() {
@@ -720,10 +783,69 @@ public class ICommModule {
         return false;
       }
 
-      public joinGroup_result getResult(I iface, joinGroup_args args) throws org.apache.thrift.TException {
-        joinGroup_result result = new joinGroup_result();
+      public joinGroupMembers_result getResult(I iface, joinGroupMembers_args args) throws org.apache.thrift.TException {
+        joinGroupMembers_result result = new joinGroupMembers_result();
         try {
-          iface.joinGroup(args.group, args.member);
+          iface.joinGroupMembers(args.group, args.size);
+        } catch (org.ignis.rpc.IExecutorException ex) {
+          result.ex = ex;
+        }
+        return result;
+      }
+    }
+
+    public static class joinToGroup<I extends Iface> extends org.apache.thrift.ProcessFunction<I, joinToGroup_args> {
+      public joinToGroup() {
+        super("joinToGroup");
+      }
+
+      public joinToGroup_args getEmptyArgsInstance() {
+        return new joinToGroup_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean rethrowUnhandledExceptions() {
+        return false;
+      }
+
+      public joinToGroup_result getResult(I iface, joinToGroup_args args) throws org.apache.thrift.TException {
+        joinToGroup_result result = new joinToGroup_result();
+        try {
+          iface.joinToGroup(args.group, args.id);
+        } catch (org.ignis.rpc.IExecutorException ex) {
+          result.ex = ex;
+        }
+        return result;
+      }
+    }
+
+    public static class hasGroup<I extends Iface> extends org.apache.thrift.ProcessFunction<I, hasGroup_args> {
+      public hasGroup() {
+        super("hasGroup");
+      }
+
+      public hasGroup_args getEmptyArgsInstance() {
+        return new hasGroup_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean rethrowUnhandledExceptions() {
+        return false;
+      }
+
+      public hasGroup_result getResult(I iface, hasGroup_args args) throws org.apache.thrift.TException {
+        hasGroup_result result = new hasGroup_result();
+        try {
+          result.success = iface.hasGroup(args.id);
+          result.setSuccessIsSet(true);
         } catch (org.ignis.rpc.IExecutorException ex) {
           result.ex = ex;
         }
@@ -752,7 +874,7 @@ public class ICommModule {
       public destroyGroup_result getResult(I iface, destroyGroup_args args) throws org.apache.thrift.TException {
         destroyGroup_result result = new destroyGroup_result();
         try {
-          iface.destroyGroup();
+          iface.destroyGroup(args.id);
         } catch (org.ignis.rpc.IExecutorException ex) {
           result.ex = ex;
         }
@@ -760,13 +882,13 @@ public class ICommModule {
       }
     }
 
-    public static class createDriverGroup<I extends Iface> extends org.apache.thrift.ProcessFunction<I, createDriverGroup_args> {
-      public createDriverGroup() {
-        super("createDriverGroup");
+    public static class destroyGroups<I extends Iface> extends org.apache.thrift.ProcessFunction<I, destroyGroups_args> {
+      public destroyGroups() {
+        super("destroyGroups");
       }
 
-      public createDriverGroup_args getEmptyArgsInstance() {
-        return new createDriverGroup_args();
+      public destroyGroups_args getEmptyArgsInstance() {
+        return new destroyGroups_args();
       }
 
       protected boolean isOneway() {
@@ -778,68 +900,10 @@ public class ICommModule {
         return false;
       }
 
-      public createDriverGroup_result getResult(I iface, createDriverGroup_args args) throws org.apache.thrift.TException {
-        createDriverGroup_result result = new createDriverGroup_result();
+      public destroyGroups_result getResult(I iface, destroyGroups_args args) throws org.apache.thrift.TException {
+        destroyGroups_result result = new destroyGroups_result();
         try {
-          iface.createDriverGroup();
-        } catch (org.ignis.rpc.IExecutorException ex) {
-          result.ex = ex;
-        }
-        return result;
-      }
-    }
-
-    public static class joinDriverGroup<I extends Iface> extends org.apache.thrift.ProcessFunction<I, joinDriverGroup_args> {
-      public joinDriverGroup() {
-        super("joinDriverGroup");
-      }
-
-      public joinDriverGroup_args getEmptyArgsInstance() {
-        return new joinDriverGroup_args();
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      @Override
-      protected boolean rethrowUnhandledExceptions() {
-        return false;
-      }
-
-      public joinDriverGroup_result getResult(I iface, joinDriverGroup_args args) throws org.apache.thrift.TException {
-        joinDriverGroup_result result = new joinDriverGroup_result();
-        try {
-          iface.joinDriverGroup(args.group, args.member, args.id);
-        } catch (org.ignis.rpc.IExecutorException ex) {
-          result.ex = ex;
-        }
-        return result;
-      }
-    }
-
-    public static class destroyDriverGroup<I extends Iface> extends org.apache.thrift.ProcessFunction<I, destroyDriverGroup_args> {
-      public destroyDriverGroup() {
-        super("destroyDriverGroup");
-      }
-
-      public destroyDriverGroup_args getEmptyArgsInstance() {
-        return new destroyDriverGroup_args();
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      @Override
-      protected boolean rethrowUnhandledExceptions() {
-        return false;
-      }
-
-      public destroyDriverGroup_result getResult(I iface, destroyDriverGroup_args args) throws org.apache.thrift.TException {
-        destroyDriverGroup_result result = new destroyDriverGroup_result();
-        try {
-          iface.destroyDriverGroup(args.id);
+          iface.destroyGroups();
         } catch (org.ignis.rpc.IExecutorException ex) {
           result.ex = ex;
         }
@@ -934,6 +998,35 @@ public class ICommModule {
       }
     }
 
+    public static class driverGather0<I extends Iface> extends org.apache.thrift.ProcessFunction<I, driverGather0_args> {
+      public driverGather0() {
+        super("driverGather0");
+      }
+
+      public driverGather0_args getEmptyArgsInstance() {
+        return new driverGather0_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean rethrowUnhandledExceptions() {
+        return false;
+      }
+
+      public driverGather0_result getResult(I iface, driverGather0_args args) throws org.apache.thrift.TException {
+        driverGather0_result result = new driverGather0_result();
+        try {
+          iface.driverGather0(args.id);
+        } catch (org.ignis.rpc.IExecutorException ex) {
+          result.ex = ex;
+        }
+        return result;
+      }
+    }
+
     public static class driverScatter<I extends Iface> extends org.apache.thrift.ProcessFunction<I, driverScatter_args> {
       public driverScatter() {
         super("driverScatter");
@@ -977,14 +1070,15 @@ public class ICommModule {
 
     private static <I extends AsyncIface> java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
       processMap.put("createGroup", new createGroup());
-      processMap.put("joinGroup", new joinGroup());
+      processMap.put("joinGroupMembers", new joinGroupMembers());
+      processMap.put("joinToGroup", new joinToGroup());
+      processMap.put("hasGroup", new hasGroup());
       processMap.put("destroyGroup", new destroyGroup());
-      processMap.put("createDriverGroup", new createDriverGroup());
-      processMap.put("joinDriverGroup", new joinDriverGroup());
-      processMap.put("destroyDriverGroup", new destroyDriverGroup());
+      processMap.put("destroyGroups", new destroyGroups());
       processMap.put("getPartitions", new getPartitions());
       processMap.put("setPartitions", new setPartitions());
       processMap.put("driverGather", new driverGather());
+      processMap.put("driverGather0", new driverGather0());
       processMap.put("driverScatter", new driverScatter());
       return processMap;
     }
@@ -1054,20 +1148,20 @@ public class ICommModule {
       }
     }
 
-    public static class joinGroup<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, joinGroup_args, Void> {
-      public joinGroup() {
-        super("joinGroup");
+    public static class joinGroupMembers<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, joinGroupMembers_args, Void> {
+      public joinGroupMembers() {
+        super("joinGroupMembers");
       }
 
-      public joinGroup_args getEmptyArgsInstance() {
-        return new joinGroup_args();
+      public joinGroupMembers_args getEmptyArgsInstance() {
+        return new joinGroupMembers_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            joinGroup_result result = new joinGroup_result();
+            joinGroupMembers_result result = new joinGroupMembers_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -1081,7 +1175,7 @@ public class ICommModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            joinGroup_result result = new joinGroup_result();
+            joinGroupMembers_result result = new joinGroupMembers_result();
             if (e instanceof org.ignis.rpc.IExecutorException) {
               result.ex = (org.ignis.rpc.IExecutorException) e;
               result.setExIsSet(true);
@@ -1113,8 +1207,138 @@ public class ICommModule {
         return false;
       }
 
-      public void start(I iface, joinGroup_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.joinGroup(args.group, args.member,resultHandler);
+      public void start(I iface, joinGroupMembers_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.joinGroupMembers(args.group, args.size,resultHandler);
+      }
+    }
+
+    public static class joinToGroup<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, joinToGroup_args, Void> {
+      public joinToGroup() {
+        super("joinToGroup");
+      }
+
+      public joinToGroup_args getEmptyArgsInstance() {
+        return new joinToGroup_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
+            joinToGroup_result result = new joinToGroup_result();
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            joinToGroup_result result = new joinToGroup_result();
+            if (e instanceof org.ignis.rpc.IExecutorException) {
+              result.ex = (org.ignis.rpc.IExecutorException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, joinToGroup_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.joinToGroup(args.group, args.id,resultHandler);
+      }
+    }
+
+    public static class hasGroup<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, hasGroup_args, java.lang.Boolean> {
+      public hasGroup() {
+        super("hasGroup");
+      }
+
+      public hasGroup_args getEmptyArgsInstance() {
+        return new hasGroup_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.Boolean> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.Boolean>() { 
+          public void onComplete(java.lang.Boolean o) {
+            hasGroup_result result = new hasGroup_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            hasGroup_result result = new hasGroup_result();
+            if (e instanceof org.ignis.rpc.IExecutorException) {
+              result.ex = (org.ignis.rpc.IExecutorException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, hasGroup_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Boolean> resultHandler) throws org.apache.thrift.TException {
+        iface.hasGroup(args.id,resultHandler);
       }
     }
 
@@ -1178,24 +1402,24 @@ public class ICommModule {
       }
 
       public void start(I iface, destroyGroup_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.destroyGroup(resultHandler);
+        iface.destroyGroup(args.id,resultHandler);
       }
     }
 
-    public static class createDriverGroup<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, createDriverGroup_args, Void> {
-      public createDriverGroup() {
-        super("createDriverGroup");
+    public static class destroyGroups<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, destroyGroups_args, Void> {
+      public destroyGroups() {
+        super("destroyGroups");
       }
 
-      public createDriverGroup_args getEmptyArgsInstance() {
-        return new createDriverGroup_args();
+      public destroyGroups_args getEmptyArgsInstance() {
+        return new destroyGroups_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            createDriverGroup_result result = new createDriverGroup_result();
+            destroyGroups_result result = new destroyGroups_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -1209,7 +1433,7 @@ public class ICommModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            createDriverGroup_result result = new createDriverGroup_result();
+            destroyGroups_result result = new destroyGroups_result();
             if (e instanceof org.ignis.rpc.IExecutorException) {
               result.ex = (org.ignis.rpc.IExecutorException) e;
               result.setExIsSet(true);
@@ -1241,136 +1465,8 @@ public class ICommModule {
         return false;
       }
 
-      public void start(I iface, createDriverGroup_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.createDriverGroup(resultHandler);
-      }
-    }
-
-    public static class joinDriverGroup<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, joinDriverGroup_args, Void> {
-      public joinDriverGroup() {
-        super("joinDriverGroup");
-      }
-
-      public joinDriverGroup_args getEmptyArgsInstance() {
-        return new joinDriverGroup_args();
-      }
-
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
-        final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
-            joinDriverGroup_result result = new joinDriverGroup_result();
-            try {
-              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-            } catch (org.apache.thrift.transport.TTransportException e) {
-              _LOGGER.error("TTransportException writing to internal frame buffer", e);
-              fb.close();
-            } catch (java.lang.Exception e) {
-              _LOGGER.error("Exception writing to internal frame buffer", e);
-              onError(e);
-            }
-          }
-          public void onError(java.lang.Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TSerializable msg;
-            joinDriverGroup_result result = new joinDriverGroup_result();
-            if (e instanceof org.ignis.rpc.IExecutorException) {
-              result.ex = (org.ignis.rpc.IExecutorException) e;
-              result.setExIsSet(true);
-              msg = result;
-            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
-              _LOGGER.error("TTransportException inside handler", e);
-              fb.close();
-              return;
-            } else if (e instanceof org.apache.thrift.TApplicationException) {
-              _LOGGER.error("TApplicationException inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TApplicationException)e;
-            } else {
-              _LOGGER.error("Exception inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (java.lang.Exception ex) {
-              _LOGGER.error("Exception writing to internal frame buffer", ex);
-              fb.close();
-            }
-          }
-        };
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      public void start(I iface, joinDriverGroup_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.joinDriverGroup(args.group, args.member, args.id,resultHandler);
-      }
-    }
-
-    public static class destroyDriverGroup<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, destroyDriverGroup_args, Void> {
-      public destroyDriverGroup() {
-        super("destroyDriverGroup");
-      }
-
-      public destroyDriverGroup_args getEmptyArgsInstance() {
-        return new destroyDriverGroup_args();
-      }
-
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
-        final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
-            destroyDriverGroup_result result = new destroyDriverGroup_result();
-            try {
-              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-            } catch (org.apache.thrift.transport.TTransportException e) {
-              _LOGGER.error("TTransportException writing to internal frame buffer", e);
-              fb.close();
-            } catch (java.lang.Exception e) {
-              _LOGGER.error("Exception writing to internal frame buffer", e);
-              onError(e);
-            }
-          }
-          public void onError(java.lang.Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TSerializable msg;
-            destroyDriverGroup_result result = new destroyDriverGroup_result();
-            if (e instanceof org.ignis.rpc.IExecutorException) {
-              result.ex = (org.ignis.rpc.IExecutorException) e;
-              result.setExIsSet(true);
-              msg = result;
-            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
-              _LOGGER.error("TTransportException inside handler", e);
-              fb.close();
-              return;
-            } else if (e instanceof org.apache.thrift.TApplicationException) {
-              _LOGGER.error("TApplicationException inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TApplicationException)e;
-            } else {
-              _LOGGER.error("Exception inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (java.lang.Exception ex) {
-              _LOGGER.error("Exception writing to internal frame buffer", ex);
-              fb.close();
-            }
-          }
-        };
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      public void start(I iface, destroyDriverGroup_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.destroyDriverGroup(args.id,resultHandler);
+      public void start(I iface, destroyGroups_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.destroyGroups(resultHandler);
       }
     }
 
@@ -1564,6 +1660,70 @@ public class ICommModule {
 
       public void start(I iface, driverGather_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
         iface.driverGather(args.id,resultHandler);
+      }
+    }
+
+    public static class driverGather0<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, driverGather0_args, Void> {
+      public driverGather0() {
+        super("driverGather0");
+      }
+
+      public driverGather0_args getEmptyArgsInstance() {
+        return new driverGather0_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
+            driverGather0_result result = new driverGather0_result();
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            driverGather0_result result = new driverGather0_result();
+            if (e instanceof org.ignis.rpc.IExecutorException) {
+              result.ex = (org.ignis.rpc.IExecutorException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, driverGather0_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.driverGather0(args.id,resultHandler);
       }
     }
 
@@ -2361,22 +2521,22 @@ public class ICommModule {
     }
   }
 
-  public static class joinGroup_args implements org.apache.thrift.TBase<joinGroup_args, joinGroup_args._Fields>, java.io.Serializable, Cloneable, Comparable<joinGroup_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinGroup_args");
+  public static class joinGroupMembers_args implements org.apache.thrift.TBase<joinGroupMembers_args, joinGroupMembers_args._Fields>, java.io.Serializable, Cloneable, Comparable<joinGroupMembers_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinGroupMembers_args");
 
     private static final org.apache.thrift.protocol.TField GROUP_FIELD_DESC = new org.apache.thrift.protocol.TField("group", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField MEMBER_FIELD_DESC = new org.apache.thrift.protocol.TField("member", org.apache.thrift.protocol.TType.BOOL, (short)2);
+    private static final org.apache.thrift.protocol.TField SIZE_FIELD_DESC = new org.apache.thrift.protocol.TField("size", org.apache.thrift.protocol.TType.I64, (short)2);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinGroup_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinGroup_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinGroupMembers_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinGroupMembers_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable java.lang.String group; // required
-    private boolean member; // required
+    private long size; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       GROUP((short)1, "group"),
-      MEMBER((short)2, "member");
+      SIZE((short)2, "size");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -2394,8 +2554,8 @@ public class ICommModule {
         switch(fieldId) {
           case 1: // GROUP
             return GROUP;
-          case 2: // MEMBER
-            return MEMBER;
+          case 2: // SIZE
+            return SIZE;
           default:
             return null;
         }
@@ -2437,52 +2597,52 @@ public class ICommModule {
     }
 
     // isset id assignments
-    private static final int __MEMBER_ISSET_ID = 0;
+    private static final int __SIZE_ISSET_ID = 0;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.GROUP, new org.apache.thrift.meta_data.FieldMetaData("group", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.MEMBER, new org.apache.thrift.meta_data.FieldMetaData("member", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
+      tmpMap.put(_Fields.SIZE, new org.apache.thrift.meta_data.FieldMetaData("size", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinGroup_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinGroupMembers_args.class, metaDataMap);
     }
 
-    public joinGroup_args() {
+    public joinGroupMembers_args() {
     }
 
-    public joinGroup_args(
+    public joinGroupMembers_args(
       java.lang.String group,
-      boolean member)
+      long size)
     {
       this();
       this.group = group;
-      this.member = member;
-      setMemberIsSet(true);
+      this.size = size;
+      setSizeIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public joinGroup_args(joinGroup_args other) {
+    public joinGroupMembers_args(joinGroupMembers_args other) {
       __isset_bitfield = other.__isset_bitfield;
       if (other.isSetGroup()) {
         this.group = other.group;
       }
-      this.member = other.member;
+      this.size = other.size;
     }
 
-    public joinGroup_args deepCopy() {
-      return new joinGroup_args(this);
+    public joinGroupMembers_args deepCopy() {
+      return new joinGroupMembers_args(this);
     }
 
     @Override
     public void clear() {
       this.group = null;
-      setMemberIsSet(false);
-      this.member = false;
+      setSizeIsSet(false);
+      this.size = 0;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -2490,7 +2650,7 @@ public class ICommModule {
       return this.group;
     }
 
-    public joinGroup_args setGroup(@org.apache.thrift.annotation.Nullable java.lang.String group) {
+    public joinGroupMembers_args setGroup(@org.apache.thrift.annotation.Nullable java.lang.String group) {
       this.group = group;
       return this;
     }
@@ -2510,27 +2670,27 @@ public class ICommModule {
       }
     }
 
-    public boolean isMember() {
-      return this.member;
+    public long getSize() {
+      return this.size;
     }
 
-    public joinGroup_args setMember(boolean member) {
-      this.member = member;
-      setMemberIsSet(true);
+    public joinGroupMembers_args setSize(long size) {
+      this.size = size;
+      setSizeIsSet(true);
       return this;
     }
 
-    public void unsetMember() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __MEMBER_ISSET_ID);
+    public void unsetSize() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __SIZE_ISSET_ID);
     }
 
-    /** Returns true if field member is set (has been assigned a value) and false otherwise */
-    public boolean isSetMember() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __MEMBER_ISSET_ID);
+    /** Returns true if field size is set (has been assigned a value) and false otherwise */
+    public boolean isSetSize() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __SIZE_ISSET_ID);
     }
 
-    public void setMemberIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __MEMBER_ISSET_ID, value);
+    public void setSizeIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __SIZE_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
@@ -2543,11 +2703,11 @@ public class ICommModule {
         }
         break;
 
-      case MEMBER:
+      case SIZE:
         if (value == null) {
-          unsetMember();
+          unsetSize();
         } else {
-          setMember((java.lang.Boolean)value);
+          setSize((java.lang.Long)value);
         }
         break;
 
@@ -2560,8 +2720,8 @@ public class ICommModule {
       case GROUP:
         return getGroup();
 
-      case MEMBER:
-        return isMember();
+      case SIZE:
+        return getSize();
 
       }
       throw new java.lang.IllegalStateException();
@@ -2576,8 +2736,8 @@ public class ICommModule {
       switch (field) {
       case GROUP:
         return isSetGroup();
-      case MEMBER:
-        return isSetMember();
+      case SIZE:
+        return isSetSize();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2586,12 +2746,12 @@ public class ICommModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof joinGroup_args)
-        return this.equals((joinGroup_args)that);
+      if (that instanceof joinGroupMembers_args)
+        return this.equals((joinGroupMembers_args)that);
       return false;
     }
 
-    public boolean equals(joinGroup_args that) {
+    public boolean equals(joinGroupMembers_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -2606,12 +2766,12 @@ public class ICommModule {
           return false;
       }
 
-      boolean this_present_member = true;
-      boolean that_present_member = true;
-      if (this_present_member || that_present_member) {
-        if (!(this_present_member && that_present_member))
+      boolean this_present_size = true;
+      boolean that_present_size = true;
+      if (this_present_size || that_present_size) {
+        if (!(this_present_size && that_present_size))
           return false;
-        if (this.member != that.member)
+        if (this.size != that.size)
           return false;
       }
 
@@ -2626,13 +2786,13 @@ public class ICommModule {
       if (isSetGroup())
         hashCode = hashCode * 8191 + group.hashCode();
 
-      hashCode = hashCode * 8191 + ((member) ? 131071 : 524287);
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(size);
 
       return hashCode;
     }
 
     @Override
-    public int compareTo(joinGroup_args other) {
+    public int compareTo(joinGroupMembers_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -2649,12 +2809,12 @@ public class ICommModule {
           return lastComparison;
         }
       }
-      lastComparison = java.lang.Boolean.valueOf(isSetMember()).compareTo(other.isSetMember());
+      lastComparison = java.lang.Boolean.valueOf(isSetSize()).compareTo(other.isSetSize());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetMember()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.member, other.member);
+      if (isSetSize()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.size, other.size);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -2677,7 +2837,7 @@ public class ICommModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinGroup_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinGroupMembers_args(");
       boolean first = true;
 
       sb.append("group:");
@@ -2688,8 +2848,8 @@ public class ICommModule {
       }
       first = false;
       if (!first) sb.append(", ");
-      sb.append("member:");
-      sb.append(this.member);
+      sb.append("size:");
+      sb.append(this.size);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -2718,15 +2878,15 @@ public class ICommModule {
       }
     }
 
-    private static class joinGroup_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinGroup_argsStandardScheme getScheme() {
-        return new joinGroup_argsStandardScheme();
+    private static class joinGroupMembers_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public joinGroupMembers_argsStandardScheme getScheme() {
+        return new joinGroupMembers_argsStandardScheme();
       }
     }
 
-    private static class joinGroup_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinGroup_args> {
+    private static class joinGroupMembers_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinGroupMembers_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, joinGroup_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, joinGroupMembers_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -2744,10 +2904,10 @@ public class ICommModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // MEMBER
-              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
-                struct.member = iprot.readBool();
-                struct.setMemberIsSet(true);
+            case 2: // SIZE
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.size = iprot.readI64();
+                struct.setSizeIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -2763,7 +2923,7 @@ public class ICommModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, joinGroup_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, joinGroupMembers_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -2772,8 +2932,8 @@ public class ICommModule {
           oprot.writeString(struct.group);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(MEMBER_FIELD_DESC);
-        oprot.writeBool(struct.member);
+        oprot.writeFieldBegin(SIZE_FIELD_DESC);
+        oprot.writeI64(struct.size);
         oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
@@ -2781,35 +2941,35 @@ public class ICommModule {
 
     }
 
-    private static class joinGroup_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinGroup_argsTupleScheme getScheme() {
-        return new joinGroup_argsTupleScheme();
+    private static class joinGroupMembers_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public joinGroupMembers_argsTupleScheme getScheme() {
+        return new joinGroupMembers_argsTupleScheme();
       }
     }
 
-    private static class joinGroup_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinGroup_args> {
+    private static class joinGroupMembers_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinGroupMembers_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, joinGroup_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, joinGroupMembers_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetGroup()) {
           optionals.set(0);
         }
-        if (struct.isSetMember()) {
+        if (struct.isSetSize()) {
           optionals.set(1);
         }
         oprot.writeBitSet(optionals, 2);
         if (struct.isSetGroup()) {
           oprot.writeString(struct.group);
         }
-        if (struct.isSetMember()) {
-          oprot.writeBool(struct.member);
+        if (struct.isSetSize()) {
+          oprot.writeI64(struct.size);
         }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, joinGroup_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, joinGroupMembers_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
@@ -2817,8 +2977,8 @@ public class ICommModule {
           struct.setGroupIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.member = iprot.readBool();
-          struct.setMemberIsSet(true);
+          struct.size = iprot.readI64();
+          struct.setSizeIsSet(true);
         }
       }
     }
@@ -2828,13 +2988,13 @@ public class ICommModule {
     }
   }
 
-  public static class joinGroup_result implements org.apache.thrift.TBase<joinGroup_result, joinGroup_result._Fields>, java.io.Serializable, Cloneable, Comparable<joinGroup_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinGroup_result");
+  public static class joinGroupMembers_result implements org.apache.thrift.TBase<joinGroupMembers_result, joinGroupMembers_result._Fields>, java.io.Serializable, Cloneable, Comparable<joinGroupMembers_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinGroupMembers_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinGroup_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinGroup_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinGroupMembers_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinGroupMembers_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex; // required
 
@@ -2905,13 +3065,13 @@ public class ICommModule {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IExecutorException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinGroup_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinGroupMembers_result.class, metaDataMap);
     }
 
-    public joinGroup_result() {
+    public joinGroupMembers_result() {
     }
 
-    public joinGroup_result(
+    public joinGroupMembers_result(
       org.ignis.rpc.IExecutorException ex)
     {
       this();
@@ -2921,14 +3081,14 @@ public class ICommModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public joinGroup_result(joinGroup_result other) {
+    public joinGroupMembers_result(joinGroupMembers_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IExecutorException(other.ex);
       }
     }
 
-    public joinGroup_result deepCopy() {
-      return new joinGroup_result(this);
+    public joinGroupMembers_result deepCopy() {
+      return new joinGroupMembers_result(this);
     }
 
     @Override
@@ -2941,7 +3101,7 @@ public class ICommModule {
       return this.ex;
     }
 
-    public joinGroup_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
+    public joinGroupMembers_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
       this.ex = ex;
       return this;
     }
@@ -3001,12 +3161,12 @@ public class ICommModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof joinGroup_result)
-        return this.equals((joinGroup_result)that);
+      if (that instanceof joinGroupMembers_result)
+        return this.equals((joinGroupMembers_result)that);
       return false;
     }
 
-    public boolean equals(joinGroup_result that) {
+    public boolean equals(joinGroupMembers_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -3036,7 +3196,7 @@ public class ICommModule {
     }
 
     @Override
-    public int compareTo(joinGroup_result other) {
+    public int compareTo(joinGroupMembers_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -3071,7 +3231,7 @@ public class ICommModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinGroup_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinGroupMembers_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -3106,15 +3266,15 @@ public class ICommModule {
       }
     }
 
-    private static class joinGroup_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinGroup_resultStandardScheme getScheme() {
-        return new joinGroup_resultStandardScheme();
+    private static class joinGroupMembers_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public joinGroupMembers_resultStandardScheme getScheme() {
+        return new joinGroupMembers_resultStandardScheme();
       }
     }
 
-    private static class joinGroup_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinGroup_result> {
+    private static class joinGroupMembers_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinGroupMembers_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, joinGroup_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, joinGroupMembers_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -3144,7 +3304,7 @@ public class ICommModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, joinGroup_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, joinGroupMembers_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -3159,16 +3319,16 @@ public class ICommModule {
 
     }
 
-    private static class joinGroup_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinGroup_resultTupleScheme getScheme() {
-        return new joinGroup_resultTupleScheme();
+    private static class joinGroupMembers_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public joinGroupMembers_resultTupleScheme getScheme() {
+        return new joinGroupMembers_resultTupleScheme();
       }
     }
 
-    private static class joinGroup_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinGroup_result> {
+    private static class joinGroupMembers_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinGroupMembers_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, joinGroup_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, joinGroupMembers_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -3181,7 +3341,7 @@ public class ICommModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, joinGroup_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, joinGroupMembers_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
@@ -3197,17 +3357,22 @@ public class ICommModule {
     }
   }
 
-  public static class destroyGroup_args implements org.apache.thrift.TBase<destroyGroup_args, destroyGroup_args._Fields>, java.io.Serializable, Cloneable, Comparable<destroyGroup_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("destroyGroup_args");
+  public static class joinToGroup_args implements org.apache.thrift.TBase<joinToGroup_args, joinToGroup_args._Fields>, java.io.Serializable, Cloneable, Comparable<joinToGroup_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinToGroup_args");
 
+    private static final org.apache.thrift.protocol.TField GROUP_FIELD_DESC = new org.apache.thrift.protocol.TField("group", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRING, (short)2);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new destroyGroup_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new destroyGroup_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinToGroup_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinToGroup_argsTupleSchemeFactory();
 
+    private @org.apache.thrift.annotation.Nullable java.lang.String group; // required
+    private @org.apache.thrift.annotation.Nullable java.lang.String id; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      GROUP((short)1, "group"),
+      ID((short)2, "id");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -3223,6 +3388,10 @@ public class ICommModule {
       @org.apache.thrift.annotation.Nullable
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 1: // GROUP
+            return GROUP;
+          case 2: // ID
+            return ID;
           default:
             return null;
         }
@@ -3262,38 +3431,133 @@ public class ICommModule {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.GROUP, new org.apache.thrift.meta_data.FieldMetaData("group", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(destroyGroup_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinToGroup_args.class, metaDataMap);
     }
 
-    public destroyGroup_args() {
+    public joinToGroup_args() {
+    }
+
+    public joinToGroup_args(
+      java.lang.String group,
+      java.lang.String id)
+    {
+      this();
+      this.group = group;
+      this.id = id;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public destroyGroup_args(destroyGroup_args other) {
+    public joinToGroup_args(joinToGroup_args other) {
+      if (other.isSetGroup()) {
+        this.group = other.group;
+      }
+      if (other.isSetId()) {
+        this.id = other.id;
+      }
     }
 
-    public destroyGroup_args deepCopy() {
-      return new destroyGroup_args(this);
+    public joinToGroup_args deepCopy() {
+      return new joinToGroup_args(this);
     }
 
     @Override
     public void clear() {
+      this.group = null;
+      this.id = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getGroup() {
+      return this.group;
+    }
+
+    public joinToGroup_args setGroup(@org.apache.thrift.annotation.Nullable java.lang.String group) {
+      this.group = group;
+      return this;
+    }
+
+    public void unsetGroup() {
+      this.group = null;
+    }
+
+    /** Returns true if field group is set (has been assigned a value) and false otherwise */
+    public boolean isSetGroup() {
+      return this.group != null;
+    }
+
+    public void setGroupIsSet(boolean value) {
+      if (!value) {
+        this.group = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getId() {
+      return this.id;
+    }
+
+    public joinToGroup_args setId(@org.apache.thrift.annotation.Nullable java.lang.String id) {
+      this.id = id;
+      return this;
+    }
+
+    public void unsetId() {
+      this.id = null;
+    }
+
+    /** Returns true if field id is set (has been assigned a value) and false otherwise */
+    public boolean isSetId() {
+      return this.id != null;
+    }
+
+    public void setIdIsSet(boolean value) {
+      if (!value) {
+        this.id = null;
+      }
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
+      case GROUP:
+        if (value == null) {
+          unsetGroup();
+        } else {
+          setGroup((java.lang.String)value);
+        }
+        break;
+
+      case ID:
+        if (value == null) {
+          unsetId();
+        } else {
+          setId((java.lang.String)value);
+        }
+        break;
+
       }
     }
 
     @org.apache.thrift.annotation.Nullable
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case GROUP:
+        return getGroup();
+
+      case ID:
+        return getId();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -3305,6 +3569,1638 @@ public class ICommModule {
       }
 
       switch (field) {
+      case GROUP:
+        return isSetGroup();
+      case ID:
+        return isSetId();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof joinToGroup_args)
+        return this.equals((joinToGroup_args)that);
+      return false;
+    }
+
+    public boolean equals(joinToGroup_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_group = true && this.isSetGroup();
+      boolean that_present_group = true && that.isSetGroup();
+      if (this_present_group || that_present_group) {
+        if (!(this_present_group && that_present_group))
+          return false;
+        if (!this.group.equals(that.group))
+          return false;
+      }
+
+      boolean this_present_id = true && this.isSetId();
+      boolean that_present_id = true && that.isSetId();
+      if (this_present_id || that_present_id) {
+        if (!(this_present_id && that_present_id))
+          return false;
+        if (!this.id.equals(that.id))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetGroup()) ? 131071 : 524287);
+      if (isSetGroup())
+        hashCode = hashCode * 8191 + group.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
+      if (isSetId())
+        hashCode = hashCode * 8191 + id.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(joinToGroup_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetGroup()).compareTo(other.isSetGroup());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetGroup()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.group, other.group);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinToGroup_args(");
+      boolean first = true;
+
+      sb.append("group:");
+      if (this.group == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.group);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("id:");
+      if (this.id == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.id);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class joinToGroup_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public joinToGroup_argsStandardScheme getScheme() {
+        return new joinToGroup_argsStandardScheme();
+      }
+    }
+
+    private static class joinToGroup_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinToGroup_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, joinToGroup_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // GROUP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.group = iprot.readString();
+                struct.setGroupIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.id = iprot.readString();
+                struct.setIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, joinToGroup_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.group != null) {
+          oprot.writeFieldBegin(GROUP_FIELD_DESC);
+          oprot.writeString(struct.group);
+          oprot.writeFieldEnd();
+        }
+        if (struct.id != null) {
+          oprot.writeFieldBegin(ID_FIELD_DESC);
+          oprot.writeString(struct.id);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class joinToGroup_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public joinToGroup_argsTupleScheme getScheme() {
+        return new joinToGroup_argsTupleScheme();
+      }
+    }
+
+    private static class joinToGroup_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinToGroup_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, joinToGroup_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetGroup()) {
+          optionals.set(0);
+        }
+        if (struct.isSetId()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetGroup()) {
+          oprot.writeString(struct.group);
+        }
+        if (struct.isSetId()) {
+          oprot.writeString(struct.id);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, joinToGroup_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.group = iprot.readString();
+          struct.setGroupIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.id = iprot.readString();
+          struct.setIdIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class joinToGroup_result implements org.apache.thrift.TBase<joinToGroup_result, joinToGroup_result._Fields>, java.io.Serializable, Cloneable, Comparable<joinToGroup_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinToGroup_result");
+
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinToGroup_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinToGroup_resultTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      EX((short)1, "ex");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // EX
+            return EX;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IExecutorException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinToGroup_result.class, metaDataMap);
+    }
+
+    public joinToGroup_result() {
+    }
+
+    public joinToGroup_result(
+      org.ignis.rpc.IExecutorException ex)
+    {
+      this();
+      this.ex = ex;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public joinToGroup_result(joinToGroup_result other) {
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IExecutorException(other.ex);
+      }
+    }
+
+    public joinToGroup_result deepCopy() {
+      return new joinToGroup_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.ex = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.IExecutorException getEx() {
+      return this.ex;
+    }
+
+    public joinToGroup_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IExecutorException)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case EX:
+        return getEx();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case EX:
+        return isSetEx();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof joinToGroup_result)
+        return this.equals((joinToGroup_result)that);
+      return false;
+    }
+
+    public boolean equals(joinToGroup_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(joinToGroup_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinToGroup_result(");
+      boolean first = true;
+
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class joinToGroup_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public joinToGroup_resultStandardScheme getScheme() {
+        return new joinToGroup_resultStandardScheme();
+      }
+    }
+
+    private static class joinToGroup_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinToGroup_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, joinToGroup_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IExecutorException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, joinToGroup_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class joinToGroup_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public joinToGroup_resultTupleScheme getScheme() {
+        return new joinToGroup_resultTupleScheme();
+      }
+    }
+
+    private static class joinToGroup_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinToGroup_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, joinToGroup_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetEx()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, joinToGroup_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.ex = new org.ignis.rpc.IExecutorException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class hasGroup_args implements org.apache.thrift.TBase<hasGroup_args, hasGroup_args._Fields>, java.io.Serializable, Cloneable, Comparable<hasGroup_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("hasGroup_args");
+
+    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRING, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new hasGroup_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new hasGroup_argsTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable java.lang.String id; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      ID((short)1, "id");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // ID
+            return ID;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(hasGroup_args.class, metaDataMap);
+    }
+
+    public hasGroup_args() {
+    }
+
+    public hasGroup_args(
+      java.lang.String id)
+    {
+      this();
+      this.id = id;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public hasGroup_args(hasGroup_args other) {
+      if (other.isSetId()) {
+        this.id = other.id;
+      }
+    }
+
+    public hasGroup_args deepCopy() {
+      return new hasGroup_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.id = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getId() {
+      return this.id;
+    }
+
+    public hasGroup_args setId(@org.apache.thrift.annotation.Nullable java.lang.String id) {
+      this.id = id;
+      return this;
+    }
+
+    public void unsetId() {
+      this.id = null;
+    }
+
+    /** Returns true if field id is set (has been assigned a value) and false otherwise */
+    public boolean isSetId() {
+      return this.id != null;
+    }
+
+    public void setIdIsSet(boolean value) {
+      if (!value) {
+        this.id = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case ID:
+        if (value == null) {
+          unsetId();
+        } else {
+          setId((java.lang.String)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case ID:
+        return getId();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case ID:
+        return isSetId();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof hasGroup_args)
+        return this.equals((hasGroup_args)that);
+      return false;
+    }
+
+    public boolean equals(hasGroup_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_id = true && this.isSetId();
+      boolean that_present_id = true && that.isSetId();
+      if (this_present_id || that_present_id) {
+        if (!(this_present_id && that_present_id))
+          return false;
+        if (!this.id.equals(that.id))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
+      if (isSetId())
+        hashCode = hashCode * 8191 + id.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(hasGroup_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("hasGroup_args(");
+      boolean first = true;
+
+      sb.append("id:");
+      if (this.id == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.id);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class hasGroup_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public hasGroup_argsStandardScheme getScheme() {
+        return new hasGroup_argsStandardScheme();
+      }
+    }
+
+    private static class hasGroup_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<hasGroup_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, hasGroup_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.id = iprot.readString();
+                struct.setIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, hasGroup_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.id != null) {
+          oprot.writeFieldBegin(ID_FIELD_DESC);
+          oprot.writeString(struct.id);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class hasGroup_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public hasGroup_argsTupleScheme getScheme() {
+        return new hasGroup_argsTupleScheme();
+      }
+    }
+
+    private static class hasGroup_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<hasGroup_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, hasGroup_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetId()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetId()) {
+          oprot.writeString(struct.id);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, hasGroup_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.id = iprot.readString();
+          struct.setIdIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class hasGroup_result implements org.apache.thrift.TBase<hasGroup_result, hasGroup_result._Fields>, java.io.Serializable, Cloneable, Comparable<hasGroup_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("hasGroup_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.BOOL, (short)0);
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new hasGroup_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new hasGroup_resultTupleSchemeFactory();
+
+    private boolean success; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX((short)1, "ex");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          case 1: // EX
+            return EX;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IExecutorException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(hasGroup_result.class, metaDataMap);
+    }
+
+    public hasGroup_result() {
+    }
+
+    public hasGroup_result(
+      boolean success,
+      org.ignis.rpc.IExecutorException ex)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+      this.ex = ex;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public hasGroup_result(hasGroup_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IExecutorException(other.ex);
+      }
+    }
+
+    public hasGroup_result deepCopy() {
+      return new hasGroup_result(this);
+    }
+
+    @Override
+    public void clear() {
+      setSuccessIsSet(false);
+      this.success = false;
+      this.ex = null;
+    }
+
+    public boolean isSuccess() {
+      return this.success;
+    }
+
+    public hasGroup_result setSuccess(boolean success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.IExecutorException getEx() {
+      return this.ex;
+    }
+
+    public hasGroup_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.Boolean)value);
+        }
+        break;
+
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IExecutorException)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return isSuccess();
+
+      case EX:
+        return getEx();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      case EX:
+        return isSetEx();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof hasGroup_result)
+        return this.equals((hasGroup_result)that);
+      return false;
+    }
+
+    public boolean equals(hasGroup_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((success) ? 131071 : 524287);
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(hasGroup_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("hasGroup_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class hasGroup_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public hasGroup_resultStandardScheme getScheme() {
+        return new hasGroup_resultStandardScheme();
+      }
+    }
+
+    private static class hasGroup_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<hasGroup_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, hasGroup_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.success = iprot.readBool();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IExecutorException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, hasGroup_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeBool(struct.success);
+          oprot.writeFieldEnd();
+        }
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class hasGroup_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public hasGroup_resultTupleScheme getScheme() {
+        return new hasGroup_resultTupleScheme();
+      }
+    }
+
+    private static class hasGroup_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<hasGroup_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, hasGroup_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        if (struct.isSetEx()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetSuccess()) {
+          oprot.writeBool(struct.success);
+        }
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, hasGroup_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.success = iprot.readBool();
+          struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.ex = new org.ignis.rpc.IExecutorException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class destroyGroup_args implements org.apache.thrift.TBase<destroyGroup_args, destroyGroup_args._Fields>, java.io.Serializable, Cloneable, Comparable<destroyGroup_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("destroyGroup_args");
+
+    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRING, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new destroyGroup_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new destroyGroup_argsTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable java.lang.String id; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      ID((short)1, "id");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // ID
+            return ID;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(destroyGroup_args.class, metaDataMap);
+    }
+
+    public destroyGroup_args() {
+    }
+
+    public destroyGroup_args(
+      java.lang.String id)
+    {
+      this();
+      this.id = id;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public destroyGroup_args(destroyGroup_args other) {
+      if (other.isSetId()) {
+        this.id = other.id;
+      }
+    }
+
+    public destroyGroup_args deepCopy() {
+      return new destroyGroup_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.id = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getId() {
+      return this.id;
+    }
+
+    public destroyGroup_args setId(@org.apache.thrift.annotation.Nullable java.lang.String id) {
+      this.id = id;
+      return this;
+    }
+
+    public void unsetId() {
+      this.id = null;
+    }
+
+    /** Returns true if field id is set (has been assigned a value) and false otherwise */
+    public boolean isSetId() {
+      return this.id != null;
+    }
+
+    public void setIdIsSet(boolean value) {
+      if (!value) {
+        this.id = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case ID:
+        if (value == null) {
+          unsetId();
+        } else {
+          setId((java.lang.String)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case ID:
+        return getId();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case ID:
+        return isSetId();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -3324,12 +5220,25 @@ public class ICommModule {
       if (this == that)
         return true;
 
+      boolean this_present_id = true && this.isSetId();
+      boolean that_present_id = true && that.isSetId();
+      if (this_present_id || that_present_id) {
+        if (!(this_present_id && that_present_id))
+          return false;
+        if (!this.id.equals(that.id))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
+      if (isSetId())
+        hashCode = hashCode * 8191 + id.hashCode();
 
       return hashCode;
     }
@@ -3342,6 +5251,16 @@ public class ICommModule {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -3363,6 +5282,13 @@ public class ICommModule {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("destroyGroup_args(");
       boolean first = true;
 
+      sb.append("id:");
+      if (this.id == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.id);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -3406,6 +5332,14 @@ public class ICommModule {
             break;
           }
           switch (schemeField.id) {
+            case 1: // ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.id = iprot.readString();
+                struct.setIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3421,6 +5355,11 @@ public class ICommModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.id != null) {
+          oprot.writeFieldBegin(ID_FIELD_DESC);
+          oprot.writeString(struct.id);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3438,11 +5377,24 @@ public class ICommModule {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, destroyGroup_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetId()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetId()) {
+          oprot.writeString(struct.id);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, destroyGroup_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.id = iprot.readString();
+          struct.setIdIsSet(true);
+        }
       }
     }
 
@@ -3820,12 +5772,12 @@ public class ICommModule {
     }
   }
 
-  public static class createDriverGroup_args implements org.apache.thrift.TBase<createDriverGroup_args, createDriverGroup_args._Fields>, java.io.Serializable, Cloneable, Comparable<createDriverGroup_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("createDriverGroup_args");
+  public static class destroyGroups_args implements org.apache.thrift.TBase<destroyGroups_args, destroyGroups_args._Fields>, java.io.Serializable, Cloneable, Comparable<destroyGroups_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("destroyGroups_args");
 
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new createDriverGroup_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new createDriverGroup_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new destroyGroups_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new destroyGroups_argsTupleSchemeFactory();
 
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -3889,20 +5841,20 @@ public class ICommModule {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(createDriverGroup_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(destroyGroups_args.class, metaDataMap);
     }
 
-    public createDriverGroup_args() {
+    public destroyGroups_args() {
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public createDriverGroup_args(createDriverGroup_args other) {
+    public destroyGroups_args(destroyGroups_args other) {
     }
 
-    public createDriverGroup_args deepCopy() {
-      return new createDriverGroup_args(this);
+    public destroyGroups_args deepCopy() {
+      return new destroyGroups_args(this);
     }
 
     @Override
@@ -3936,12 +5888,12 @@ public class ICommModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof createDriverGroup_args)
-        return this.equals((createDriverGroup_args)that);
+      if (that instanceof destroyGroups_args)
+        return this.equals((destroyGroups_args)that);
       return false;
     }
 
-    public boolean equals(createDriverGroup_args that) {
+    public boolean equals(destroyGroups_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -3958,7 +5910,7 @@ public class ICommModule {
     }
 
     @Override
-    public int compareTo(createDriverGroup_args other) {
+    public int compareTo(destroyGroups_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -3983,7 +5935,7 @@ public class ICommModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("createDriverGroup_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("destroyGroups_args(");
       boolean first = true;
 
       sb.append(")");
@@ -4011,15 +5963,15 @@ public class ICommModule {
       }
     }
 
-    private static class createDriverGroup_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public createDriverGroup_argsStandardScheme getScheme() {
-        return new createDriverGroup_argsStandardScheme();
+    private static class destroyGroups_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public destroyGroups_argsStandardScheme getScheme() {
+        return new destroyGroups_argsStandardScheme();
       }
     }
 
-    private static class createDriverGroup_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<createDriverGroup_args> {
+    private static class destroyGroups_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<destroyGroups_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, createDriverGroup_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, destroyGroups_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -4040,7 +5992,7 @@ public class ICommModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, createDriverGroup_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, destroyGroups_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -4050,21 +6002,21 @@ public class ICommModule {
 
     }
 
-    private static class createDriverGroup_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public createDriverGroup_argsTupleScheme getScheme() {
-        return new createDriverGroup_argsTupleScheme();
+    private static class destroyGroups_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public destroyGroups_argsTupleScheme getScheme() {
+        return new destroyGroups_argsTupleScheme();
       }
     }
 
-    private static class createDriverGroup_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<createDriverGroup_args> {
+    private static class destroyGroups_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<destroyGroups_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, createDriverGroup_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, destroyGroups_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, createDriverGroup_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, destroyGroups_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
       }
     }
@@ -4074,13 +6026,13 @@ public class ICommModule {
     }
   }
 
-  public static class createDriverGroup_result implements org.apache.thrift.TBase<createDriverGroup_result, createDriverGroup_result._Fields>, java.io.Serializable, Cloneable, Comparable<createDriverGroup_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("createDriverGroup_result");
+  public static class destroyGroups_result implements org.apache.thrift.TBase<destroyGroups_result, destroyGroups_result._Fields>, java.io.Serializable, Cloneable, Comparable<destroyGroups_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("destroyGroups_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new createDriverGroup_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new createDriverGroup_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new destroyGroups_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new destroyGroups_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex; // required
 
@@ -4151,13 +6103,13 @@ public class ICommModule {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IExecutorException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(createDriverGroup_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(destroyGroups_result.class, metaDataMap);
     }
 
-    public createDriverGroup_result() {
+    public destroyGroups_result() {
     }
 
-    public createDriverGroup_result(
+    public destroyGroups_result(
       org.ignis.rpc.IExecutorException ex)
     {
       this();
@@ -4167,14 +6119,14 @@ public class ICommModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public createDriverGroup_result(createDriverGroup_result other) {
+    public destroyGroups_result(destroyGroups_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IExecutorException(other.ex);
       }
     }
 
-    public createDriverGroup_result deepCopy() {
-      return new createDriverGroup_result(this);
+    public destroyGroups_result deepCopy() {
+      return new destroyGroups_result(this);
     }
 
     @Override
@@ -4187,7 +6139,7 @@ public class ICommModule {
       return this.ex;
     }
 
-    public createDriverGroup_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
+    public destroyGroups_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
       this.ex = ex;
       return this;
     }
@@ -4247,12 +6199,12 @@ public class ICommModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof createDriverGroup_result)
-        return this.equals((createDriverGroup_result)that);
+      if (that instanceof destroyGroups_result)
+        return this.equals((destroyGroups_result)that);
       return false;
     }
 
-    public boolean equals(createDriverGroup_result that) {
+    public boolean equals(destroyGroups_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -4282,7 +6234,7 @@ public class ICommModule {
     }
 
     @Override
-    public int compareTo(createDriverGroup_result other) {
+    public int compareTo(destroyGroups_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -4317,7 +6269,7 @@ public class ICommModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("createDriverGroup_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("destroyGroups_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -4352,15 +6304,15 @@ public class ICommModule {
       }
     }
 
-    private static class createDriverGroup_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public createDriverGroup_resultStandardScheme getScheme() {
-        return new createDriverGroup_resultStandardScheme();
+    private static class destroyGroups_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public destroyGroups_resultStandardScheme getScheme() {
+        return new destroyGroups_resultStandardScheme();
       }
     }
 
-    private static class createDriverGroup_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<createDriverGroup_result> {
+    private static class destroyGroups_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<destroyGroups_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, createDriverGroup_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, destroyGroups_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -4390,7 +6342,7 @@ public class ICommModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, createDriverGroup_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, destroyGroups_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -4405,16 +6357,16 @@ public class ICommModule {
 
     }
 
-    private static class createDriverGroup_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public createDriverGroup_resultTupleScheme getScheme() {
-        return new createDriverGroup_resultTupleScheme();
+    private static class destroyGroups_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public destroyGroups_resultTupleScheme getScheme() {
+        return new destroyGroups_resultTupleScheme();
       }
     }
 
-    private static class createDriverGroup_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<createDriverGroup_result> {
+    private static class destroyGroups_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<destroyGroups_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, createDriverGroup_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, destroyGroups_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -4427,1670 +6379,7 @@ public class ICommModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, createDriverGroup_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IExecutorException();
-          struct.ex.read(iprot);
-          struct.setExIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class joinDriverGroup_args implements org.apache.thrift.TBase<joinDriverGroup_args, joinDriverGroup_args._Fields>, java.io.Serializable, Cloneable, Comparable<joinDriverGroup_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinDriverGroup_args");
-
-    private static final org.apache.thrift.protocol.TField GROUP_FIELD_DESC = new org.apache.thrift.protocol.TField("group", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField MEMBER_FIELD_DESC = new org.apache.thrift.protocol.TField("member", org.apache.thrift.protocol.TType.BOOL, (short)2);
-    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)3);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinDriverGroup_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinDriverGroup_argsTupleSchemeFactory();
-
-    private @org.apache.thrift.annotation.Nullable java.lang.String group; // required
-    private boolean member; // required
-    private long id; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      GROUP((short)1, "group"),
-      MEMBER((short)2, "member"),
-      ID((short)3, "id");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // GROUP
-            return GROUP;
-          case 2: // MEMBER
-            return MEMBER;
-          case 3: // ID
-            return ID;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    private static final int __MEMBER_ISSET_ID = 0;
-    private static final int __ID_ISSET_ID = 1;
-    private byte __isset_bitfield = 0;
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.GROUP, new org.apache.thrift.meta_data.FieldMetaData("group", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.MEMBER, new org.apache.thrift.meta_data.FieldMetaData("member", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
-      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinDriverGroup_args.class, metaDataMap);
-    }
-
-    public joinDriverGroup_args() {
-    }
-
-    public joinDriverGroup_args(
-      java.lang.String group,
-      boolean member,
-      long id)
-    {
-      this();
-      this.group = group;
-      this.member = member;
-      setMemberIsSet(true);
-      this.id = id;
-      setIdIsSet(true);
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public joinDriverGroup_args(joinDriverGroup_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      if (other.isSetGroup()) {
-        this.group = other.group;
-      }
-      this.member = other.member;
-      this.id = other.id;
-    }
-
-    public joinDriverGroup_args deepCopy() {
-      return new joinDriverGroup_args(this);
-    }
-
-    @Override
-    public void clear() {
-      this.group = null;
-      setMemberIsSet(false);
-      this.member = false;
-      setIdIsSet(false);
-      this.id = 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.String getGroup() {
-      return this.group;
-    }
-
-    public joinDriverGroup_args setGroup(@org.apache.thrift.annotation.Nullable java.lang.String group) {
-      this.group = group;
-      return this;
-    }
-
-    public void unsetGroup() {
-      this.group = null;
-    }
-
-    /** Returns true if field group is set (has been assigned a value) and false otherwise */
-    public boolean isSetGroup() {
-      return this.group != null;
-    }
-
-    public void setGroupIsSet(boolean value) {
-      if (!value) {
-        this.group = null;
-      }
-    }
-
-    public boolean isMember() {
-      return this.member;
-    }
-
-    public joinDriverGroup_args setMember(boolean member) {
-      this.member = member;
-      setMemberIsSet(true);
-      return this;
-    }
-
-    public void unsetMember() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __MEMBER_ISSET_ID);
-    }
-
-    /** Returns true if field member is set (has been assigned a value) and false otherwise */
-    public boolean isSetMember() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __MEMBER_ISSET_ID);
-    }
-
-    public void setMemberIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __MEMBER_ISSET_ID, value);
-    }
-
-    public long getId() {
-      return this.id;
-    }
-
-    public joinDriverGroup_args setId(long id) {
-      this.id = id;
-      setIdIsSet(true);
-      return this;
-    }
-
-    public void unsetId() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __ID_ISSET_ID);
-    }
-
-    /** Returns true if field id is set (has been assigned a value) and false otherwise */
-    public boolean isSetId() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __ID_ISSET_ID);
-    }
-
-    public void setIdIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case GROUP:
-        if (value == null) {
-          unsetGroup();
-        } else {
-          setGroup((java.lang.String)value);
-        }
-        break;
-
-      case MEMBER:
-        if (value == null) {
-          unsetMember();
-        } else {
-          setMember((java.lang.Boolean)value);
-        }
-        break;
-
-      case ID:
-        if (value == null) {
-          unsetId();
-        } else {
-          setId((java.lang.Long)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case GROUP:
-        return getGroup();
-
-      case MEMBER:
-        return isMember();
-
-      case ID:
-        return getId();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case GROUP:
-        return isSetGroup();
-      case MEMBER:
-        return isSetMember();
-      case ID:
-        return isSetId();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof joinDriverGroup_args)
-        return this.equals((joinDriverGroup_args)that);
-      return false;
-    }
-
-    public boolean equals(joinDriverGroup_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_group = true && this.isSetGroup();
-      boolean that_present_group = true && that.isSetGroup();
-      if (this_present_group || that_present_group) {
-        if (!(this_present_group && that_present_group))
-          return false;
-        if (!this.group.equals(that.group))
-          return false;
-      }
-
-      boolean this_present_member = true;
-      boolean that_present_member = true;
-      if (this_present_member || that_present_member) {
-        if (!(this_present_member && that_present_member))
-          return false;
-        if (this.member != that.member)
-          return false;
-      }
-
-      boolean this_present_id = true;
-      boolean that_present_id = true;
-      if (this_present_id || that_present_id) {
-        if (!(this_present_id && that_present_id))
-          return false;
-        if (this.id != that.id)
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetGroup()) ? 131071 : 524287);
-      if (isSetGroup())
-        hashCode = hashCode * 8191 + group.hashCode();
-
-      hashCode = hashCode * 8191 + ((member) ? 131071 : 524287);
-
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(id);
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(joinDriverGroup_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetGroup()).compareTo(other.isSetGroup());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetGroup()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.group, other.group);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetMember()).compareTo(other.isSetMember());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetMember()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.member, other.member);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetId()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-    }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinDriverGroup_args(");
-      boolean first = true;
-
-      sb.append("group:");
-      if (this.group == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.group);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("member:");
-      sb.append(this.member);
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("id:");
-      sb.append(this.id);
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class joinDriverGroup_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinDriverGroup_argsStandardScheme getScheme() {
-        return new joinDriverGroup_argsStandardScheme();
-      }
-    }
-
-    private static class joinDriverGroup_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinDriverGroup_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, joinDriverGroup_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // GROUP
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.group = iprot.readString();
-                struct.setGroupIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 2: // MEMBER
-              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
-                struct.member = iprot.readBool();
-                struct.setMemberIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 3: // ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.id = iprot.readI64();
-                struct.setIdIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, joinDriverGroup_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.group != null) {
-          oprot.writeFieldBegin(GROUP_FIELD_DESC);
-          oprot.writeString(struct.group);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldBegin(MEMBER_FIELD_DESC);
-        oprot.writeBool(struct.member);
-        oprot.writeFieldEnd();
-        oprot.writeFieldBegin(ID_FIELD_DESC);
-        oprot.writeI64(struct.id);
-        oprot.writeFieldEnd();
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class joinDriverGroup_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinDriverGroup_argsTupleScheme getScheme() {
-        return new joinDriverGroup_argsTupleScheme();
-      }
-    }
-
-    private static class joinDriverGroup_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinDriverGroup_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, joinDriverGroup_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetGroup()) {
-          optionals.set(0);
-        }
-        if (struct.isSetMember()) {
-          optionals.set(1);
-        }
-        if (struct.isSetId()) {
-          optionals.set(2);
-        }
-        oprot.writeBitSet(optionals, 3);
-        if (struct.isSetGroup()) {
-          oprot.writeString(struct.group);
-        }
-        if (struct.isSetMember()) {
-          oprot.writeBool(struct.member);
-        }
-        if (struct.isSetId()) {
-          oprot.writeI64(struct.id);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, joinDriverGroup_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
-        if (incoming.get(0)) {
-          struct.group = iprot.readString();
-          struct.setGroupIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.member = iprot.readBool();
-          struct.setMemberIsSet(true);
-        }
-        if (incoming.get(2)) {
-          struct.id = iprot.readI64();
-          struct.setIdIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class joinDriverGroup_result implements org.apache.thrift.TBase<joinDriverGroup_result, joinDriverGroup_result._Fields>, java.io.Serializable, Cloneable, Comparable<joinDriverGroup_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("joinDriverGroup_result");
-
-    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new joinDriverGroup_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new joinDriverGroup_resultTupleSchemeFactory();
-
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      EX((short)1, "ex");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // EX
-            return EX;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IExecutorException.class)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(joinDriverGroup_result.class, metaDataMap);
-    }
-
-    public joinDriverGroup_result() {
-    }
-
-    public joinDriverGroup_result(
-      org.ignis.rpc.IExecutorException ex)
-    {
-      this();
-      this.ex = ex;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public joinDriverGroup_result(joinDriverGroup_result other) {
-      if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IExecutorException(other.ex);
-      }
-    }
-
-    public joinDriverGroup_result deepCopy() {
-      return new joinDriverGroup_result(this);
-    }
-
-    @Override
-    public void clear() {
-      this.ex = null;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IExecutorException getEx() {
-      return this.ex;
-    }
-
-    public joinDriverGroup_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
-      this.ex = ex;
-      return this;
-    }
-
-    public void unsetEx() {
-      this.ex = null;
-    }
-
-    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
-    public boolean isSetEx() {
-      return this.ex != null;
-    }
-
-    public void setExIsSet(boolean value) {
-      if (!value) {
-        this.ex = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case EX:
-        if (value == null) {
-          unsetEx();
-        } else {
-          setEx((org.ignis.rpc.IExecutorException)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case EX:
-        return getEx();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case EX:
-        return isSetEx();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof joinDriverGroup_result)
-        return this.equals((joinDriverGroup_result)that);
-      return false;
-    }
-
-    public boolean equals(joinDriverGroup_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_ex = true && this.isSetEx();
-      boolean that_present_ex = true && that.isSetEx();
-      if (this_present_ex || that_present_ex) {
-        if (!(this_present_ex && that_present_ex))
-          return false;
-        if (!this.ex.equals(that.ex))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
-      if (isSetEx())
-        hashCode = hashCode * 8191 + ex.hashCode();
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(joinDriverGroup_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetEx()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-      }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("joinDriverGroup_result(");
-      boolean first = true;
-
-      sb.append("ex:");
-      if (this.ex == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.ex);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class joinDriverGroup_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinDriverGroup_resultStandardScheme getScheme() {
-        return new joinDriverGroup_resultStandardScheme();
-      }
-    }
-
-    private static class joinDriverGroup_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<joinDriverGroup_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, joinDriverGroup_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // EX
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IExecutorException();
-                struct.ex.read(iprot);
-                struct.setExIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, joinDriverGroup_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.ex != null) {
-          oprot.writeFieldBegin(EX_FIELD_DESC);
-          struct.ex.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class joinDriverGroup_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public joinDriverGroup_resultTupleScheme getScheme() {
-        return new joinDriverGroup_resultTupleScheme();
-      }
-    }
-
-    private static class joinDriverGroup_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<joinDriverGroup_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, joinDriverGroup_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetEx()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetEx()) {
-          struct.ex.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, joinDriverGroup_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IExecutorException();
-          struct.ex.read(iprot);
-          struct.setExIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class destroyDriverGroup_args implements org.apache.thrift.TBase<destroyDriverGroup_args, destroyDriverGroup_args._Fields>, java.io.Serializable, Cloneable, Comparable<destroyDriverGroup_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("destroyDriverGroup_args");
-
-    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)1);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new destroyDriverGroup_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new destroyDriverGroup_argsTupleSchemeFactory();
-
-    private long id; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      ID((short)1, "id");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // ID
-            return ID;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    private static final int __ID_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(destroyDriverGroup_args.class, metaDataMap);
-    }
-
-    public destroyDriverGroup_args() {
-    }
-
-    public destroyDriverGroup_args(
-      long id)
-    {
-      this();
-      this.id = id;
-      setIdIsSet(true);
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public destroyDriverGroup_args(destroyDriverGroup_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.id = other.id;
-    }
-
-    public destroyDriverGroup_args deepCopy() {
-      return new destroyDriverGroup_args(this);
-    }
-
-    @Override
-    public void clear() {
-      setIdIsSet(false);
-      this.id = 0;
-    }
-
-    public long getId() {
-      return this.id;
-    }
-
-    public destroyDriverGroup_args setId(long id) {
-      this.id = id;
-      setIdIsSet(true);
-      return this;
-    }
-
-    public void unsetId() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __ID_ISSET_ID);
-    }
-
-    /** Returns true if field id is set (has been assigned a value) and false otherwise */
-    public boolean isSetId() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __ID_ISSET_ID);
-    }
-
-    public void setIdIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case ID:
-        if (value == null) {
-          unsetId();
-        } else {
-          setId((java.lang.Long)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case ID:
-        return getId();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case ID:
-        return isSetId();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof destroyDriverGroup_args)
-        return this.equals((destroyDriverGroup_args)that);
-      return false;
-    }
-
-    public boolean equals(destroyDriverGroup_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_id = true;
-      boolean that_present_id = true;
-      if (this_present_id || that_present_id) {
-        if (!(this_present_id && that_present_id))
-          return false;
-        if (this.id != that.id)
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(id);
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(destroyDriverGroup_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetId()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-    }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("destroyDriverGroup_args(");
-      boolean first = true;
-
-      sb.append("id:");
-      sb.append(this.id);
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class destroyDriverGroup_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public destroyDriverGroup_argsStandardScheme getScheme() {
-        return new destroyDriverGroup_argsStandardScheme();
-      }
-    }
-
-    private static class destroyDriverGroup_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<destroyDriverGroup_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, destroyDriverGroup_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.id = iprot.readI64();
-                struct.setIdIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, destroyDriverGroup_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(ID_FIELD_DESC);
-        oprot.writeI64(struct.id);
-        oprot.writeFieldEnd();
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class destroyDriverGroup_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public destroyDriverGroup_argsTupleScheme getScheme() {
-        return new destroyDriverGroup_argsTupleScheme();
-      }
-    }
-
-    private static class destroyDriverGroup_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<destroyDriverGroup_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, destroyDriverGroup_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetId()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetId()) {
-          oprot.writeI64(struct.id);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, destroyDriverGroup_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.id = iprot.readI64();
-          struct.setIdIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class destroyDriverGroup_result implements org.apache.thrift.TBase<destroyDriverGroup_result, destroyDriverGroup_result._Fields>, java.io.Serializable, Cloneable, Comparable<destroyDriverGroup_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("destroyDriverGroup_result");
-
-    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new destroyDriverGroup_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new destroyDriverGroup_resultTupleSchemeFactory();
-
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      EX((short)1, "ex");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // EX
-            return EX;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IExecutorException.class)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(destroyDriverGroup_result.class, metaDataMap);
-    }
-
-    public destroyDriverGroup_result() {
-    }
-
-    public destroyDriverGroup_result(
-      org.ignis.rpc.IExecutorException ex)
-    {
-      this();
-      this.ex = ex;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public destroyDriverGroup_result(destroyDriverGroup_result other) {
-      if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IExecutorException(other.ex);
-      }
-    }
-
-    public destroyDriverGroup_result deepCopy() {
-      return new destroyDriverGroup_result(this);
-    }
-
-    @Override
-    public void clear() {
-      this.ex = null;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IExecutorException getEx() {
-      return this.ex;
-    }
-
-    public destroyDriverGroup_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
-      this.ex = ex;
-      return this;
-    }
-
-    public void unsetEx() {
-      this.ex = null;
-    }
-
-    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
-    public boolean isSetEx() {
-      return this.ex != null;
-    }
-
-    public void setExIsSet(boolean value) {
-      if (!value) {
-        this.ex = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case EX:
-        if (value == null) {
-          unsetEx();
-        } else {
-          setEx((org.ignis.rpc.IExecutorException)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case EX:
-        return getEx();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case EX:
-        return isSetEx();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof destroyDriverGroup_result)
-        return this.equals((destroyDriverGroup_result)that);
-      return false;
-    }
-
-    public boolean equals(destroyDriverGroup_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_ex = true && this.isSetEx();
-      boolean that_present_ex = true && that.isSetEx();
-      if (this_present_ex || that_present_ex) {
-        if (!(this_present_ex && that_present_ex))
-          return false;
-        if (!this.ex.equals(that.ex))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
-      if (isSetEx())
-        hashCode = hashCode * 8191 + ex.hashCode();
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(destroyDriverGroup_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetEx()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-      }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("destroyDriverGroup_result(");
-      boolean first = true;
-
-      sb.append("ex:");
-      if (this.ex == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.ex);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class destroyDriverGroup_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public destroyDriverGroup_resultStandardScheme getScheme() {
-        return new destroyDriverGroup_resultStandardScheme();
-      }
-    }
-
-    private static class destroyDriverGroup_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<destroyDriverGroup_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, destroyDriverGroup_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // EX
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IExecutorException();
-                struct.ex.read(iprot);
-                struct.setExIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, destroyDriverGroup_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.ex != null) {
-          oprot.writeFieldBegin(EX_FIELD_DESC);
-          struct.ex.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class destroyDriverGroup_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public destroyDriverGroup_resultTupleScheme getScheme() {
-        return new destroyDriverGroup_resultTupleScheme();
-      }
-    }
-
-    private static class destroyDriverGroup_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<destroyDriverGroup_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, destroyDriverGroup_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetEx()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetEx()) {
-          struct.ex.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, destroyDriverGroup_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, destroyGroups_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
@@ -7673,12 +7962,12 @@ public class ICommModule {
   public static class driverGather_args implements org.apache.thrift.TBase<driverGather_args, driverGather_args._Fields>, java.io.Serializable, Cloneable, Comparable<driverGather_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("driverGather_args");
 
-    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRING, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new driverGather_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new driverGather_argsTupleSchemeFactory();
 
-    private long id; // required
+    private @org.apache.thrift.annotation.Nullable java.lang.String id; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -7741,13 +8030,11 @@ public class ICommModule {
     }
 
     // isset id assignments
-    private static final int __ID_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(driverGather_args.class, metaDataMap);
     }
@@ -7756,19 +8043,19 @@ public class ICommModule {
     }
 
     public driverGather_args(
-      long id)
+      java.lang.String id)
     {
       this();
       this.id = id;
-      setIdIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public driverGather_args(driverGather_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.id = other.id;
+      if (other.isSetId()) {
+        this.id = other.id;
+      }
     }
 
     public driverGather_args deepCopy() {
@@ -7777,31 +8064,32 @@ public class ICommModule {
 
     @Override
     public void clear() {
-      setIdIsSet(false);
-      this.id = 0;
+      this.id = null;
     }
 
-    public long getId() {
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getId() {
       return this.id;
     }
 
-    public driverGather_args setId(long id) {
+    public driverGather_args setId(@org.apache.thrift.annotation.Nullable java.lang.String id) {
       this.id = id;
-      setIdIsSet(true);
       return this;
     }
 
     public void unsetId() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __ID_ISSET_ID);
+      this.id = null;
     }
 
     /** Returns true if field id is set (has been assigned a value) and false otherwise */
     public boolean isSetId() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __ID_ISSET_ID);
+      return this.id != null;
     }
 
     public void setIdIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
+      if (!value) {
+        this.id = null;
+      }
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
@@ -7810,7 +8098,7 @@ public class ICommModule {
         if (value == null) {
           unsetId();
         } else {
-          setId((java.lang.Long)value);
+          setId((java.lang.String)value);
         }
         break;
 
@@ -7855,12 +8143,12 @@ public class ICommModule {
       if (this == that)
         return true;
 
-      boolean this_present_id = true;
-      boolean that_present_id = true;
+      boolean this_present_id = true && this.isSetId();
+      boolean that_present_id = true && that.isSetId();
       if (this_present_id || that_present_id) {
         if (!(this_present_id && that_present_id))
           return false;
-        if (this.id != that.id)
+        if (!this.id.equals(that.id))
           return false;
       }
 
@@ -7871,7 +8159,9 @@ public class ICommModule {
     public int hashCode() {
       int hashCode = 1;
 
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(id);
+      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
+      if (isSetId())
+        hashCode = hashCode * 8191 + id.hashCode();
 
       return hashCode;
     }
@@ -7916,7 +8206,11 @@ public class ICommModule {
       boolean first = true;
 
       sb.append("id:");
-      sb.append(this.id);
+      if (this.id == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.id);
+      }
       first = false;
       sb.append(")");
       return sb.toString();
@@ -7937,8 +8231,6 @@ public class ICommModule {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -7964,8 +8256,8 @@ public class ICommModule {
           }
           switch (schemeField.id) {
             case 1: // ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.id = iprot.readI64();
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.id = iprot.readString();
                 struct.setIdIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -7986,9 +8278,11 @@ public class ICommModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(ID_FIELD_DESC);
-        oprot.writeI64(struct.id);
-        oprot.writeFieldEnd();
+        if (struct.id != null) {
+          oprot.writeFieldBegin(ID_FIELD_DESC);
+          oprot.writeString(struct.id);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -8012,7 +8306,7 @@ public class ICommModule {
         }
         oprot.writeBitSet(optionals, 1);
         if (struct.isSetId()) {
-          oprot.writeI64(struct.id);
+          oprot.writeString(struct.id);
         }
       }
 
@@ -8021,7 +8315,7 @@ public class ICommModule {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.id = iprot.readI64();
+          struct.id = iprot.readString();
           struct.setIdIsSet(true);
         }
       }
@@ -8401,15 +8695,15 @@ public class ICommModule {
     }
   }
 
-  public static class driverScatter_args implements org.apache.thrift.TBase<driverScatter_args, driverScatter_args._Fields>, java.io.Serializable, Cloneable, Comparable<driverScatter_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("driverScatter_args");
+  public static class driverGather0_args implements org.apache.thrift.TBase<driverGather0_args, driverGather0_args._Fields>, java.io.Serializable, Cloneable, Comparable<driverGather0_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("driverGather0_args");
 
-    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRING, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new driverScatter_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new driverScatter_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new driverGather0_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new driverGather0_argsTupleSchemeFactory();
 
-    private long id; // required
+    private @org.apache.thrift.annotation.Nullable java.lang.String id; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -8472,67 +8766,66 @@ public class ICommModule {
     }
 
     // isset id assignments
-    private static final int __ID_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(driverScatter_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(driverGather0_args.class, metaDataMap);
     }
 
-    public driverScatter_args() {
+    public driverGather0_args() {
     }
 
-    public driverScatter_args(
-      long id)
+    public driverGather0_args(
+      java.lang.String id)
     {
       this();
       this.id = id;
-      setIdIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public driverScatter_args(driverScatter_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.id = other.id;
+    public driverGather0_args(driverGather0_args other) {
+      if (other.isSetId()) {
+        this.id = other.id;
+      }
     }
 
-    public driverScatter_args deepCopy() {
-      return new driverScatter_args(this);
+    public driverGather0_args deepCopy() {
+      return new driverGather0_args(this);
     }
 
     @Override
     public void clear() {
-      setIdIsSet(false);
-      this.id = 0;
+      this.id = null;
     }
 
-    public long getId() {
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getId() {
       return this.id;
     }
 
-    public driverScatter_args setId(long id) {
+    public driverGather0_args setId(@org.apache.thrift.annotation.Nullable java.lang.String id) {
       this.id = id;
-      setIdIsSet(true);
       return this;
     }
 
     public void unsetId() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __ID_ISSET_ID);
+      this.id = null;
     }
 
     /** Returns true if field id is set (has been assigned a value) and false otherwise */
     public boolean isSetId() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __ID_ISSET_ID);
+      return this.id != null;
     }
 
     public void setIdIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
+      if (!value) {
+        this.id = null;
+      }
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
@@ -8541,7 +8834,743 @@ public class ICommModule {
         if (value == null) {
           unsetId();
         } else {
-          setId((java.lang.Long)value);
+          setId((java.lang.String)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case ID:
+        return getId();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case ID:
+        return isSetId();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof driverGather0_args)
+        return this.equals((driverGather0_args)that);
+      return false;
+    }
+
+    public boolean equals(driverGather0_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_id = true && this.isSetId();
+      boolean that_present_id = true && that.isSetId();
+      if (this_present_id || that_present_id) {
+        if (!(this_present_id && that_present_id))
+          return false;
+        if (!this.id.equals(that.id))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
+      if (isSetId())
+        hashCode = hashCode * 8191 + id.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(driverGather0_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("driverGather0_args(");
+      boolean first = true;
+
+      sb.append("id:");
+      if (this.id == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.id);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class driverGather0_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public driverGather0_argsStandardScheme getScheme() {
+        return new driverGather0_argsStandardScheme();
+      }
+    }
+
+    private static class driverGather0_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<driverGather0_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, driverGather0_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.id = iprot.readString();
+                struct.setIdIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, driverGather0_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.id != null) {
+          oprot.writeFieldBegin(ID_FIELD_DESC);
+          oprot.writeString(struct.id);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class driverGather0_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public driverGather0_argsTupleScheme getScheme() {
+        return new driverGather0_argsTupleScheme();
+      }
+    }
+
+    private static class driverGather0_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<driverGather0_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, driverGather0_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetId()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetId()) {
+          oprot.writeString(struct.id);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, driverGather0_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.id = iprot.readString();
+          struct.setIdIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class driverGather0_result implements org.apache.thrift.TBase<driverGather0_result, driverGather0_result._Fields>, java.io.Serializable, Cloneable, Comparable<driverGather0_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("driverGather0_result");
+
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new driverGather0_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new driverGather0_resultTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      EX((short)1, "ex");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // EX
+            return EX;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IExecutorException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(driverGather0_result.class, metaDataMap);
+    }
+
+    public driverGather0_result() {
+    }
+
+    public driverGather0_result(
+      org.ignis.rpc.IExecutorException ex)
+    {
+      this();
+      this.ex = ex;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public driverGather0_result(driverGather0_result other) {
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IExecutorException(other.ex);
+      }
+    }
+
+    public driverGather0_result deepCopy() {
+      return new driverGather0_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.ex = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.IExecutorException getEx() {
+      return this.ex;
+    }
+
+    public driverGather0_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IExecutorException)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case EX:
+        return getEx();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case EX:
+        return isSetEx();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof driverGather0_result)
+        return this.equals((driverGather0_result)that);
+      return false;
+    }
+
+    public boolean equals(driverGather0_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(driverGather0_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("driverGather0_result(");
+      boolean first = true;
+
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class driverGather0_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public driverGather0_resultStandardScheme getScheme() {
+        return new driverGather0_resultStandardScheme();
+      }
+    }
+
+    private static class driverGather0_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<driverGather0_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, driverGather0_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IExecutorException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, driverGather0_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class driverGather0_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public driverGather0_resultTupleScheme getScheme() {
+        return new driverGather0_resultTupleScheme();
+      }
+    }
+
+    private static class driverGather0_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<driverGather0_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, driverGather0_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetEx()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, driverGather0_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.ex = new org.ignis.rpc.IExecutorException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class driverScatter_args implements org.apache.thrift.TBase<driverScatter_args, driverScatter_args._Fields>, java.io.Serializable, Cloneable, Comparable<driverScatter_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("driverScatter_args");
+
+    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRING, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new driverScatter_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new driverScatter_argsTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable java.lang.String id; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      ID((short)1, "id");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // ID
+            return ID;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(driverScatter_args.class, metaDataMap);
+    }
+
+    public driverScatter_args() {
+    }
+
+    public driverScatter_args(
+      java.lang.String id)
+    {
+      this();
+      this.id = id;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public driverScatter_args(driverScatter_args other) {
+      if (other.isSetId()) {
+        this.id = other.id;
+      }
+    }
+
+    public driverScatter_args deepCopy() {
+      return new driverScatter_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.id = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getId() {
+      return this.id;
+    }
+
+    public driverScatter_args setId(@org.apache.thrift.annotation.Nullable java.lang.String id) {
+      this.id = id;
+      return this;
+    }
+
+    public void unsetId() {
+      this.id = null;
+    }
+
+    /** Returns true if field id is set (has been assigned a value) and false otherwise */
+    public boolean isSetId() {
+      return this.id != null;
+    }
+
+    public void setIdIsSet(boolean value) {
+      if (!value) {
+        this.id = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case ID:
+        if (value == null) {
+          unsetId();
+        } else {
+          setId((java.lang.String)value);
         }
         break;
 
@@ -8586,12 +9615,12 @@ public class ICommModule {
       if (this == that)
         return true;
 
-      boolean this_present_id = true;
-      boolean that_present_id = true;
+      boolean this_present_id = true && this.isSetId();
+      boolean that_present_id = true && that.isSetId();
       if (this_present_id || that_present_id) {
         if (!(this_present_id && that_present_id))
           return false;
-        if (this.id != that.id)
+        if (!this.id.equals(that.id))
           return false;
       }
 
@@ -8602,7 +9631,9 @@ public class ICommModule {
     public int hashCode() {
       int hashCode = 1;
 
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(id);
+      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
+      if (isSetId())
+        hashCode = hashCode * 8191 + id.hashCode();
 
       return hashCode;
     }
@@ -8647,7 +9678,11 @@ public class ICommModule {
       boolean first = true;
 
       sb.append("id:");
-      sb.append(this.id);
+      if (this.id == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.id);
+      }
       first = false;
       sb.append(")");
       return sb.toString();
@@ -8668,8 +9703,6 @@ public class ICommModule {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -8695,8 +9728,8 @@ public class ICommModule {
           }
           switch (schemeField.id) {
             case 1: // ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.id = iprot.readI64();
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.id = iprot.readString();
                 struct.setIdIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -8717,9 +9750,11 @@ public class ICommModule {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(ID_FIELD_DESC);
-        oprot.writeI64(struct.id);
-        oprot.writeFieldEnd();
+        if (struct.id != null) {
+          oprot.writeFieldBegin(ID_FIELD_DESC);
+          oprot.writeString(struct.id);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -8743,7 +9778,7 @@ public class ICommModule {
         }
         oprot.writeBitSet(optionals, 1);
         if (struct.isSetId()) {
-          oprot.writeI64(struct.id);
+          oprot.writeString(struct.id);
         }
       }
 
@@ -8752,7 +9787,7 @@ public class ICommModule {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.id = iprot.readI64();
+          struct.id = iprot.readString();
           struct.setIdIsSet(true);
         }
       }

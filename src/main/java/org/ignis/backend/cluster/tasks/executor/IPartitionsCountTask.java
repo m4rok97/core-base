@@ -55,16 +55,16 @@ public class IPartitionsCountTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
+        LOGGER.info(log() + "Executing partition count");
         try {
             if (shared.barrier.await() == 0) {
                 shared.result.set(0);
-                LOGGER.info(log() + "Executing count");
             }
             shared.result.addAndGet(executor.getIoModule().partitionCount());
             if (shared.barrier.await() == 0) {
                 context.<Long>set("result", shared.result.get());
-                LOGGER.info(log() + "Count executed");
             }
+            shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);
@@ -74,6 +74,7 @@ public class IPartitionsCountTask extends IExecutorContextTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
+        LOGGER.info(log() + "Partition Count executed");
     }
 
 }

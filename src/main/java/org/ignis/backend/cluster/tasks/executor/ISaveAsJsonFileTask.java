@@ -59,7 +59,7 @@ public final class ISaveAsJsonFileTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Saving text file");
+        LOGGER.info(log() + "Saving json file");
         int id = (int) executor.getId();
         try {
             shared.partitions.set(id, executor.getIoModule().partitionCount());
@@ -68,7 +68,8 @@ public final class ISaveAsJsonFileTask extends IExecutorContextTask {
             for (int i = 1; i < id; i++) {
                 first += shared.partitions.get(i - 1);
             }
-            executor.getIoModule().saveAsJsonFile(path, first);
+            executor.getIoModule().saveAsJsonFile(path, first);  
+            shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);

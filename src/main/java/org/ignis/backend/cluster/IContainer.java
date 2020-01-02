@@ -28,13 +28,15 @@ import org.ignis.backend.scheduler.model.IContainerDetails;
 public final class IContainer {
 
     private final long id;
+    private final long cluster;
     private final ITunnel tunnel;
     private final IProperties properties;
     private IContainerDetails info;
     private int resets;
 
-    public IContainer(long id, ITunnel tunnel, IProperties properties) throws IgnisException {
+    public IContainer(long id, long cluster, ITunnel tunnel, IProperties properties) throws IgnisException {
         this.id = id;
+        this.cluster = cluster;
         this.tunnel = tunnel;
         this.properties = properties;
         this.resets = -1;
@@ -42,6 +44,10 @@ public final class IContainer {
 
     public long getId() {
         return id;
+    }
+
+    public long getCluster() {
+        return cluster;
     }
 
     public ITunnel getTunnel() {

@@ -39,6 +39,7 @@ public class IDataCacheHelper extends IDataHelper {
 
     public ITaskGroup create(ITaskGroup group, ICache cache) throws IgnisException {
         ITaskGroupCache.Builder builder = new ITaskGroupCache.Builder(data.getLock(), cache, group);
+        builder.newDependency(data.getWorker().getTasks());
         for (IExecutor executor : data.getExecutors()) {
             builder.addExecutor(getName(), executor);
         }

@@ -16,10 +16,13 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import java.util.concurrent.BrokenBarrierException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
+import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -32,15 +35,19 @@ public final class ICommGroupCreateTask extends IExecutorTask {
 
     public static class Shared {
 
+        private boolean test;
         private String group;
         private final IBarrier barrier;
+        private final int executors;
 
         public Shared(int executors) {
+            this.executors = executors;
             barrier = new IBarrier(executors);
         }
     }
 
     private final Shared shared;
+    private Integer attempt;
 
     public ICommGroupCreateTask(String name, IExecutor executor, Shared shared) {
         super(name, executor);
@@ -49,7 +56,39 @@ public final class ICommGroupCreateTask extends IExecutorTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        //TODO
+        LOGGER.info(log() + "Testing mpi group");
+        try {
+            shared.test = true;
+            shared.barrier.await();
+            if (executor.getResets() != attempt) {
+                shared.test = false;
+            }
+            shared.barrier.await();
+            if (shared.test) {
+                LOGGER.info(log() + "Executor mpi group ready");
+                return;
+            }
+            if (attempt != null) {
+                executor.getCommModule().destroyGroups();
+            }
+            attempt = executor.getResets();
+            if (executor.getId() == 0) {
+                LOGGER.info(log() + "Mpi driver group not found, creating a new one");
+                shared.group = executor.getCommModule().createGroup();
+            }
+            shared.barrier.await();
+            executor.getCommModule().joinGroupMembers(shared.group, shared.executors);
+            LOGGER.info(log() + "Executor mpi group ready");
+            shared.barrier.await();
+        } catch (IExecutorException ex) {
+            shared.barrier.fails();
+            throw new IExecutorExceptionWrapper(ex);
+        } catch (BrokenBarrierException ex) {
+            //Other Task has failed
+        } catch (Exception ex) {
+            shared.barrier.fails();
+            throw new IgnisException(ex.getMessage(), ex);
+        }
     }
 
 }

@@ -16,13 +16,12 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
-import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
@@ -30,99 +29,71 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class ITakeTask extends IExecutorContextTask {
+public class ITakeTask extends IDriverTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITakeTask.class);
 
-    public static class Shared {
+    public static class Shared extends IDriverTask.Shared {
 
         public Shared(int executors) {
+            super(executors);
             count = new ArrayList<>(Collections.nCopies(executors, 0l));
-            result = new ArrayList<>(Collections.nCopies(executors, null));
-            barrier = new IBarrier(executors);
         }
 
         private final List<Long> count;
-        private final List<List<ByteBuffer>> result;
-        private final IBarrier barrier;
 
     }
 
     private final Shared shared;
-    private final boolean driver;
     private final long n;
 
     public ITakeTask(String name, IExecutor executor, Shared shared, boolean driver, long n) {
-        super(name, executor, Mode.LOAD);
-        this.shared = shared;
-        this.driver = driver;
+        super(name, executor, shared, driver);
         this.n = n;
+        this.shared = shared;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        /*try {//TODO
-            if (barrier.await() == 0) {
-                shared.count.clear();
-                shared.result.clear();
-                LOGGER.info(log() + "Executing " + (ligth ? "ligth " : "") + "take");
+        LOGGER.info(log() + "Executing take");
+        try {
+            if (!driver) {
+                shared.count.set((int) executor.getId(), executor.getMathModule().count());
             }
-            barrier.await();
-            shared.count.put(executor, executor.getStorageModule().count());
-            if (barrier.await() == 0) {
-                long elems = n;
-                for (IExecutor e : executors) {
-                    long ecount = shared.count.get(e);
-                    if (ecount > elems) {
-                        shared.count.put(e, elems);
-                        elems = 0;
-                    } else {
-                        elems -= ecount;
-                    }
-                }
-                if (elems > 0) {
+            shared.barrier.await();
+            if (driver) {
+                long elems = shared.count.stream().reduce(0l, Long::sum);
+                if (elems < n) {
                     throw new IgnisException("There are not enough elements");
                 }
+                long remainder = n;
+                for (int i = 0; i < shared.executors; i++) {
+                    long localN = shared.count.get((int) executor.getId());
+                    if (remainder >= localN) {
+                        remainder -= localN;
+                    } else {
+                        shared.count.set((int) executor.getId(), remainder);
+                        remainder = 0;
+                    }
+                }
             }
-            barrier.await();
-            long elems = shared.count.get(executor);
-            ByteBuffer bytes;
-            if (elems > 0) {
-                bytes = executor.getStorageModule().take(executor.getId(), "none", elems, ligth);//TODO
-            } else {
-                bytes = ByteBuffer.allocate(0);
+            shared.barrier.await();
+
+            if (!driver) {
+                executor.getGeneralActionModule().take(shared.count.get((int) executor.getId()));
             }
-            if (ligth) {
-                shared.result.put(executor, bytes);
-            }
-            barrier.await();
-            if (ligth) {
-                ligthMode(context);
-            } else {
-                directMode(context);
-            }
-            if (barrier.await() == 0) {
-                LOGGER.info(log() + "Take executed");
-            }
+            shared.barrier.await();
+            gather(context, shared.count.get(0) == n);
         } catch (IgnisException ex) {
-            barrier.fails();
+            shared.barrier.fails();
             throw ex;
         } catch (BrokenBarrierException ex) {
             //Other Task has failed
         } catch (Exception ex) {
-            barrier.fails();
+            shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
-        }*/
-    }
-
-    private void ligthMode(ITaskContext context) throws Exception {
-        /*if (barrier.await() == 0) {
-            context.set("result", executors.stream().map(e -> shared.result.get(e)).collect(Collectors.toList()));
-        }*/
-    }
-
-    private void directMode(ITaskContext context) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //TODO
+        }
+        LOGGER.info(log() + "Take executed");
     }
 
 }

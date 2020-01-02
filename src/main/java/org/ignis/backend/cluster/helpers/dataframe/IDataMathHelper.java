@@ -47,8 +47,9 @@ public final class IDataMathHelper extends IDataHelper {
     public IDataFrame sample(boolean withReplacement, double fraction, int seed) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getWorker().getTasks());
+        ISampleTask.Shared shared = new ISampleTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new ISampleTask(getName(), executor, withReplacement, fraction, seed));
+            builder.newTask(new ISampleTask(getName(), executor, shared, withReplacement, fraction, seed));
         }
         IDataFrame target = data.createDataFrame("", builder.build());
         LOGGER.info(log() + "Registering partitions sample withReplacement: " + withReplacement + ", fraction: "
@@ -91,12 +92,13 @@ public final class IDataMathHelper extends IDataHelper {
     public ILazy<Long> max(IDriver driver, ISource cmp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getWorker().getTasks());
+        IMaxTask.Shared shared = new IMaxTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IMaxTask(getName(), executor, false, cmp));
+            builder.newTask(new IMaxTask(getName(), executor, shared, false, cmp));
         }
 
         builder.newLock(driver.getLock());
-        builder.newTask(new IMaxTask(driver.getName(), driver.getExecutor(), true, cmp));
+        builder.newTask(new IMaxTask(driver.getName(), driver.getExecutor(), shared, true, cmp));
 
         LOGGER.info(log() + "Registering max");
         return () -> {
@@ -108,12 +110,13 @@ public final class IDataMathHelper extends IDataHelper {
     public ILazy<Long> min(IDriver driver, ISource cmp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getWorker().getTasks());
+        IMinTask.Shared shared = new IMinTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IMinTask(getName(), executor, false, cmp));
+            builder.newTask(new IMinTask(getName(), executor, shared, false, cmp));
         }
 
         builder.newLock(driver.getLock());
-        builder.newTask(new IMinTask(driver.getName(), driver.getExecutor(), true, cmp));
+        builder.newTask(new IMinTask(driver.getName(), driver.getExecutor(), shared, true, cmp));
 
         LOGGER.info(log() + "Registering min");
         return () -> {

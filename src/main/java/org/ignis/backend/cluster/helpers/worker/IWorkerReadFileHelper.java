@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.helpers.worker;
 
 import org.ignis.backend.cluster.IDataFrame;
+import org.ignis.backend.cluster.IDriver;
 import org.ignis.backend.cluster.IWorker;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -39,15 +40,11 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public IDataFrame parallelize() throws IgnisException {
+    public IDataFrame partitionObjectFile(String path, long partitions) throws IgnisException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public IDataFrame openPartitionObjectFile(String path, long partitions) throws IgnisException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public IDataFrame openPartitionObjectFileFunction(String path, ISource src, long partitions) throws IgnisException {
+    public IDataFrame partitionObjectFile(String path, ISource src, long partitions) throws IgnisException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

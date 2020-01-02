@@ -18,7 +18,6 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
-import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
@@ -26,69 +25,25 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class ICollectTask extends IExecutorContextTask {
+public class ICollectTask extends IDriverTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICollectTask.class);
 
-    public static class Shared {
-
-        public Shared(int executors) {
-            barrier = new IBarrier(executors);
-        }
-
-        private final IBarrier barrier;
-
-    }
-
-    private final Shared shared;
-    private final boolean driver;
-
     public ICollectTask(String name, IExecutor executor, Shared shared, boolean driver) {
-        super(name, executor, Mode.LOAD);
-        this.shared = shared;
-        this.driver = driver;
+        super(name, executor, shared, driver);
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        /*try {//TODO
-            if (barrier.await() == 0) {
-                shared.result.clear();
-                LOGGER.info(log() + "Executing " + (ligth ? "ligth " : "") + "collect");
-            }
-            barrier.await();
-            ByteBuffer bytes = executor.getStorageModule().collect(executor.getId(), "none", ligth);//TODO
-            if (ligth) {
-                shared.result.put(executor, bytes);
-            }
-            barrier.await();
-            if (ligth) {
-                ligthMode(context);
-            } else {
-                directMode(context);
-            }
-            if (barrier.await() == 0) {
-                LOGGER.info(log() + "Collect executed");
-            }
+        LOGGER.info(log() + "Executing collect");
+        try {
+            gather(context);
         } catch (IgnisException ex) {
-            barrier.fails();
             throw ex;
-        } catch (BrokenBarrierException ex) {
-            //Other Task has failed
         } catch (Exception ex) {
-            barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
-        }*/
-    }
-
-    private void ligthMode(ITaskContext context) throws Exception {
-        /*if (barrier.await() == 0) {
-            context.set("result", executors.stream().map(e -> shared.result.get(e)).collect(Collectors.toList()));
-        }*/
-    }
-
-    private void directMode(ITaskContext context) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");//TODO
+        }
+        LOGGER.info(log() + "Collect executed");
     }
 
 }

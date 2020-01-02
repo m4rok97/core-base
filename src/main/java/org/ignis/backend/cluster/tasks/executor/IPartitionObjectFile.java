@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class IOpenPartitionObjectFileFunction extends IExecutorContextTask {
+public final class IPartitionObjectFile extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IOpenPartitionObjectFileFunction.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPartitionObjectFile.class);
 
     public static class Shared {
 
@@ -50,7 +50,11 @@ public final class IOpenPartitionObjectFileFunction extends IExecutorContextTask
     private final String path;
     private final ISource src;
 
-    public IOpenPartitionObjectFileFunction(String name, IExecutor executor, Shared shared, String path, ISource src) {
+    public IPartitionObjectFile(String name, IExecutor executor, Shared shared, String path) {
+        this(name, executor, shared, path, null);
+    }
+
+    public IPartitionObjectFile(String name, IExecutor executor, Shared shared, String path, ISource src) {
         super(name, executor, Mode.SAVE);
         this.shared = shared;
         this.path = path;
@@ -62,7 +66,7 @@ public final class IOpenPartitionObjectFileFunction extends IExecutorContextTask
         LOGGER.info(log() + "Reading partition object file");
         try {
             if (shared.barrier.await() == 0) {
-
+                //TODO get number of partitions
             }
             shared.barrier.await();
             long executorPartitions = shared.partitionCount / shared.executors;
@@ -74,8 +78,12 @@ public final class IOpenPartitionObjectFileFunction extends IExecutorContextTask
             } else {
                 first += remainder;
             }
-
-            executor.getIoModule().openPartitionObjectFileFunction(src, path, first, executorPartitions);
+            if (src != null) {
+                executor.getIoModule().partitionObjectFile4(path, first, executorPartitions, src);
+            } else {
+                executor.getIoModule().partitionObjectFile(path, first, executorPartitions);
+            }
+            shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);

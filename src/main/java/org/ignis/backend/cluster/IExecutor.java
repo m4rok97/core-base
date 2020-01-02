@@ -25,6 +25,7 @@ import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.executor.ICacheContextModule;
+import org.ignis.rpc.executor.ICommModule;
 import org.ignis.rpc.executor.IExecutorServerModule;
 import org.ignis.rpc.executor.IGeneralActionModule;
 import org.ignis.rpc.executor.IGeneralModule;
@@ -48,6 +49,7 @@ public final class IExecutor {
     private final IMathModule.Iface mathModule;
     private final IIOModule.Iface ioModule;
     private final ICacheContextModule.Iface cacheContextModule;
+    private final ICommModule.Iface commModule;
     private int pid;
     private int resets;
 
@@ -65,6 +67,7 @@ public final class IExecutor {
         mathModule = new IMathModule.Client(new TMultiplexedProtocol(protocol, "IMath"));
         ioModule = new IIOModule.Client(new TMultiplexedProtocol(protocol, "IIO"));
         cacheContextModule = new ICacheContextModule.Client(new TMultiplexedProtocol(protocol, "ICacheContext"));
+        commModule = new ICommModule.Client(new TMultiplexedProtocol(protocol, "IComm"));
     }
 
     public long getWorker() {
@@ -132,6 +135,10 @@ public final class IExecutor {
 
     public ICacheContextModule.Iface getCacheContextModule() {
         return cacheContextModule;
+    }
+
+    public ICommModule.Iface getCommModule() {
+        return commModule;
     }
 
 }
