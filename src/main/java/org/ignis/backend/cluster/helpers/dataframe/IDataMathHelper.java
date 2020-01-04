@@ -52,7 +52,7 @@ public final class IDataMathHelper extends IDataHelper {
             builder.newTask(new ISampleTask(getName(), executor, shared, withReplacement, fraction, seed));
         }
         IDataFrame target = data.createDataFrame("", builder.build());
-        LOGGER.info(log() + "Registering partitions sample withReplacement: " + withReplacement + ", fraction: "
+        LOGGER.info(log() + "Registering sample withReplacement: " + withReplacement + ", fraction: "
                 + fraction + ", seed:" + seed + " -> " + target.getName());
         return target;
     }

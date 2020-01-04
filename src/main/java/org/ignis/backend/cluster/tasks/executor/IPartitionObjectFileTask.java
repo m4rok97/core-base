@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class IPartitionObjectFile extends IExecutorContextTask {
+public final class IPartitionObjectFileTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPartitionObjectFile.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPartitionObjectFileTask.class);
 
     public static class Shared {
 
@@ -50,11 +50,11 @@ public final class IPartitionObjectFile extends IExecutorContextTask {
     private final String path;
     private final ISource src;
 
-    public IPartitionObjectFile(String name, IExecutor executor, Shared shared, String path) {
+    public IPartitionObjectFileTask(String name, IExecutor executor, Shared shared, String path) {
         this(name, executor, shared, path, null);
     }
 
-    public IPartitionObjectFile(String name, IExecutor executor, Shared shared, String path, ISource src) {
+    public IPartitionObjectFileTask(String name, IExecutor executor, Shared shared, String path, ISource src) {
         super(name, executor, Mode.SAVE);
         this.shared = shared;
         this.path = path;

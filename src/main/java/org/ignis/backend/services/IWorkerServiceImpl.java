@@ -116,7 +116,6 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }
-
     }
 
     @Override
@@ -137,7 +136,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
             synchronized (lock1) {
                 synchronized (lock2) {
                     IDataFrame source = workerSource.getDataFrame(data.getDataFrame());
-                    IDataFrame target = new IWorkerImportDataHelper(workerTarget, clusterTarget.getProperties()).importData(source);
+                    IDataFrame target = new IWorkerImportDataHelper(workerTarget, clusterTarget.getProperties()).importDataFrame(source);
                     return new IDataFrameId(clusterTarget.getId(), workerTarget.getId(), target.getId());
                 }
             }
@@ -147,7 +146,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId importDataFrame3(IWorkerId id, ISource src, IDataFrameId data) throws IDriverException, TException {
+    public IDataFrameId importDataFrame3a(IWorkerId id, IDataFrameId data, long partitions) throws IDriverException, TException {
         try {
             ICluster clusterSource = attributes.getCluster(data.getCluster());
             ICluster clusterTarget = attributes.getCluster(id.getCluster());
@@ -164,7 +163,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
             synchronized (lock1) {
                 synchronized (lock2) {
                     IDataFrame source = workerSource.getDataFrame(data.getDataFrame());
-                    IDataFrame target = new IWorkerImportDataHelper(workerTarget, clusterTarget.getProperties()).importData(source, src);
+                    IDataFrame target = new IWorkerImportDataHelper(workerTarget, clusterTarget.getProperties()).importDataFrame(source, partitions);
                     return new IDataFrameId(clusterTarget.getId(), workerTarget.getId(), target.getId());
                 }
             }
@@ -174,12 +173,66 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId textFile(IWorkerId id, String path, long partitions) throws IDriverException, TException {
+    public IDataFrameId importDataFrame3b(IWorkerId id, IDataFrameId data, ISource src) throws IDriverException, TException {
+        try {
+            ICluster clusterSource = attributes.getCluster(data.getCluster());
+            ICluster clusterTarget = attributes.getCluster(id.getCluster());
+            IWorker workerSource = clusterSource.getWorker(data.getWorker());
+            IWorker workerTarget = clusterSource.getWorker(id.getWorker());
+
+            ILock lock1 = workerSource.getLock();
+            ILock lock2 = workerTarget.getLock();
+            if (lock1.compareTo(lock2) < 0) {
+                ILock tmp = lock1;
+                lock1 = lock2;
+                lock2 = tmp;
+            }
+            synchronized (lock1) {
+                synchronized (lock2) {
+                    IDataFrame source = workerSource.getDataFrame(data.getDataFrame());
+                    IDataFrame target = new IWorkerImportDataHelper(workerTarget, clusterTarget.getProperties()).importDataFrame(source, src);
+                    return new IDataFrameId(clusterTarget.getId(), workerTarget.getId(), target.getId());
+                }
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId importDataFrame4(IWorkerId id, IDataFrameId data, long partitions, ISource src) throws IDriverException, TException {
+        try {
+            ICluster clusterSource = attributes.getCluster(data.getCluster());
+            ICluster clusterTarget = attributes.getCluster(id.getCluster());
+            IWorker workerSource = clusterSource.getWorker(data.getWorker());
+            IWorker workerTarget = clusterSource.getWorker(id.getWorker());
+
+            ILock lock1 = workerSource.getLock();
+            ILock lock2 = workerTarget.getLock();
+            if (lock1.compareTo(lock2) < 0) {
+                ILock tmp = lock1;
+                lock1 = lock2;
+                lock2 = tmp;
+            }
+            synchronized (lock1) {
+                synchronized (lock2) {
+                    IDataFrame source = workerSource.getDataFrame(data.getDataFrame());
+                    IDataFrame target = new IWorkerImportDataHelper(workerTarget, clusterTarget.getProperties()).importDataFrame(source, partitions, src);
+                    return new IDataFrameId(clusterTarget.getId(), workerTarget.getId(), target.getId());
+                }
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId textFile(IWorkerId id, String path) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).readFile(path, partitions);
+                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).textFile(path);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {
@@ -188,12 +241,12 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId partitionObjectFile(IWorkerId id, String path, long partitions) throws IDriverException, TException {
+    public IDataFrameId textFile3(IWorkerId id, String path, long partitions) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionObjectFile(path, partitions);
+                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).textFile(path, partitions);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {
@@ -202,12 +255,26 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId partitionObjectFile4(IWorkerId id, String path, long partitions, ISource src) throws IDriverException, TException {
+    public IDataFrameId partitionObjectFile(IWorkerId id, String path) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionObjectFile(path, src, partitions);
+                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionObjectFile(path);
+                return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId partitionObjectFile3(IWorkerId id, String path, ISource src) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            synchronized (worker.getLock()) {
+                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionObjectFile(path, src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {

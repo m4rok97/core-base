@@ -16,50 +16,42 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
-import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.IExecutorException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
-public final class ITextFileTask extends IExecutorContextTask {
+public class IParallelizeTask extends IDriverTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITextFileTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IParallelizeTask.class);
 
-    private final String path;
-    private final Long partitions;
+    private final ISource src;
 
-    public ITextFileTask(String name, IExecutor executor, String path) {
-        this(name, executor, path, null);
+    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver) {
+        this(name, executor, shared, driver, null);
     }
 
-    public ITextFileTask(String name, IExecutor executor, String path, Long partitions) {
-        super(name, executor, Mode.SAVE);
-        this.path = path;
-        this.partitions = partitions;
+    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src) {
+        super(name, executor, shared, driver);
+        this.src = src;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Reading file");
+        LOGGER.info(log() + "Executing parallelize");
         try {
-            if (partitions == null) {
-                executor.getIoModule().textFile(path);
-            } else {
-                executor.getIoModule().textFile2(path, partitions);
-            }
-        } catch (IExecutorException ex) {
-            throw new IExecutorExceptionWrapper(ex);
-        } catch (TException ex) {
+            gather(context);
+        } catch (IgnisException ex) {
+            throw ex;
+        } catch (Exception ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "File read");
+        LOGGER.info(log() + "Parallelize executed");
     }
 
 }

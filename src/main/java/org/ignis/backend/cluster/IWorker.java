@@ -98,10 +98,6 @@ public final class IWorker {
         return cluster.getProperties();
     }
 
-    public int getDataFrameSize() {
-        return dataFrames.size();
-    }
-
     public int getCores() {
         return cores;
     }

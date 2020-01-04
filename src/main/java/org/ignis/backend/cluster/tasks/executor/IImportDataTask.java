@@ -16,15 +16,11 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -37,35 +33,35 @@ public final class IImportDataTask extends IExecutorContextTask {
 
     public static class Shared {
 
-        public Shared(List<IExecutor> sources, List<IExecutor> targets) {
+        public Shared(int sources, int targets) {
             this.sources = sources;
             this.targets = targets;
-            barrier = new IBarrier(sources.size() + targets.size());
+            barrier = new IBarrier(sources + targets);
         }
 
-        private final List<IExecutor> sources;
-        private final List<IExecutor> targets;
+        private final int sources;
+        private final int targets;
         private final IBarrier barrier;
-        //Executor -> Count (Multiple Write, One Read)
-        private final Map<IExecutor, Long> count = new ConcurrentHashMap<>();
-
-        //Source -> (Target -> Count) (One Write, Multiple Read)
-        private final Map<IExecutor, LinkedHashMap<IExecutor, Long>> msgs = new HashMap<>();
     }
 
     private final Shared shared;
     private final boolean source;
+    private final Long partitions;
+    private final ISource src;
 
-    public IImportDataTask(String name, IExecutor executor, Shared shared, boolean source) {
-        super(name, executor, Mode.SAVE);
+    public IImportDataTask(String name, IExecutor executor, Shared shared, boolean source, Long partitions, ISource src) {
+        super(name, executor, source ? Mode.LOAD : Mode.SAVE);
         this.shared = shared;
         this.source = source;
+        this.partitions = partitions;
+        this.src = src;
     }
+//TODO 
 
     /*
     *Select an executor in the same machine
      */
-   /* private IExecutor nextHostExecutor(List<IExecutor> executors, IExecutor source) {
+ /* private IExecutor nextHostExecutor(List<IExecutor> executors, IExecutor source) {
         String host = source.getContainer().getHost();
         for (int i = 0; i < executors.size(); i++) {
             if (executors.get(i).getContainer().getHost().equals(host)) {
@@ -138,7 +134,6 @@ public final class IImportDataTask extends IExecutorContextTask {
         targets.clear();
         targets.addAll(orderTargets);
     }*/
-
     @Override
     public void run(ITaskContext context) throws IgnisException {
         /*try {//TODO

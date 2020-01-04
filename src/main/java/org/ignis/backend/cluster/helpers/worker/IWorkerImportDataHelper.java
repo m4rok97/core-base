@@ -17,7 +17,11 @@
 package org.ignis.backend.cluster.helpers.worker;
 
 import org.ignis.backend.cluster.IDataFrame;
+import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IWorker;
+import org.ignis.backend.cluster.tasks.ITaskGroup;
+import org.ignis.backend.cluster.tasks.executor.IImportDataTask;
+import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
@@ -34,35 +38,41 @@ public final class IWorkerImportDataHelper extends IWorkerHelper {
         super(worker, properties);
     }
 
-    public IDataFrame importData(IDataFrame source) {
-        /*LOGGER.info(log() + "Preparing importData");
-        List<IExecutor> result = new ArrayList<>();
-        ITaskGroup.Builder shedulerBuilder = new ITaskGroup.Builder(job.getLock());
-        shedulerBuilder.newDependency(source.getScheduler());
-        shedulerBuilder.newDependency(job.getScheduler());
-        int senders = source.getExecutors().size();
-        int receivers = job.getExecutors().size();
-
-        IBarrier barrier = new IBarrier(senders + receivers);
-        IImportDataTask.Shared shared = new IImportDataTask.Shared();
-        IWorkerImportDataHelper sourceHelper = new IWorkerImportDataHelper(source.getJob(), source.getJob().getProperties());
-        for (IExecutor executor : source.getExecutors()) {
-            shedulerBuilder.newTask(new IImportDataTask(sourceHelper, executor, barrier, shared, IImportDataTask.SEND,
-                    source.getExecutors(), result));
-        }
-        for (IExecutor executor : job.getExecutors()) {
-            shedulerBuilder.newTask(new IImportDataTask(this, executor, barrier, shared, IImportDataTask.RECEIVE,
-                    source.getExecutors(), result));
-            result.add(executor);
-        }
-        IDataFrame target = job.createDataFrame(result, shedulerBuilder.build());
-        LOGGER.info(log() + "ImportData -> " + target.getName());
-        return target;*/
-        throw new UnsupportedOperationException("Not supported yet.");
+    public IDataFrame importDataFrame(IDataFrame source) throws IgnisException {
+        IDataFrame target = importDataFrameAux(source, null, null);
+        LOGGER.info(log() + "Preparing importDataFrame -> " + target.getName());
+        return target;
     }
 
-    public IDataFrame importData(IDataFrame source, ISource src) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public IDataFrame importDataFrame(IDataFrame source, ISource src) throws IgnisException {
+        IDataFrame target = importDataFrameAux(source, null, null);
+        LOGGER.info(log() + "Preparing importDataFrame -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame importDataFrame(IDataFrame source, long partitions) throws IgnisException {
+        IDataFrame target = importDataFrameAux(source, null, null);
+        LOGGER.info(log() + "Preparing importDataFrame partitions: " + partitions + " -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame importDataFrame(IDataFrame source, long partitions, ISource src) throws IgnisException {
+        IDataFrame target = importDataFrameAux(source, null, null);
+        LOGGER.info(log() + "Preparing importDataFrame partitions: " + partitions + " -> " + target.getName());
+        return target;
+    }
+
+    private IDataFrame importDataFrameAux(IDataFrame source, Long partitions, ISource src) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
+        builder.newLock(source.getLock());
+        IImportDataTask.Shared shared = new IImportDataTask.Shared(source.getPartitions(), worker.getExecutors().size());
+        for (IExecutor executor : source.getExecutors()) {
+            builder.newTask(new IImportDataTask(getName(), executor, shared, true, partitions, src));
+        }
+        for (IExecutor executor : worker.getExecutors()) {
+            builder.newTask(new IImportDataTask(getName(), executor, shared, false, partitions, src));
+        }
+        return worker.createDataFrame("", worker.getExecutors(), builder.build());
     }
 
 }
