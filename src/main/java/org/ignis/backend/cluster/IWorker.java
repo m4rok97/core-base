@@ -54,7 +54,7 @@ public final class IWorker {
         if (cluster.getProperties().getBoolean(IKeys.EXECUTOR_ISOLATION)) {
             this.lock = cluster.getLock();
         } else {
-            this.lock = new ILock(id, true);
+            this.lock = new ILock(cluster.getId(), id);
         }
         this.tasks = new IWorkerCreateHelper(this, cluster.getProperties()).create();//Must be the last
     }

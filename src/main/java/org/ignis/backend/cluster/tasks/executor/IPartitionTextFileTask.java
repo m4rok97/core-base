@@ -25,24 +25,24 @@ import org.ignis.rpc.ISource;
  *
  * @author César Pomar
  */
-public final class IPartitionObjectFileTask extends IPartitionFileTask {
+public final class IPartitionTextFileTask extends IPartitionFileTask{
 
-    public IPartitionObjectFileTask(String name, IExecutor executor, Shared shared, String path) {
+    public IPartitionTextFileTask(String name, IExecutor executor, Shared shared, String path) {
         super(name, executor, shared, path);
     }
 
-    public IPartitionObjectFileTask(String name, IExecutor executor, Shared shared, String path, ISource src) {
+    public IPartitionTextFileTask(String name, IExecutor executor, Shared shared, String path, ISource src) {
         super(name, executor, shared, path, src);
     }
-
+    
     @Override
     public void read(String path, long first, long partitions, ISource src) throws IExecutorException, TException {
-        executor.getIoModule().partitionObjectFile4(path, first, partitions, src);
+        executor.getIoModule().partitionTextFile4(path, first, partitions, src);
     }
 
     @Override
     public void read(String path, long first, long partitions) throws IExecutorException, TException {
-        executor.getIoModule().partitionObjectFile(path, first, partitions);
+        executor.getIoModule().partitionTextFile(path, first, partitions);
     }
-
+    
 }

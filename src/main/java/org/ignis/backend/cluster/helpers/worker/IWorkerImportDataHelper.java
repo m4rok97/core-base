@@ -65,7 +65,15 @@ public final class IWorkerImportDataHelper extends IWorkerHelper {
     private IDataFrame importDataFrameAux(IDataFrame source, Long partitions, ISource src) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newLock(source.getLock());
-        IImportDataTask.Shared shared = new IImportDataTask.Shared(source.getPartitions(), worker.getExecutors().size());
+        IWorker mayor = worker;
+        IWorker minor = worker;
+        if (minor.getLock().compareTo(minor.getLock()) > 0) {
+            IWorker aux = minor;
+            minor = mayor;
+            mayor = aux;
+        }
+        String commId = mayor.getCluster().getId() + "-" + mayor.getId() + "-" + minor.getCluster().getId() + "-" + minor.getId();
+        IImportDataTask.Shared shared = new IImportDataTask.Shared(source.getPartitions(), worker.getExecutors().size(), commId);
         for (IExecutor executor : source.getExecutors()) {
             builder.newTask(new IImportDataTask(getName(), executor, shared, true, partitions, src));
         }

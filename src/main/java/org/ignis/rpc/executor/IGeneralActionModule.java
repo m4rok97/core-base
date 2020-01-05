@@ -17,6 +17,8 @@ public class IGeneralActionModule {
 
     public void collect() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
+    public void aggregate(org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+
     public void treeAggregate(org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
     public void fold(org.ignis.rpc.ISource src) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
@@ -40,6 +42,8 @@ public class IGeneralActionModule {
     public void treeReduce(org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void collect(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+
+    public void aggregate(org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void treeAggregate(org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -140,6 +144,30 @@ public class IGeneralActionModule {
     {
       collect_result result = new collect_result();
       receiveBase(result, "collect");
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      return;
+    }
+
+    public void aggregate(org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    {
+      send_aggregate(seqOp, combOp);
+      recv_aggregate();
+    }
+
+    public void send_aggregate(org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp) throws org.apache.thrift.TException
+    {
+      aggregate_args args = new aggregate_args();
+      args.setSeqOp(seqOp);
+      args.setCombOp(combOp);
+      sendBase("aggregate", args);
+    }
+
+    public void recv_aggregate() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    {
+      aggregate_result result = new aggregate_result();
+      receiveBase(result, "aggregate");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -424,6 +452,41 @@ public class IGeneralActionModule {
       }
     }
 
+    public void aggregate(org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      aggregate_call method_call = new aggregate_call(seqOp, combOp, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class aggregate_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+      private org.ignis.rpc.ISource seqOp;
+      private org.ignis.rpc.ISource combOp;
+      public aggregate_call(org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.seqOp = seqOp;
+        this.combOp = combOp;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("aggregate", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        aggregate_args args = new aggregate_args();
+        args.setSeqOp(seqOp);
+        args.setCombOp(combOp);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public Void getResult() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return null;
+      }
+    }
+
     public void treeAggregate(org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       treeAggregate_call method_call = new treeAggregate_call(seqOp, combOp, depth, resultHandler, this, ___protocolFactory, ___transport);
@@ -673,6 +736,7 @@ public class IGeneralActionModule {
       processMap.put("reduce", new reduce());
       processMap.put("treeReduce", new treeReduce());
       processMap.put("collect", new collect());
+      processMap.put("aggregate", new aggregate());
       processMap.put("treeAggregate", new treeAggregate());
       processMap.put("fold", new fold());
       processMap.put("take", new take());
@@ -763,6 +827,35 @@ public class IGeneralActionModule {
         collect_result result = new collect_result();
         try {
           iface.collect();
+        } catch (org.ignis.rpc.IExecutorException ex) {
+          result.ex = ex;
+        }
+        return result;
+      }
+    }
+
+    public static class aggregate<I extends Iface> extends org.apache.thrift.ProcessFunction<I, aggregate_args> {
+      public aggregate() {
+        super("aggregate");
+      }
+
+      public aggregate_args getEmptyArgsInstance() {
+        return new aggregate_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean rethrowUnhandledExceptions() {
+        return false;
+      }
+
+      public aggregate_result getResult(I iface, aggregate_args args) throws org.apache.thrift.TException {
+        aggregate_result result = new aggregate_result();
+        try {
+          iface.aggregate(args.seqOp, args.combOp);
         } catch (org.ignis.rpc.IExecutorException ex) {
           result.ex = ex;
         }
@@ -989,6 +1082,7 @@ public class IGeneralActionModule {
       processMap.put("reduce", new reduce());
       processMap.put("treeReduce", new treeReduce());
       processMap.put("collect", new collect());
+      processMap.put("aggregate", new aggregate());
       processMap.put("treeAggregate", new treeAggregate());
       processMap.put("fold", new fold());
       processMap.put("take", new take());
@@ -1188,6 +1282,70 @@ public class IGeneralActionModule {
 
       public void start(I iface, collect_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
         iface.collect(resultHandler);
+      }
+    }
+
+    public static class aggregate<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, aggregate_args, Void> {
+      public aggregate() {
+        super("aggregate");
+      }
+
+      public aggregate_args getEmptyArgsInstance() {
+        return new aggregate_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
+            aggregate_result result = new aggregate_result();
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            aggregate_result result = new aggregate_result();
+            if (e instanceof org.ignis.rpc.IExecutorException) {
+              result.ex = (org.ignis.rpc.IExecutorException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, aggregate_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.aggregate(args.seqOp, args.combOp,resultHandler);
       }
     }
 
@@ -3831,6 +3989,857 @@ public class IGeneralActionModule {
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, collect_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.ex = new org.ignis.rpc.IExecutorException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class aggregate_args implements org.apache.thrift.TBase<aggregate_args, aggregate_args._Fields>, java.io.Serializable, Cloneable, Comparable<aggregate_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("aggregate_args");
+
+    private static final org.apache.thrift.protocol.TField SEQ_OP_FIELD_DESC = new org.apache.thrift.protocol.TField("seqOp", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField COMB_OP_FIELD_DESC = new org.apache.thrift.protocol.TField("combOp", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new aggregate_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new aggregate_argsTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource seqOp; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource combOp; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SEQ_OP((short)1, "seqOp"),
+      COMB_OP((short)2, "combOp");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // SEQ_OP
+            return SEQ_OP;
+          case 2: // COMB_OP
+            return COMB_OP;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SEQ_OP, new org.apache.thrift.meta_data.FieldMetaData("seqOp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.COMB_OP, new org.apache.thrift.meta_data.FieldMetaData("combOp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(aggregate_args.class, metaDataMap);
+    }
+
+    public aggregate_args() {
+    }
+
+    public aggregate_args(
+      org.ignis.rpc.ISource seqOp,
+      org.ignis.rpc.ISource combOp)
+    {
+      this();
+      this.seqOp = seqOp;
+      this.combOp = combOp;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public aggregate_args(aggregate_args other) {
+      if (other.isSetSeqOp()) {
+        this.seqOp = new org.ignis.rpc.ISource(other.seqOp);
+      }
+      if (other.isSetCombOp()) {
+        this.combOp = new org.ignis.rpc.ISource(other.combOp);
+      }
+    }
+
+    public aggregate_args deepCopy() {
+      return new aggregate_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.seqOp = null;
+      this.combOp = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getSeqOp() {
+      return this.seqOp;
+    }
+
+    public aggregate_args setSeqOp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource seqOp) {
+      this.seqOp = seqOp;
+      return this;
+    }
+
+    public void unsetSeqOp() {
+      this.seqOp = null;
+    }
+
+    /** Returns true if field seqOp is set (has been assigned a value) and false otherwise */
+    public boolean isSetSeqOp() {
+      return this.seqOp != null;
+    }
+
+    public void setSeqOpIsSet(boolean value) {
+      if (!value) {
+        this.seqOp = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getCombOp() {
+      return this.combOp;
+    }
+
+    public aggregate_args setCombOp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource combOp) {
+      this.combOp = combOp;
+      return this;
+    }
+
+    public void unsetCombOp() {
+      this.combOp = null;
+    }
+
+    /** Returns true if field combOp is set (has been assigned a value) and false otherwise */
+    public boolean isSetCombOp() {
+      return this.combOp != null;
+    }
+
+    public void setCombOpIsSet(boolean value) {
+      if (!value) {
+        this.combOp = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case SEQ_OP:
+        if (value == null) {
+          unsetSeqOp();
+        } else {
+          setSeqOp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
+      case COMB_OP:
+        if (value == null) {
+          unsetCombOp();
+        } else {
+          setCombOp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SEQ_OP:
+        return getSeqOp();
+
+      case COMB_OP:
+        return getCombOp();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SEQ_OP:
+        return isSetSeqOp();
+      case COMB_OP:
+        return isSetCombOp();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof aggregate_args)
+        return this.equals((aggregate_args)that);
+      return false;
+    }
+
+    public boolean equals(aggregate_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_seqOp = true && this.isSetSeqOp();
+      boolean that_present_seqOp = true && that.isSetSeqOp();
+      if (this_present_seqOp || that_present_seqOp) {
+        if (!(this_present_seqOp && that_present_seqOp))
+          return false;
+        if (!this.seqOp.equals(that.seqOp))
+          return false;
+      }
+
+      boolean this_present_combOp = true && this.isSetCombOp();
+      boolean that_present_combOp = true && that.isSetCombOp();
+      if (this_present_combOp || that_present_combOp) {
+        if (!(this_present_combOp && that_present_combOp))
+          return false;
+        if (!this.combOp.equals(that.combOp))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSeqOp()) ? 131071 : 524287);
+      if (isSetSeqOp())
+        hashCode = hashCode * 8191 + seqOp.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetCombOp()) ? 131071 : 524287);
+      if (isSetCombOp())
+        hashCode = hashCode * 8191 + combOp.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(aggregate_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetSeqOp()).compareTo(other.isSetSeqOp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSeqOp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.seqOp, other.seqOp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetCombOp()).compareTo(other.isSetCombOp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetCombOp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.combOp, other.combOp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("aggregate_args(");
+      boolean first = true;
+
+      sb.append("seqOp:");
+      if (this.seqOp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.seqOp);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("combOp:");
+      if (this.combOp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.combOp);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (seqOp != null) {
+        seqOp.validate();
+      }
+      if (combOp != null) {
+        combOp.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class aggregate_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public aggregate_argsStandardScheme getScheme() {
+        return new aggregate_argsStandardScheme();
+      }
+    }
+
+    private static class aggregate_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<aggregate_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, aggregate_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // SEQ_OP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.seqOp = new org.ignis.rpc.ISource();
+                struct.seqOp.read(iprot);
+                struct.setSeqOpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // COMB_OP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.combOp = new org.ignis.rpc.ISource();
+                struct.combOp.read(iprot);
+                struct.setCombOpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, aggregate_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.seqOp != null) {
+          oprot.writeFieldBegin(SEQ_OP_FIELD_DESC);
+          struct.seqOp.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.combOp != null) {
+          oprot.writeFieldBegin(COMB_OP_FIELD_DESC);
+          struct.combOp.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class aggregate_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public aggregate_argsTupleScheme getScheme() {
+        return new aggregate_argsTupleScheme();
+      }
+    }
+
+    private static class aggregate_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<aggregate_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, aggregate_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSeqOp()) {
+          optionals.set(0);
+        }
+        if (struct.isSetCombOp()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetSeqOp()) {
+          struct.seqOp.write(oprot);
+        }
+        if (struct.isSetCombOp()) {
+          struct.combOp.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, aggregate_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.seqOp = new org.ignis.rpc.ISource();
+          struct.seqOp.read(iprot);
+          struct.setSeqOpIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.combOp = new org.ignis.rpc.ISource();
+          struct.combOp.read(iprot);
+          struct.setCombOpIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class aggregate_result implements org.apache.thrift.TBase<aggregate_result, aggregate_result._Fields>, java.io.Serializable, Cloneable, Comparable<aggregate_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("aggregate_result");
+
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new aggregate_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new aggregate_resultTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      EX((short)1, "ex");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // EX
+            return EX;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IExecutorException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(aggregate_result.class, metaDataMap);
+    }
+
+    public aggregate_result() {
+    }
+
+    public aggregate_result(
+      org.ignis.rpc.IExecutorException ex)
+    {
+      this();
+      this.ex = ex;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public aggregate_result(aggregate_result other) {
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.IExecutorException(other.ex);
+      }
+    }
+
+    public aggregate_result deepCopy() {
+      return new aggregate_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.ex = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.IExecutorException getEx() {
+      return this.ex;
+    }
+
+    public aggregate_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.IExecutorException)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case EX:
+        return getEx();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case EX:
+        return isSetEx();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof aggregate_result)
+        return this.equals((aggregate_result)that);
+      return false;
+    }
+
+    public boolean equals(aggregate_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(aggregate_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("aggregate_result(");
+      boolean first = true;
+
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class aggregate_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public aggregate_resultStandardScheme getScheme() {
+        return new aggregate_resultStandardScheme();
+      }
+    }
+
+    private static class aggregate_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<aggregate_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, aggregate_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.IExecutorException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, aggregate_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class aggregate_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public aggregate_resultTupleScheme getScheme() {
+        return new aggregate_resultTupleScheme();
+      }
+    }
+
+    private static class aggregate_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<aggregate_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, aggregate_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetEx()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, aggregate_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {

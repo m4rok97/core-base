@@ -23,15 +23,15 @@ package org.ignis.backend.cluster.tasks;
 public final class ILock implements Comparable<ILock> {
 
     private final long id;
-    private final int weak;//If worker has his own Lock will be weak
+    private final long weak;//If worker has his own Lock will be weak
 
     public ILock(long id) {
-        this(id, false);
+        this(id, -1);
     }
 
-    public ILock(long id, boolean weak) {
+    public ILock(long id, long weak) {
         this.id = id;
-        this.weak = weak ? -1 : 1;
+        this.weak = weak;
     }
 
     @Override
@@ -42,7 +42,11 @@ public final class ILock implements Comparable<ILock> {
         } else if (cmp < 0) {
             return -1;
         }
-        return weak;
+        cmp = weak - lock.weak;
+        if (cmp >= 0) {
+            return 1;
+        }
+        return -1;
     }
 
     @Override
@@ -57,7 +61,7 @@ public final class ILock implements Comparable<ILock> {
         }
 
         if (obj != null && obj instanceof ILock) {
-            return id == ((ILock) obj).id;
+            return id == ((ILock) obj).id && weak == ((ILock) obj).weak;
         }
 
         return false;

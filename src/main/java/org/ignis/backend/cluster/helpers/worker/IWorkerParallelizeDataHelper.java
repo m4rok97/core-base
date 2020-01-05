@@ -22,7 +22,6 @@ import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IWorker;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.executor.IParallelizeTask;
-import org.ignis.backend.cluster.tasks.executor.ITakeSampleTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.ISource;

@@ -20,7 +20,9 @@ import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IWorker;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
+import org.ignis.backend.cluster.tasks.executor.IPartitionJsonFileTask;
 import org.ignis.backend.cluster.tasks.executor.IPartitionObjectFileTask;
+import org.ignis.backend.cluster.tasks.executor.IPartitionTextFileTask;
 import org.ignis.backend.cluster.tasks.executor.ITextFileTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
@@ -82,6 +84,54 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         }
         IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
         LOGGER.info(log() + "Registering  partitionObjectFile: " + path + " -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame partitionTextFile(String path) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
+        builder.newDependency(worker.getTasks());
+        IPartitionTextFileTask.Shared shared = new IPartitionTextFileTask.Shared(worker.getExecutors().size());
+        for (IExecutor executor : worker.getExecutors()) {
+            builder.newTask(new IPartitionTextFileTask(getName(), executor, shared, path));
+        }
+        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "Registering partitionTextFile path: " + path + " -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame partitionTextFile(String path, ISource src) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
+        builder.newDependency(worker.getTasks());
+        IPartitionTextFileTask.Shared shared = new IPartitionTextFileTask.Shared(worker.getExecutors().size());
+        for (IExecutor executor : worker.getExecutors()) {
+            builder.newTask(new IPartitionTextFileTask(getName(), executor, shared, path, src));
+        }
+        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "Registering  partitionTextFile: " + path + " -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame partitionJsonFile(String path) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
+        builder.newDependency(worker.getTasks());
+        IPartitionJsonFileTask.Shared shared = new IPartitionJsonFileTask.Shared(worker.getExecutors().size());
+        for (IExecutor executor : worker.getExecutors()) {
+            builder.newTask(new IPartitionJsonFileTask(getName(), executor, shared, path));
+        }
+        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "Registering partitionJsonFile path: " + path + " -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame partitionJsonFile(String path, ISource src) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
+        builder.newDependency(worker.getTasks());
+        IPartitionJsonFileTask.Shared shared = new IPartitionJsonFileTask.Shared(worker.getExecutors().size());
+        for (IExecutor executor : worker.getExecutors()) {
+            builder.newTask(new IPartitionJsonFileTask(getName(), executor, shared, path, src));
+        }
+        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "Registering  partitionJsonFile: " + path + " -> " + target.getName());
         return target;
     }
 

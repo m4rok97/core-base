@@ -16,9 +16,9 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import java.util.concurrent.BrokenBarrierException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
-import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
@@ -27,69 +27,37 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class IAggregateTask extends IExecutorContextTask {
+public class IAggregateTask extends IDriverTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IAggregateTask.class);
 
-    public static class Shared {
-
-        public Shared(int executors) {
-            barrier = new IBarrier(executors);
-        }
-
-        private final IBarrier barrier;
-
-    }
-
-    private final Shared shared;
-    private final boolean driver;
+    private final ISource seqOp;
+    private final ISource combOp;
 
     public IAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp) {
-        super(name, executor, Mode.LOAD);
-        this.shared = shared;
-        this.driver = driver;
+        super(name, executor, shared, driver);
+        this.seqOp = seqOp;
+        this.combOp = combOp;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        /*try {//TODO
-            if (barrier.await() == 0) {
-                shared.result.clear();
-                LOGGER.info(log() + "Executing " + (ligth ? "ligth " : "") + "collect");
+        LOGGER.info(log() + "Executing aggregate");
+        try {
+            if (!driver) {
+                executor.getGeneralActionModule().aggregate(seqOp, combOp);
             }
-            barrier.await();
-            ByteBuffer bytes = executor.getStorageModule().collect(executor.getId(), "none", ligth);//TODO
-            if (ligth) {
-                shared.result.put(executor, bytes);
-            }
-            barrier.await();
-            if (ligth) {
-                ligthMode(context);
-            } else {
-                directMode(context);
-            }
-            if (barrier.await() == 0) {
-                LOGGER.info(log() + "Collect executed");
-            }
+            shared.barrier.await();
+            gather(context, true);
         } catch (IgnisException ex) {
-            barrier.fails();
+            shared.barrier.fails();
             throw ex;
         } catch (BrokenBarrierException ex) {
             //Other Task has failed
         } catch (Exception ex) {
-            barrier.fails();
+            shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
-        }*/
+        }
+        LOGGER.info(log() + "Aggregate executed");
     }
-
-    private void ligthMode(ITaskContext context) throws Exception {
-        /*if (barrier.await() == 0) {
-            context.set("result", executors.stream().map(e -> shared.result.get(e)).collect(Collectors.toList()));
-        }*/
-    }
-
-    private void directMode(ITaskContext context) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");//TODO
-    }
-
 }
