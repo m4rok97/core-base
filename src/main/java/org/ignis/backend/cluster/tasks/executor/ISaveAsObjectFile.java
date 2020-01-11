@@ -32,9 +32,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public final class ISaveAsPartitionObjectFile extends IExecutorContextTask {
+public final class ISaveAsObjectFile extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsPartitionObjectFile.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISaveAsObjectFile.class);
 
     public static class Shared {
 
@@ -50,11 +50,13 @@ public final class ISaveAsPartitionObjectFile extends IExecutorContextTask {
 
     private final Shared shared;
     private final String path;
+    private final byte compression;
 
-    public ISaveAsPartitionObjectFile(String name, IExecutor executor, Shared shared, String path) {
+    public ISaveAsObjectFile(String name, IExecutor executor, Shared shared, String path, byte compression) {
         super(name, executor, Mode.LOAD);
         this.shared = shared;
         this.path = path;
+        this.compression = compression;
     }
 
     @Override
@@ -68,7 +70,7 @@ public final class ISaveAsPartitionObjectFile extends IExecutorContextTask {
             for (int i = 1; i < id; i++) {
                 first += shared.partitions.get(i - 1);
             }
-            executor.getIoModule().saveAsTextFile(path, first);  
+            executor.getIoModule().saveAsObjectFile(path, compression,first);  
             shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();

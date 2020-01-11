@@ -99,18 +99,6 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         return target;
     }
 
-    public IDataFrame partitionTextFile(String path, ISource src) throws IgnisException {
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
-        builder.newDependency(worker.getTasks());
-        IPartitionTextFileTask.Shared shared = new IPartitionTextFileTask.Shared(worker.getExecutors().size());
-        for (IExecutor executor : worker.getExecutors()) {
-            builder.newTask(new IPartitionTextFileTask(getName(), executor, shared, path, src));
-        }
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering  partitionTextFile: " + path + " -> " + target.getName());
-        return target;
-    }
-
     public IDataFrame partitionJsonFile(String path) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newDependency(worker.getTasks());

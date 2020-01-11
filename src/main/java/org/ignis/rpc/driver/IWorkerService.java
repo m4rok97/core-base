@@ -35,15 +35,13 @@ public class IWorkerService {
 
     public org.ignis.rpc.driver.IDataFrameId textFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
-    public org.ignis.rpc.driver.IDataFrameId textFile3(IWorkerId id, java.lang.String path, long partitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public org.ignis.rpc.driver.IDataFrameId textFile3(IWorkerId id, java.lang.String path, long minPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
     public org.ignis.rpc.driver.IDataFrameId partitionObjectFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
     public org.ignis.rpc.driver.IDataFrameId partitionObjectFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
     public org.ignis.rpc.driver.IDataFrameId partitionTextFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
-
-    public org.ignis.rpc.driver.IDataFrameId partitionTextFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
     public org.ignis.rpc.driver.IDataFrameId partitionJsonFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
@@ -77,15 +75,13 @@ public class IWorkerService {
 
     public void textFile(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
-    public void textFile3(IWorkerId id, java.lang.String path, long partitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
+    public void textFile3(IWorkerId id, java.lang.String path, long minPartitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
     public void partitionObjectFile(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
     public void partitionObjectFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
     public void partitionTextFile(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
-
-    public void partitionTextFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
     public void partitionJsonFile(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
@@ -441,18 +437,18 @@ public class IWorkerService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "textFile failed: unknown result");
     }
 
-    public org.ignis.rpc.driver.IDataFrameId textFile3(IWorkerId id, java.lang.String path, long partitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId textFile3(IWorkerId id, java.lang.String path, long minPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
     {
-      send_textFile3(id, path, partitions);
+      send_textFile3(id, path, minPartitions);
       return recv_textFile3();
     }
 
-    public void send_textFile3(IWorkerId id, java.lang.String path, long partitions) throws org.apache.thrift.TException
+    public void send_textFile3(IWorkerId id, java.lang.String path, long minPartitions) throws org.apache.thrift.TException
     {
       textFile3_args args = new textFile3_args();
       args.setId(id);
       args.setPath(path);
-      args.setPartitions(partitions);
+      args.setMinPartitions(minPartitions);
       sendBase("textFile3", args);
     }
 
@@ -549,34 +545,6 @@ public class IWorkerService {
         throw result.ex;
       }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitionTextFile failed: unknown result");
-    }
-
-    public org.ignis.rpc.driver.IDataFrameId partitionTextFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
-    {
-      send_partitionTextFile3(id, path, src);
-      return recv_partitionTextFile3();
-    }
-
-    public void send_partitionTextFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
-    {
-      partitionTextFile3_args args = new partitionTextFile3_args();
-      args.setId(id);
-      args.setPath(path);
-      args.setSrc(src);
-      sendBase("partitionTextFile3", args);
-    }
-
-    public org.ignis.rpc.driver.IDataFrameId recv_partitionTextFile3() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
-    {
-      partitionTextFile3_result result = new partitionTextFile3_result();
-      receiveBase(result, "partitionTextFile3");
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      if (result.ex != null) {
-        throw result.ex;
-      }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitionTextFile3 failed: unknown result");
     }
 
     public org.ignis.rpc.driver.IDataFrameId partitionJsonFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
@@ -1093,9 +1061,9 @@ public class IWorkerService {
       }
     }
 
-    public void textFile3(IWorkerId id, java.lang.String path, long partitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+    public void textFile3(IWorkerId id, java.lang.String path, long minPartitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      textFile3_call method_call = new textFile3_call(id, path, partitions, resultHandler, this, ___protocolFactory, ___transport);
+      textFile3_call method_call = new textFile3_call(id, path, minPartitions, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -1103,12 +1071,12 @@ public class IWorkerService {
     public static class textFile3_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
       private IWorkerId id;
       private java.lang.String path;
-      private long partitions;
-      public textFile3_call(IWorkerId id, java.lang.String path, long partitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private long minPartitions;
+      public textFile3_call(IWorkerId id, java.lang.String path, long minPartitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.path = path;
-        this.partitions = partitions;
+        this.minPartitions = minPartitions;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -1116,7 +1084,7 @@ public class IWorkerService {
         textFile3_args args = new textFile3_args();
         args.setId(id);
         args.setPath(path);
-        args.setPartitions(partitions);
+        args.setMinPartitions(minPartitions);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -1239,44 +1207,6 @@ public class IWorkerService {
       }
     }
 
-    public void partitionTextFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      partitionTextFile3_call method_call = new partitionTextFile3_call(id, path, src, resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class partitionTextFile3_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
-      private IWorkerId id;
-      private java.lang.String path;
-      private org.ignis.rpc.ISource src;
-      public partitionTextFile3_call(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-        this.id = id;
-        this.path = path;
-        this.src = src;
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("partitionTextFile3", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        partitionTextFile3_args args = new partitionTextFile3_args();
-        args.setId(id);
-        args.setPath(path);
-        args.setSrc(src);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public org.ignis.rpc.driver.IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new java.lang.IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_partitionTextFile3();
-      }
-    }
-
     public void partitionJsonFile(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       partitionJsonFile_call method_call = new partitionJsonFile_call(id, path, resultHandler, this, ___protocolFactory, ___transport);
@@ -1379,7 +1309,6 @@ public class IWorkerService {
       processMap.put("partitionObjectFile", new partitionObjectFile());
       processMap.put("partitionObjectFile3", new partitionObjectFile3());
       processMap.put("partitionTextFile", new partitionTextFile());
-      processMap.put("partitionTextFile3", new partitionTextFile3());
       processMap.put("partitionJsonFile", new partitionJsonFile());
       processMap.put("partitionJsonFile3", new partitionJsonFile3());
       return processMap;
@@ -1754,7 +1683,7 @@ public class IWorkerService {
       public textFile3_result getResult(I iface, textFile3_args args) throws org.apache.thrift.TException {
         textFile3_result result = new textFile3_result();
         try {
-          result.success = iface.textFile3(args.id, args.path, args.partitions);
+          result.success = iface.textFile3(args.id, args.path, args.minPartitions);
         } catch (org.ignis.rpc.IDriverException ex) {
           result.ex = ex;
         }
@@ -1849,35 +1778,6 @@ public class IWorkerService {
       }
     }
 
-    public static class partitionTextFile3<I extends Iface> extends org.apache.thrift.ProcessFunction<I, partitionTextFile3_args> {
-      public partitionTextFile3() {
-        super("partitionTextFile3");
-      }
-
-      public partitionTextFile3_args getEmptyArgsInstance() {
-        return new partitionTextFile3_args();
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      @Override
-      protected boolean rethrowUnhandledExceptions() {
-        return false;
-      }
-
-      public partitionTextFile3_result getResult(I iface, partitionTextFile3_args args) throws org.apache.thrift.TException {
-        partitionTextFile3_result result = new partitionTextFile3_result();
-        try {
-          result.success = iface.partitionTextFile3(args.id, args.path, args.src);
-        } catch (org.ignis.rpc.IDriverException ex) {
-          result.ex = ex;
-        }
-        return result;
-      }
-    }
-
     public static class partitionJsonFile<I extends Iface> extends org.apache.thrift.ProcessFunction<I, partitionJsonFile_args> {
       public partitionJsonFile() {
         super("partitionJsonFile");
@@ -1965,7 +1865,6 @@ public class IWorkerService {
       processMap.put("partitionObjectFile", new partitionObjectFile());
       processMap.put("partitionObjectFile3", new partitionObjectFile3());
       processMap.put("partitionTextFile", new partitionTextFile());
-      processMap.put("partitionTextFile3", new partitionTextFile3());
       processMap.put("partitionJsonFile", new partitionJsonFile());
       processMap.put("partitionJsonFile3", new partitionJsonFile3());
       return processMap;
@@ -2811,7 +2710,7 @@ public class IWorkerService {
       }
 
       public void start(I iface, textFile3_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-        iface.textFile3(args.id, args.path, args.partitions,resultHandler);
+        iface.textFile3(args.id, args.path, args.minPartitions,resultHandler);
       }
     }
 
@@ -3007,71 +2906,6 @@ public class IWorkerService {
 
       public void start(I iface, partitionTextFile_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
         iface.partitionTextFile(args.id, args.path,resultHandler);
-      }
-    }
-
-    public static class partitionTextFile3<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, partitionTextFile3_args, org.ignis.rpc.driver.IDataFrameId> {
-      public partitionTextFile3() {
-        super("partitionTextFile3");
-      }
-
-      public partitionTextFile3_args getEmptyArgsInstance() {
-        return new partitionTextFile3_args();
-      }
-
-      public org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
-        final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId>() { 
-          public void onComplete(org.ignis.rpc.driver.IDataFrameId o) {
-            partitionTextFile3_result result = new partitionTextFile3_result();
-            result.success = o;
-            try {
-              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-            } catch (org.apache.thrift.transport.TTransportException e) {
-              _LOGGER.error("TTransportException writing to internal frame buffer", e);
-              fb.close();
-            } catch (java.lang.Exception e) {
-              _LOGGER.error("Exception writing to internal frame buffer", e);
-              onError(e);
-            }
-          }
-          public void onError(java.lang.Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TSerializable msg;
-            partitionTextFile3_result result = new partitionTextFile3_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
-              result.setExIsSet(true);
-              msg = result;
-            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
-              _LOGGER.error("TTransportException inside handler", e);
-              fb.close();
-              return;
-            } else if (e instanceof org.apache.thrift.TApplicationException) {
-              _LOGGER.error("TApplicationException inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TApplicationException)e;
-            } else {
-              _LOGGER.error("Exception inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (java.lang.Exception ex) {
-              _LOGGER.error("Exception writing to internal frame buffer", ex);
-              fb.close();
-            }
-          }
-        };
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      public void start(I iface, partitionTextFile3_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-        iface.partitionTextFile3(args.id, args.path, args.src,resultHandler);
       }
     }
 
@@ -15276,20 +15110,20 @@ public class IWorkerService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)2);
-    private static final org.apache.thrift.protocol.TField PARTITIONS_FIELD_DESC = new org.apache.thrift.protocol.TField("partitions", org.apache.thrift.protocol.TType.I64, (short)3);
+    private static final org.apache.thrift.protocol.TField MIN_PARTITIONS_FIELD_DESC = new org.apache.thrift.protocol.TField("minPartitions", org.apache.thrift.protocol.TType.I64, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new textFile3_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new textFile3_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IWorkerId id; // required
     private @org.apache.thrift.annotation.Nullable java.lang.String path; // required
-    private long partitions; // required
+    private long minPartitions; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
       PATH((short)2, "path"),
-      PARTITIONS((short)3, "partitions");
+      MIN_PARTITIONS((short)3, "minPartitions");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -15309,8 +15143,8 @@ public class IWorkerService {
             return ID;
           case 2: // PATH
             return PATH;
-          case 3: // PARTITIONS
-            return PARTITIONS;
+          case 3: // MIN_PARTITIONS
+            return MIN_PARTITIONS;
           default:
             return null;
         }
@@ -15352,7 +15186,7 @@ public class IWorkerService {
     }
 
     // isset id assignments
-    private static final int __PARTITIONS_ISSET_ID = 0;
+    private static final int __MINPARTITIONS_ISSET_ID = 0;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
@@ -15361,7 +15195,7 @@ public class IWorkerService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IWorkerId.class)));
       tmpMap.put(_Fields.PATH, new org.apache.thrift.meta_data.FieldMetaData("path", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.PARTITIONS, new org.apache.thrift.meta_data.FieldMetaData("partitions", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.MIN_PARTITIONS, new org.apache.thrift.meta_data.FieldMetaData("minPartitions", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(textFile3_args.class, metaDataMap);
@@ -15373,13 +15207,13 @@ public class IWorkerService {
     public textFile3_args(
       IWorkerId id,
       java.lang.String path,
-      long partitions)
+      long minPartitions)
     {
       this();
       this.id = id;
       this.path = path;
-      this.partitions = partitions;
-      setPartitionsIsSet(true);
+      this.minPartitions = minPartitions;
+      setMinPartitionsIsSet(true);
     }
 
     /**
@@ -15393,7 +15227,7 @@ public class IWorkerService {
       if (other.isSetPath()) {
         this.path = other.path;
       }
-      this.partitions = other.partitions;
+      this.minPartitions = other.minPartitions;
     }
 
     public textFile3_args deepCopy() {
@@ -15404,8 +15238,8 @@ public class IWorkerService {
     public void clear() {
       this.id = null;
       this.path = null;
-      setPartitionsIsSet(false);
-      this.partitions = 0;
+      setMinPartitionsIsSet(false);
+      this.minPartitions = 0;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -15458,27 +15292,27 @@ public class IWorkerService {
       }
     }
 
-    public long getPartitions() {
-      return this.partitions;
+    public long getMinPartitions() {
+      return this.minPartitions;
     }
 
-    public textFile3_args setPartitions(long partitions) {
-      this.partitions = partitions;
-      setPartitionsIsSet(true);
+    public textFile3_args setMinPartitions(long minPartitions) {
+      this.minPartitions = minPartitions;
+      setMinPartitionsIsSet(true);
       return this;
     }
 
-    public void unsetPartitions() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
+    public void unsetMinPartitions() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __MINPARTITIONS_ISSET_ID);
     }
 
-    /** Returns true if field partitions is set (has been assigned a value) and false otherwise */
-    public boolean isSetPartitions() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
+    /** Returns true if field minPartitions is set (has been assigned a value) and false otherwise */
+    public boolean isSetMinPartitions() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __MINPARTITIONS_ISSET_ID);
     }
 
-    public void setPartitionsIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PARTITIONS_ISSET_ID, value);
+    public void setMinPartitionsIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __MINPARTITIONS_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
@@ -15499,11 +15333,11 @@ public class IWorkerService {
         }
         break;
 
-      case PARTITIONS:
+      case MIN_PARTITIONS:
         if (value == null) {
-          unsetPartitions();
+          unsetMinPartitions();
         } else {
-          setPartitions((java.lang.Long)value);
+          setMinPartitions((java.lang.Long)value);
         }
         break;
 
@@ -15519,8 +15353,8 @@ public class IWorkerService {
       case PATH:
         return getPath();
 
-      case PARTITIONS:
-        return getPartitions();
+      case MIN_PARTITIONS:
+        return getMinPartitions();
 
       }
       throw new java.lang.IllegalStateException();
@@ -15537,8 +15371,8 @@ public class IWorkerService {
         return isSetId();
       case PATH:
         return isSetPath();
-      case PARTITIONS:
-        return isSetPartitions();
+      case MIN_PARTITIONS:
+        return isSetMinPartitions();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -15576,12 +15410,12 @@ public class IWorkerService {
           return false;
       }
 
-      boolean this_present_partitions = true;
-      boolean that_present_partitions = true;
-      if (this_present_partitions || that_present_partitions) {
-        if (!(this_present_partitions && that_present_partitions))
+      boolean this_present_minPartitions = true;
+      boolean that_present_minPartitions = true;
+      if (this_present_minPartitions || that_present_minPartitions) {
+        if (!(this_present_minPartitions && that_present_minPartitions))
           return false;
-        if (this.partitions != that.partitions)
+        if (this.minPartitions != that.minPartitions)
           return false;
       }
 
@@ -15600,7 +15434,7 @@ public class IWorkerService {
       if (isSetPath())
         hashCode = hashCode * 8191 + path.hashCode();
 
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(partitions);
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(minPartitions);
 
       return hashCode;
     }
@@ -15633,12 +15467,12 @@ public class IWorkerService {
           return lastComparison;
         }
       }
-      lastComparison = java.lang.Boolean.valueOf(isSetPartitions()).compareTo(other.isSetPartitions());
+      lastComparison = java.lang.Boolean.valueOf(isSetMinPartitions()).compareTo(other.isSetMinPartitions());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetPartitions()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.partitions, other.partitions);
+      if (isSetMinPartitions()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.minPartitions, other.minPartitions);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -15680,8 +15514,8 @@ public class IWorkerService {
       }
       first = false;
       if (!first) sb.append(", ");
-      sb.append("partitions:");
-      sb.append(this.partitions);
+      sb.append("minPartitions:");
+      sb.append(this.minPartitions);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -15748,10 +15582,10 @@ public class IWorkerService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 3: // PARTITIONS
+            case 3: // MIN_PARTITIONS
               if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.partitions = iprot.readI64();
-                struct.setPartitionsIsSet(true);
+                struct.minPartitions = iprot.readI64();
+                struct.setMinPartitionsIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -15781,8 +15615,8 @@ public class IWorkerService {
           oprot.writeString(struct.path);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(PARTITIONS_FIELD_DESC);
-        oprot.writeI64(struct.partitions);
+        oprot.writeFieldBegin(MIN_PARTITIONS_FIELD_DESC);
+        oprot.writeI64(struct.minPartitions);
         oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
@@ -15808,7 +15642,7 @@ public class IWorkerService {
         if (struct.isSetPath()) {
           optionals.set(1);
         }
-        if (struct.isSetPartitions()) {
+        if (struct.isSetMinPartitions()) {
           optionals.set(2);
         }
         oprot.writeBitSet(optionals, 3);
@@ -15818,8 +15652,8 @@ public class IWorkerService {
         if (struct.isSetPath()) {
           oprot.writeString(struct.path);
         }
-        if (struct.isSetPartitions()) {
-          oprot.writeI64(struct.partitions);
+        if (struct.isSetMinPartitions()) {
+          oprot.writeI64(struct.minPartitions);
         }
       }
 
@@ -15837,8 +15671,8 @@ public class IWorkerService {
           struct.setPathIsSet(true);
         }
         if (incoming.get(2)) {
-          struct.partitions = iprot.readI64();
-          struct.setPartitionsIsSet(true);
+          struct.minPartitions = iprot.readI64();
+          struct.setMinPartitionsIsSet(true);
         }
       }
     }
@@ -19285,1072 +19119,6 @@ public class IWorkerService {
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, partitionTextFile_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
-        if (incoming.get(0)) {
-          struct.success = new org.ignis.rpc.driver.IDataFrameId();
-          struct.success.read(iprot);
-          struct.setSuccessIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
-          struct.ex.read(iprot);
-          struct.setExIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class partitionTextFile3_args implements org.apache.thrift.TBase<partitionTextFile3_args, partitionTextFile3_args._Fields>, java.io.Serializable, Cloneable, Comparable<partitionTextFile3_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionTextFile3_args");
-
-    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-    private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)2);
-    private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)3);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionTextFile3_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionTextFile3_argsTupleSchemeFactory();
-
-    private @org.apache.thrift.annotation.Nullable IWorkerId id; // required
-    private @org.apache.thrift.annotation.Nullable java.lang.String path; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      ID((short)1, "id"),
-      PATH((short)2, "path"),
-      SRC((short)3, "src");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // ID
-            return ID;
-          case 2: // PATH
-            return PATH;
-          case 3: // SRC
-            return SRC;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IWorkerId.class)));
-      tmpMap.put(_Fields.PATH, new org.apache.thrift.meta_data.FieldMetaData("path", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionTextFile3_args.class, metaDataMap);
-    }
-
-    public partitionTextFile3_args() {
-    }
-
-    public partitionTextFile3_args(
-      IWorkerId id,
-      java.lang.String path,
-      org.ignis.rpc.ISource src)
-    {
-      this();
-      this.id = id;
-      this.path = path;
-      this.src = src;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public partitionTextFile3_args(partitionTextFile3_args other) {
-      if (other.isSetId()) {
-        this.id = new IWorkerId(other.id);
-      }
-      if (other.isSetPath()) {
-        this.path = other.path;
-      }
-      if (other.isSetSrc()) {
-        this.src = new org.ignis.rpc.ISource(other.src);
-      }
-    }
-
-    public partitionTextFile3_args deepCopy() {
-      return new partitionTextFile3_args(this);
-    }
-
-    @Override
-    public void clear() {
-      this.id = null;
-      this.path = null;
-      this.src = null;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public IWorkerId getId() {
-      return this.id;
-    }
-
-    public partitionTextFile3_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
-      this.id = id;
-      return this;
-    }
-
-    public void unsetId() {
-      this.id = null;
-    }
-
-    /** Returns true if field id is set (has been assigned a value) and false otherwise */
-    public boolean isSetId() {
-      return this.id != null;
-    }
-
-    public void setIdIsSet(boolean value) {
-      if (!value) {
-        this.id = null;
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.String getPath() {
-      return this.path;
-    }
-
-    public partitionTextFile3_args setPath(@org.apache.thrift.annotation.Nullable java.lang.String path) {
-      this.path = path;
-      return this;
-    }
-
-    public void unsetPath() {
-      this.path = null;
-    }
-
-    /** Returns true if field path is set (has been assigned a value) and false otherwise */
-    public boolean isSetPath() {
-      return this.path != null;
-    }
-
-    public void setPathIsSet(boolean value) {
-      if (!value) {
-        this.path = null;
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.ISource getSrc() {
-      return this.src;
-    }
-
-    public partitionTextFile3_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
-      this.src = src;
-      return this;
-    }
-
-    public void unsetSrc() {
-      this.src = null;
-    }
-
-    /** Returns true if field src is set (has been assigned a value) and false otherwise */
-    public boolean isSetSrc() {
-      return this.src != null;
-    }
-
-    public void setSrcIsSet(boolean value) {
-      if (!value) {
-        this.src = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case ID:
-        if (value == null) {
-          unsetId();
-        } else {
-          setId((IWorkerId)value);
-        }
-        break;
-
-      case PATH:
-        if (value == null) {
-          unsetPath();
-        } else {
-          setPath((java.lang.String)value);
-        }
-        break;
-
-      case SRC:
-        if (value == null) {
-          unsetSrc();
-        } else {
-          setSrc((org.ignis.rpc.ISource)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case ID:
-        return getId();
-
-      case PATH:
-        return getPath();
-
-      case SRC:
-        return getSrc();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case ID:
-        return isSetId();
-      case PATH:
-        return isSetPath();
-      case SRC:
-        return isSetSrc();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof partitionTextFile3_args)
-        return this.equals((partitionTextFile3_args)that);
-      return false;
-    }
-
-    public boolean equals(partitionTextFile3_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_id = true && this.isSetId();
-      boolean that_present_id = true && that.isSetId();
-      if (this_present_id || that_present_id) {
-        if (!(this_present_id && that_present_id))
-          return false;
-        if (!this.id.equals(that.id))
-          return false;
-      }
-
-      boolean this_present_path = true && this.isSetPath();
-      boolean that_present_path = true && that.isSetPath();
-      if (this_present_path || that_present_path) {
-        if (!(this_present_path && that_present_path))
-          return false;
-        if (!this.path.equals(that.path))
-          return false;
-      }
-
-      boolean this_present_src = true && this.isSetSrc();
-      boolean that_present_src = true && that.isSetSrc();
-      if (this_present_src || that_present_src) {
-        if (!(this_present_src && that_present_src))
-          return false;
-        if (!this.src.equals(that.src))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
-      if (isSetId())
-        hashCode = hashCode * 8191 + id.hashCode();
-
-      hashCode = hashCode * 8191 + ((isSetPath()) ? 131071 : 524287);
-      if (isSetPath())
-        hashCode = hashCode * 8191 + path.hashCode();
-
-      hashCode = hashCode * 8191 + ((isSetSrc()) ? 131071 : 524287);
-      if (isSetSrc())
-        hashCode = hashCode * 8191 + src.hashCode();
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(partitionTextFile3_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetId()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetPath()).compareTo(other.isSetPath());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetPath()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.path, other.path);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetSrc()).compareTo(other.isSetSrc());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSrc()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.src, other.src);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-    }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionTextFile3_args(");
-      boolean first = true;
-
-      sb.append("id:");
-      if (this.id == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.id);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("path:");
-      if (this.path == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.path);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("src:");
-      if (this.src == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.src);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-      if (id != null) {
-        id.validate();
-      }
-      if (src != null) {
-        src.validate();
-      }
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class partitionTextFile3_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionTextFile3_argsStandardScheme getScheme() {
-        return new partitionTextFile3_argsStandardScheme();
-      }
-    }
-
-    private static class partitionTextFile3_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionTextFile3_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionTextFile3_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.id = new IWorkerId();
-                struct.id.read(iprot);
-                struct.setIdIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 2: // PATH
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.path = iprot.readString();
-                struct.setPathIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 3: // SRC
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.src = new org.ignis.rpc.ISource();
-                struct.src.read(iprot);
-                struct.setSrcIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionTextFile3_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.id != null) {
-          oprot.writeFieldBegin(ID_FIELD_DESC);
-          struct.id.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        if (struct.path != null) {
-          oprot.writeFieldBegin(PATH_FIELD_DESC);
-          oprot.writeString(struct.path);
-          oprot.writeFieldEnd();
-        }
-        if (struct.src != null) {
-          oprot.writeFieldBegin(SRC_FIELD_DESC);
-          struct.src.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class partitionTextFile3_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionTextFile3_argsTupleScheme getScheme() {
-        return new partitionTextFile3_argsTupleScheme();
-      }
-    }
-
-    private static class partitionTextFile3_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionTextFile3_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, partitionTextFile3_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetId()) {
-          optionals.set(0);
-        }
-        if (struct.isSetPath()) {
-          optionals.set(1);
-        }
-        if (struct.isSetSrc()) {
-          optionals.set(2);
-        }
-        oprot.writeBitSet(optionals, 3);
-        if (struct.isSetId()) {
-          struct.id.write(oprot);
-        }
-        if (struct.isSetPath()) {
-          oprot.writeString(struct.path);
-        }
-        if (struct.isSetSrc()) {
-          struct.src.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, partitionTextFile3_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
-        if (incoming.get(0)) {
-          struct.id = new IWorkerId();
-          struct.id.read(iprot);
-          struct.setIdIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.path = iprot.readString();
-          struct.setPathIsSet(true);
-        }
-        if (incoming.get(2)) {
-          struct.src = new org.ignis.rpc.ISource();
-          struct.src.read(iprot);
-          struct.setSrcIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class partitionTextFile3_result implements org.apache.thrift.TBase<partitionTextFile3_result, partitionTextFile3_result._Fields>, java.io.Serializable, Cloneable, Comparable<partitionTextFile3_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionTextFile3_result");
-
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
-    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionTextFile3_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionTextFile3_resultTupleSchemeFactory();
-
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success"),
-      EX((short)1, "ex");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 0: // SUCCESS
-            return SUCCESS;
-          case 1: // EX
-            return EX;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDataFrameId.class)));
-      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionTextFile3_result.class, metaDataMap);
-    }
-
-    public partitionTextFile3_result() {
-    }
-
-    public partitionTextFile3_result(
-      org.ignis.rpc.driver.IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
-    {
-      this();
-      this.success = success;
-      this.ex = ex;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public partitionTextFile3_result(partitionTextFile3_result other) {
-      if (other.isSetSuccess()) {
-        this.success = new org.ignis.rpc.driver.IDataFrameId(other.success);
-      }
-      if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
-      }
-    }
-
-    public partitionTextFile3_result deepCopy() {
-      return new partitionTextFile3_result(this);
-    }
-
-    @Override
-    public void clear() {
-      this.success = null;
-      this.ex = null;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.driver.IDataFrameId getSuccess() {
-      return this.success;
-    }
-
-    public partitionTextFile3_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
-      this.success = success;
-      return this;
-    }
-
-    public void unsetSuccess() {
-      this.success = null;
-    }
-
-    /** Returns true if field success is set (has been assigned a value) and false otherwise */
-    public boolean isSetSuccess() {
-      return this.success != null;
-    }
-
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
-        this.success = null;
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
-      return this.ex;
-    }
-
-    public partitionTextFile3_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
-      this.ex = ex;
-      return this;
-    }
-
-    public void unsetEx() {
-      this.ex = null;
-    }
-
-    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
-    public boolean isSetEx() {
-      return this.ex != null;
-    }
-
-    public void setExIsSet(boolean value) {
-      if (!value) {
-        this.ex = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case SUCCESS:
-        if (value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((org.ignis.rpc.driver.IDataFrameId)value);
-        }
-        break;
-
-      case EX:
-        if (value == null) {
-          unsetEx();
-        } else {
-          setEx((org.ignis.rpc.IDriverException)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case SUCCESS:
-        return getSuccess();
-
-      case EX:
-        return getEx();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case SUCCESS:
-        return isSetSuccess();
-      case EX:
-        return isSetEx();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof partitionTextFile3_result)
-        return this.equals((partitionTextFile3_result)that);
-      return false;
-    }
-
-    public boolean equals(partitionTextFile3_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!this.success.equals(that.success))
-          return false;
-      }
-
-      boolean this_present_ex = true && this.isSetEx();
-      boolean that_present_ex = true && that.isSetEx();
-      if (this_present_ex || that_present_ex) {
-        if (!(this_present_ex && that_present_ex))
-          return false;
-        if (!this.ex.equals(that.ex))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
-      if (isSetSuccess())
-        hashCode = hashCode * 8191 + success.hashCode();
-
-      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
-      if (isSetEx())
-        hashCode = hashCode * 8191 + ex.hashCode();
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(partitionTextFile3_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSuccess()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetEx()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-      }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionTextFile3_result(");
-      boolean first = true;
-
-      sb.append("success:");
-      if (this.success == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.success);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("ex:");
-      if (this.ex == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.ex);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-      if (success != null) {
-        success.validate();
-      }
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class partitionTextFile3_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionTextFile3_resultStandardScheme getScheme() {
-        return new partitionTextFile3_resultStandardScheme();
-      }
-    }
-
-    private static class partitionTextFile3_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionTextFile3_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionTextFile3_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.success = new org.ignis.rpc.driver.IDataFrameId();
-                struct.success.read(iprot);
-                struct.setSuccessIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 1: // EX
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
-                struct.ex.read(iprot);
-                struct.setExIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionTextFile3_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.success != null) {
-          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          struct.success.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        if (struct.ex != null) {
-          oprot.writeFieldBegin(EX_FIELD_DESC);
-          struct.ex.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class partitionTextFile3_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionTextFile3_resultTupleScheme getScheme() {
-        return new partitionTextFile3_resultTupleScheme();
-      }
-    }
-
-    private static class partitionTextFile3_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionTextFile3_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, partitionTextFile3_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetSuccess()) {
-          optionals.set(0);
-        }
-        if (struct.isSetEx()) {
-          optionals.set(1);
-        }
-        oprot.writeBitSet(optionals, 2);
-        if (struct.isSetSuccess()) {
-          struct.success.write(oprot);
-        }
-        if (struct.isSetEx()) {
-          struct.ex.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, partitionTextFile3_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {

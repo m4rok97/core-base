@@ -31,13 +31,8 @@ public final class IPartitionTextFileTask extends IPartitionFileTask{
         super(name, executor, shared, path);
     }
 
-    public IPartitionTextFileTask(String name, IExecutor executor, Shared shared, String path, ISource src) {
-        super(name, executor, shared, path, src);
-    }
-    
     @Override
     public void read(String path, long first, long partitions, ISource src) throws IExecutorException, TException {
-        executor.getIoModule().partitionTextFile4(path, first, partitions, src);
     }
 
     @Override

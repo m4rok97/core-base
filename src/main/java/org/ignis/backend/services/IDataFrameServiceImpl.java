@@ -47,8 +47,9 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                worker.getDataFrame(id.getDataFrame()).setName(name);
+                data.setName(name);
             }
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
@@ -109,7 +110,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataIOHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).repartition(numPartitions);
+                IDataFrame result = new IDataIOHelper(data, worker.getProperties()).repartition(numPartitions);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -124,7 +125,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataIOHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).coalesce(numPartitions, shuffle);
+                IDataFrame result = new IDataIOHelper(data, worker.getProperties()).coalesce(numPartitions, shuffle);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -149,14 +150,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public void saveAsPartitionObjectFile(IDataFrameId id, String path, byte compression) throws IDriverException, TException {
+    public void saveAsObjectFile(IDataFrameId id, String path, byte compression) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Void> result;
             synchronized (worker.getLock()) {
-                result = new IDataIOHelper(data, worker.getProperties()).saveAsPartitionObjectFile(path, compression);
+                result = new IDataIOHelper(data, worker.getProperties()).saveAsObjectFile(path, compression);
             }
             result.execute();
         } catch (Exception ex) {
@@ -172,7 +173,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Void> result;
             synchronized (worker.getLock()) {
-                result = new IDataIOHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).saveAsTextFile(path);
+                result = new IDataIOHelper(data, worker.getProperties()).saveAsTextFile(path);
             }
             result.execute();
         } catch (Exception ex) {
@@ -181,14 +182,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public void saveAsJsonFile(IDataFrameId id, String path) throws IDriverException, TException {
+    public void saveAsJsonFile(IDataFrameId id, String path, boolean pretty) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Void> result;
             synchronized (worker.getLock()) {
-                result = new IDataIOHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).saveAsJsonFile(path);
+                result = new IDataIOHelper(data, worker.getProperties()).saveAsJsonFile(path, pretty);
             }
             result.execute();
         } catch (Exception ex) {
@@ -203,7 +204,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).map(src);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).map(src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -218,7 +219,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).filter(src);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).filter(src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -233,7 +234,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).flatmap(src);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).flatmap(src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -248,7 +249,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).mapPartitions(src);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).mapPartitions(src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -263,7 +264,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).mapPartitionsWithIndex(src);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).mapPartitionsWithIndex(src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -278,7 +279,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).applyPartition(src);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).applyPartition(src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -293,7 +294,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).groupBy(src);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).groupBy(src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -308,7 +309,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).groupBy(src, numPartitions);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).groupBy(src, numPartitions);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -323,7 +324,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).sort(ascending);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).sort(ascending);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -338,7 +339,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).sort(ascending, numPartitions);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).sort(ascending, numPartitions);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -353,7 +354,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).sortBy(src, ascending);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).sortBy(src, ascending);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -368,7 +369,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).sortBy(src, ascending, numPartitions);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).sortBy(src, ascending, numPartitions);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -591,7 +592,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataMathHelper(worker.getDataFrame(id.getDataFrame()), worker.getProperties()).sample(withReplacement, fraction, seed);
+                IDataFrame result = new IDataMathHelper(data, worker.getProperties()).sample(withReplacement, fraction, seed);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {

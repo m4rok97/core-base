@@ -27,11 +27,11 @@ public class IDataFrameService {
 
     public long partitions(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
-    public void saveAsPartitionObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void saveAsObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
     public void saveAsTextFile(IDataFrameId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
-    public void saveAsJsonFile(IDataFrameId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, boolean pretty) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
     public IDataFrameId map_(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
 
@@ -113,11 +113,11 @@ public class IDataFrameService {
 
     public void partitions(IDataFrameId id, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void saveAsPartitionObjectFile(IDataFrameId id, java.lang.String path, byte compression, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void saveAsObjectFile(IDataFrameId id, java.lang.String path, byte compression, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void saveAsTextFile(IDataFrameId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, boolean pretty, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void map_(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
@@ -399,25 +399,25 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitions failed: unknown result");
     }
 
-    public void saveAsPartitionObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void saveAsObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
     {
-      send_saveAsPartitionObjectFile(id, path, compression);
-      recv_saveAsPartitionObjectFile();
+      send_saveAsObjectFile(id, path, compression);
+      recv_saveAsObjectFile();
     }
 
-    public void send_saveAsPartitionObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.apache.thrift.TException
+    public void send_saveAsObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.apache.thrift.TException
     {
-      saveAsPartitionObjectFile_args args = new saveAsPartitionObjectFile_args();
+      saveAsObjectFile_args args = new saveAsObjectFile_args();
       args.setId(id);
       args.setPath(path);
       args.setCompression(compression);
-      sendBase("saveAsPartitionObjectFile", args);
+      sendBase("saveAsObjectFile", args);
     }
 
-    public void recv_saveAsPartitionObjectFile() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_saveAsObjectFile() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
     {
-      saveAsPartitionObjectFile_result result = new saveAsPartitionObjectFile_result();
-      receiveBase(result, "saveAsPartitionObjectFile");
+      saveAsObjectFile_result result = new saveAsObjectFile_result();
+      receiveBase(result, "saveAsObjectFile");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -448,17 +448,18 @@ public class IDataFrameService {
       return;
     }
 
-    public void saveAsJsonFile(IDataFrameId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, boolean pretty) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
     {
-      send_saveAsJsonFile(id, path);
+      send_saveAsJsonFile(id, path, pretty);
       recv_saveAsJsonFile();
     }
 
-    public void send_saveAsJsonFile(IDataFrameId id, java.lang.String path) throws org.apache.thrift.TException
+    public void send_saveAsJsonFile(IDataFrameId id, java.lang.String path, boolean pretty) throws org.apache.thrift.TException
     {
       saveAsJsonFile_args args = new saveAsJsonFile_args();
       args.setId(id);
       args.setPath(path);
+      args.setPretty(pretty);
       sendBase("saveAsJsonFile", args);
     }
 
@@ -1580,18 +1581,18 @@ public class IDataFrameService {
       }
     }
 
-    public void saveAsPartitionObjectFile(IDataFrameId id, java.lang.String path, byte compression, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void saveAsObjectFile(IDataFrameId id, java.lang.String path, byte compression, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      saveAsPartitionObjectFile_call method_call = new saveAsPartitionObjectFile_call(id, path, compression, resultHandler, this, ___protocolFactory, ___transport);
+      saveAsObjectFile_call method_call = new saveAsObjectFile_call(id, path, compression, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class saveAsPartitionObjectFile_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class saveAsObjectFile_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private IDataFrameId id;
       private java.lang.String path;
       private byte compression;
-      public saveAsPartitionObjectFile_call(IDataFrameId id, java.lang.String path, byte compression, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public saveAsObjectFile_call(IDataFrameId id, java.lang.String path, byte compression, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.path = path;
@@ -1599,8 +1600,8 @@ public class IDataFrameService {
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("saveAsPartitionObjectFile", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        saveAsPartitionObjectFile_args args = new saveAsPartitionObjectFile_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("saveAsObjectFile", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        saveAsObjectFile_args args = new saveAsObjectFile_args();
         args.setId(id);
         args.setPath(path);
         args.setCompression(compression);
@@ -1653,9 +1654,9 @@ public class IDataFrameService {
       }
     }
 
-    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, boolean pretty, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      saveAsJsonFile_call method_call = new saveAsJsonFile_call(id, path, resultHandler, this, ___protocolFactory, ___transport);
+      saveAsJsonFile_call method_call = new saveAsJsonFile_call(id, path, pretty, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -1663,10 +1664,12 @@ public class IDataFrameService {
     public static class saveAsJsonFile_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private IDataFrameId id;
       private java.lang.String path;
-      public saveAsJsonFile_call(IDataFrameId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private boolean pretty;
+      public saveAsJsonFile_call(IDataFrameId id, java.lang.String path, boolean pretty, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.path = path;
+        this.pretty = pretty;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -1674,6 +1677,7 @@ public class IDataFrameService {
         saveAsJsonFile_args args = new saveAsJsonFile_args();
         args.setId(id);
         args.setPath(path);
+        args.setPretty(pretty);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -2804,7 +2808,7 @@ public class IDataFrameService {
       processMap.put("repartition", new repartition());
       processMap.put("coalesce", new coalesce());
       processMap.put("partitions", new partitions());
-      processMap.put("saveAsPartitionObjectFile", new saveAsPartitionObjectFile());
+      processMap.put("saveAsObjectFile", new saveAsObjectFile());
       processMap.put("saveAsTextFile", new saveAsTextFile());
       processMap.put("saveAsJsonFile", new saveAsJsonFile());
       processMap.put("map_", new map_());
@@ -3073,13 +3077,13 @@ public class IDataFrameService {
       }
     }
 
-    public static class saveAsPartitionObjectFile<I extends Iface> extends org.apache.thrift.ProcessFunction<I, saveAsPartitionObjectFile_args> {
-      public saveAsPartitionObjectFile() {
-        super("saveAsPartitionObjectFile");
+    public static class saveAsObjectFile<I extends Iface> extends org.apache.thrift.ProcessFunction<I, saveAsObjectFile_args> {
+      public saveAsObjectFile() {
+        super("saveAsObjectFile");
       }
 
-      public saveAsPartitionObjectFile_args getEmptyArgsInstance() {
-        return new saveAsPartitionObjectFile_args();
+      public saveAsObjectFile_args getEmptyArgsInstance() {
+        return new saveAsObjectFile_args();
       }
 
       protected boolean isOneway() {
@@ -3091,10 +3095,10 @@ public class IDataFrameService {
         return false;
       }
 
-      public saveAsPartitionObjectFile_result getResult(I iface, saveAsPartitionObjectFile_args args) throws org.apache.thrift.TException {
-        saveAsPartitionObjectFile_result result = new saveAsPartitionObjectFile_result();
+      public saveAsObjectFile_result getResult(I iface, saveAsObjectFile_args args) throws org.apache.thrift.TException {
+        saveAsObjectFile_result result = new saveAsObjectFile_result();
         try {
-          iface.saveAsPartitionObjectFile(args.id, args.path, args.compression);
+          iface.saveAsObjectFile(args.id, args.path, args.compression);
         } catch (org.ignis.rpc.IDriverException ex) {
           result.ex = ex;
         }
@@ -3152,7 +3156,7 @@ public class IDataFrameService {
       public saveAsJsonFile_result getResult(I iface, saveAsJsonFile_args args) throws org.apache.thrift.TException {
         saveAsJsonFile_result result = new saveAsJsonFile_result();
         try {
-          iface.saveAsJsonFile(args.id, args.path);
+          iface.saveAsJsonFile(args.id, args.path, args.pretty);
         } catch (org.ignis.rpc.IDriverException ex) {
           result.ex = ex;
         }
@@ -4066,7 +4070,7 @@ public class IDataFrameService {
       processMap.put("repartition", new repartition());
       processMap.put("coalesce", new coalesce());
       processMap.put("partitions", new partitions());
-      processMap.put("saveAsPartitionObjectFile", new saveAsPartitionObjectFile());
+      processMap.put("saveAsObjectFile", new saveAsObjectFile());
       processMap.put("saveAsTextFile", new saveAsTextFile());
       processMap.put("saveAsJsonFile", new saveAsJsonFile());
       processMap.put("map_", new map_());
@@ -4618,20 +4622,20 @@ public class IDataFrameService {
       }
     }
 
-    public static class saveAsPartitionObjectFile<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, saveAsPartitionObjectFile_args, Void> {
-      public saveAsPartitionObjectFile() {
-        super("saveAsPartitionObjectFile");
+    public static class saveAsObjectFile<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, saveAsObjectFile_args, Void> {
+      public saveAsObjectFile() {
+        super("saveAsObjectFile");
       }
 
-      public saveAsPartitionObjectFile_args getEmptyArgsInstance() {
-        return new saveAsPartitionObjectFile_args();
+      public saveAsObjectFile_args getEmptyArgsInstance() {
+        return new saveAsObjectFile_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            saveAsPartitionObjectFile_result result = new saveAsPartitionObjectFile_result();
+            saveAsObjectFile_result result = new saveAsObjectFile_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -4645,7 +4649,7 @@ public class IDataFrameService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            saveAsPartitionObjectFile_result result = new saveAsPartitionObjectFile_result();
+            saveAsObjectFile_result result = new saveAsObjectFile_result();
             if (e instanceof org.ignis.rpc.IDriverException) {
               result.ex = (org.ignis.rpc.IDriverException) e;
               result.setExIsSet(true);
@@ -4677,8 +4681,8 @@ public class IDataFrameService {
         return false;
       }
 
-      public void start(I iface, saveAsPartitionObjectFile_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.saveAsPartitionObjectFile(args.id, args.path, args.compression,resultHandler);
+      public void start(I iface, saveAsObjectFile_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.saveAsObjectFile(args.id, args.path, args.compression,resultHandler);
       }
     }
 
@@ -4806,7 +4810,7 @@ public class IDataFrameService {
       }
 
       public void start(I iface, saveAsJsonFile_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.saveAsJsonFile(args.id, args.path,resultHandler);
+        iface.saveAsJsonFile(args.id, args.path, args.pretty,resultHandler);
       }
     }
 
@@ -13526,15 +13530,15 @@ public class IDataFrameService {
     }
   }
 
-  public static class saveAsPartitionObjectFile_args implements org.apache.thrift.TBase<saveAsPartitionObjectFile_args, saveAsPartitionObjectFile_args._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsPartitionObjectFile_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsPartitionObjectFile_args");
+  public static class saveAsObjectFile_args implements org.apache.thrift.TBase<saveAsObjectFile_args, saveAsObjectFile_args._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsObjectFile_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsObjectFile_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)2);
     private static final org.apache.thrift.protocol.TField COMPRESSION_FIELD_DESC = new org.apache.thrift.protocol.TField("compression", org.apache.thrift.protocol.TType.BYTE, (short)3);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsPartitionObjectFile_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsPartitionObjectFile_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsObjectFile_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsObjectFile_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable java.lang.String path; // required
@@ -13619,13 +13623,13 @@ public class IDataFrameService {
       tmpMap.put(_Fields.COMPRESSION, new org.apache.thrift.meta_data.FieldMetaData("compression", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BYTE)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsPartitionObjectFile_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsObjectFile_args.class, metaDataMap);
     }
 
-    public saveAsPartitionObjectFile_args() {
+    public saveAsObjectFile_args() {
     }
 
-    public saveAsPartitionObjectFile_args(
+    public saveAsObjectFile_args(
       IDataFrameId id,
       java.lang.String path,
       byte compression)
@@ -13640,7 +13644,7 @@ public class IDataFrameService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public saveAsPartitionObjectFile_args(saveAsPartitionObjectFile_args other) {
+    public saveAsObjectFile_args(saveAsObjectFile_args other) {
       __isset_bitfield = other.__isset_bitfield;
       if (other.isSetId()) {
         this.id = new IDataFrameId(other.id);
@@ -13651,8 +13655,8 @@ public class IDataFrameService {
       this.compression = other.compression;
     }
 
-    public saveAsPartitionObjectFile_args deepCopy() {
-      return new saveAsPartitionObjectFile_args(this);
+    public saveAsObjectFile_args deepCopy() {
+      return new saveAsObjectFile_args(this);
     }
 
     @Override
@@ -13668,7 +13672,7 @@ public class IDataFrameService {
       return this.id;
     }
 
-    public saveAsPartitionObjectFile_args setId(@org.apache.thrift.annotation.Nullable IDataFrameId id) {
+    public saveAsObjectFile_args setId(@org.apache.thrift.annotation.Nullable IDataFrameId id) {
       this.id = id;
       return this;
     }
@@ -13693,7 +13697,7 @@ public class IDataFrameService {
       return this.path;
     }
 
-    public saveAsPartitionObjectFile_args setPath(@org.apache.thrift.annotation.Nullable java.lang.String path) {
+    public saveAsObjectFile_args setPath(@org.apache.thrift.annotation.Nullable java.lang.String path) {
       this.path = path;
       return this;
     }
@@ -13717,7 +13721,7 @@ public class IDataFrameService {
       return this.compression;
     }
 
-    public saveAsPartitionObjectFile_args setCompression(byte compression) {
+    public saveAsObjectFile_args setCompression(byte compression) {
       this.compression = compression;
       setCompressionIsSet(true);
       return this;
@@ -13802,12 +13806,12 @@ public class IDataFrameService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof saveAsPartitionObjectFile_args)
-        return this.equals((saveAsPartitionObjectFile_args)that);
+      if (that instanceof saveAsObjectFile_args)
+        return this.equals((saveAsObjectFile_args)that);
       return false;
     }
 
-    public boolean equals(saveAsPartitionObjectFile_args that) {
+    public boolean equals(saveAsObjectFile_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -13861,7 +13865,7 @@ public class IDataFrameService {
     }
 
     @Override
-    public int compareTo(saveAsPartitionObjectFile_args other) {
+    public int compareTo(saveAsObjectFile_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -13916,7 +13920,7 @@ public class IDataFrameService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsPartitionObjectFile_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsObjectFile_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -13968,15 +13972,15 @@ public class IDataFrameService {
       }
     }
 
-    private static class saveAsPartitionObjectFile_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public saveAsPartitionObjectFile_argsStandardScheme getScheme() {
-        return new saveAsPartitionObjectFile_argsStandardScheme();
+    private static class saveAsObjectFile_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsObjectFile_argsStandardScheme getScheme() {
+        return new saveAsObjectFile_argsStandardScheme();
       }
     }
 
-    private static class saveAsPartitionObjectFile_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsPartitionObjectFile_args> {
+    private static class saveAsObjectFile_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsObjectFile_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsPartitionObjectFile_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsObjectFile_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -14022,7 +14026,7 @@ public class IDataFrameService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsPartitionObjectFile_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsObjectFile_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -14045,16 +14049,16 @@ public class IDataFrameService {
 
     }
 
-    private static class saveAsPartitionObjectFile_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public saveAsPartitionObjectFile_argsTupleScheme getScheme() {
-        return new saveAsPartitionObjectFile_argsTupleScheme();
+    private static class saveAsObjectFile_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsObjectFile_argsTupleScheme getScheme() {
+        return new saveAsObjectFile_argsTupleScheme();
       }
     }
 
-    private static class saveAsPartitionObjectFile_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsPartitionObjectFile_args> {
+    private static class saveAsObjectFile_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsObjectFile_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsPartitionObjectFile_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsObjectFile_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetId()) {
@@ -14079,7 +14083,7 @@ public class IDataFrameService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsPartitionObjectFile_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsObjectFile_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
@@ -14103,13 +14107,13 @@ public class IDataFrameService {
     }
   }
 
-  public static class saveAsPartitionObjectFile_result implements org.apache.thrift.TBase<saveAsPartitionObjectFile_result, saveAsPartitionObjectFile_result._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsPartitionObjectFile_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsPartitionObjectFile_result");
+  public static class saveAsObjectFile_result implements org.apache.thrift.TBase<saveAsObjectFile_result, saveAsObjectFile_result._Fields>, java.io.Serializable, Cloneable, Comparable<saveAsObjectFile_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("saveAsObjectFile_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsPartitionObjectFile_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsPartitionObjectFile_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsObjectFile_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsObjectFile_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
 
@@ -14180,13 +14184,13 @@ public class IDataFrameService {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsPartitionObjectFile_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsObjectFile_result.class, metaDataMap);
     }
 
-    public saveAsPartitionObjectFile_result() {
+    public saveAsObjectFile_result() {
     }
 
-    public saveAsPartitionObjectFile_result(
+    public saveAsObjectFile_result(
       org.ignis.rpc.IDriverException ex)
     {
       this();
@@ -14196,14 +14200,14 @@ public class IDataFrameService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public saveAsPartitionObjectFile_result(saveAsPartitionObjectFile_result other) {
+    public saveAsObjectFile_result(saveAsObjectFile_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IDriverException(other.ex);
       }
     }
 
-    public saveAsPartitionObjectFile_result deepCopy() {
-      return new saveAsPartitionObjectFile_result(this);
+    public saveAsObjectFile_result deepCopy() {
+      return new saveAsObjectFile_result(this);
     }
 
     @Override
@@ -14216,7 +14220,7 @@ public class IDataFrameService {
       return this.ex;
     }
 
-    public saveAsPartitionObjectFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public saveAsObjectFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -14276,12 +14280,12 @@ public class IDataFrameService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof saveAsPartitionObjectFile_result)
-        return this.equals((saveAsPartitionObjectFile_result)that);
+      if (that instanceof saveAsObjectFile_result)
+        return this.equals((saveAsObjectFile_result)that);
       return false;
     }
 
-    public boolean equals(saveAsPartitionObjectFile_result that) {
+    public boolean equals(saveAsObjectFile_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -14311,7 +14315,7 @@ public class IDataFrameService {
     }
 
     @Override
-    public int compareTo(saveAsPartitionObjectFile_result other) {
+    public int compareTo(saveAsObjectFile_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -14346,7 +14350,7 @@ public class IDataFrameService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsPartitionObjectFile_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("saveAsObjectFile_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -14381,15 +14385,15 @@ public class IDataFrameService {
       }
     }
 
-    private static class saveAsPartitionObjectFile_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public saveAsPartitionObjectFile_resultStandardScheme getScheme() {
-        return new saveAsPartitionObjectFile_resultStandardScheme();
+    private static class saveAsObjectFile_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsObjectFile_resultStandardScheme getScheme() {
+        return new saveAsObjectFile_resultStandardScheme();
       }
     }
 
-    private static class saveAsPartitionObjectFile_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsPartitionObjectFile_result> {
+    private static class saveAsObjectFile_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<saveAsObjectFile_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsPartitionObjectFile_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, saveAsObjectFile_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -14419,7 +14423,7 @@ public class IDataFrameService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsPartitionObjectFile_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, saveAsObjectFile_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -14434,16 +14438,16 @@ public class IDataFrameService {
 
     }
 
-    private static class saveAsPartitionObjectFile_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public saveAsPartitionObjectFile_resultTupleScheme getScheme() {
-        return new saveAsPartitionObjectFile_resultTupleScheme();
+    private static class saveAsObjectFile_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public saveAsObjectFile_resultTupleScheme getScheme() {
+        return new saveAsObjectFile_resultTupleScheme();
       }
     }
 
-    private static class saveAsPartitionObjectFile_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsPartitionObjectFile_result> {
+    private static class saveAsObjectFile_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<saveAsObjectFile_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsPartitionObjectFile_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, saveAsObjectFile_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -14456,7 +14460,7 @@ public class IDataFrameService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsPartitionObjectFile_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, saveAsObjectFile_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
@@ -15323,17 +15327,20 @@ public class IDataFrameService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)2);
+    private static final org.apache.thrift.protocol.TField PRETTY_FIELD_DESC = new org.apache.thrift.protocol.TField("pretty", org.apache.thrift.protocol.TType.BOOL, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsJsonFile_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsJsonFile_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable java.lang.String path; // required
+    private boolean pretty; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      PATH((short)2, "path");
+      PATH((short)2, "path"),
+      PRETTY((short)3, "pretty");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -15353,6 +15360,8 @@ public class IDataFrameService {
             return ID;
           case 2: // PATH
             return PATH;
+          case 3: // PRETTY
+            return PRETTY;
           default:
             return null;
         }
@@ -15394,6 +15403,8 @@ public class IDataFrameService {
     }
 
     // isset id assignments
+    private static final int __PRETTY_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -15401,6 +15412,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.PATH, new org.apache.thrift.meta_data.FieldMetaData("path", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.PRETTY, new org.apache.thrift.meta_data.FieldMetaData("pretty", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsJsonFile_args.class, metaDataMap);
     }
@@ -15410,23 +15423,28 @@ public class IDataFrameService {
 
     public saveAsJsonFile_args(
       IDataFrameId id,
-      java.lang.String path)
+      java.lang.String path,
+      boolean pretty)
     {
       this();
       this.id = id;
       this.path = path;
+      this.pretty = pretty;
+      setPrettyIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public saveAsJsonFile_args(saveAsJsonFile_args other) {
+      __isset_bitfield = other.__isset_bitfield;
       if (other.isSetId()) {
         this.id = new IDataFrameId(other.id);
       }
       if (other.isSetPath()) {
         this.path = other.path;
       }
+      this.pretty = other.pretty;
     }
 
     public saveAsJsonFile_args deepCopy() {
@@ -15437,6 +15455,8 @@ public class IDataFrameService {
     public void clear() {
       this.id = null;
       this.path = null;
+      setPrettyIsSet(false);
+      this.pretty = false;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -15489,6 +15509,29 @@ public class IDataFrameService {
       }
     }
 
+    public boolean isPretty() {
+      return this.pretty;
+    }
+
+    public saveAsJsonFile_args setPretty(boolean pretty) {
+      this.pretty = pretty;
+      setPrettyIsSet(true);
+      return this;
+    }
+
+    public void unsetPretty() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PRETTY_ISSET_ID);
+    }
+
+    /** Returns true if field pretty is set (has been assigned a value) and false otherwise */
+    public boolean isSetPretty() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PRETTY_ISSET_ID);
+    }
+
+    public void setPrettyIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PRETTY_ISSET_ID, value);
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -15507,6 +15550,14 @@ public class IDataFrameService {
         }
         break;
 
+      case PRETTY:
+        if (value == null) {
+          unsetPretty();
+        } else {
+          setPretty((java.lang.Boolean)value);
+        }
+        break;
+
       }
     }
 
@@ -15518,6 +15569,9 @@ public class IDataFrameService {
 
       case PATH:
         return getPath();
+
+      case PRETTY:
+        return isPretty();
 
       }
       throw new java.lang.IllegalStateException();
@@ -15534,6 +15588,8 @@ public class IDataFrameService {
         return isSetId();
       case PATH:
         return isSetPath();
+      case PRETTY:
+        return isSetPretty();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -15571,6 +15627,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_pretty = true;
+      boolean that_present_pretty = true;
+      if (this_present_pretty || that_present_pretty) {
+        if (!(this_present_pretty && that_present_pretty))
+          return false;
+        if (this.pretty != that.pretty)
+          return false;
+      }
+
       return true;
     }
 
@@ -15585,6 +15650,8 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetPath()) ? 131071 : 524287);
       if (isSetPath())
         hashCode = hashCode * 8191 + path.hashCode();
+
+      hashCode = hashCode * 8191 + ((pretty) ? 131071 : 524287);
 
       return hashCode;
     }
@@ -15613,6 +15680,16 @@ public class IDataFrameService {
       }
       if (isSetPath()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.path, other.path);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetPretty()).compareTo(other.isSetPretty());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetPretty()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.pretty, other.pretty);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -15653,6 +15730,10 @@ public class IDataFrameService {
         sb.append(this.path);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("pretty:");
+      sb.append(this.pretty);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -15675,6 +15756,8 @@ public class IDataFrameService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -15716,6 +15799,14 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // PRETTY
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.pretty = iprot.readBool();
+                struct.setPrettyIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -15741,6 +15832,9 @@ public class IDataFrameService {
           oprot.writeString(struct.path);
           oprot.writeFieldEnd();
         }
+        oprot.writeFieldBegin(PRETTY_FIELD_DESC);
+        oprot.writeBool(struct.pretty);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -15765,19 +15859,25 @@ public class IDataFrameService {
         if (struct.isSetPath()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetPretty()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetPath()) {
           oprot.writeString(struct.path);
         }
+        if (struct.isSetPretty()) {
+          oprot.writeBool(struct.pretty);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, saveAsJsonFile_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -15786,6 +15886,10 @@ public class IDataFrameService {
         if (incoming.get(1)) {
           struct.path = iprot.readString();
           struct.setPathIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.pretty = iprot.readBool();
+          struct.setPrettyIsSet(true);
         }
       }
     }

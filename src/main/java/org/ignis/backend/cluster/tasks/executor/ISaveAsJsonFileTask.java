@@ -50,11 +50,13 @@ public final class ISaveAsJsonFileTask extends IExecutorContextTask {
 
     private final Shared shared;
     private final String path;
+    private final boolean pretty;
 
-    public ISaveAsJsonFileTask(String name, IExecutor executor, Shared shared, String path) {
+    public ISaveAsJsonFileTask(String name, IExecutor executor, Shared shared, String path,boolean pretty) {
         super(name, executor, Mode.LOAD);
         this.shared = shared;
         this.path = path;
+        this.pretty = pretty;
     }
 
     @Override
@@ -68,7 +70,7 @@ public final class ISaveAsJsonFileTask extends IExecutorContextTask {
             for (int i = 1; i < id; i++) {
                 first += shared.partitions.get(i - 1);
             }
-            executor.getIoModule().saveAsJsonFile(path, first);  
+            executor.getIoModule().saveAsJsonFile(path, first, pretty);  
             shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
