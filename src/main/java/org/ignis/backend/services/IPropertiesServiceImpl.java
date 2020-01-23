@@ -18,7 +18,7 @@ package org.ignis.backend.services;
 
 import java.util.Map;
 import org.apache.thrift.TException;
-import org.ignis.rpc.IDriverException;
+import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.driver.IPropertiesService;
 
 /**

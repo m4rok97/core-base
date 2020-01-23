@@ -27,7 +27,7 @@ import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
-import org.ignis.rpc.IDriverException;
+import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.ISource;
 import org.ignis.rpc.driver.IDataFrameId;
 import org.ignis.rpc.driver.IWorkerId;
@@ -90,12 +90,12 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId parallelize(IWorkerId id) throws IDriverException, TException {
+    public IDataFrameId parallelize(IWorkerId id, long dataId) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver);
+                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver, dataId);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {
@@ -105,12 +105,12 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId parallelize2(IWorkerId id, ISource src) throws IDriverException, TException {
+    public IDataFrameId parallelize3(IWorkerId id, long dataId, ISource src) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver, src);
+                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver,dataId, src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {

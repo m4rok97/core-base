@@ -34,12 +34,12 @@ public class ITreeReduceTask extends IDriverTask {
     private final ISource src;
     private final long depth;
 
-    public ITreeReduceTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src) {
-        this(name, executor, shared, driver, src, 2);
+    public ITreeReduceTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src, ISource tp) {
+        this(name, executor, shared, driver, src, 2, tp);
     }
 
-    public ITreeReduceTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src, long depth) {
-        super(name, executor, shared, driver);
+    public ITreeReduceTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src, long depth, ISource tp) {
+        super(name, executor, shared, driver, tp);
         this.src = src;
         this.depth = depth;
     }

@@ -34,8 +34,8 @@ public class IAggregateTask extends IDriverTask {
     private final ISource seqOp;
     private final ISource combOp;
 
-    public IAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp) {
-        super(name, executor, shared, driver);
+    public IAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp, ISource tp) {
+        super(name, executor, shared, driver, tp);
         this.seqOp = seqOp;
         this.combOp = combOp;
     }

@@ -19,6 +19,7 @@ package org.ignis.backend.cluster.tasks.executor;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -29,8 +30,8 @@ public class ICollectTask extends IDriverTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICollectTask.class);
 
-    public ICollectTask(String name, IExecutor executor, Shared shared, boolean driver) {
-        super(name, executor, shared, driver);
+    public ICollectTask(String name, IExecutor executor, Shared shared, boolean driver, ISource tp) {
+        super(name, executor, shared, driver, tp);
     }
 
     @Override

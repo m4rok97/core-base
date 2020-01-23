@@ -11,87 +11,87 @@ public class IDataFrameService {
 
   public interface Iface {
 
-    public void setName(IDataFrameId id, java.lang.String name) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void setName(IDataFrameId id, java.lang.String name) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void persist(IDataFrameId id, byte level) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void persist(IDataFrameId id, byte level) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void cache(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void cache(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void unpersist(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void unpersist(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void uncache(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void uncache(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId repartition(IDataFrameId id, long numPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId repartition(IDataFrameId id, long numPartitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId coalesce(IDataFrameId id, long numPartitions, boolean shuffle) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId coalesce(IDataFrameId id, long numPartitions, boolean shuffle) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long partitions(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long partitions(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void saveAsObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void saveAsObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void saveAsTextFile(IDataFrameId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void saveAsTextFile(IDataFrameId id, java.lang.String path) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, boolean pretty) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, boolean pretty) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId map_(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId map_(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId filter(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId filter(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId flatmap(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId flatmap(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId mapPartitions(IDataFrameId id, org.ignis.rpc.ISource src, boolean preservesPartitioning) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId mapPartitions(IDataFrameId id, org.ignis.rpc.ISource src, boolean preservesPartitioning) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId mapPartitionsWithIndex(IDataFrameId id, org.ignis.rpc.ISource src, boolean preservesPartitioning) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId mapPartitionsWithIndex(IDataFrameId id, org.ignis.rpc.ISource src, boolean preservesPartitioning) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId applyPartition(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId applyPartition(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId groupBy(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId groupBy(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId groupBy2(IDataFrameId id, org.ignis.rpc.ISource src, long numPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId groupBy2(IDataFrameId id, org.ignis.rpc.ISource src, long numPartitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId sort(IDataFrameId id, boolean ascending) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId sort(IDataFrameId id, boolean ascending) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId sort2(IDataFrameId id, boolean ascending, long numPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId sort2(IDataFrameId id, boolean ascending, long numPartitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId sortBy(IDataFrameId id, org.ignis.rpc.ISource src, boolean ascending) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId sortBy(IDataFrameId id, org.ignis.rpc.ISource src, boolean ascending) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId sortBy3(IDataFrameId id, org.ignis.rpc.ISource src, boolean ascending, long numPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId sortBy3(IDataFrameId id, org.ignis.rpc.ISource src, boolean ascending, long numPartitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long reduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long reduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long treeReduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long treeReduce4(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long collect(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long collect(IDataFrameId id, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long treeAggregate3(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long treeAggregate5(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long fold(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long fold(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long take(IDataFrameId id, long num) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long take(IDataFrameId id, long num, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void foreach_(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void foreach_(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void foreachPartition(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void foreachPartition(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long top(IDataFrameId id, long num) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long top(IDataFrameId id, long num, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long top2(IDataFrameId id, long num, org.ignis.rpc.ISource cmp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long top4(IDataFrameId id, long num, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public IDataFrameId sample(IDataFrameId id, boolean withReplacement, double fraction, int seed) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public IDataFrameId sample(IDataFrameId id, boolean withReplacement, double fraction, int seed) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long takeSample(IDataFrameId id, boolean withReplacement, long num, int seed) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long takeSample(IDataFrameId id, boolean withReplacement, long num, int seed, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long count(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long count(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long max(IDataFrameId id, org.ignis.rpc.ISource cmp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long max(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long min(IDataFrameId id, org.ignis.rpc.ISource cmp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long min(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
   }
 
@@ -143,41 +143,41 @@ public class IDataFrameService {
 
     public void sortBy3(IDataFrameId id, org.ignis.rpc.ISource src, boolean ascending, long numPartitions, org.apache.thrift.async.AsyncMethodCallback<IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
-    public void reduce(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void reduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void treeReduce4(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void collect(IDataFrameId id, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void collect(IDataFrameId id, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void treeAggregate3(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void treeAggregate5(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void fold(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void fold(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void take(IDataFrameId id, long num, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void take(IDataFrameId id, long num, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
     public void foreach_(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void foreachPartition(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void top(IDataFrameId id, long num, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void top(IDataFrameId id, long num, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void top2(IDataFrameId id, long num, org.ignis.rpc.ISource cmp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void top4(IDataFrameId id, long num, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
     public void sample(IDataFrameId id, boolean withReplacement, double fraction, int seed, org.apache.thrift.async.AsyncMethodCallback<IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
-    public void takeSample(IDataFrameId id, boolean withReplacement, long num, int seed, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void takeSample(IDataFrameId id, boolean withReplacement, long num, int seed, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
     public void count(IDataFrameId id, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void max(IDataFrameId id, org.ignis.rpc.ISource cmp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void max(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void min(IDataFrameId id, org.ignis.rpc.ISource cmp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void min(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -201,7 +201,7 @@ public class IDataFrameService {
       super(iprot, oprot);
     }
 
-    public void setName(IDataFrameId id, java.lang.String name) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void setName(IDataFrameId id, java.lang.String name) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_setName(id, name);
       recv_setName();
@@ -215,7 +215,7 @@ public class IDataFrameService {
       sendBase("setName", args);
     }
 
-    public void recv_setName() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_setName() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       setName_result result = new setName_result();
       receiveBase(result, "setName");
@@ -225,7 +225,7 @@ public class IDataFrameService {
       return;
     }
 
-    public void persist(IDataFrameId id, byte level) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void persist(IDataFrameId id, byte level) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_persist(id, level);
       recv_persist();
@@ -239,7 +239,7 @@ public class IDataFrameService {
       sendBase("persist", args);
     }
 
-    public void recv_persist() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_persist() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       persist_result result = new persist_result();
       receiveBase(result, "persist");
@@ -249,7 +249,7 @@ public class IDataFrameService {
       return;
     }
 
-    public void cache(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void cache(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_cache(id);
       recv_cache();
@@ -262,7 +262,7 @@ public class IDataFrameService {
       sendBase("cache", args);
     }
 
-    public void recv_cache() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_cache() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       cache_result result = new cache_result();
       receiveBase(result, "cache");
@@ -272,7 +272,7 @@ public class IDataFrameService {
       return;
     }
 
-    public void unpersist(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void unpersist(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_unpersist(id);
       recv_unpersist();
@@ -285,7 +285,7 @@ public class IDataFrameService {
       sendBase("unpersist", args);
     }
 
-    public void recv_unpersist() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_unpersist() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       unpersist_result result = new unpersist_result();
       receiveBase(result, "unpersist");
@@ -295,7 +295,7 @@ public class IDataFrameService {
       return;
     }
 
-    public void uncache(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void uncache(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_uncache(id);
       recv_uncache();
@@ -308,7 +308,7 @@ public class IDataFrameService {
       sendBase("uncache", args);
     }
 
-    public void recv_uncache() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_uncache() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       uncache_result result = new uncache_result();
       receiveBase(result, "uncache");
@@ -318,7 +318,7 @@ public class IDataFrameService {
       return;
     }
 
-    public IDataFrameId repartition(IDataFrameId id, long numPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId repartition(IDataFrameId id, long numPartitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_repartition(id, numPartitions);
       return recv_repartition();
@@ -332,7 +332,7 @@ public class IDataFrameService {
       sendBase("repartition", args);
     }
 
-    public IDataFrameId recv_repartition() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_repartition() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       repartition_result result = new repartition_result();
       receiveBase(result, "repartition");
@@ -345,7 +345,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "repartition failed: unknown result");
     }
 
-    public IDataFrameId coalesce(IDataFrameId id, long numPartitions, boolean shuffle) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId coalesce(IDataFrameId id, long numPartitions, boolean shuffle) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_coalesce(id, numPartitions, shuffle);
       return recv_coalesce();
@@ -360,7 +360,7 @@ public class IDataFrameService {
       sendBase("coalesce", args);
     }
 
-    public IDataFrameId recv_coalesce() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_coalesce() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       coalesce_result result = new coalesce_result();
       receiveBase(result, "coalesce");
@@ -373,7 +373,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "coalesce failed: unknown result");
     }
 
-    public long partitions(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long partitions(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_partitions(id);
       return recv_partitions();
@@ -386,7 +386,7 @@ public class IDataFrameService {
       sendBase("partitions", args);
     }
 
-    public long recv_partitions() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_partitions() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       partitions_result result = new partitions_result();
       receiveBase(result, "partitions");
@@ -399,7 +399,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitions failed: unknown result");
     }
 
-    public void saveAsObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void saveAsObjectFile(IDataFrameId id, java.lang.String path, byte compression) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_saveAsObjectFile(id, path, compression);
       recv_saveAsObjectFile();
@@ -414,7 +414,7 @@ public class IDataFrameService {
       sendBase("saveAsObjectFile", args);
     }
 
-    public void recv_saveAsObjectFile() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_saveAsObjectFile() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       saveAsObjectFile_result result = new saveAsObjectFile_result();
       receiveBase(result, "saveAsObjectFile");
@@ -424,7 +424,7 @@ public class IDataFrameService {
       return;
     }
 
-    public void saveAsTextFile(IDataFrameId id, java.lang.String path) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void saveAsTextFile(IDataFrameId id, java.lang.String path) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_saveAsTextFile(id, path);
       recv_saveAsTextFile();
@@ -438,7 +438,7 @@ public class IDataFrameService {
       sendBase("saveAsTextFile", args);
     }
 
-    public void recv_saveAsTextFile() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_saveAsTextFile() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       saveAsTextFile_result result = new saveAsTextFile_result();
       receiveBase(result, "saveAsTextFile");
@@ -448,7 +448,7 @@ public class IDataFrameService {
       return;
     }
 
-    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, boolean pretty) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void saveAsJsonFile(IDataFrameId id, java.lang.String path, boolean pretty) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_saveAsJsonFile(id, path, pretty);
       recv_saveAsJsonFile();
@@ -463,7 +463,7 @@ public class IDataFrameService {
       sendBase("saveAsJsonFile", args);
     }
 
-    public void recv_saveAsJsonFile() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_saveAsJsonFile() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       saveAsJsonFile_result result = new saveAsJsonFile_result();
       receiveBase(result, "saveAsJsonFile");
@@ -473,7 +473,7 @@ public class IDataFrameService {
       return;
     }
 
-    public IDataFrameId map_(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId map_(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_map_(id, src);
       return recv_map_();
@@ -487,7 +487,7 @@ public class IDataFrameService {
       sendBase("map_", args);
     }
 
-    public IDataFrameId recv_map_() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_map_() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       map__result result = new map__result();
       receiveBase(result, "map_");
@@ -500,7 +500,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "map_ failed: unknown result");
     }
 
-    public IDataFrameId filter(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId filter(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_filter(id, src);
       return recv_filter();
@@ -514,7 +514,7 @@ public class IDataFrameService {
       sendBase("filter", args);
     }
 
-    public IDataFrameId recv_filter() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_filter() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       filter_result result = new filter_result();
       receiveBase(result, "filter");
@@ -527,7 +527,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "filter failed: unknown result");
     }
 
-    public IDataFrameId flatmap(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId flatmap(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_flatmap(id, src);
       return recv_flatmap();
@@ -541,7 +541,7 @@ public class IDataFrameService {
       sendBase("flatmap", args);
     }
 
-    public IDataFrameId recv_flatmap() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_flatmap() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       flatmap_result result = new flatmap_result();
       receiveBase(result, "flatmap");
@@ -554,7 +554,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "flatmap failed: unknown result");
     }
 
-    public IDataFrameId mapPartitions(IDataFrameId id, org.ignis.rpc.ISource src, boolean preservesPartitioning) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId mapPartitions(IDataFrameId id, org.ignis.rpc.ISource src, boolean preservesPartitioning) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_mapPartitions(id, src, preservesPartitioning);
       return recv_mapPartitions();
@@ -569,7 +569,7 @@ public class IDataFrameService {
       sendBase("mapPartitions", args);
     }
 
-    public IDataFrameId recv_mapPartitions() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_mapPartitions() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       mapPartitions_result result = new mapPartitions_result();
       receiveBase(result, "mapPartitions");
@@ -582,7 +582,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "mapPartitions failed: unknown result");
     }
 
-    public IDataFrameId mapPartitionsWithIndex(IDataFrameId id, org.ignis.rpc.ISource src, boolean preservesPartitioning) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId mapPartitionsWithIndex(IDataFrameId id, org.ignis.rpc.ISource src, boolean preservesPartitioning) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_mapPartitionsWithIndex(id, src, preservesPartitioning);
       return recv_mapPartitionsWithIndex();
@@ -597,7 +597,7 @@ public class IDataFrameService {
       sendBase("mapPartitionsWithIndex", args);
     }
 
-    public IDataFrameId recv_mapPartitionsWithIndex() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_mapPartitionsWithIndex() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       mapPartitionsWithIndex_result result = new mapPartitionsWithIndex_result();
       receiveBase(result, "mapPartitionsWithIndex");
@@ -610,7 +610,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "mapPartitionsWithIndex failed: unknown result");
     }
 
-    public IDataFrameId applyPartition(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId applyPartition(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_applyPartition(id, src);
       return recv_applyPartition();
@@ -624,7 +624,7 @@ public class IDataFrameService {
       sendBase("applyPartition", args);
     }
 
-    public IDataFrameId recv_applyPartition() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_applyPartition() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       applyPartition_result result = new applyPartition_result();
       receiveBase(result, "applyPartition");
@@ -637,7 +637,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "applyPartition failed: unknown result");
     }
 
-    public IDataFrameId groupBy(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId groupBy(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_groupBy(id, src);
       return recv_groupBy();
@@ -651,7 +651,7 @@ public class IDataFrameService {
       sendBase("groupBy", args);
     }
 
-    public IDataFrameId recv_groupBy() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_groupBy() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       groupBy_result result = new groupBy_result();
       receiveBase(result, "groupBy");
@@ -664,7 +664,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "groupBy failed: unknown result");
     }
 
-    public IDataFrameId groupBy2(IDataFrameId id, org.ignis.rpc.ISource src, long numPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId groupBy2(IDataFrameId id, org.ignis.rpc.ISource src, long numPartitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_groupBy2(id, src, numPartitions);
       return recv_groupBy2();
@@ -679,7 +679,7 @@ public class IDataFrameService {
       sendBase("groupBy2", args);
     }
 
-    public IDataFrameId recv_groupBy2() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_groupBy2() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       groupBy2_result result = new groupBy2_result();
       receiveBase(result, "groupBy2");
@@ -692,7 +692,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "groupBy2 failed: unknown result");
     }
 
-    public IDataFrameId sort(IDataFrameId id, boolean ascending) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId sort(IDataFrameId id, boolean ascending) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_sort(id, ascending);
       return recv_sort();
@@ -706,7 +706,7 @@ public class IDataFrameService {
       sendBase("sort", args);
     }
 
-    public IDataFrameId recv_sort() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_sort() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       sort_result result = new sort_result();
       receiveBase(result, "sort");
@@ -719,7 +719,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "sort failed: unknown result");
     }
 
-    public IDataFrameId sort2(IDataFrameId id, boolean ascending, long numPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId sort2(IDataFrameId id, boolean ascending, long numPartitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_sort2(id, ascending, numPartitions);
       return recv_sort2();
@@ -734,7 +734,7 @@ public class IDataFrameService {
       sendBase("sort2", args);
     }
 
-    public IDataFrameId recv_sort2() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_sort2() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       sort2_result result = new sort2_result();
       receiveBase(result, "sort2");
@@ -747,7 +747,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "sort2 failed: unknown result");
     }
 
-    public IDataFrameId sortBy(IDataFrameId id, org.ignis.rpc.ISource src, boolean ascending) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId sortBy(IDataFrameId id, org.ignis.rpc.ISource src, boolean ascending) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_sortBy(id, src, ascending);
       return recv_sortBy();
@@ -762,7 +762,7 @@ public class IDataFrameService {
       sendBase("sortBy", args);
     }
 
-    public IDataFrameId recv_sortBy() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_sortBy() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       sortBy_result result = new sortBy_result();
       receiveBase(result, "sortBy");
@@ -775,7 +775,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "sortBy failed: unknown result");
     }
 
-    public IDataFrameId sortBy3(IDataFrameId id, org.ignis.rpc.ISource src, boolean ascending, long numPartitions) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId sortBy3(IDataFrameId id, org.ignis.rpc.ISource src, boolean ascending, long numPartitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_sortBy3(id, src, ascending, numPartitions);
       return recv_sortBy3();
@@ -791,7 +791,7 @@ public class IDataFrameService {
       sendBase("sortBy3", args);
     }
 
-    public IDataFrameId recv_sortBy3() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_sortBy3() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       sortBy3_result result = new sortBy3_result();
       receiveBase(result, "sortBy3");
@@ -804,21 +804,22 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "sortBy3 failed: unknown result");
     }
 
-    public long reduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long reduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_reduce(id, src);
+      send_reduce(id, src, tp);
       return recv_reduce();
     }
 
-    public void send_reduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
+    public void send_reduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       reduce_args args = new reduce_args();
       args.setId(id);
       args.setSrc(src);
+      args.setTp(tp);
       sendBase("reduce", args);
     }
 
-    public long recv_reduce() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_reduce() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       reduce_result result = new reduce_result();
       receiveBase(result, "reduce");
@@ -831,21 +832,22 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "reduce failed: unknown result");
     }
 
-    public long treeReduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_treeReduce(id, src);
+      send_treeReduce(id, src, tp);
       return recv_treeReduce();
     }
 
-    public void send_treeReduce(IDataFrameId id, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
+    public void send_treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       treeReduce_args args = new treeReduce_args();
       args.setId(id);
       args.setSrc(src);
+      args.setTp(tp);
       sendBase("treeReduce", args);
     }
 
-    public long recv_treeReduce() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_treeReduce() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       treeReduce_result result = new treeReduce_result();
       receiveBase(result, "treeReduce");
@@ -858,48 +860,50 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "treeReduce failed: unknown result");
     }
 
-    public long treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long treeReduce4(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_treeReduce3(id, src, depth);
-      return recv_treeReduce3();
+      send_treeReduce4(id, src, depth, tp);
+      return recv_treeReduce4();
     }
 
-    public void send_treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth) throws org.apache.thrift.TException
+    public void send_treeReduce4(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
-      treeReduce3_args args = new treeReduce3_args();
+      treeReduce4_args args = new treeReduce4_args();
       args.setId(id);
       args.setSrc(src);
       args.setDepth(depth);
-      sendBase("treeReduce3", args);
+      args.setTp(tp);
+      sendBase("treeReduce4", args);
     }
 
-    public long recv_treeReduce3() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_treeReduce4() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      treeReduce3_result result = new treeReduce3_result();
-      receiveBase(result, "treeReduce3");
+      treeReduce4_result result = new treeReduce4_result();
+      receiveBase(result, "treeReduce4");
       if (result.isSetSuccess()) {
         return result.success;
       }
       if (result.ex != null) {
         throw result.ex;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "treeReduce3 failed: unknown result");
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "treeReduce4 failed: unknown result");
     }
 
-    public long collect(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long collect(IDataFrameId id, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_collect(id);
+      send_collect(id, tp);
       return recv_collect();
     }
 
-    public void send_collect(IDataFrameId id) throws org.apache.thrift.TException
+    public void send_collect(IDataFrameId id, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       collect_args args = new collect_args();
       args.setId(id);
+      args.setTp(tp);
       sendBase("collect", args);
     }
 
-    public long recv_collect() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_collect() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       collect_result result = new collect_result();
       receiveBase(result, "collect");
@@ -912,22 +916,23 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "collect failed: unknown result");
     }
 
-    public long aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_aggregate(id, seqOp, combOp);
+      send_aggregate(id, seqOp, combOp, tp);
       return recv_aggregate();
     }
 
-    public void send_aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp) throws org.apache.thrift.TException
+    public void send_aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       aggregate_args args = new aggregate_args();
       args.setId(id);
       args.setSeqOp(seqOp);
       args.setCombOp(combOp);
+      args.setTp(tp);
       sendBase("aggregate", args);
     }
 
-    public long recv_aggregate() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_aggregate() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       aggregate_result result = new aggregate_result();
       receiveBase(result, "aggregate");
@@ -940,22 +945,23 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "aggregate failed: unknown result");
     }
 
-    public long treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_treeAggregate(id, seqOp, combOp);
+      send_treeAggregate(id, seqOp, combOp, tp);
       return recv_treeAggregate();
     }
 
-    public void send_treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp) throws org.apache.thrift.TException
+    public void send_treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       treeAggregate_args args = new treeAggregate_args();
       args.setId(id);
       args.setSeqOp(seqOp);
       args.setCombOp(combOp);
+      args.setTp(tp);
       sendBase("treeAggregate", args);
     }
 
-    public long recv_treeAggregate() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_treeAggregate() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       treeAggregate_result result = new treeAggregate_result();
       receiveBase(result, "treeAggregate");
@@ -968,50 +974,52 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "treeAggregate failed: unknown result");
     }
 
-    public long treeAggregate3(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long treeAggregate5(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_treeAggregate3(id, seqOp, combOp, depth);
-      return recv_treeAggregate3();
+      send_treeAggregate5(id, seqOp, combOp, depth, tp);
+      return recv_treeAggregate5();
     }
 
-    public void send_treeAggregate3(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth) throws org.apache.thrift.TException
+    public void send_treeAggregate5(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
-      treeAggregate3_args args = new treeAggregate3_args();
+      treeAggregate5_args args = new treeAggregate5_args();
       args.setId(id);
       args.setSeqOp(seqOp);
       args.setCombOp(combOp);
       args.setDepth(depth);
-      sendBase("treeAggregate3", args);
+      args.setTp(tp);
+      sendBase("treeAggregate5", args);
     }
 
-    public long recv_treeAggregate3() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_treeAggregate5() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      treeAggregate3_result result = new treeAggregate3_result();
-      receiveBase(result, "treeAggregate3");
+      treeAggregate5_result result = new treeAggregate5_result();
+      receiveBase(result, "treeAggregate5");
       if (result.isSetSuccess()) {
         return result.success;
       }
       if (result.ex != null) {
         throw result.ex;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "treeAggregate3 failed: unknown result");
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "treeAggregate5 failed: unknown result");
     }
 
-    public long fold(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long fold(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_fold(id, src);
+      send_fold(id, src, tp);
       return recv_fold();
     }
 
-    public void send_fold(IDataFrameId id, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
+    public void send_fold(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       fold_args args = new fold_args();
       args.setId(id);
       args.setSrc(src);
+      args.setTp(tp);
       sendBase("fold", args);
     }
 
-    public long recv_fold() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_fold() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       fold_result result = new fold_result();
       receiveBase(result, "fold");
@@ -1024,21 +1032,22 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "fold failed: unknown result");
     }
 
-    public long take(IDataFrameId id, long num) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long take(IDataFrameId id, long num, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_take(id, num);
+      send_take(id, num, tp);
       return recv_take();
     }
 
-    public void send_take(IDataFrameId id, long num) throws org.apache.thrift.TException
+    public void send_take(IDataFrameId id, long num, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       take_args args = new take_args();
       args.setId(id);
       args.setNum(num);
+      args.setTp(tp);
       sendBase("take", args);
     }
 
-    public long recv_take() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_take() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       take_result result = new take_result();
       receiveBase(result, "take");
@@ -1051,7 +1060,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "take failed: unknown result");
     }
 
-    public void foreach_(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void foreach_(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_foreach_(id, src);
       recv_foreach_();
@@ -1065,7 +1074,7 @@ public class IDataFrameService {
       sendBase("foreach_", args);
     }
 
-    public void recv_foreach_() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_foreach_() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       foreach__result result = new foreach__result();
       receiveBase(result, "foreach_");
@@ -1075,7 +1084,7 @@ public class IDataFrameService {
       return;
     }
 
-    public void foreachPartition(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void foreachPartition(IDataFrameId id, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_foreachPartition(id, src);
       recv_foreachPartition();
@@ -1089,7 +1098,7 @@ public class IDataFrameService {
       sendBase("foreachPartition", args);
     }
 
-    public void recv_foreachPartition() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_foreachPartition() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       foreachPartition_result result = new foreachPartition_result();
       receiveBase(result, "foreachPartition");
@@ -1099,21 +1108,22 @@ public class IDataFrameService {
       return;
     }
 
-    public long top(IDataFrameId id, long num) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long top(IDataFrameId id, long num, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_top(id, num);
+      send_top(id, num, tp);
       return recv_top();
     }
 
-    public void send_top(IDataFrameId id, long num) throws org.apache.thrift.TException
+    public void send_top(IDataFrameId id, long num, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       top_args args = new top_args();
       args.setId(id);
       args.setNum(num);
+      args.setTp(tp);
       sendBase("top", args);
     }
 
-    public long recv_top() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_top() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       top_result result = new top_result();
       receiveBase(result, "top");
@@ -1126,35 +1136,36 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "top failed: unknown result");
     }
 
-    public long top2(IDataFrameId id, long num, org.ignis.rpc.ISource cmp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long top4(IDataFrameId id, long num, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_top2(id, num, cmp);
-      return recv_top2();
+      send_top4(id, num, cmp, tp);
+      return recv_top4();
     }
 
-    public void send_top2(IDataFrameId id, long num, org.ignis.rpc.ISource cmp) throws org.apache.thrift.TException
+    public void send_top4(IDataFrameId id, long num, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
-      top2_args args = new top2_args();
+      top4_args args = new top4_args();
       args.setId(id);
       args.setNum(num);
       args.setCmp(cmp);
-      sendBase("top2", args);
+      args.setTp(tp);
+      sendBase("top4", args);
     }
 
-    public long recv_top2() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_top4() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      top2_result result = new top2_result();
-      receiveBase(result, "top2");
+      top4_result result = new top4_result();
+      receiveBase(result, "top4");
       if (result.isSetSuccess()) {
         return result.success;
       }
       if (result.ex != null) {
         throw result.ex;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "top2 failed: unknown result");
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "top4 failed: unknown result");
     }
 
-    public IDataFrameId sample(IDataFrameId id, boolean withReplacement, double fraction, int seed) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId sample(IDataFrameId id, boolean withReplacement, double fraction, int seed) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_sample(id, withReplacement, fraction, seed);
       return recv_sample();
@@ -1170,7 +1181,7 @@ public class IDataFrameService {
       sendBase("sample", args);
     }
 
-    public IDataFrameId recv_sample() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public IDataFrameId recv_sample() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       sample_result result = new sample_result();
       receiveBase(result, "sample");
@@ -1183,23 +1194,24 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "sample failed: unknown result");
     }
 
-    public long takeSample(IDataFrameId id, boolean withReplacement, long num, int seed) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long takeSample(IDataFrameId id, boolean withReplacement, long num, int seed, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_takeSample(id, withReplacement, num, seed);
+      send_takeSample(id, withReplacement, num, seed, tp);
       return recv_takeSample();
     }
 
-    public void send_takeSample(IDataFrameId id, boolean withReplacement, long num, int seed) throws org.apache.thrift.TException
+    public void send_takeSample(IDataFrameId id, boolean withReplacement, long num, int seed, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       takeSample_args args = new takeSample_args();
       args.setId(id);
       args.setWithReplacement(withReplacement);
       args.setNum(num);
       args.setSeed(seed);
+      args.setTp(tp);
       sendBase("takeSample", args);
     }
 
-    public long recv_takeSample() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_takeSample() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       takeSample_result result = new takeSample_result();
       receiveBase(result, "takeSample");
@@ -1212,7 +1224,7 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "takeSample failed: unknown result");
     }
 
-    public long count(IDataFrameId id) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long count(IDataFrameId id) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_count(id);
       return recv_count();
@@ -1225,7 +1237,7 @@ public class IDataFrameService {
       sendBase("count", args);
     }
 
-    public long recv_count() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_count() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       count_result result = new count_result();
       receiveBase(result, "count");
@@ -1238,21 +1250,22 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "count failed: unknown result");
     }
 
-    public long max(IDataFrameId id, org.ignis.rpc.ISource cmp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long max(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_max(id, cmp);
+      send_max(id, cmp, tp);
       return recv_max();
     }
 
-    public void send_max(IDataFrameId id, org.ignis.rpc.ISource cmp) throws org.apache.thrift.TException
+    public void send_max(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       max_args args = new max_args();
       args.setId(id);
       args.setCmp(cmp);
+      args.setTp(tp);
       sendBase("max", args);
     }
 
-    public long recv_max() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_max() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       max_result result = new max_result();
       receiveBase(result, "max");
@@ -1265,21 +1278,22 @@ public class IDataFrameService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "max failed: unknown result");
     }
 
-    public long min(IDataFrameId id, org.ignis.rpc.ISource cmp) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long min(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_min(id, cmp);
+      send_min(id, cmp, tp);
       return recv_min();
     }
 
-    public void send_min(IDataFrameId id, org.ignis.rpc.ISource cmp) throws org.apache.thrift.TException
+    public void send_min(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp) throws org.apache.thrift.TException
     {
       min_args args = new min_args();
       args.setId(id);
       args.setCmp(cmp);
+      args.setTp(tp);
       sendBase("min", args);
     }
 
-    public long recv_min() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_min() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       min_result result = new min_result();
       receiveBase(result, "min");
@@ -1335,7 +1349,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1370,7 +1384,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1402,7 +1416,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1434,7 +1448,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1466,7 +1480,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1501,7 +1515,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1539,7 +1553,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1571,7 +1585,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1609,7 +1623,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1644,7 +1658,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1682,7 +1696,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1717,7 +1731,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1752,7 +1766,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1787,7 +1801,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1825,7 +1839,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1863,7 +1877,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1898,7 +1912,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1933,7 +1947,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -1971,7 +1985,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2006,7 +2020,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2044,7 +2058,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2082,7 +2096,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2123,7 +2137,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2133,9 +2147,9 @@ public class IDataFrameService {
       }
     }
 
-    public void reduce(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void reduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      reduce_call method_call = new reduce_call(id, src, resultHandler, this, ___protocolFactory, ___transport);
+      reduce_call method_call = new reduce_call(id, src, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2143,10 +2157,12 @@ public class IDataFrameService {
     public static class reduce_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private org.ignis.rpc.ISource src;
-      public reduce_call(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public reduce_call(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.src = src;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2154,11 +2170,12 @@ public class IDataFrameService {
         reduce_args args = new reduce_args();
         args.setId(id);
         args.setSrc(src);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2168,9 +2185,9 @@ public class IDataFrameService {
       }
     }
 
-    public void treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void treeReduce(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      treeReduce_call method_call = new treeReduce_call(id, src, resultHandler, this, ___protocolFactory, ___transport);
+      treeReduce_call method_call = new treeReduce_call(id, src, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2178,10 +2195,12 @@ public class IDataFrameService {
     public static class treeReduce_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private org.ignis.rpc.ISource src;
-      public treeReduce_call(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public treeReduce_call(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.src = src;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2189,11 +2208,12 @@ public class IDataFrameService {
         treeReduce_args args = new treeReduce_args();
         args.setId(id);
         args.setSrc(src);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2203,67 +2223,73 @@ public class IDataFrameService {
       }
     }
 
-    public void treeReduce3(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void treeReduce4(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      treeReduce3_call method_call = new treeReduce3_call(id, src, depth, resultHandler, this, ___protocolFactory, ___transport);
+      treeReduce4_call method_call = new treeReduce4_call(id, src, depth, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class treeReduce3_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
+    public static class treeReduce4_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private org.ignis.rpc.ISource src;
       private long depth;
-      public treeReduce3_call(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public treeReduce4_call(IDataFrameId id, org.ignis.rpc.ISource src, long depth, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.src = src;
         this.depth = depth;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("treeReduce3", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        treeReduce3_args args = new treeReduce3_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("treeReduce4", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        treeReduce4_args args = new treeReduce4_args();
         args.setId(id);
         args.setSrc(src);
         args.setDepth(depth);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_treeReduce3();
+        return (new Client(prot)).recv_treeReduce4();
       }
     }
 
-    public void collect(IDataFrameId id, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void collect(IDataFrameId id, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      collect_call method_call = new collect_call(id, resultHandler, this, ___protocolFactory, ___transport);
+      collect_call method_call = new collect_call(id, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class collect_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
-      public collect_call(IDataFrameId id, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public collect_call(IDataFrameId id, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("collect", org.apache.thrift.protocol.TMessageType.CALL, 0));
         collect_args args = new collect_args();
         args.setId(id);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2273,9 +2299,9 @@ public class IDataFrameService {
       }
     }
 
-    public void aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void aggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      aggregate_call method_call = new aggregate_call(id, seqOp, combOp, resultHandler, this, ___protocolFactory, ___transport);
+      aggregate_call method_call = new aggregate_call(id, seqOp, combOp, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2284,11 +2310,13 @@ public class IDataFrameService {
       private IDataFrameId id;
       private org.ignis.rpc.ISource seqOp;
       private org.ignis.rpc.ISource combOp;
-      public aggregate_call(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public aggregate_call(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.seqOp = seqOp;
         this.combOp = combOp;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2297,11 +2325,12 @@ public class IDataFrameService {
         args.setId(id);
         args.setSeqOp(seqOp);
         args.setCombOp(combOp);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2311,9 +2340,9 @@ public class IDataFrameService {
       }
     }
 
-    public void treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void treeAggregate(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      treeAggregate_call method_call = new treeAggregate_call(id, seqOp, combOp, resultHandler, this, ___protocolFactory, ___transport);
+      treeAggregate_call method_call = new treeAggregate_call(id, seqOp, combOp, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2322,11 +2351,13 @@ public class IDataFrameService {
       private IDataFrameId id;
       private org.ignis.rpc.ISource seqOp;
       private org.ignis.rpc.ISource combOp;
-      public treeAggregate_call(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public treeAggregate_call(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.seqOp = seqOp;
         this.combOp = combOp;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2335,11 +2366,12 @@ public class IDataFrameService {
         args.setId(id);
         args.setSeqOp(seqOp);
         args.setCombOp(combOp);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2349,50 +2381,53 @@ public class IDataFrameService {
       }
     }
 
-    public void treeAggregate3(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void treeAggregate5(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      treeAggregate3_call method_call = new treeAggregate3_call(id, seqOp, combOp, depth, resultHandler, this, ___protocolFactory, ___transport);
+      treeAggregate5_call method_call = new treeAggregate5_call(id, seqOp, combOp, depth, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class treeAggregate3_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
+    public static class treeAggregate5_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private org.ignis.rpc.ISource seqOp;
       private org.ignis.rpc.ISource combOp;
       private long depth;
-      public treeAggregate3_call(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public treeAggregate5_call(IDataFrameId id, org.ignis.rpc.ISource seqOp, org.ignis.rpc.ISource combOp, long depth, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.seqOp = seqOp;
         this.combOp = combOp;
         this.depth = depth;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("treeAggregate3", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        treeAggregate3_args args = new treeAggregate3_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("treeAggregate5", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        treeAggregate5_args args = new treeAggregate5_args();
         args.setId(id);
         args.setSeqOp(seqOp);
         args.setCombOp(combOp);
         args.setDepth(depth);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_treeAggregate3();
+        return (new Client(prot)).recv_treeAggregate5();
       }
     }
 
-    public void fold(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void fold(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      fold_call method_call = new fold_call(id, src, resultHandler, this, ___protocolFactory, ___transport);
+      fold_call method_call = new fold_call(id, src, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2400,10 +2435,12 @@ public class IDataFrameService {
     public static class fold_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private org.ignis.rpc.ISource src;
-      public fold_call(IDataFrameId id, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public fold_call(IDataFrameId id, org.ignis.rpc.ISource src, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.src = src;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2411,11 +2448,12 @@ public class IDataFrameService {
         fold_args args = new fold_args();
         args.setId(id);
         args.setSrc(src);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2425,9 +2463,9 @@ public class IDataFrameService {
       }
     }
 
-    public void take(IDataFrameId id, long num, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void take(IDataFrameId id, long num, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      take_call method_call = new take_call(id, num, resultHandler, this, ___protocolFactory, ___transport);
+      take_call method_call = new take_call(id, num, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2435,10 +2473,12 @@ public class IDataFrameService {
     public static class take_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private long num;
-      public take_call(IDataFrameId id, long num, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public take_call(IDataFrameId id, long num, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.num = num;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2446,11 +2486,12 @@ public class IDataFrameService {
         take_args args = new take_args();
         args.setId(id);
         args.setNum(num);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2485,7 +2526,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2520,7 +2561,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2530,9 +2571,9 @@ public class IDataFrameService {
       }
     }
 
-    public void top(IDataFrameId id, long num, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void top(IDataFrameId id, long num, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      top_call method_call = new top_call(id, num, resultHandler, this, ___protocolFactory, ___transport);
+      top_call method_call = new top_call(id, num, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2540,10 +2581,12 @@ public class IDataFrameService {
     public static class top_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private long num;
-      public top_call(IDataFrameId id, long num, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public top_call(IDataFrameId id, long num, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.num = num;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2551,11 +2594,12 @@ public class IDataFrameService {
         top_args args = new top_args();
         args.setId(id);
         args.setNum(num);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2565,41 +2609,44 @@ public class IDataFrameService {
       }
     }
 
-    public void top2(IDataFrameId id, long num, org.ignis.rpc.ISource cmp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void top4(IDataFrameId id, long num, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      top2_call method_call = new top2_call(id, num, cmp, resultHandler, this, ___protocolFactory, ___transport);
+      top4_call method_call = new top4_call(id, num, cmp, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class top2_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
+    public static class top4_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private long num;
       private org.ignis.rpc.ISource cmp;
-      public top2_call(IDataFrameId id, long num, org.ignis.rpc.ISource cmp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public top4_call(IDataFrameId id, long num, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.num = num;
         this.cmp = cmp;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("top2", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        top2_args args = new top2_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("top4", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        top4_args args = new top4_args();
         args.setId(id);
         args.setNum(num);
         args.setCmp(cmp);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_top2();
+        return (new Client(prot)).recv_top4();
       }
     }
 
@@ -2634,7 +2681,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public IDataFrameId getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2644,9 +2691,9 @@ public class IDataFrameService {
       }
     }
 
-    public void takeSample(IDataFrameId id, boolean withReplacement, long num, int seed, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void takeSample(IDataFrameId id, boolean withReplacement, long num, int seed, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      takeSample_call method_call = new takeSample_call(id, withReplacement, num, seed, resultHandler, this, ___protocolFactory, ___transport);
+      takeSample_call method_call = new takeSample_call(id, withReplacement, num, seed, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2656,12 +2703,14 @@ public class IDataFrameService {
       private boolean withReplacement;
       private long num;
       private int seed;
-      public takeSample_call(IDataFrameId id, boolean withReplacement, long num, int seed, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public takeSample_call(IDataFrameId id, boolean withReplacement, long num, int seed, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.withReplacement = withReplacement;
         this.num = num;
         this.seed = seed;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2671,11 +2720,12 @@ public class IDataFrameService {
         args.setWithReplacement(withReplacement);
         args.setNum(num);
         args.setSeed(seed);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2707,7 +2757,7 @@ public class IDataFrameService {
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2717,9 +2767,9 @@ public class IDataFrameService {
       }
     }
 
-    public void max(IDataFrameId id, org.ignis.rpc.ISource cmp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void max(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      max_call method_call = new max_call(id, cmp, resultHandler, this, ___protocolFactory, ___transport);
+      max_call method_call = new max_call(id, cmp, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2727,10 +2777,12 @@ public class IDataFrameService {
     public static class max_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private org.ignis.rpc.ISource cmp;
-      public max_call(IDataFrameId id, org.ignis.rpc.ISource cmp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public max_call(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.cmp = cmp;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2738,11 +2790,12 @@ public class IDataFrameService {
         max_args args = new max_args();
         args.setId(id);
         args.setCmp(cmp);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2752,9 +2805,9 @@ public class IDataFrameService {
       }
     }
 
-    public void min(IDataFrameId id, org.ignis.rpc.ISource cmp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void min(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      min_call method_call = new min_call(id, cmp, resultHandler, this, ___protocolFactory, ___transport);
+      min_call method_call = new min_call(id, cmp, tp, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -2762,10 +2815,12 @@ public class IDataFrameService {
     public static class min_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
       private IDataFrameId id;
       private org.ignis.rpc.ISource cmp;
-      public min_call(IDataFrameId id, org.ignis.rpc.ISource cmp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private org.ignis.rpc.ISource tp;
+      public min_call(IDataFrameId id, org.ignis.rpc.ISource cmp, org.ignis.rpc.ISource tp, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.cmp = cmp;
+        this.tp = tp;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -2773,11 +2828,12 @@ public class IDataFrameService {
         min_args args = new min_args();
         args.setId(id);
         args.setCmp(cmp);
+        args.setTp(tp);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -2825,17 +2881,17 @@ public class IDataFrameService {
       processMap.put("sortBy3", new sortBy3());
       processMap.put("reduce", new reduce());
       processMap.put("treeReduce", new treeReduce());
-      processMap.put("treeReduce3", new treeReduce3());
+      processMap.put("treeReduce4", new treeReduce4());
       processMap.put("collect", new collect());
       processMap.put("aggregate", new aggregate());
       processMap.put("treeAggregate", new treeAggregate());
-      processMap.put("treeAggregate3", new treeAggregate3());
+      processMap.put("treeAggregate5", new treeAggregate5());
       processMap.put("fold", new fold());
       processMap.put("take", new take());
       processMap.put("foreach_", new foreach_());
       processMap.put("foreachPartition", new foreachPartition());
       processMap.put("top", new top());
-      processMap.put("top2", new top2());
+      processMap.put("top4", new top4());
       processMap.put("sample", new sample());
       processMap.put("takeSample", new takeSample());
       processMap.put("count", new count());
@@ -2866,7 +2922,7 @@ public class IDataFrameService {
         setName_result result = new setName_result();
         try {
           iface.setName(args.id, args.name);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -2895,7 +2951,7 @@ public class IDataFrameService {
         persist_result result = new persist_result();
         try {
           iface.persist(args.id, args.level);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -2924,7 +2980,7 @@ public class IDataFrameService {
         cache_result result = new cache_result();
         try {
           iface.cache(args.id);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -2953,7 +3009,7 @@ public class IDataFrameService {
         unpersist_result result = new unpersist_result();
         try {
           iface.unpersist(args.id);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -2982,7 +3038,7 @@ public class IDataFrameService {
         uncache_result result = new uncache_result();
         try {
           iface.uncache(args.id);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3011,7 +3067,7 @@ public class IDataFrameService {
         repartition_result result = new repartition_result();
         try {
           result.success = iface.repartition(args.id, args.numPartitions);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3040,7 +3096,7 @@ public class IDataFrameService {
         coalesce_result result = new coalesce_result();
         try {
           result.success = iface.coalesce(args.id, args.numPartitions, args.shuffle);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3070,7 +3126,7 @@ public class IDataFrameService {
         try {
           result.success = iface.partitions(args.id);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3099,7 +3155,7 @@ public class IDataFrameService {
         saveAsObjectFile_result result = new saveAsObjectFile_result();
         try {
           iface.saveAsObjectFile(args.id, args.path, args.compression);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3128,7 +3184,7 @@ public class IDataFrameService {
         saveAsTextFile_result result = new saveAsTextFile_result();
         try {
           iface.saveAsTextFile(args.id, args.path);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3157,7 +3213,7 @@ public class IDataFrameService {
         saveAsJsonFile_result result = new saveAsJsonFile_result();
         try {
           iface.saveAsJsonFile(args.id, args.path, args.pretty);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3186,7 +3242,7 @@ public class IDataFrameService {
         map__result result = new map__result();
         try {
           result.success = iface.map_(args.id, args.src);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3215,7 +3271,7 @@ public class IDataFrameService {
         filter_result result = new filter_result();
         try {
           result.success = iface.filter(args.id, args.src);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3244,7 +3300,7 @@ public class IDataFrameService {
         flatmap_result result = new flatmap_result();
         try {
           result.success = iface.flatmap(args.id, args.src);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3273,7 +3329,7 @@ public class IDataFrameService {
         mapPartitions_result result = new mapPartitions_result();
         try {
           result.success = iface.mapPartitions(args.id, args.src, args.preservesPartitioning);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3302,7 +3358,7 @@ public class IDataFrameService {
         mapPartitionsWithIndex_result result = new mapPartitionsWithIndex_result();
         try {
           result.success = iface.mapPartitionsWithIndex(args.id, args.src, args.preservesPartitioning);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3331,7 +3387,7 @@ public class IDataFrameService {
         applyPartition_result result = new applyPartition_result();
         try {
           result.success = iface.applyPartition(args.id, args.src);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3360,7 +3416,7 @@ public class IDataFrameService {
         groupBy_result result = new groupBy_result();
         try {
           result.success = iface.groupBy(args.id, args.src);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3389,7 +3445,7 @@ public class IDataFrameService {
         groupBy2_result result = new groupBy2_result();
         try {
           result.success = iface.groupBy2(args.id, args.src, args.numPartitions);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3418,7 +3474,7 @@ public class IDataFrameService {
         sort_result result = new sort_result();
         try {
           result.success = iface.sort(args.id, args.ascending);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3447,7 +3503,7 @@ public class IDataFrameService {
         sort2_result result = new sort2_result();
         try {
           result.success = iface.sort2(args.id, args.ascending, args.numPartitions);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3476,7 +3532,7 @@ public class IDataFrameService {
         sortBy_result result = new sortBy_result();
         try {
           result.success = iface.sortBy(args.id, args.src, args.ascending);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3505,7 +3561,7 @@ public class IDataFrameService {
         sortBy3_result result = new sortBy3_result();
         try {
           result.success = iface.sortBy3(args.id, args.src, args.ascending, args.numPartitions);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3533,9 +3589,9 @@ public class IDataFrameService {
       public reduce_result getResult(I iface, reduce_args args) throws org.apache.thrift.TException {
         reduce_result result = new reduce_result();
         try {
-          result.success = iface.reduce(args.id, args.src);
+          result.success = iface.reduce(args.id, args.src, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3563,22 +3619,22 @@ public class IDataFrameService {
       public treeReduce_result getResult(I iface, treeReduce_args args) throws org.apache.thrift.TException {
         treeReduce_result result = new treeReduce_result();
         try {
-          result.success = iface.treeReduce(args.id, args.src);
+          result.success = iface.treeReduce(args.id, args.src, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
       }
     }
 
-    public static class treeReduce3<I extends Iface> extends org.apache.thrift.ProcessFunction<I, treeReduce3_args> {
-      public treeReduce3() {
-        super("treeReduce3");
+    public static class treeReduce4<I extends Iface> extends org.apache.thrift.ProcessFunction<I, treeReduce4_args> {
+      public treeReduce4() {
+        super("treeReduce4");
       }
 
-      public treeReduce3_args getEmptyArgsInstance() {
-        return new treeReduce3_args();
+      public treeReduce4_args getEmptyArgsInstance() {
+        return new treeReduce4_args();
       }
 
       protected boolean isOneway() {
@@ -3590,12 +3646,12 @@ public class IDataFrameService {
         return false;
       }
 
-      public treeReduce3_result getResult(I iface, treeReduce3_args args) throws org.apache.thrift.TException {
-        treeReduce3_result result = new treeReduce3_result();
+      public treeReduce4_result getResult(I iface, treeReduce4_args args) throws org.apache.thrift.TException {
+        treeReduce4_result result = new treeReduce4_result();
         try {
-          result.success = iface.treeReduce3(args.id, args.src, args.depth);
+          result.success = iface.treeReduce4(args.id, args.src, args.depth, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3623,9 +3679,9 @@ public class IDataFrameService {
       public collect_result getResult(I iface, collect_args args) throws org.apache.thrift.TException {
         collect_result result = new collect_result();
         try {
-          result.success = iface.collect(args.id);
+          result.success = iface.collect(args.id, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3653,9 +3709,9 @@ public class IDataFrameService {
       public aggregate_result getResult(I iface, aggregate_args args) throws org.apache.thrift.TException {
         aggregate_result result = new aggregate_result();
         try {
-          result.success = iface.aggregate(args.id, args.seqOp, args.combOp);
+          result.success = iface.aggregate(args.id, args.seqOp, args.combOp, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3683,22 +3739,22 @@ public class IDataFrameService {
       public treeAggregate_result getResult(I iface, treeAggregate_args args) throws org.apache.thrift.TException {
         treeAggregate_result result = new treeAggregate_result();
         try {
-          result.success = iface.treeAggregate(args.id, args.seqOp, args.combOp);
+          result.success = iface.treeAggregate(args.id, args.seqOp, args.combOp, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
       }
     }
 
-    public static class treeAggregate3<I extends Iface> extends org.apache.thrift.ProcessFunction<I, treeAggregate3_args> {
-      public treeAggregate3() {
-        super("treeAggregate3");
+    public static class treeAggregate5<I extends Iface> extends org.apache.thrift.ProcessFunction<I, treeAggregate5_args> {
+      public treeAggregate5() {
+        super("treeAggregate5");
       }
 
-      public treeAggregate3_args getEmptyArgsInstance() {
-        return new treeAggregate3_args();
+      public treeAggregate5_args getEmptyArgsInstance() {
+        return new treeAggregate5_args();
       }
 
       protected boolean isOneway() {
@@ -3710,12 +3766,12 @@ public class IDataFrameService {
         return false;
       }
 
-      public treeAggregate3_result getResult(I iface, treeAggregate3_args args) throws org.apache.thrift.TException {
-        treeAggregate3_result result = new treeAggregate3_result();
+      public treeAggregate5_result getResult(I iface, treeAggregate5_args args) throws org.apache.thrift.TException {
+        treeAggregate5_result result = new treeAggregate5_result();
         try {
-          result.success = iface.treeAggregate3(args.id, args.seqOp, args.combOp, args.depth);
+          result.success = iface.treeAggregate5(args.id, args.seqOp, args.combOp, args.depth, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3743,9 +3799,9 @@ public class IDataFrameService {
       public fold_result getResult(I iface, fold_args args) throws org.apache.thrift.TException {
         fold_result result = new fold_result();
         try {
-          result.success = iface.fold(args.id, args.src);
+          result.success = iface.fold(args.id, args.src, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3773,9 +3829,9 @@ public class IDataFrameService {
       public take_result getResult(I iface, take_args args) throws org.apache.thrift.TException {
         take_result result = new take_result();
         try {
-          result.success = iface.take(args.id, args.num);
+          result.success = iface.take(args.id, args.num, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3804,7 +3860,7 @@ public class IDataFrameService {
         foreach__result result = new foreach__result();
         try {
           iface.foreach_(args.id, args.src);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3833,7 +3889,7 @@ public class IDataFrameService {
         foreachPartition_result result = new foreachPartition_result();
         try {
           iface.foreachPartition(args.id, args.src);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3861,22 +3917,22 @@ public class IDataFrameService {
       public top_result getResult(I iface, top_args args) throws org.apache.thrift.TException {
         top_result result = new top_result();
         try {
-          result.success = iface.top(args.id, args.num);
+          result.success = iface.top(args.id, args.num, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
       }
     }
 
-    public static class top2<I extends Iface> extends org.apache.thrift.ProcessFunction<I, top2_args> {
-      public top2() {
-        super("top2");
+    public static class top4<I extends Iface> extends org.apache.thrift.ProcessFunction<I, top4_args> {
+      public top4() {
+        super("top4");
       }
 
-      public top2_args getEmptyArgsInstance() {
-        return new top2_args();
+      public top4_args getEmptyArgsInstance() {
+        return new top4_args();
       }
 
       protected boolean isOneway() {
@@ -3888,12 +3944,12 @@ public class IDataFrameService {
         return false;
       }
 
-      public top2_result getResult(I iface, top2_args args) throws org.apache.thrift.TException {
-        top2_result result = new top2_result();
+      public top4_result getResult(I iface, top4_args args) throws org.apache.thrift.TException {
+        top4_result result = new top4_result();
         try {
-          result.success = iface.top2(args.id, args.num, args.cmp);
+          result.success = iface.top4(args.id, args.num, args.cmp, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3922,7 +3978,7 @@ public class IDataFrameService {
         sample_result result = new sample_result();
         try {
           result.success = iface.sample(args.id, args.withReplacement, args.fraction, args.seed);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3950,9 +4006,9 @@ public class IDataFrameService {
       public takeSample_result getResult(I iface, takeSample_args args) throws org.apache.thrift.TException {
         takeSample_result result = new takeSample_result();
         try {
-          result.success = iface.takeSample(args.id, args.withReplacement, args.num, args.seed);
+          result.success = iface.takeSample(args.id, args.withReplacement, args.num, args.seed, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -3982,7 +4038,7 @@ public class IDataFrameService {
         try {
           result.success = iface.count(args.id);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -4010,9 +4066,9 @@ public class IDataFrameService {
       public max_result getResult(I iface, max_args args) throws org.apache.thrift.TException {
         max_result result = new max_result();
         try {
-          result.success = iface.max(args.id, args.cmp);
+          result.success = iface.max(args.id, args.cmp, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -4040,9 +4096,9 @@ public class IDataFrameService {
       public min_result getResult(I iface, min_args args) throws org.apache.thrift.TException {
         min_result result = new min_result();
         try {
-          result.success = iface.min(args.id, args.cmp);
+          result.success = iface.min(args.id, args.cmp, args.tp);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -4087,17 +4143,17 @@ public class IDataFrameService {
       processMap.put("sortBy3", new sortBy3());
       processMap.put("reduce", new reduce());
       processMap.put("treeReduce", new treeReduce());
-      processMap.put("treeReduce3", new treeReduce3());
+      processMap.put("treeReduce4", new treeReduce4());
       processMap.put("collect", new collect());
       processMap.put("aggregate", new aggregate());
       processMap.put("treeAggregate", new treeAggregate());
-      processMap.put("treeAggregate3", new treeAggregate3());
+      processMap.put("treeAggregate5", new treeAggregate5());
       processMap.put("fold", new fold());
       processMap.put("take", new take());
       processMap.put("foreach_", new foreach_());
       processMap.put("foreachPartition", new foreachPartition());
       processMap.put("top", new top());
-      processMap.put("top2", new top2());
+      processMap.put("top4", new top4());
       processMap.put("sample", new sample());
       processMap.put("takeSample", new takeSample());
       processMap.put("count", new count());
@@ -4134,8 +4190,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             setName_result result = new setName_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4198,8 +4254,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             persist_result result = new persist_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4262,8 +4318,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             cache_result result = new cache_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4326,8 +4382,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             unpersist_result result = new unpersist_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4390,8 +4446,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             uncache_result result = new uncache_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4455,8 +4511,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             repartition_result result = new repartition_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4520,8 +4576,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             coalesce_result result = new coalesce_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4586,8 +4642,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             partitions_result result = new partitions_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4650,8 +4706,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             saveAsObjectFile_result result = new saveAsObjectFile_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4714,8 +4770,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             saveAsTextFile_result result = new saveAsTextFile_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4778,8 +4834,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             saveAsJsonFile_result result = new saveAsJsonFile_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4843,8 +4899,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             map__result result = new map__result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4908,8 +4964,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             filter_result result = new filter_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -4973,8 +5029,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             flatmap_result result = new flatmap_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5038,8 +5094,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             mapPartitions_result result = new mapPartitions_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5103,8 +5159,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             mapPartitionsWithIndex_result result = new mapPartitionsWithIndex_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5168,8 +5224,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             applyPartition_result result = new applyPartition_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5233,8 +5289,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             groupBy_result result = new groupBy_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5298,8 +5354,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             groupBy2_result result = new groupBy2_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5363,8 +5419,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             sort_result result = new sort_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5428,8 +5484,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             sort2_result result = new sort2_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5493,8 +5549,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             sortBy_result result = new sortBy_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5558,8 +5614,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             sortBy3_result result = new sortBy3_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5624,8 +5680,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             reduce_result result = new reduce_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5656,7 +5712,7 @@ public class IDataFrameService {
       }
 
       public void start(I iface, reduce_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.reduce(args.id, args.src,resultHandler);
+        iface.reduce(args.id, args.src, args.tp,resultHandler);
       }
     }
 
@@ -5690,8 +5746,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             treeReduce_result result = new treeReduce_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5722,24 +5778,24 @@ public class IDataFrameService {
       }
 
       public void start(I iface, treeReduce_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.treeReduce(args.id, args.src,resultHandler);
+        iface.treeReduce(args.id, args.src, args.tp,resultHandler);
       }
     }
 
-    public static class treeReduce3<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, treeReduce3_args, java.lang.Long> {
-      public treeReduce3() {
-        super("treeReduce3");
+    public static class treeReduce4<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, treeReduce4_args, java.lang.Long> {
+      public treeReduce4() {
+        super("treeReduce4");
       }
 
-      public treeReduce3_args getEmptyArgsInstance() {
-        return new treeReduce3_args();
+      public treeReduce4_args getEmptyArgsInstance() {
+        return new treeReduce4_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<java.lang.Long>() { 
           public void onComplete(java.lang.Long o) {
-            treeReduce3_result result = new treeReduce3_result();
+            treeReduce4_result result = new treeReduce4_result();
             result.success = o;
             result.setSuccessIsSet(true);
             try {
@@ -5755,9 +5811,9 @@ public class IDataFrameService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            treeReduce3_result result = new treeReduce3_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            treeReduce4_result result = new treeReduce4_result();
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5787,8 +5843,8 @@ public class IDataFrameService {
         return false;
       }
 
-      public void start(I iface, treeReduce3_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.treeReduce3(args.id, args.src, args.depth,resultHandler);
+      public void start(I iface, treeReduce4_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+        iface.treeReduce4(args.id, args.src, args.depth, args.tp,resultHandler);
       }
     }
 
@@ -5822,8 +5878,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             collect_result result = new collect_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5854,7 +5910,7 @@ public class IDataFrameService {
       }
 
       public void start(I iface, collect_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.collect(args.id,resultHandler);
+        iface.collect(args.id, args.tp,resultHandler);
       }
     }
 
@@ -5888,8 +5944,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             aggregate_result result = new aggregate_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5920,7 +5976,7 @@ public class IDataFrameService {
       }
 
       public void start(I iface, aggregate_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.aggregate(args.id, args.seqOp, args.combOp,resultHandler);
+        iface.aggregate(args.id, args.seqOp, args.combOp, args.tp,resultHandler);
       }
     }
 
@@ -5954,8 +6010,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             treeAggregate_result result = new treeAggregate_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -5986,24 +6042,24 @@ public class IDataFrameService {
       }
 
       public void start(I iface, treeAggregate_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.treeAggregate(args.id, args.seqOp, args.combOp,resultHandler);
+        iface.treeAggregate(args.id, args.seqOp, args.combOp, args.tp,resultHandler);
       }
     }
 
-    public static class treeAggregate3<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, treeAggregate3_args, java.lang.Long> {
-      public treeAggregate3() {
-        super("treeAggregate3");
+    public static class treeAggregate5<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, treeAggregate5_args, java.lang.Long> {
+      public treeAggregate5() {
+        super("treeAggregate5");
       }
 
-      public treeAggregate3_args getEmptyArgsInstance() {
-        return new treeAggregate3_args();
+      public treeAggregate5_args getEmptyArgsInstance() {
+        return new treeAggregate5_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<java.lang.Long>() { 
           public void onComplete(java.lang.Long o) {
-            treeAggregate3_result result = new treeAggregate3_result();
+            treeAggregate5_result result = new treeAggregate5_result();
             result.success = o;
             result.setSuccessIsSet(true);
             try {
@@ -6019,9 +6075,9 @@ public class IDataFrameService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            treeAggregate3_result result = new treeAggregate3_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            treeAggregate5_result result = new treeAggregate5_result();
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6051,8 +6107,8 @@ public class IDataFrameService {
         return false;
       }
 
-      public void start(I iface, treeAggregate3_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.treeAggregate3(args.id, args.seqOp, args.combOp, args.depth,resultHandler);
+      public void start(I iface, treeAggregate5_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+        iface.treeAggregate5(args.id, args.seqOp, args.combOp, args.depth, args.tp,resultHandler);
       }
     }
 
@@ -6086,8 +6142,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             fold_result result = new fold_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6118,7 +6174,7 @@ public class IDataFrameService {
       }
 
       public void start(I iface, fold_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.fold(args.id, args.src,resultHandler);
+        iface.fold(args.id, args.src, args.tp,resultHandler);
       }
     }
 
@@ -6152,8 +6208,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             take_result result = new take_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6184,7 +6240,7 @@ public class IDataFrameService {
       }
 
       public void start(I iface, take_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.take(args.id, args.num,resultHandler);
+        iface.take(args.id, args.num, args.tp,resultHandler);
       }
     }
 
@@ -6216,8 +6272,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             foreach__result result = new foreach__result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6280,8 +6336,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             foreachPartition_result result = new foreachPartition_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6346,8 +6402,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             top_result result = new top_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6378,24 +6434,24 @@ public class IDataFrameService {
       }
 
       public void start(I iface, top_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.top(args.id, args.num,resultHandler);
+        iface.top(args.id, args.num, args.tp,resultHandler);
       }
     }
 
-    public static class top2<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, top2_args, java.lang.Long> {
-      public top2() {
-        super("top2");
+    public static class top4<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, top4_args, java.lang.Long> {
+      public top4() {
+        super("top4");
       }
 
-      public top2_args getEmptyArgsInstance() {
-        return new top2_args();
+      public top4_args getEmptyArgsInstance() {
+        return new top4_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<java.lang.Long>() { 
           public void onComplete(java.lang.Long o) {
-            top2_result result = new top2_result();
+            top4_result result = new top4_result();
             result.success = o;
             result.setSuccessIsSet(true);
             try {
@@ -6411,9 +6467,9 @@ public class IDataFrameService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            top2_result result = new top2_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            top4_result result = new top4_result();
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6443,8 +6499,8 @@ public class IDataFrameService {
         return false;
       }
 
-      public void start(I iface, top2_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.top2(args.id, args.num, args.cmp,resultHandler);
+      public void start(I iface, top4_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+        iface.top4(args.id, args.num, args.cmp, args.tp,resultHandler);
       }
     }
 
@@ -6477,8 +6533,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             sample_result result = new sample_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6543,8 +6599,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             takeSample_result result = new takeSample_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6575,7 +6631,7 @@ public class IDataFrameService {
       }
 
       public void start(I iface, takeSample_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.takeSample(args.id, args.withReplacement, args.num, args.seed,resultHandler);
+        iface.takeSample(args.id, args.withReplacement, args.num, args.seed, args.tp,resultHandler);
       }
     }
 
@@ -6609,8 +6665,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             count_result result = new count_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6675,8 +6731,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             max_result result = new max_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6707,7 +6763,7 @@ public class IDataFrameService {
       }
 
       public void start(I iface, max_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.max(args.id, args.cmp,resultHandler);
+        iface.max(args.id, args.cmp, args.tp,resultHandler);
       }
     }
 
@@ -6741,8 +6797,8 @@ public class IDataFrameService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             min_result result = new min_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -6773,7 +6829,7 @@ public class IDataFrameService {
       }
 
       public void start(I iface, min_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.min(args.id, args.cmp,resultHandler);
+        iface.min(args.id, args.cmp, args.tp,resultHandler);
       }
     }
 
@@ -7264,7 +7320,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new setName_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new setName_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -7331,7 +7387,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(setName_result.class, metaDataMap);
     }
@@ -7340,7 +7396,7 @@ public class IDataFrameService {
     }
 
     public setName_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -7351,7 +7407,7 @@ public class IDataFrameService {
      */
     public setName_result(setName_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -7365,11 +7421,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public setName_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public setName_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -7395,7 +7451,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -7554,7 +7610,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -7613,7 +7669,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -8105,7 +8161,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new persist_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new persist_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -8172,7 +8228,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(persist_result.class, metaDataMap);
     }
@@ -8181,7 +8237,7 @@ public class IDataFrameService {
     }
 
     public persist_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -8192,7 +8248,7 @@ public class IDataFrameService {
      */
     public persist_result(persist_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -8206,11 +8262,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public persist_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public persist_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -8236,7 +8292,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -8395,7 +8451,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -8454,7 +8510,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -8846,7 +8902,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new cache_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new cache_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -8913,7 +8969,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(cache_result.class, metaDataMap);
     }
@@ -8922,7 +8978,7 @@ public class IDataFrameService {
     }
 
     public cache_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -8933,7 +8989,7 @@ public class IDataFrameService {
      */
     public cache_result(cache_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -8947,11 +9003,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public cache_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public cache_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -8977,7 +9033,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -9136,7 +9192,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -9195,7 +9251,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -9587,7 +9643,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new unpersist_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new unpersist_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -9654,7 +9710,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(unpersist_result.class, metaDataMap);
     }
@@ -9663,7 +9719,7 @@ public class IDataFrameService {
     }
 
     public unpersist_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -9674,7 +9730,7 @@ public class IDataFrameService {
      */
     public unpersist_result(unpersist_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -9688,11 +9744,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public unpersist_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public unpersist_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -9718,7 +9774,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -9877,7 +9933,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -9936,7 +9992,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -10328,7 +10384,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new uncache_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new uncache_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -10395,7 +10451,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(uncache_result.class, metaDataMap);
     }
@@ -10404,7 +10460,7 @@ public class IDataFrameService {
     }
 
     public uncache_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -10415,7 +10471,7 @@ public class IDataFrameService {
      */
     public uncache_result(uncache_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -10429,11 +10485,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public uncache_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public uncache_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -10459,7 +10515,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -10618,7 +10674,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -10677,7 +10733,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -11171,7 +11227,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new repartition_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -11243,7 +11299,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(repartition_result.class, metaDataMap);
     }
@@ -11253,7 +11309,7 @@ public class IDataFrameService {
 
     public repartition_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -11268,7 +11324,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -11308,11 +11364,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public repartition_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public repartition_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -11346,7 +11402,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -11553,7 +11609,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -11628,7 +11684,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -12218,7 +12274,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new coalesce_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -12290,7 +12346,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(coalesce_result.class, metaDataMap);
     }
@@ -12300,7 +12356,7 @@ public class IDataFrameService {
 
     public coalesce_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -12315,7 +12371,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -12355,11 +12411,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public coalesce_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public coalesce_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -12393,7 +12449,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -12600,7 +12656,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -12675,7 +12731,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -13069,7 +13125,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitions_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -13143,7 +13199,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitions_result.class, metaDataMap);
     }
@@ -13153,7 +13209,7 @@ public class IDataFrameService {
 
     public partitions_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -13168,7 +13224,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -13207,11 +13263,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public partitions_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public partitions_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -13245,7 +13301,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -13444,7 +13500,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -13518,7 +13574,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -14115,7 +14171,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsObjectFile_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsObjectFile_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -14182,7 +14238,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsObjectFile_result.class, metaDataMap);
     }
@@ -14191,7 +14247,7 @@ public class IDataFrameService {
     }
 
     public saveAsObjectFile_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -14202,7 +14258,7 @@ public class IDataFrameService {
      */
     public saveAsObjectFile_result(saveAsObjectFile_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -14216,11 +14272,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public saveAsObjectFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public saveAsObjectFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -14246,7 +14302,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -14405,7 +14461,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -14464,7 +14520,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -14961,7 +15017,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsTextFile_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsTextFile_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -15028,7 +15084,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsTextFile_result.class, metaDataMap);
     }
@@ -15037,7 +15093,7 @@ public class IDataFrameService {
     }
 
     public saveAsTextFile_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -15048,7 +15104,7 @@ public class IDataFrameService {
      */
     public saveAsTextFile_result(saveAsTextFile_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -15062,11 +15118,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public saveAsTextFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public saveAsTextFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -15092,7 +15148,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -15251,7 +15307,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -15310,7 +15366,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -15907,7 +15963,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new saveAsJsonFile_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new saveAsJsonFile_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -15974,7 +16030,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(saveAsJsonFile_result.class, metaDataMap);
     }
@@ -15983,7 +16039,7 @@ public class IDataFrameService {
     }
 
     public saveAsJsonFile_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -15994,7 +16050,7 @@ public class IDataFrameService {
      */
     public saveAsJsonFile_result(saveAsJsonFile_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -16008,11 +16064,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public saveAsJsonFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public saveAsJsonFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -16038,7 +16094,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -16197,7 +16253,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -16256,7 +16312,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -16760,7 +16816,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new map__resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -16832,7 +16888,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(map__result.class, metaDataMap);
     }
@@ -16842,7 +16898,7 @@ public class IDataFrameService {
 
     public map__result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -16857,7 +16913,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -16897,11 +16953,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public map__result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public map__result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -16935,7 +16991,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -17142,7 +17198,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -17217,7 +17273,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -17721,7 +17777,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new filter_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -17793,7 +17849,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(filter_result.class, metaDataMap);
     }
@@ -17803,7 +17859,7 @@ public class IDataFrameService {
 
     public filter_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -17818,7 +17874,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -17858,11 +17914,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public filter_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public filter_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -17896,7 +17952,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -18103,7 +18159,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -18178,7 +18234,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -18682,7 +18738,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new flatmap_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -18754,7 +18810,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(flatmap_result.class, metaDataMap);
     }
@@ -18764,7 +18820,7 @@ public class IDataFrameService {
 
     public flatmap_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -18779,7 +18835,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -18819,11 +18875,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public flatmap_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public flatmap_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -18857,7 +18913,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -19064,7 +19120,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -19139,7 +19195,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -19743,7 +19799,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new mapPartitions_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -19815,7 +19871,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(mapPartitions_result.class, metaDataMap);
     }
@@ -19825,7 +19881,7 @@ public class IDataFrameService {
 
     public mapPartitions_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -19840,7 +19896,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -19880,11 +19936,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public mapPartitions_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public mapPartitions_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -19918,7 +19974,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -20125,7 +20181,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -20200,7 +20256,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -20804,7 +20860,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new mapPartitionsWithIndex_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -20876,7 +20932,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(mapPartitionsWithIndex_result.class, metaDataMap);
     }
@@ -20886,7 +20942,7 @@ public class IDataFrameService {
 
     public mapPartitionsWithIndex_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -20901,7 +20957,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -20941,11 +20997,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public mapPartitionsWithIndex_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public mapPartitionsWithIndex_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -20979,7 +21035,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -21186,7 +21242,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -21261,7 +21317,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -21765,7 +21821,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new applyPartition_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -21837,7 +21893,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(applyPartition_result.class, metaDataMap);
     }
@@ -21847,7 +21903,7 @@ public class IDataFrameService {
 
     public applyPartition_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -21862,7 +21918,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -21902,11 +21958,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public applyPartition_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public applyPartition_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -21940,7 +21996,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -22147,7 +22203,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -22222,7 +22278,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -22726,7 +22782,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new groupBy_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -22798,7 +22854,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(groupBy_result.class, metaDataMap);
     }
@@ -22808,7 +22864,7 @@ public class IDataFrameService {
 
     public groupBy_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -22823,7 +22879,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -22863,11 +22919,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public groupBy_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public groupBy_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -22901,7 +22957,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -23108,7 +23164,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -23183,7 +23239,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -23787,7 +23843,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new groupBy2_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -23859,7 +23915,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(groupBy2_result.class, metaDataMap);
     }
@@ -23869,7 +23925,7 @@ public class IDataFrameService {
 
     public groupBy2_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -23884,7 +23940,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -23924,11 +23980,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public groupBy2_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public groupBy2_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -23962,7 +24018,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -24169,7 +24225,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -24244,7 +24300,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -24738,7 +24794,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sort_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -24810,7 +24866,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sort_result.class, metaDataMap);
     }
@@ -24820,7 +24876,7 @@ public class IDataFrameService {
 
     public sort_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -24835,7 +24891,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -24875,11 +24931,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public sort_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public sort_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -24913,7 +24969,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -25120,7 +25176,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -25195,7 +25251,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -25785,7 +25841,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sort2_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -25857,7 +25913,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sort2_result.class, metaDataMap);
     }
@@ -25867,7 +25923,7 @@ public class IDataFrameService {
 
     public sort2_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -25882,7 +25938,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -25922,11 +25978,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public sort2_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public sort2_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -25960,7 +26016,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -26167,7 +26223,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -26242,7 +26298,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -26846,7 +26902,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sortBy_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -26918,7 +26974,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sortBy_result.class, metaDataMap);
     }
@@ -26928,7 +26984,7 @@ public class IDataFrameService {
 
     public sortBy_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -26943,7 +26999,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -26983,11 +27039,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public sortBy_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public sortBy_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -27021,7 +27077,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -27228,7 +27284,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -27303,7 +27359,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -28003,7 +28059,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sortBy3_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -28075,7 +28131,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sortBy3_result.class, metaDataMap);
     }
@@ -28085,7 +28141,7 @@ public class IDataFrameService {
 
     public sortBy3_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -28100,7 +28156,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -28140,11 +28196,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public sortBy3_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public sortBy3_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -28178,7 +28234,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -28385,7 +28441,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -28460,7 +28516,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -28477,17 +28533,20 @@ public class IDataFrameService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new reduce_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new reduce_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      SRC((short)2, "src");
+      SRC((short)2, "src"),
+      TP((short)3, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -28507,6 +28566,8 @@ public class IDataFrameService {
             return ID;
           case 2: // SRC
             return SRC;
+          case 3: // TP
+            return TP;
           default:
             return null;
         }
@@ -28555,6 +28616,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(reduce_args.class, metaDataMap);
     }
@@ -28564,11 +28627,13 @@ public class IDataFrameService {
 
     public reduce_args(
       IDataFrameId id,
-      org.ignis.rpc.ISource src)
+      org.ignis.rpc.ISource src,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.src = src;
+      this.tp = tp;
     }
 
     /**
@@ -28581,6 +28646,9 @@ public class IDataFrameService {
       if (other.isSetSrc()) {
         this.src = new org.ignis.rpc.ISource(other.src);
       }
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public reduce_args deepCopy() {
@@ -28591,6 +28659,7 @@ public class IDataFrameService {
     public void clear() {
       this.id = null;
       this.src = null;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -28643,6 +28712,31 @@ public class IDataFrameService {
       }
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public reduce_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -28661,6 +28755,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -28672,6 +28774,9 @@ public class IDataFrameService {
 
       case SRC:
         return getSrc();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -28688,6 +28793,8 @@ public class IDataFrameService {
         return isSetId();
       case SRC:
         return isSetSrc();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -28725,6 +28832,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -28739,6 +28855,10 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetSrc()) ? 131071 : 524287);
       if (isSetSrc())
         hashCode = hashCode * 8191 + src.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -28767,6 +28887,16 @@ public class IDataFrameService {
       }
       if (isSetSrc()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.src, other.src);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -28807,6 +28937,14 @@ public class IDataFrameService {
         sb.append(this.src);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -28819,6 +28957,9 @@ public class IDataFrameService {
       }
       if (src != null) {
         src.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -28874,6 +29015,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -28897,6 +29047,11 @@ public class IDataFrameService {
         if (struct.src != null) {
           oprot.writeFieldBegin(SRC_FIELD_DESC);
           struct.src.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -28923,19 +29078,25 @@ public class IDataFrameService {
         if (struct.isSetSrc()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetTp()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetSrc()) {
           struct.src.write(oprot);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, reduce_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -28945,6 +29106,11 @@ public class IDataFrameService {
           struct.src = new org.ignis.rpc.ISource();
           struct.src.read(iprot);
           struct.setSrcIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -28964,7 +29130,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new reduce_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -29038,7 +29204,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(reduce_result.class, metaDataMap);
     }
@@ -29048,7 +29214,7 @@ public class IDataFrameService {
 
     public reduce_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -29063,7 +29229,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -29102,11 +29268,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public reduce_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public reduce_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -29140,7 +29306,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -29339,7 +29505,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -29413,7 +29579,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -29430,17 +29596,20 @@ public class IDataFrameService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeReduce_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeReduce_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      SRC((short)2, "src");
+      SRC((short)2, "src"),
+      TP((short)3, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -29460,6 +29629,8 @@ public class IDataFrameService {
             return ID;
           case 2: // SRC
             return SRC;
+          case 3: // TP
+            return TP;
           default:
             return null;
         }
@@ -29508,6 +29679,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeReduce_args.class, metaDataMap);
     }
@@ -29517,11 +29690,13 @@ public class IDataFrameService {
 
     public treeReduce_args(
       IDataFrameId id,
-      org.ignis.rpc.ISource src)
+      org.ignis.rpc.ISource src,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.src = src;
+      this.tp = tp;
     }
 
     /**
@@ -29534,6 +29709,9 @@ public class IDataFrameService {
       if (other.isSetSrc()) {
         this.src = new org.ignis.rpc.ISource(other.src);
       }
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public treeReduce_args deepCopy() {
@@ -29544,6 +29722,7 @@ public class IDataFrameService {
     public void clear() {
       this.id = null;
       this.src = null;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -29596,6 +29775,31 @@ public class IDataFrameService {
       }
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public treeReduce_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -29614,6 +29818,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -29625,6 +29837,9 @@ public class IDataFrameService {
 
       case SRC:
         return getSrc();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -29641,6 +29856,8 @@ public class IDataFrameService {
         return isSetId();
       case SRC:
         return isSetSrc();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -29678,6 +29895,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -29692,6 +29918,10 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetSrc()) ? 131071 : 524287);
       if (isSetSrc())
         hashCode = hashCode * 8191 + src.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -29720,6 +29950,16 @@ public class IDataFrameService {
       }
       if (isSetSrc()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.src, other.src);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -29760,6 +30000,14 @@ public class IDataFrameService {
         sb.append(this.src);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -29772,6 +30020,9 @@ public class IDataFrameService {
       }
       if (src != null) {
         src.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -29827,6 +30078,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -29850,6 +30110,11 @@ public class IDataFrameService {
         if (struct.src != null) {
           oprot.writeFieldBegin(SRC_FIELD_DESC);
           struct.src.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -29876,19 +30141,25 @@ public class IDataFrameService {
         if (struct.isSetSrc()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetTp()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetSrc()) {
           struct.src.write(oprot);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, treeReduce_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -29898,6 +30169,11 @@ public class IDataFrameService {
           struct.src = new org.ignis.rpc.ISource();
           struct.src.read(iprot);
           struct.setSrcIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -29917,7 +30193,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeReduce_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -29991,7 +30267,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeReduce_result.class, metaDataMap);
     }
@@ -30001,7 +30277,7 @@ public class IDataFrameService {
 
     public treeReduce_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -30016,7 +30292,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -30055,11 +30331,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public treeReduce_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public treeReduce_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -30093,7 +30369,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -30292,7 +30568,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -30366,7 +30642,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -30378,25 +30654,28 @@ public class IDataFrameService {
     }
   }
 
-  public static class treeReduce3_args implements org.apache.thrift.TBase<treeReduce3_args, treeReduce3_args._Fields>, java.io.Serializable, Cloneable, Comparable<treeReduce3_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeReduce3_args");
+  public static class treeReduce4_args implements org.apache.thrift.TBase<treeReduce4_args, treeReduce4_args._Fields>, java.io.Serializable, Cloneable, Comparable<treeReduce4_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeReduce4_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)2);
     private static final org.apache.thrift.protocol.TField DEPTH_FIELD_DESC = new org.apache.thrift.protocol.TField("depth", org.apache.thrift.protocol.TType.I64, (short)3);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)4);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeReduce3_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeReduce3_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeReduce4_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeReduce4_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src; // required
     private long depth; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
       SRC((short)2, "src"),
-      DEPTH((short)3, "depth");
+      DEPTH((short)3, "depth"),
+      TP((short)4, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -30418,6 +30697,8 @@ public class IDataFrameService {
             return SRC;
           case 3: // DEPTH
             return DEPTH;
+          case 4: // TP
+            return TP;
           default:
             return null;
         }
@@ -30470,29 +30751,33 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       tmpMap.put(_Fields.DEPTH, new org.apache.thrift.meta_data.FieldMetaData("depth", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeReduce3_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeReduce4_args.class, metaDataMap);
     }
 
-    public treeReduce3_args() {
+    public treeReduce4_args() {
     }
 
-    public treeReduce3_args(
+    public treeReduce4_args(
       IDataFrameId id,
       org.ignis.rpc.ISource src,
-      long depth)
+      long depth,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.src = src;
       this.depth = depth;
       setDepthIsSet(true);
+      this.tp = tp;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public treeReduce3_args(treeReduce3_args other) {
+    public treeReduce4_args(treeReduce4_args other) {
       __isset_bitfield = other.__isset_bitfield;
       if (other.isSetId()) {
         this.id = new IDataFrameId(other.id);
@@ -30501,10 +30786,13 @@ public class IDataFrameService {
         this.src = new org.ignis.rpc.ISource(other.src);
       }
       this.depth = other.depth;
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
-    public treeReduce3_args deepCopy() {
-      return new treeReduce3_args(this);
+    public treeReduce4_args deepCopy() {
+      return new treeReduce4_args(this);
     }
 
     @Override
@@ -30513,6 +30801,7 @@ public class IDataFrameService {
       this.src = null;
       setDepthIsSet(false);
       this.depth = 0;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -30520,7 +30809,7 @@ public class IDataFrameService {
       return this.id;
     }
 
-    public treeReduce3_args setId(@org.apache.thrift.annotation.Nullable IDataFrameId id) {
+    public treeReduce4_args setId(@org.apache.thrift.annotation.Nullable IDataFrameId id) {
       this.id = id;
       return this;
     }
@@ -30545,7 +30834,7 @@ public class IDataFrameService {
       return this.src;
     }
 
-    public treeReduce3_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
+    public treeReduce4_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
       this.src = src;
       return this;
     }
@@ -30569,7 +30858,7 @@ public class IDataFrameService {
       return this.depth;
     }
 
-    public treeReduce3_args setDepth(long depth) {
+    public treeReduce4_args setDepth(long depth) {
       this.depth = depth;
       setDepthIsSet(true);
       return this;
@@ -30586,6 +30875,31 @@ public class IDataFrameService {
 
     public void setDepthIsSet(boolean value) {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __DEPTH_ISSET_ID, value);
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public treeReduce4_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
@@ -30614,6 +30928,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -30628,6 +30950,9 @@ public class IDataFrameService {
 
       case DEPTH:
         return getDepth();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -30646,6 +30971,8 @@ public class IDataFrameService {
         return isSetSrc();
       case DEPTH:
         return isSetDepth();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -30654,12 +30981,12 @@ public class IDataFrameService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof treeReduce3_args)
-        return this.equals((treeReduce3_args)that);
+      if (that instanceof treeReduce4_args)
+        return this.equals((treeReduce4_args)that);
       return false;
     }
 
-    public boolean equals(treeReduce3_args that) {
+    public boolean equals(treeReduce4_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -30692,6 +31019,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -30709,11 +31045,15 @@ public class IDataFrameService {
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(depth);
 
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
+
       return hashCode;
     }
 
     @Override
-    public int compareTo(treeReduce3_args other) {
+    public int compareTo(treeReduce4_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -30750,6 +31090,16 @@ public class IDataFrameService {
           return lastComparison;
         }
       }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -30768,7 +31118,7 @@ public class IDataFrameService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeReduce3_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeReduce4_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -30790,6 +31140,14 @@ public class IDataFrameService {
       sb.append("depth:");
       sb.append(this.depth);
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -30802,6 +31160,9 @@ public class IDataFrameService {
       }
       if (src != null) {
         src.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -30823,15 +31184,15 @@ public class IDataFrameService {
       }
     }
 
-    private static class treeReduce3_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public treeReduce3_argsStandardScheme getScheme() {
-        return new treeReduce3_argsStandardScheme();
+    private static class treeReduce4_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeReduce4_argsStandardScheme getScheme() {
+        return new treeReduce4_argsStandardScheme();
       }
     }
 
-    private static class treeReduce3_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeReduce3_args> {
+    private static class treeReduce4_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeReduce4_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, treeReduce3_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, treeReduce4_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -30867,6 +31228,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 4: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -30878,7 +31248,7 @@ public class IDataFrameService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, treeReduce3_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, treeReduce4_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -30895,22 +31265,27 @@ public class IDataFrameService {
         oprot.writeFieldBegin(DEPTH_FIELD_DESC);
         oprot.writeI64(struct.depth);
         oprot.writeFieldEnd();
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
 
     }
 
-    private static class treeReduce3_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public treeReduce3_argsTupleScheme getScheme() {
-        return new treeReduce3_argsTupleScheme();
+    private static class treeReduce4_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeReduce4_argsTupleScheme getScheme() {
+        return new treeReduce4_argsTupleScheme();
       }
     }
 
-    private static class treeReduce3_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeReduce3_args> {
+    private static class treeReduce4_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeReduce4_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, treeReduce3_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, treeReduce4_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetId()) {
@@ -30922,7 +31297,10 @@ public class IDataFrameService {
         if (struct.isSetDepth()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetTp()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
@@ -30932,12 +31310,15 @@ public class IDataFrameService {
         if (struct.isSetDepth()) {
           oprot.writeI64(struct.depth);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, treeReduce3_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, treeReduce4_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
+        java.util.BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -30952,6 +31333,11 @@ public class IDataFrameService {
           struct.depth = iprot.readI64();
           struct.setDepthIsSet(true);
         }
+        if (incoming.get(3)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
+        }
       }
     }
 
@@ -30960,17 +31346,17 @@ public class IDataFrameService {
     }
   }
 
-  public static class treeReduce3_result implements org.apache.thrift.TBase<treeReduce3_result, treeReduce3_result._Fields>, java.io.Serializable, Cloneable, Comparable<treeReduce3_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeReduce3_result");
+  public static class treeReduce4_result implements org.apache.thrift.TBase<treeReduce4_result, treeReduce4_result._Fields>, java.io.Serializable, Cloneable, Comparable<treeReduce4_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeReduce4_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeReduce3_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeReduce3_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeReduce4_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeReduce4_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -31044,17 +31430,17 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeReduce3_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeReduce4_result.class, metaDataMap);
     }
 
-    public treeReduce3_result() {
+    public treeReduce4_result() {
     }
 
-    public treeReduce3_result(
+    public treeReduce4_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -31065,16 +31451,16 @@ public class IDataFrameService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public treeReduce3_result(treeReduce3_result other) {
+    public treeReduce4_result(treeReduce4_result other) {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
-    public treeReduce3_result deepCopy() {
-      return new treeReduce3_result(this);
+    public treeReduce4_result deepCopy() {
+      return new treeReduce4_result(this);
     }
 
     @Override
@@ -31088,7 +31474,7 @@ public class IDataFrameService {
       return this.success;
     }
 
-    public treeReduce3_result setSuccess(long success) {
+    public treeReduce4_result setSuccess(long success) {
       this.success = success;
       setSuccessIsSet(true);
       return this;
@@ -31108,11 +31494,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public treeReduce3_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public treeReduce4_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -31146,7 +31532,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -31185,12 +31571,12 @@ public class IDataFrameService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof treeReduce3_result)
-        return this.equals((treeReduce3_result)that);
+      if (that instanceof treeReduce4_result)
+        return this.equals((treeReduce4_result)that);
       return false;
     }
 
-    public boolean equals(treeReduce3_result that) {
+    public boolean equals(treeReduce4_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -31231,7 +31617,7 @@ public class IDataFrameService {
     }
 
     @Override
-    public int compareTo(treeReduce3_result other) {
+    public int compareTo(treeReduce4_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -31276,7 +31662,7 @@ public class IDataFrameService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeReduce3_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeReduce4_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -31317,15 +31703,15 @@ public class IDataFrameService {
       }
     }
 
-    private static class treeReduce3_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public treeReduce3_resultStandardScheme getScheme() {
-        return new treeReduce3_resultStandardScheme();
+    private static class treeReduce4_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeReduce4_resultStandardScheme getScheme() {
+        return new treeReduce4_resultStandardScheme();
       }
     }
 
-    private static class treeReduce3_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeReduce3_result> {
+    private static class treeReduce4_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeReduce4_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, treeReduce3_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, treeReduce4_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -31345,7 +31731,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -31363,7 +31749,7 @@ public class IDataFrameService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, treeReduce3_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, treeReduce4_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -31383,16 +31769,16 @@ public class IDataFrameService {
 
     }
 
-    private static class treeReduce3_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public treeReduce3_resultTupleScheme getScheme() {
-        return new treeReduce3_resultTupleScheme();
+    private static class treeReduce4_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeReduce4_resultTupleScheme getScheme() {
+        return new treeReduce4_resultTupleScheme();
       }
     }
 
-    private static class treeReduce3_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeReduce3_result> {
+    private static class treeReduce4_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeReduce4_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, treeReduce3_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, treeReduce4_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetSuccess()) {
@@ -31411,7 +31797,7 @@ public class IDataFrameService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, treeReduce3_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, treeReduce4_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
@@ -31419,7 +31805,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -31435,15 +31821,18 @@ public class IDataFrameService {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("collect_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)2);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new collect_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new collect_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      ID((short)1, "id");
+      ID((short)1, "id"),
+      TP((short)2, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -31461,6 +31850,8 @@ public class IDataFrameService {
         switch(fieldId) {
           case 1: // ID
             return ID;
+          case 2: // TP
+            return TP;
           default:
             return null;
         }
@@ -31507,6 +31898,8 @@ public class IDataFrameService {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(collect_args.class, metaDataMap);
     }
@@ -31515,10 +31908,12 @@ public class IDataFrameService {
     }
 
     public collect_args(
-      IDataFrameId id)
+      IDataFrameId id,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
+      this.tp = tp;
     }
 
     /**
@@ -31527,6 +31922,9 @@ public class IDataFrameService {
     public collect_args(collect_args other) {
       if (other.isSetId()) {
         this.id = new IDataFrameId(other.id);
+      }
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
       }
     }
 
@@ -31537,6 +31935,7 @@ public class IDataFrameService {
     @Override
     public void clear() {
       this.id = null;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -31564,6 +31963,31 @@ public class IDataFrameService {
       }
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public collect_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -31571,6 +31995,14 @@ public class IDataFrameService {
           unsetId();
         } else {
           setId((IDataFrameId)value);
+        }
+        break;
+
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
         }
         break;
 
@@ -31582,6 +32014,9 @@ public class IDataFrameService {
       switch (field) {
       case ID:
         return getId();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -31596,6 +32031,8 @@ public class IDataFrameService {
       switch (field) {
       case ID:
         return isSetId();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -31624,6 +32061,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -31634,6 +32080,10 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
       if (isSetId())
         hashCode = hashCode * 8191 + id.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -31652,6 +32102,16 @@ public class IDataFrameService {
       }
       if (isSetId()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -31684,6 +32144,14 @@ public class IDataFrameService {
         sb.append(this.id);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -31693,6 +32161,9 @@ public class IDataFrameService {
       // check for sub-struct validity
       if (id != null) {
         id.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -31739,6 +32210,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 2: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -31757,6 +32237,11 @@ public class IDataFrameService {
         if (struct.id != null) {
           oprot.writeFieldBegin(ID_FIELD_DESC);
           struct.id.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -31780,20 +32265,31 @@ public class IDataFrameService {
         if (struct.isSetId()) {
           optionals.set(0);
         }
-        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetTp()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
         if (struct.isSetId()) {
           struct.id.write(oprot);
+        }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, collect_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
+        java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
           struct.setIdIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -31813,7 +32309,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new collect_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -31887,7 +32383,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(collect_result.class, metaDataMap);
     }
@@ -31897,7 +32393,7 @@ public class IDataFrameService {
 
     public collect_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -31912,7 +32408,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -31951,11 +32447,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public collect_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public collect_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -31989,7 +32485,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -32188,7 +32684,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -32262,7 +32758,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -32280,6 +32776,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField SEQ_OP_FIELD_DESC = new org.apache.thrift.protocol.TField("seqOp", org.apache.thrift.protocol.TType.STRUCT, (short)2);
     private static final org.apache.thrift.protocol.TField COMB_OP_FIELD_DESC = new org.apache.thrift.protocol.TField("combOp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)4);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new aggregate_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new aggregate_argsTupleSchemeFactory();
@@ -32287,12 +32784,14 @@ public class IDataFrameService {
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource seqOp; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource combOp; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
       SEQ_OP((short)2, "seqOp"),
-      COMB_OP((short)3, "combOp");
+      COMB_OP((short)3, "combOp"),
+      TP((short)4, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -32314,6 +32813,8 @@ public class IDataFrameService {
             return SEQ_OP;
           case 3: // COMB_OP
             return COMB_OP;
+          case 4: // TP
+            return TP;
           default:
             return null;
         }
@@ -32364,6 +32865,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       tmpMap.put(_Fields.COMB_OP, new org.apache.thrift.meta_data.FieldMetaData("combOp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(aggregate_args.class, metaDataMap);
     }
@@ -32374,12 +32877,14 @@ public class IDataFrameService {
     public aggregate_args(
       IDataFrameId id,
       org.ignis.rpc.ISource seqOp,
-      org.ignis.rpc.ISource combOp)
+      org.ignis.rpc.ISource combOp,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.seqOp = seqOp;
       this.combOp = combOp;
+      this.tp = tp;
     }
 
     /**
@@ -32395,6 +32900,9 @@ public class IDataFrameService {
       if (other.isSetCombOp()) {
         this.combOp = new org.ignis.rpc.ISource(other.combOp);
       }
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public aggregate_args deepCopy() {
@@ -32406,6 +32914,7 @@ public class IDataFrameService {
       this.id = null;
       this.seqOp = null;
       this.combOp = null;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -32483,6 +32992,31 @@ public class IDataFrameService {
       }
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public aggregate_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -32509,6 +33043,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -32523,6 +33065,9 @@ public class IDataFrameService {
 
       case COMB_OP:
         return getCombOp();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -32541,6 +33086,8 @@ public class IDataFrameService {
         return isSetSeqOp();
       case COMB_OP:
         return isSetCombOp();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -32587,6 +33134,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -32605,6 +33161,10 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetCombOp()) ? 131071 : 524287);
       if (isSetCombOp())
         hashCode = hashCode * 8191 + combOp.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -32643,6 +33203,16 @@ public class IDataFrameService {
       }
       if (isSetCombOp()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.combOp, other.combOp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -32691,6 +33261,14 @@ public class IDataFrameService {
         sb.append(this.combOp);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -32706,6 +33284,9 @@ public class IDataFrameService {
       }
       if (combOp != null) {
         combOp.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -32770,6 +33351,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 4: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -32800,6 +33390,11 @@ public class IDataFrameService {
           struct.combOp.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -32827,7 +33422,10 @@ public class IDataFrameService {
         if (struct.isSetCombOp()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetTp()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
@@ -32837,12 +33435,15 @@ public class IDataFrameService {
         if (struct.isSetCombOp()) {
           struct.combOp.write(oprot);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, aggregate_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
+        java.util.BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -32857,6 +33458,11 @@ public class IDataFrameService {
           struct.combOp = new org.ignis.rpc.ISource();
           struct.combOp.read(iprot);
           struct.setCombOpIsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -32876,7 +33482,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new aggregate_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -32950,7 +33556,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(aggregate_result.class, metaDataMap);
     }
@@ -32960,7 +33566,7 @@ public class IDataFrameService {
 
     public aggregate_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -32975,7 +33581,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -33014,11 +33620,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public aggregate_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public aggregate_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -33052,7 +33658,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -33251,7 +33857,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -33325,7 +33931,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -33343,6 +33949,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField SEQ_OP_FIELD_DESC = new org.apache.thrift.protocol.TField("seqOp", org.apache.thrift.protocol.TType.STRUCT, (short)2);
     private static final org.apache.thrift.protocol.TField COMB_OP_FIELD_DESC = new org.apache.thrift.protocol.TField("combOp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)4);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeAggregate_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeAggregate_argsTupleSchemeFactory();
@@ -33350,12 +33957,14 @@ public class IDataFrameService {
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource seqOp; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource combOp; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
       SEQ_OP((short)2, "seqOp"),
-      COMB_OP((short)3, "combOp");
+      COMB_OP((short)3, "combOp"),
+      TP((short)4, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -33377,6 +33986,8 @@ public class IDataFrameService {
             return SEQ_OP;
           case 3: // COMB_OP
             return COMB_OP;
+          case 4: // TP
+            return TP;
           default:
             return null;
         }
@@ -33427,6 +34038,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       tmpMap.put(_Fields.COMB_OP, new org.apache.thrift.meta_data.FieldMetaData("combOp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeAggregate_args.class, metaDataMap);
     }
@@ -33437,12 +34050,14 @@ public class IDataFrameService {
     public treeAggregate_args(
       IDataFrameId id,
       org.ignis.rpc.ISource seqOp,
-      org.ignis.rpc.ISource combOp)
+      org.ignis.rpc.ISource combOp,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.seqOp = seqOp;
       this.combOp = combOp;
+      this.tp = tp;
     }
 
     /**
@@ -33458,6 +34073,9 @@ public class IDataFrameService {
       if (other.isSetCombOp()) {
         this.combOp = new org.ignis.rpc.ISource(other.combOp);
       }
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public treeAggregate_args deepCopy() {
@@ -33469,6 +34087,7 @@ public class IDataFrameService {
       this.id = null;
       this.seqOp = null;
       this.combOp = null;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -33546,6 +34165,31 @@ public class IDataFrameService {
       }
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public treeAggregate_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -33572,6 +34216,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -33586,6 +34238,9 @@ public class IDataFrameService {
 
       case COMB_OP:
         return getCombOp();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -33604,6 +34259,8 @@ public class IDataFrameService {
         return isSetSeqOp();
       case COMB_OP:
         return isSetCombOp();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -33650,6 +34307,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -33668,6 +34334,10 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetCombOp()) ? 131071 : 524287);
       if (isSetCombOp())
         hashCode = hashCode * 8191 + combOp.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -33706,6 +34376,16 @@ public class IDataFrameService {
       }
       if (isSetCombOp()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.combOp, other.combOp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -33754,6 +34434,14 @@ public class IDataFrameService {
         sb.append(this.combOp);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -33769,6 +34457,9 @@ public class IDataFrameService {
       }
       if (combOp != null) {
         combOp.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -33833,6 +34524,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 4: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -33863,6 +34563,11 @@ public class IDataFrameService {
           struct.combOp.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -33890,7 +34595,10 @@ public class IDataFrameService {
         if (struct.isSetCombOp()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetTp()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
@@ -33900,12 +34608,15 @@ public class IDataFrameService {
         if (struct.isSetCombOp()) {
           struct.combOp.write(oprot);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, treeAggregate_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
+        java.util.BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -33920,6 +34631,11 @@ public class IDataFrameService {
           struct.combOp = new org.ignis.rpc.ISource();
           struct.combOp.read(iprot);
           struct.setCombOpIsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -33939,7 +34655,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeAggregate_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -34013,7 +34729,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeAggregate_result.class, metaDataMap);
     }
@@ -34023,7 +34739,7 @@ public class IDataFrameService {
 
     public treeAggregate_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -34038,7 +34754,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -34077,11 +34793,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public treeAggregate_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public treeAggregate_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -34115,7 +34831,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -34314,7 +35030,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -34388,7 +35104,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -34400,28 +35116,31 @@ public class IDataFrameService {
     }
   }
 
-  public static class treeAggregate3_args implements org.apache.thrift.TBase<treeAggregate3_args, treeAggregate3_args._Fields>, java.io.Serializable, Cloneable, Comparable<treeAggregate3_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeAggregate3_args");
+  public static class treeAggregate5_args implements org.apache.thrift.TBase<treeAggregate5_args, treeAggregate5_args._Fields>, java.io.Serializable, Cloneable, Comparable<treeAggregate5_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeAggregate5_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField SEQ_OP_FIELD_DESC = new org.apache.thrift.protocol.TField("seqOp", org.apache.thrift.protocol.TType.STRUCT, (short)2);
     private static final org.apache.thrift.protocol.TField COMB_OP_FIELD_DESC = new org.apache.thrift.protocol.TField("combOp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
     private static final org.apache.thrift.protocol.TField DEPTH_FIELD_DESC = new org.apache.thrift.protocol.TField("depth", org.apache.thrift.protocol.TType.I64, (short)4);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)5);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeAggregate3_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeAggregate3_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeAggregate5_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeAggregate5_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource seqOp; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource combOp; // required
     private long depth; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
       SEQ_OP((short)2, "seqOp"),
       COMB_OP((short)3, "combOp"),
-      DEPTH((short)4, "depth");
+      DEPTH((short)4, "depth"),
+      TP((short)5, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -34445,6 +35164,8 @@ public class IDataFrameService {
             return COMB_OP;
           case 4: // DEPTH
             return DEPTH;
+          case 5: // TP
+            return TP;
           default:
             return null;
         }
@@ -34499,18 +35220,21 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       tmpMap.put(_Fields.DEPTH, new org.apache.thrift.meta_data.FieldMetaData("depth", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeAggregate3_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeAggregate5_args.class, metaDataMap);
     }
 
-    public treeAggregate3_args() {
+    public treeAggregate5_args() {
     }
 
-    public treeAggregate3_args(
+    public treeAggregate5_args(
       IDataFrameId id,
       org.ignis.rpc.ISource seqOp,
       org.ignis.rpc.ISource combOp,
-      long depth)
+      long depth,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
@@ -34518,12 +35242,13 @@ public class IDataFrameService {
       this.combOp = combOp;
       this.depth = depth;
       setDepthIsSet(true);
+      this.tp = tp;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public treeAggregate3_args(treeAggregate3_args other) {
+    public treeAggregate5_args(treeAggregate5_args other) {
       __isset_bitfield = other.__isset_bitfield;
       if (other.isSetId()) {
         this.id = new IDataFrameId(other.id);
@@ -34535,10 +35260,13 @@ public class IDataFrameService {
         this.combOp = new org.ignis.rpc.ISource(other.combOp);
       }
       this.depth = other.depth;
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
-    public treeAggregate3_args deepCopy() {
-      return new treeAggregate3_args(this);
+    public treeAggregate5_args deepCopy() {
+      return new treeAggregate5_args(this);
     }
 
     @Override
@@ -34548,6 +35276,7 @@ public class IDataFrameService {
       this.combOp = null;
       setDepthIsSet(false);
       this.depth = 0;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -34555,7 +35284,7 @@ public class IDataFrameService {
       return this.id;
     }
 
-    public treeAggregate3_args setId(@org.apache.thrift.annotation.Nullable IDataFrameId id) {
+    public treeAggregate5_args setId(@org.apache.thrift.annotation.Nullable IDataFrameId id) {
       this.id = id;
       return this;
     }
@@ -34580,7 +35309,7 @@ public class IDataFrameService {
       return this.seqOp;
     }
 
-    public treeAggregate3_args setSeqOp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource seqOp) {
+    public treeAggregate5_args setSeqOp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource seqOp) {
       this.seqOp = seqOp;
       return this;
     }
@@ -34605,7 +35334,7 @@ public class IDataFrameService {
       return this.combOp;
     }
 
-    public treeAggregate3_args setCombOp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource combOp) {
+    public treeAggregate5_args setCombOp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource combOp) {
       this.combOp = combOp;
       return this;
     }
@@ -34629,7 +35358,7 @@ public class IDataFrameService {
       return this.depth;
     }
 
-    public treeAggregate3_args setDepth(long depth) {
+    public treeAggregate5_args setDepth(long depth) {
       this.depth = depth;
       setDepthIsSet(true);
       return this;
@@ -34646,6 +35375,31 @@ public class IDataFrameService {
 
     public void setDepthIsSet(boolean value) {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __DEPTH_ISSET_ID, value);
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public treeAggregate5_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
@@ -34682,6 +35436,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -34699,6 +35461,9 @@ public class IDataFrameService {
 
       case DEPTH:
         return getDepth();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -34719,6 +35484,8 @@ public class IDataFrameService {
         return isSetCombOp();
       case DEPTH:
         return isSetDepth();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -34727,12 +35494,12 @@ public class IDataFrameService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof treeAggregate3_args)
-        return this.equals((treeAggregate3_args)that);
+      if (that instanceof treeAggregate5_args)
+        return this.equals((treeAggregate5_args)that);
       return false;
     }
 
-    public boolean equals(treeAggregate3_args that) {
+    public boolean equals(treeAggregate5_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -34774,6 +35541,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -34795,11 +35571,15 @@ public class IDataFrameService {
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(depth);
 
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
+
       return hashCode;
     }
 
     @Override
-    public int compareTo(treeAggregate3_args other) {
+    public int compareTo(treeAggregate5_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -34846,6 +35626,16 @@ public class IDataFrameService {
           return lastComparison;
         }
       }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -34864,7 +35654,7 @@ public class IDataFrameService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeAggregate3_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeAggregate5_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -34894,6 +35684,14 @@ public class IDataFrameService {
       sb.append("depth:");
       sb.append(this.depth);
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -34909,6 +35707,9 @@ public class IDataFrameService {
       }
       if (combOp != null) {
         combOp.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -34930,15 +35731,15 @@ public class IDataFrameService {
       }
     }
 
-    private static class treeAggregate3_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public treeAggregate3_argsStandardScheme getScheme() {
-        return new treeAggregate3_argsStandardScheme();
+    private static class treeAggregate5_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeAggregate5_argsStandardScheme getScheme() {
+        return new treeAggregate5_argsStandardScheme();
       }
     }
 
-    private static class treeAggregate3_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeAggregate3_args> {
+    private static class treeAggregate5_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeAggregate5_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, treeAggregate3_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, treeAggregate5_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -34983,6 +35784,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 5: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -34994,7 +35804,7 @@ public class IDataFrameService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, treeAggregate3_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, treeAggregate5_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -35016,22 +35826,27 @@ public class IDataFrameService {
         oprot.writeFieldBegin(DEPTH_FIELD_DESC);
         oprot.writeI64(struct.depth);
         oprot.writeFieldEnd();
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
 
     }
 
-    private static class treeAggregate3_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public treeAggregate3_argsTupleScheme getScheme() {
-        return new treeAggregate3_argsTupleScheme();
+    private static class treeAggregate5_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeAggregate5_argsTupleScheme getScheme() {
+        return new treeAggregate5_argsTupleScheme();
       }
     }
 
-    private static class treeAggregate3_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeAggregate3_args> {
+    private static class treeAggregate5_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeAggregate5_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, treeAggregate3_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, treeAggregate5_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetId()) {
@@ -35046,7 +35861,10 @@ public class IDataFrameService {
         if (struct.isSetDepth()) {
           optionals.set(3);
         }
-        oprot.writeBitSet(optionals, 4);
+        if (struct.isSetTp()) {
+          optionals.set(4);
+        }
+        oprot.writeBitSet(optionals, 5);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
@@ -35059,12 +35877,15 @@ public class IDataFrameService {
         if (struct.isSetDepth()) {
           oprot.writeI64(struct.depth);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, treeAggregate3_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, treeAggregate5_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(4);
+        java.util.BitSet incoming = iprot.readBitSet(5);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -35084,6 +35905,11 @@ public class IDataFrameService {
           struct.depth = iprot.readI64();
           struct.setDepthIsSet(true);
         }
+        if (incoming.get(4)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
+        }
       }
     }
 
@@ -35092,17 +35918,17 @@ public class IDataFrameService {
     }
   }
 
-  public static class treeAggregate3_result implements org.apache.thrift.TBase<treeAggregate3_result, treeAggregate3_result._Fields>, java.io.Serializable, Cloneable, Comparable<treeAggregate3_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeAggregate3_result");
+  public static class treeAggregate5_result implements org.apache.thrift.TBase<treeAggregate5_result, treeAggregate5_result._Fields>, java.io.Serializable, Cloneable, Comparable<treeAggregate5_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("treeAggregate5_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeAggregate3_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeAggregate3_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new treeAggregate5_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new treeAggregate5_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -35176,17 +36002,17 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeAggregate3_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(treeAggregate5_result.class, metaDataMap);
     }
 
-    public treeAggregate3_result() {
+    public treeAggregate5_result() {
     }
 
-    public treeAggregate3_result(
+    public treeAggregate5_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -35197,16 +36023,16 @@ public class IDataFrameService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public treeAggregate3_result(treeAggregate3_result other) {
+    public treeAggregate5_result(treeAggregate5_result other) {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
-    public treeAggregate3_result deepCopy() {
-      return new treeAggregate3_result(this);
+    public treeAggregate5_result deepCopy() {
+      return new treeAggregate5_result(this);
     }
 
     @Override
@@ -35220,7 +36046,7 @@ public class IDataFrameService {
       return this.success;
     }
 
-    public treeAggregate3_result setSuccess(long success) {
+    public treeAggregate5_result setSuccess(long success) {
       this.success = success;
       setSuccessIsSet(true);
       return this;
@@ -35240,11 +36066,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public treeAggregate3_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public treeAggregate5_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -35278,7 +36104,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -35317,12 +36143,12 @@ public class IDataFrameService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof treeAggregate3_result)
-        return this.equals((treeAggregate3_result)that);
+      if (that instanceof treeAggregate5_result)
+        return this.equals((treeAggregate5_result)that);
       return false;
     }
 
-    public boolean equals(treeAggregate3_result that) {
+    public boolean equals(treeAggregate5_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -35363,7 +36189,7 @@ public class IDataFrameService {
     }
 
     @Override
-    public int compareTo(treeAggregate3_result other) {
+    public int compareTo(treeAggregate5_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -35408,7 +36234,7 @@ public class IDataFrameService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeAggregate3_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("treeAggregate5_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -35449,15 +36275,15 @@ public class IDataFrameService {
       }
     }
 
-    private static class treeAggregate3_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public treeAggregate3_resultStandardScheme getScheme() {
-        return new treeAggregate3_resultStandardScheme();
+    private static class treeAggregate5_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeAggregate5_resultStandardScheme getScheme() {
+        return new treeAggregate5_resultStandardScheme();
       }
     }
 
-    private static class treeAggregate3_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeAggregate3_result> {
+    private static class treeAggregate5_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<treeAggregate5_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, treeAggregate3_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, treeAggregate5_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -35477,7 +36303,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -35495,7 +36321,7 @@ public class IDataFrameService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, treeAggregate3_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, treeAggregate5_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -35515,16 +36341,16 @@ public class IDataFrameService {
 
     }
 
-    private static class treeAggregate3_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public treeAggregate3_resultTupleScheme getScheme() {
-        return new treeAggregate3_resultTupleScheme();
+    private static class treeAggregate5_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public treeAggregate5_resultTupleScheme getScheme() {
+        return new treeAggregate5_resultTupleScheme();
       }
     }
 
-    private static class treeAggregate3_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeAggregate3_result> {
+    private static class treeAggregate5_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<treeAggregate5_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, treeAggregate3_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, treeAggregate5_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetSuccess()) {
@@ -35543,7 +36369,7 @@ public class IDataFrameService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, treeAggregate3_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, treeAggregate5_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
@@ -35551,7 +36377,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -35568,17 +36394,20 @@ public class IDataFrameService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new fold_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new fold_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      SRC((short)2, "src");
+      SRC((short)2, "src"),
+      TP((short)3, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -35598,6 +36427,8 @@ public class IDataFrameService {
             return ID;
           case 2: // SRC
             return SRC;
+          case 3: // TP
+            return TP;
           default:
             return null;
         }
@@ -35646,6 +36477,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(fold_args.class, metaDataMap);
     }
@@ -35655,11 +36488,13 @@ public class IDataFrameService {
 
     public fold_args(
       IDataFrameId id,
-      org.ignis.rpc.ISource src)
+      org.ignis.rpc.ISource src,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.src = src;
+      this.tp = tp;
     }
 
     /**
@@ -35672,6 +36507,9 @@ public class IDataFrameService {
       if (other.isSetSrc()) {
         this.src = new org.ignis.rpc.ISource(other.src);
       }
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public fold_args deepCopy() {
@@ -35682,6 +36520,7 @@ public class IDataFrameService {
     public void clear() {
       this.id = null;
       this.src = null;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -35734,6 +36573,31 @@ public class IDataFrameService {
       }
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public fold_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -35752,6 +36616,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -35763,6 +36635,9 @@ public class IDataFrameService {
 
       case SRC:
         return getSrc();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -35779,6 +36654,8 @@ public class IDataFrameService {
         return isSetId();
       case SRC:
         return isSetSrc();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -35816,6 +36693,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -35830,6 +36716,10 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetSrc()) ? 131071 : 524287);
       if (isSetSrc())
         hashCode = hashCode * 8191 + src.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -35858,6 +36748,16 @@ public class IDataFrameService {
       }
       if (isSetSrc()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.src, other.src);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -35898,6 +36798,14 @@ public class IDataFrameService {
         sb.append(this.src);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -35910,6 +36818,9 @@ public class IDataFrameService {
       }
       if (src != null) {
         src.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -35965,6 +36876,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -35988,6 +36908,11 @@ public class IDataFrameService {
         if (struct.src != null) {
           oprot.writeFieldBegin(SRC_FIELD_DESC);
           struct.src.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -36014,19 +36939,25 @@ public class IDataFrameService {
         if (struct.isSetSrc()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetTp()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetSrc()) {
           struct.src.write(oprot);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, fold_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -36036,6 +36967,11 @@ public class IDataFrameService {
           struct.src = new org.ignis.rpc.ISource();
           struct.src.read(iprot);
           struct.setSrcIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -36055,7 +36991,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new fold_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -36129,7 +37065,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(fold_result.class, metaDataMap);
     }
@@ -36139,7 +37075,7 @@ public class IDataFrameService {
 
     public fold_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -36154,7 +37090,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -36193,11 +37129,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public fold_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public fold_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -36231,7 +37167,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -36430,7 +37366,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -36504,7 +37440,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -36521,17 +37457,20 @@ public class IDataFrameService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField NUM_FIELD_DESC = new org.apache.thrift.protocol.TField("num", org.apache.thrift.protocol.TType.I64, (short)2);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new take_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new take_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private long num; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      NUM((short)2, "num");
+      NUM((short)2, "num"),
+      TP((short)3, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -36551,6 +37490,8 @@ public class IDataFrameService {
             return ID;
           case 2: // NUM
             return NUM;
+          case 3: // TP
+            return TP;
           default:
             return null;
         }
@@ -36601,6 +37542,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.NUM, new org.apache.thrift.meta_data.FieldMetaData("num", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(take_args.class, metaDataMap);
     }
@@ -36610,12 +37553,14 @@ public class IDataFrameService {
 
     public take_args(
       IDataFrameId id,
-      long num)
+      long num,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.num = num;
       setNumIsSet(true);
+      this.tp = tp;
     }
 
     /**
@@ -36627,6 +37572,9 @@ public class IDataFrameService {
         this.id = new IDataFrameId(other.id);
       }
       this.num = other.num;
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public take_args deepCopy() {
@@ -36638,6 +37586,7 @@ public class IDataFrameService {
       this.id = null;
       setNumIsSet(false);
       this.num = 0;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -36688,6 +37637,31 @@ public class IDataFrameService {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __NUM_ISSET_ID, value);
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public take_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -36706,6 +37680,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -36717,6 +37699,9 @@ public class IDataFrameService {
 
       case NUM:
         return getNum();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -36733,6 +37718,8 @@ public class IDataFrameService {
         return isSetId();
       case NUM:
         return isSetNum();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -36770,6 +37757,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -36782,6 +37778,10 @@ public class IDataFrameService {
         hashCode = hashCode * 8191 + id.hashCode();
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(num);
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -36810,6 +37810,16 @@ public class IDataFrameService {
       }
       if (isSetNum()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.num, other.num);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -36846,6 +37856,14 @@ public class IDataFrameService {
       sb.append("num:");
       sb.append(this.num);
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -36855,6 +37873,9 @@ public class IDataFrameService {
       // check for sub-struct validity
       if (id != null) {
         id.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -36911,6 +37932,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -36934,6 +37964,11 @@ public class IDataFrameService {
         oprot.writeFieldBegin(NUM_FIELD_DESC);
         oprot.writeI64(struct.num);
         oprot.writeFieldEnd();
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -36958,19 +37993,25 @@ public class IDataFrameService {
         if (struct.isSetNum()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetTp()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetNum()) {
           oprot.writeI64(struct.num);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, take_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -36979,6 +38020,11 @@ public class IDataFrameService {
         if (incoming.get(1)) {
           struct.num = iprot.readI64();
           struct.setNumIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -36998,7 +38044,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new take_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -37072,7 +38118,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(take_result.class, metaDataMap);
     }
@@ -37082,7 +38128,7 @@ public class IDataFrameService {
 
     public take_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -37097,7 +38143,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -37136,11 +38182,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public take_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public take_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -37174,7 +38220,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -37373,7 +38419,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -37447,7 +38493,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -37949,7 +38995,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new foreach__resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new foreach__resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -38016,7 +39062,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(foreach__result.class, metaDataMap);
     }
@@ -38025,7 +39071,7 @@ public class IDataFrameService {
     }
 
     public foreach__result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -38036,7 +39082,7 @@ public class IDataFrameService {
      */
     public foreach__result(foreach__result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -38050,11 +39096,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public foreach__result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public foreach__result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -38080,7 +39126,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -38239,7 +39285,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -38298,7 +39344,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -38800,7 +39846,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new foreachPartition_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new foreachPartition_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -38867,7 +39913,7 @@ public class IDataFrameService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(foreachPartition_result.class, metaDataMap);
     }
@@ -38876,7 +39922,7 @@ public class IDataFrameService {
     }
 
     public foreachPartition_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -38887,7 +39933,7 @@ public class IDataFrameService {
      */
     public foreachPartition_result(foreachPartition_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -38901,11 +39947,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public foreachPartition_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public foreachPartition_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -38931,7 +39977,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -39090,7 +40136,7 @@ public class IDataFrameService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -39149,7 +40195,7 @@ public class IDataFrameService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -39166,17 +40212,20 @@ public class IDataFrameService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField NUM_FIELD_DESC = new org.apache.thrift.protocol.TField("num", org.apache.thrift.protocol.TType.I64, (short)2);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new top_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new top_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private long num; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      NUM((short)2, "num");
+      NUM((short)2, "num"),
+      TP((short)3, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -39196,6 +40245,8 @@ public class IDataFrameService {
             return ID;
           case 2: // NUM
             return NUM;
+          case 3: // TP
+            return TP;
           default:
             return null;
         }
@@ -39246,6 +40297,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.NUM, new org.apache.thrift.meta_data.FieldMetaData("num", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(top_args.class, metaDataMap);
     }
@@ -39255,12 +40308,14 @@ public class IDataFrameService {
 
     public top_args(
       IDataFrameId id,
-      long num)
+      long num,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.num = num;
       setNumIsSet(true);
+      this.tp = tp;
     }
 
     /**
@@ -39272,6 +40327,9 @@ public class IDataFrameService {
         this.id = new IDataFrameId(other.id);
       }
       this.num = other.num;
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public top_args deepCopy() {
@@ -39283,6 +40341,7 @@ public class IDataFrameService {
       this.id = null;
       setNumIsSet(false);
       this.num = 0;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -39333,6 +40392,31 @@ public class IDataFrameService {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __NUM_ISSET_ID, value);
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public top_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -39351,6 +40435,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -39362,6 +40454,9 @@ public class IDataFrameService {
 
       case NUM:
         return getNum();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -39378,6 +40473,8 @@ public class IDataFrameService {
         return isSetId();
       case NUM:
         return isSetNum();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -39415,6 +40512,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -39427,6 +40533,10 @@ public class IDataFrameService {
         hashCode = hashCode * 8191 + id.hashCode();
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(num);
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -39455,6 +40565,16 @@ public class IDataFrameService {
       }
       if (isSetNum()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.num, other.num);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -39491,6 +40611,14 @@ public class IDataFrameService {
       sb.append("num:");
       sb.append(this.num);
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -39500,6 +40628,9 @@ public class IDataFrameService {
       // check for sub-struct validity
       if (id != null) {
         id.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -39556,6 +40687,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -39579,6 +40719,11 @@ public class IDataFrameService {
         oprot.writeFieldBegin(NUM_FIELD_DESC);
         oprot.writeI64(struct.num);
         oprot.writeFieldEnd();
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -39603,19 +40748,25 @@ public class IDataFrameService {
         if (struct.isSetNum()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetTp()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetNum()) {
           oprot.writeI64(struct.num);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, top_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -39624,6 +40775,11 @@ public class IDataFrameService {
         if (incoming.get(1)) {
           struct.num = iprot.readI64();
           struct.setNumIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -39643,7 +40799,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new top_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -39717,7 +40873,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(top_result.class, metaDataMap);
     }
@@ -39727,7 +40883,7 @@ public class IDataFrameService {
 
     public top_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -39742,7 +40898,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -39781,11 +40937,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public top_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public top_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -39819,7 +40975,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -40018,7 +41174,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -40092,7 +41248,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -40104,25 +41260,28 @@ public class IDataFrameService {
     }
   }
 
-  public static class top2_args implements org.apache.thrift.TBase<top2_args, top2_args._Fields>, java.io.Serializable, Cloneable, Comparable<top2_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("top2_args");
+  public static class top4_args implements org.apache.thrift.TBase<top4_args, top4_args._Fields>, java.io.Serializable, Cloneable, Comparable<top4_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("top4_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField NUM_FIELD_DESC = new org.apache.thrift.protocol.TField("num", org.apache.thrift.protocol.TType.I64, (short)2);
     private static final org.apache.thrift.protocol.TField CMP_FIELD_DESC = new org.apache.thrift.protocol.TField("cmp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)4);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new top2_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new top2_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new top4_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new top4_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private long num; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource cmp; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
       NUM((short)2, "num"),
-      CMP((short)3, "cmp");
+      CMP((short)3, "cmp"),
+      TP((short)4, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -40144,6 +41303,8 @@ public class IDataFrameService {
             return NUM;
           case 3: // CMP
             return CMP;
+          case 4: // TP
+            return TP;
           default:
             return null;
         }
@@ -40196,29 +41357,33 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.CMP, new org.apache.thrift.meta_data.FieldMetaData("cmp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(top2_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(top4_args.class, metaDataMap);
     }
 
-    public top2_args() {
+    public top4_args() {
     }
 
-    public top2_args(
+    public top4_args(
       IDataFrameId id,
       long num,
-      org.ignis.rpc.ISource cmp)
+      org.ignis.rpc.ISource cmp,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.num = num;
       setNumIsSet(true);
       this.cmp = cmp;
+      this.tp = tp;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public top2_args(top2_args other) {
+    public top4_args(top4_args other) {
       __isset_bitfield = other.__isset_bitfield;
       if (other.isSetId()) {
         this.id = new IDataFrameId(other.id);
@@ -40227,10 +41392,13 @@ public class IDataFrameService {
       if (other.isSetCmp()) {
         this.cmp = new org.ignis.rpc.ISource(other.cmp);
       }
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
-    public top2_args deepCopy() {
-      return new top2_args(this);
+    public top4_args deepCopy() {
+      return new top4_args(this);
     }
 
     @Override
@@ -40239,6 +41407,7 @@ public class IDataFrameService {
       setNumIsSet(false);
       this.num = 0;
       this.cmp = null;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -40246,7 +41415,7 @@ public class IDataFrameService {
       return this.id;
     }
 
-    public top2_args setId(@org.apache.thrift.annotation.Nullable IDataFrameId id) {
+    public top4_args setId(@org.apache.thrift.annotation.Nullable IDataFrameId id) {
       this.id = id;
       return this;
     }
@@ -40270,7 +41439,7 @@ public class IDataFrameService {
       return this.num;
     }
 
-    public top2_args setNum(long num) {
+    public top4_args setNum(long num) {
       this.num = num;
       setNumIsSet(true);
       return this;
@@ -40294,7 +41463,7 @@ public class IDataFrameService {
       return this.cmp;
     }
 
-    public top2_args setCmp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource cmp) {
+    public top4_args setCmp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource cmp) {
       this.cmp = cmp;
       return this;
     }
@@ -40311,6 +41480,31 @@ public class IDataFrameService {
     public void setCmpIsSet(boolean value) {
       if (!value) {
         this.cmp = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public top4_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
       }
     }
 
@@ -40340,6 +41534,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -40354,6 +41556,9 @@ public class IDataFrameService {
 
       case CMP:
         return getCmp();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -40372,6 +41577,8 @@ public class IDataFrameService {
         return isSetNum();
       case CMP:
         return isSetCmp();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -40380,12 +41587,12 @@ public class IDataFrameService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof top2_args)
-        return this.equals((top2_args)that);
+      if (that instanceof top4_args)
+        return this.equals((top4_args)that);
       return false;
     }
 
-    public boolean equals(top2_args that) {
+    public boolean equals(top4_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -40418,6 +41625,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -40435,11 +41651,15 @@ public class IDataFrameService {
       if (isSetCmp())
         hashCode = hashCode * 8191 + cmp.hashCode();
 
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
+
       return hashCode;
     }
 
     @Override
-    public int compareTo(top2_args other) {
+    public int compareTo(top4_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -40476,6 +41696,16 @@ public class IDataFrameService {
           return lastComparison;
         }
       }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -40494,7 +41724,7 @@ public class IDataFrameService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("top2_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("top4_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -40516,6 +41746,14 @@ public class IDataFrameService {
         sb.append(this.cmp);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -40528,6 +41766,9 @@ public class IDataFrameService {
       }
       if (cmp != null) {
         cmp.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -40549,15 +41790,15 @@ public class IDataFrameService {
       }
     }
 
-    private static class top2_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public top2_argsStandardScheme getScheme() {
-        return new top2_argsStandardScheme();
+    private static class top4_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public top4_argsStandardScheme getScheme() {
+        return new top4_argsStandardScheme();
       }
     }
 
-    private static class top2_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<top2_args> {
+    private static class top4_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<top4_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, top2_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, top4_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -40593,6 +41834,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 4: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -40604,7 +41854,7 @@ public class IDataFrameService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, top2_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, top4_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -40621,22 +41871,27 @@ public class IDataFrameService {
           struct.cmp.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
 
     }
 
-    private static class top2_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public top2_argsTupleScheme getScheme() {
-        return new top2_argsTupleScheme();
+    private static class top4_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public top4_argsTupleScheme getScheme() {
+        return new top4_argsTupleScheme();
       }
     }
 
-    private static class top2_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<top2_args> {
+    private static class top4_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<top4_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, top2_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, top4_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetId()) {
@@ -40648,7 +41903,10 @@ public class IDataFrameService {
         if (struct.isSetCmp()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetTp()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
@@ -40658,12 +41916,15 @@ public class IDataFrameService {
         if (struct.isSetCmp()) {
           struct.cmp.write(oprot);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, top2_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, top4_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
+        java.util.BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -40678,6 +41939,11 @@ public class IDataFrameService {
           struct.cmp.read(iprot);
           struct.setCmpIsSet(true);
         }
+        if (incoming.get(3)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
+        }
       }
     }
 
@@ -40686,17 +41952,17 @@ public class IDataFrameService {
     }
   }
 
-  public static class top2_result implements org.apache.thrift.TBase<top2_result, top2_result._Fields>, java.io.Serializable, Cloneable, Comparable<top2_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("top2_result");
+  public static class top4_result implements org.apache.thrift.TBase<top4_result, top4_result._Fields>, java.io.Serializable, Cloneable, Comparable<top4_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("top4_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new top2_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new top2_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new top4_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new top4_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -40770,17 +42036,17 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(top2_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(top4_result.class, metaDataMap);
     }
 
-    public top2_result() {
+    public top4_result() {
     }
 
-    public top2_result(
+    public top4_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -40791,16 +42057,16 @@ public class IDataFrameService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public top2_result(top2_result other) {
+    public top4_result(top4_result other) {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
-    public top2_result deepCopy() {
-      return new top2_result(this);
+    public top4_result deepCopy() {
+      return new top4_result(this);
     }
 
     @Override
@@ -40814,7 +42080,7 @@ public class IDataFrameService {
       return this.success;
     }
 
-    public top2_result setSuccess(long success) {
+    public top4_result setSuccess(long success) {
       this.success = success;
       setSuccessIsSet(true);
       return this;
@@ -40834,11 +42100,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public top2_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public top4_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -40872,7 +42138,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -40911,12 +42177,12 @@ public class IDataFrameService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof top2_result)
-        return this.equals((top2_result)that);
+      if (that instanceof top4_result)
+        return this.equals((top4_result)that);
       return false;
     }
 
-    public boolean equals(top2_result that) {
+    public boolean equals(top4_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -40957,7 +42223,7 @@ public class IDataFrameService {
     }
 
     @Override
-    public int compareTo(top2_result other) {
+    public int compareTo(top4_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -41002,7 +42268,7 @@ public class IDataFrameService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("top2_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("top4_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -41043,15 +42309,15 @@ public class IDataFrameService {
       }
     }
 
-    private static class top2_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public top2_resultStandardScheme getScheme() {
-        return new top2_resultStandardScheme();
+    private static class top4_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public top4_resultStandardScheme getScheme() {
+        return new top4_resultStandardScheme();
       }
     }
 
-    private static class top2_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<top2_result> {
+    private static class top4_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<top4_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, top2_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, top4_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -41071,7 +42337,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -41089,7 +42355,7 @@ public class IDataFrameService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, top2_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, top4_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -41109,16 +42375,16 @@ public class IDataFrameService {
 
     }
 
-    private static class top2_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public top2_resultTupleScheme getScheme() {
-        return new top2_resultTupleScheme();
+    private static class top4_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public top4_resultTupleScheme getScheme() {
+        return new top4_resultTupleScheme();
       }
     }
 
-    private static class top2_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<top2_result> {
+    private static class top4_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<top4_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, top2_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, top4_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetSuccess()) {
@@ -41137,7 +42403,7 @@ public class IDataFrameService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, top2_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, top4_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
@@ -41145,7 +42411,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -41831,7 +43097,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sample_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -41903,7 +43169,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sample_result.class, metaDataMap);
     }
@@ -41913,7 +43179,7 @@ public class IDataFrameService {
 
     public sample_result(
       IDataFrameId success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -41928,7 +43194,7 @@ public class IDataFrameService {
         this.success = new IDataFrameId(other.success);
       }
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -41968,11 +43234,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public sample_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public sample_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -42006,7 +43272,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -42213,7 +43479,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -42288,7 +43554,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -42307,6 +43573,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.protocol.TField WITH_REPLACEMENT_FIELD_DESC = new org.apache.thrift.protocol.TField("withReplacement", org.apache.thrift.protocol.TType.BOOL, (short)2);
     private static final org.apache.thrift.protocol.TField NUM_FIELD_DESC = new org.apache.thrift.protocol.TField("num", org.apache.thrift.protocol.TType.I64, (short)3);
     private static final org.apache.thrift.protocol.TField SEED_FIELD_DESC = new org.apache.thrift.protocol.TField("seed", org.apache.thrift.protocol.TType.I32, (short)4);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)5);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new takeSample_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new takeSample_argsTupleSchemeFactory();
@@ -42315,13 +43582,15 @@ public class IDataFrameService {
     private boolean withReplacement; // required
     private long num; // required
     private int seed; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
       WITH_REPLACEMENT((short)2, "withReplacement"),
       NUM((short)3, "num"),
-      SEED((short)4, "seed");
+      SEED((short)4, "seed"),
+      TP((short)5, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -42345,6 +43614,8 @@ public class IDataFrameService {
             return NUM;
           case 4: // SEED
             return SEED;
+          case 5: // TP
+            return TP;
           default:
             return null;
         }
@@ -42401,6 +43672,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.SEED, new org.apache.thrift.meta_data.FieldMetaData("seed", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(takeSample_args.class, metaDataMap);
     }
@@ -42412,7 +43685,8 @@ public class IDataFrameService {
       IDataFrameId id,
       boolean withReplacement,
       long num,
-      int seed)
+      int seed,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
@@ -42422,6 +43696,7 @@ public class IDataFrameService {
       setNumIsSet(true);
       this.seed = seed;
       setSeedIsSet(true);
+      this.tp = tp;
     }
 
     /**
@@ -42435,6 +43710,9 @@ public class IDataFrameService {
       this.withReplacement = other.withReplacement;
       this.num = other.num;
       this.seed = other.seed;
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public takeSample_args deepCopy() {
@@ -42450,6 +43728,7 @@ public class IDataFrameService {
       this.num = 0;
       setSeedIsSet(false);
       this.seed = 0;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -42546,6 +43825,31 @@ public class IDataFrameService {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __SEED_ISSET_ID, value);
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public takeSample_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -42580,6 +43884,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -42597,6 +43909,9 @@ public class IDataFrameService {
 
       case SEED:
         return getSeed();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -42617,6 +43932,8 @@ public class IDataFrameService {
         return isSetNum();
       case SEED:
         return isSetSeed();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -42672,6 +43989,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -42688,6 +44014,10 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(num);
 
       hashCode = hashCode * 8191 + seed;
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -42740,6 +44070,16 @@ public class IDataFrameService {
           return lastComparison;
         }
       }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -42780,6 +44120,14 @@ public class IDataFrameService {
       sb.append("seed:");
       sb.append(this.seed);
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -42789,6 +44137,9 @@ public class IDataFrameService {
       // check for sub-struct validity
       if (id != null) {
         id.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -42861,6 +44212,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 5: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -42890,6 +44250,11 @@ public class IDataFrameService {
         oprot.writeFieldBegin(SEED_FIELD_DESC);
         oprot.writeI32(struct.seed);
         oprot.writeFieldEnd();
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -42920,7 +44285,10 @@ public class IDataFrameService {
         if (struct.isSetSeed()) {
           optionals.set(3);
         }
-        oprot.writeBitSet(optionals, 4);
+        if (struct.isSetTp()) {
+          optionals.set(4);
+        }
+        oprot.writeBitSet(optionals, 5);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
@@ -42933,12 +44301,15 @@ public class IDataFrameService {
         if (struct.isSetSeed()) {
           oprot.writeI32(struct.seed);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, takeSample_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(4);
+        java.util.BitSet incoming = iprot.readBitSet(5);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -42955,6 +44326,11 @@ public class IDataFrameService {
         if (incoming.get(3)) {
           struct.seed = iprot.readI32();
           struct.setSeedIsSet(true);
+        }
+        if (incoming.get(4)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -42974,7 +44350,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new takeSample_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -43048,7 +44424,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(takeSample_result.class, metaDataMap);
     }
@@ -43058,7 +44434,7 @@ public class IDataFrameService {
 
     public takeSample_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -43073,7 +44449,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -43112,11 +44488,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public takeSample_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public takeSample_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -43150,7 +44526,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -43349,7 +44725,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -43423,7 +44799,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -43817,7 +45193,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new count_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -43891,7 +45267,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(count_result.class, metaDataMap);
     }
@@ -43901,7 +45277,7 @@ public class IDataFrameService {
 
     public count_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -43916,7 +45292,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -43955,11 +45331,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public count_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public count_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -43993,7 +45369,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -44192,7 +45568,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -44266,7 +45642,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -44283,17 +45659,20 @@ public class IDataFrameService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField CMP_FIELD_DESC = new org.apache.thrift.protocol.TField("cmp", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new max_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new max_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource cmp; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      CMP((short)2, "cmp");
+      CMP((short)2, "cmp"),
+      TP((short)3, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -44313,6 +45692,8 @@ public class IDataFrameService {
             return ID;
           case 2: // CMP
             return CMP;
+          case 3: // TP
+            return TP;
           default:
             return null;
         }
@@ -44361,6 +45742,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.CMP, new org.apache.thrift.meta_data.FieldMetaData("cmp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(max_args.class, metaDataMap);
     }
@@ -44370,11 +45753,13 @@ public class IDataFrameService {
 
     public max_args(
       IDataFrameId id,
-      org.ignis.rpc.ISource cmp)
+      org.ignis.rpc.ISource cmp,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.cmp = cmp;
+      this.tp = tp;
     }
 
     /**
@@ -44387,6 +45772,9 @@ public class IDataFrameService {
       if (other.isSetCmp()) {
         this.cmp = new org.ignis.rpc.ISource(other.cmp);
       }
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public max_args deepCopy() {
@@ -44397,6 +45785,7 @@ public class IDataFrameService {
     public void clear() {
       this.id = null;
       this.cmp = null;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -44449,6 +45838,31 @@ public class IDataFrameService {
       }
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public max_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -44467,6 +45881,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -44478,6 +45900,9 @@ public class IDataFrameService {
 
       case CMP:
         return getCmp();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -44494,6 +45919,8 @@ public class IDataFrameService {
         return isSetId();
       case CMP:
         return isSetCmp();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -44531,6 +45958,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -44545,6 +45981,10 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetCmp()) ? 131071 : 524287);
       if (isSetCmp())
         hashCode = hashCode * 8191 + cmp.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -44573,6 +46013,16 @@ public class IDataFrameService {
       }
       if (isSetCmp()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.cmp, other.cmp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -44613,6 +46063,14 @@ public class IDataFrameService {
         sb.append(this.cmp);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -44625,6 +46083,9 @@ public class IDataFrameService {
       }
       if (cmp != null) {
         cmp.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -44680,6 +46141,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -44703,6 +46173,11 @@ public class IDataFrameService {
         if (struct.cmp != null) {
           oprot.writeFieldBegin(CMP_FIELD_DESC);
           struct.cmp.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -44729,19 +46204,25 @@ public class IDataFrameService {
         if (struct.isSetCmp()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetTp()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetCmp()) {
           struct.cmp.write(oprot);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, max_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -44751,6 +46232,11 @@ public class IDataFrameService {
           struct.cmp = new org.ignis.rpc.ISource();
           struct.cmp.read(iprot);
           struct.setCmpIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -44770,7 +46256,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new max_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -44844,7 +46330,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(max_result.class, metaDataMap);
     }
@@ -44854,7 +46340,7 @@ public class IDataFrameService {
 
     public max_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -44869,7 +46355,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -44908,11 +46394,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public max_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public max_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -44946,7 +46432,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -45145,7 +46631,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -45219,7 +46705,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -45236,17 +46722,20 @@ public class IDataFrameService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField CMP_FIELD_DESC = new org.apache.thrift.protocol.TField("cmp", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField TP_FIELD_DESC = new org.apache.thrift.protocol.TField("tp", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new min_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new min_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IDataFrameId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource cmp; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      CMP((short)2, "cmp");
+      CMP((short)2, "cmp"),
+      TP((short)3, "tp");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -45266,6 +46755,8 @@ public class IDataFrameService {
             return ID;
           case 2: // CMP
             return CMP;
+          case 3: // TP
+            return TP;
           default:
             return null;
         }
@@ -45314,6 +46805,8 @@ public class IDataFrameService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IDataFrameId.class)));
       tmpMap.put(_Fields.CMP, new org.apache.thrift.meta_data.FieldMetaData("cmp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
+      tmpMap.put(_Fields.TP, new org.apache.thrift.meta_data.FieldMetaData("tp", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(min_args.class, metaDataMap);
     }
@@ -45323,11 +46816,13 @@ public class IDataFrameService {
 
     public min_args(
       IDataFrameId id,
-      org.ignis.rpc.ISource cmp)
+      org.ignis.rpc.ISource cmp,
+      org.ignis.rpc.ISource tp)
     {
       this();
       this.id = id;
       this.cmp = cmp;
+      this.tp = tp;
     }
 
     /**
@@ -45340,6 +46835,9 @@ public class IDataFrameService {
       if (other.isSetCmp()) {
         this.cmp = new org.ignis.rpc.ISource(other.cmp);
       }
+      if (other.isSetTp()) {
+        this.tp = new org.ignis.rpc.ISource(other.tp);
+      }
     }
 
     public min_args deepCopy() {
@@ -45350,6 +46848,7 @@ public class IDataFrameService {
     public void clear() {
       this.id = null;
       this.cmp = null;
+      this.tp = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -45402,6 +46901,31 @@ public class IDataFrameService {
       }
     }
 
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.ISource getTp() {
+      return this.tp;
+    }
+
+    public min_args setTp(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource tp) {
+      this.tp = tp;
+      return this;
+    }
+
+    public void unsetTp() {
+      this.tp = null;
+    }
+
+    /** Returns true if field tp is set (has been assigned a value) and false otherwise */
+    public boolean isSetTp() {
+      return this.tp != null;
+    }
+
+    public void setTpIsSet(boolean value) {
+      if (!value) {
+        this.tp = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -45420,6 +46944,14 @@ public class IDataFrameService {
         }
         break;
 
+      case TP:
+        if (value == null) {
+          unsetTp();
+        } else {
+          setTp((org.ignis.rpc.ISource)value);
+        }
+        break;
+
       }
     }
 
@@ -45431,6 +46963,9 @@ public class IDataFrameService {
 
       case CMP:
         return getCmp();
+
+      case TP:
+        return getTp();
 
       }
       throw new java.lang.IllegalStateException();
@@ -45447,6 +46982,8 @@ public class IDataFrameService {
         return isSetId();
       case CMP:
         return isSetCmp();
+      case TP:
+        return isSetTp();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -45484,6 +47021,15 @@ public class IDataFrameService {
           return false;
       }
 
+      boolean this_present_tp = true && this.isSetTp();
+      boolean that_present_tp = true && that.isSetTp();
+      if (this_present_tp || that_present_tp) {
+        if (!(this_present_tp && that_present_tp))
+          return false;
+        if (!this.tp.equals(that.tp))
+          return false;
+      }
+
       return true;
     }
 
@@ -45498,6 +47044,10 @@ public class IDataFrameService {
       hashCode = hashCode * 8191 + ((isSetCmp()) ? 131071 : 524287);
       if (isSetCmp())
         hashCode = hashCode * 8191 + cmp.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTp()) ? 131071 : 524287);
+      if (isSetTp())
+        hashCode = hashCode * 8191 + tp.hashCode();
 
       return hashCode;
     }
@@ -45526,6 +47076,16 @@ public class IDataFrameService {
       }
       if (isSetCmp()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.cmp, other.cmp);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetTp()).compareTo(other.isSetTp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTp()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tp, other.tp);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -45566,6 +47126,14 @@ public class IDataFrameService {
         sb.append(this.cmp);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("tp:");
+      if (this.tp == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tp);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -45578,6 +47146,9 @@ public class IDataFrameService {
       }
       if (cmp != null) {
         cmp.validate();
+      }
+      if (tp != null) {
+        tp.validate();
       }
     }
 
@@ -45633,6 +47204,15 @@ public class IDataFrameService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // TP
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.tp = new org.ignis.rpc.ISource();
+                struct.tp.read(iprot);
+                struct.setTpIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -45656,6 +47236,11 @@ public class IDataFrameService {
         if (struct.cmp != null) {
           oprot.writeFieldBegin(CMP_FIELD_DESC);
           struct.cmp.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tp != null) {
+          oprot.writeFieldBegin(TP_FIELD_DESC);
+          struct.tp.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -45682,19 +47267,25 @@ public class IDataFrameService {
         if (struct.isSetCmp()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetTp()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetCmp()) {
           struct.cmp.write(oprot);
         }
+        if (struct.isSetTp()) {
+          struct.tp.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, min_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IDataFrameId();
           struct.id.read(iprot);
@@ -45704,6 +47295,11 @@ public class IDataFrameService {
           struct.cmp = new org.ignis.rpc.ISource();
           struct.cmp.read(iprot);
           struct.setCmpIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.tp = new org.ignis.rpc.ISource();
+          struct.tp.read(iprot);
+          struct.setTpIsSet(true);
         }
       }
     }
@@ -45723,7 +47319,7 @@ public class IDataFrameService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new min_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -45797,7 +47393,7 @@ public class IDataFrameService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(min_result.class, metaDataMap);
     }
@@ -45807,7 +47403,7 @@ public class IDataFrameService {
 
     public min_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -45822,7 +47418,7 @@ public class IDataFrameService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -45861,11 +47457,11 @@ public class IDataFrameService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public min_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public min_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -45899,7 +47495,7 @@ public class IDataFrameService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -46098,7 +47694,7 @@ public class IDataFrameService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -46172,7 +47768,7 @@ public class IDataFrameService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }

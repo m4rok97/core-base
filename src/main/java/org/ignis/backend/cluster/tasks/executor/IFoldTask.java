@@ -33,14 +33,14 @@ public class IFoldTask extends IDriverTask {
 
     private final ISource src;
 
-    public IFoldTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src) {
-        super(name, executor, shared, driver);
+    public IFoldTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src, ISource tp) {
+        super(name, executor, shared, driver, tp);
         this.src = src;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-                LOGGER.info(log() + "Executing fold");
+        LOGGER.info(log() + "Executing fold");
         try {
             if (!driver) {
                 executor.getGeneralActionModule().fold(src);

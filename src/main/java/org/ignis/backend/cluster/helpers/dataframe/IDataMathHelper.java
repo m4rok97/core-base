@@ -57,17 +57,17 @@ public final class IDataMathHelper extends IDataHelper {
         return target;
     }
 
-    public ILazy<Long> takeSample(IDriver driver, boolean withReplacement, long num, int seed) {
+    public ILazy<Long> takeSample(IDriver driver, boolean withReplacement, long num, int seed, ISource tp) {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getWorker().getTasks());
         LOGGER.info(log() + "Registering takeSample withReplacement: " + withReplacement + ", num: " + num + ", seed: " + seed);
         ITakeSampleTask.Shared shared = new ITakeSampleTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new ITakeSampleTask(getName(), executor, shared, false, withReplacement, num, seed));
+            builder.newTask(new ITakeSampleTask(getName(), executor, shared, false, withReplacement, num, seed, tp));
         }
 
         builder.newLock(driver.getLock());
-        builder.newTask(new ITakeSampleTask(getName(), driver.getExecutor(), shared, true, withReplacement, num, seed));
+        builder.newTask(new ITakeSampleTask(getName(), driver.getExecutor(), shared, true, withReplacement, num, seed, tp));
 
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
@@ -89,16 +89,16 @@ public final class IDataMathHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> max(IDriver driver, ISource cmp) throws IgnisException {
+    public ILazy<Long> max(IDriver driver, ISource cmp, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getWorker().getTasks());
         IMaxTask.Shared shared = new IMaxTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IMaxTask(getName(), executor, shared, false, cmp));
+            builder.newTask(new IMaxTask(getName(), executor, shared, false, cmp, tp));
         }
 
         builder.newLock(driver.getLock());
-        builder.newTask(new IMaxTask(driver.getName(), driver.getExecutor(), shared, true, cmp));
+        builder.newTask(new IMaxTask(driver.getName(), driver.getExecutor(), shared, true, cmp, tp));
 
         LOGGER.info(log() + "Registering max");
         return () -> {
@@ -107,16 +107,16 @@ public final class IDataMathHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> min(IDriver driver, ISource cmp) throws IgnisException {
+    public ILazy<Long> min(IDriver driver, ISource cmp, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getWorker().getTasks());
         IMinTask.Shared shared = new IMinTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IMinTask(getName(), executor, shared, false, cmp));
+            builder.newTask(new IMinTask(getName(), executor, shared, false, cmp, tp));
         }
 
         builder.newLock(driver.getLock());
-        builder.newTask(new IMinTask(driver.getName(), driver.getExecutor(), shared, true, cmp));
+        builder.newTask(new IMinTask(driver.getName(), driver.getExecutor(), shared, true, cmp, tp));
 
         LOGGER.info(log() + "Registering min");
         return () -> {

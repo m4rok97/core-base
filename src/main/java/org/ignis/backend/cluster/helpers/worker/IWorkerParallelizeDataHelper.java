@@ -39,30 +39,30 @@ public final class IWorkerParallelizeDataHelper extends IWorkerHelper {
         super(job, properties);
     }
 
-    public IDataFrame parallelize(IDriver driver) throws IgnisException {
+    public IDataFrame parallelize(IDriver driver, long dataId) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newDependency(worker.getTasks());
         IParallelizeTask.Shared shared = new IParallelizeTask.Shared(worker.getExecutors().size());
         for (IExecutor executor : worker.getExecutors()) {
-            builder.newTask(new IParallelizeTask(getName(), executor, shared, false));
+            builder.newTask(new IParallelizeTask(getName(), executor, shared, false, dataId));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new IParallelizeTask(getName(), driver.getExecutor(), shared, true));
+        builder.newTask(new IParallelizeTask(getName(), driver.getExecutor(), shared, true, dataId));
 
         IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
         LOGGER.info(log() + "Registering parallelize -> " + target.getName());
         return target;
     }
 
-    public IDataFrame parallelize(IDriver driver, ISource src) throws IgnisException {
+    public IDataFrame parallelize(IDriver driver, long dataId, ISource src) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newDependency(worker.getTasks());
         IParallelizeTask.Shared shared = new IParallelizeTask.Shared(worker.getExecutors().size());
         for (IExecutor executor : worker.getExecutors()) {
-            builder.newTask(new IParallelizeTask(getName(), executor, shared, false, src));
+            builder.newTask(new IParallelizeTask(getName(), executor, shared, false, dataId, src));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new IParallelizeTask(getName(), driver.getExecutor(), shared, true, src));
+        builder.newTask(new IParallelizeTask(getName(), driver.getExecutor(), shared, true, dataId, src));
 
         IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
         LOGGER.info(log() + "Registering parallelize -> " + target.getName());

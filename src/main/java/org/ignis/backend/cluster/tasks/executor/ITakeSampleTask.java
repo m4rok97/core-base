@@ -23,6 +23,7 @@ import java.util.concurrent.BrokenBarrierException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -49,8 +50,8 @@ public class ITakeSampleTask extends IDriverTask {
     private final long num;
     private final int seed;
 
-    public ITakeSampleTask(String name, IExecutor executor, Shared shared, boolean driver, boolean withReplacement, long num, int seed) {
-        super(name, executor, shared, driver);
+    public ITakeSampleTask(String name, IExecutor executor, Shared shared, boolean driver, boolean withReplacement, long num, int seed, ISource tp) {
+        super(name, executor, shared, driver, tp);
         this.shared = shared;
         this.withReplacement = withReplacement;
         this.num = num;

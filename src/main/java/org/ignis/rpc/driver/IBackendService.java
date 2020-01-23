@@ -11,7 +11,7 @@ public class IBackendService {
 
   public interface Iface {
 
-    public void stop() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void stop() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
   }
 
@@ -41,7 +41,7 @@ public class IBackendService {
       super(iprot, oprot);
     }
 
-    public void stop() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void stop() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_stop();
       recv_stop();
@@ -53,7 +53,7 @@ public class IBackendService {
       sendBase("stop", args);
     }
 
-    public void recv_stop() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_stop() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       stop_result result = new stop_result();
       receiveBase(result, "stop");
@@ -100,7 +100,7 @@ public class IBackendService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -149,7 +149,7 @@ public class IBackendService {
         stop_result result = new stop_result();
         try {
           iface.stop();
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -201,8 +201,8 @@ public class IBackendService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             stop_result result = new stop_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -501,7 +501,7 @@ public class IBackendService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new stop_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new stop_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -568,7 +568,7 @@ public class IBackendService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(stop_result.class, metaDataMap);
     }
@@ -577,7 +577,7 @@ public class IBackendService {
     }
 
     public stop_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -588,7 +588,7 @@ public class IBackendService {
      */
     public stop_result(stop_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -602,11 +602,11 @@ public class IBackendService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public stop_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public stop_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -632,7 +632,7 @@ public class IBackendService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -791,7 +791,7 @@ public class IBackendService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -850,7 +850,7 @@ public class IBackendService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }

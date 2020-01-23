@@ -35,12 +35,12 @@ public class ITreeAggregateTask extends IDriverTask {
     private final ISource combOp;
     private final long depth;
 
-    public ITreeAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp) {
-        this(name, executor, shared, driver, seqOp, combOp, 2);
+    public ITreeAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp, ISource tp) {
+        this(name, executor, shared, driver, seqOp, combOp, 2, tp);
     }
-    
-    public ITreeAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp, long depth) {
-        super(name, executor, shared, driver);
+
+    public ITreeAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp, long depth, ISource tp) {
+        super(name, executor, shared, driver, tp);
         this.seqOp = seqOp;
         this.combOp = combOp;
         this.depth = depth;

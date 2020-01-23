@@ -99,11 +99,11 @@ public final class Main {
         IClusterServiceImpl clusters = null;
 
         try {
-            processor.registerProcessor("backend", new IBackendService.Processor<>(backend = new IBackendServiceImpl(attributes)));
-            processor.registerProcessor("cluster", new IClusterService.Processor<>(clusters = new IClusterServiceImpl(attributes, scheduler)));
-            processor.registerProcessor("worker", new IWorkerService.Processor<>(new IWorkerServiceImpl(attributes)));
-            processor.registerProcessor("dataframe", new IDataFrameService.Processor<>(new IDataFrameServiceImpl(attributes)));
-            processor.registerProcessor("properties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(attributes)));
+            processor.registerProcessor("IBackend", new IBackendService.Processor<>(backend = new IBackendServiceImpl(attributes)));
+            processor.registerProcessor("ICluster", new IClusterService.Processor<>(clusters = new IClusterServiceImpl(attributes, scheduler)));
+            processor.registerProcessor("IWorker", new IWorkerService.Processor<>(new IWorkerServiceImpl(attributes)));
+            processor.registerProcessor("IDataFrame", new IDataFrameService.Processor<>(new IDataFrameServiceImpl(attributes)));
+            processor.registerProcessor("IProperties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(attributes)));
         } catch (Exception ex) {
             LOGGER.error("Error starting services, aborting", ex);
             System.exit(-1);
@@ -123,6 +123,14 @@ public final class Main {
             if (!attributes.defaultProperties.contains(IKeys.DEBUG)) {
                 clusters.destroyClusters();
             }
+            try {
+                if(attributes.driver.getExecutor().getTransport().isOpen()){
+                    attributes.driver.getExecutor().getExecutorServerModule().stop();
+                }
+            } catch (Exception ex) {
+                LOGGER.warn("Driver callback could not be stopped");
+            }
+
             LOGGER.info("Backend stopped");
             System.exit(0);
         } catch (Exception ex) {

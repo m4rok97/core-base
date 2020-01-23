@@ -27,7 +27,7 @@ import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.IScheduler;
-import org.ignis.rpc.IDriverException;
+import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.driver.IClusterService;
 
 /**
@@ -48,7 +48,24 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     }
 
     @Override
-    public long newInstance(long properties) throws IDriverException, TException {
+    public long newInstance0() throws IDriverException, TException {
+        return newInstance1a("");
+    }
+
+    @Override
+    public long newInstance1a(String name) throws IDriverException, TException {
+        try {
+            IProperties clusterProperties = new IProperties(attributes.defaultProperties);
+            long id = attributes.newCluster();
+            attributes.setCluster(new ICluster(name, id, clusterProperties, threadPool, scheduler, attributes.ssh));
+            return id;
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public long newInstance1b(long properties) throws IDriverException, TException {
         return newInstance2("", properties);
     }
 

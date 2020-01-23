@@ -33,8 +33,8 @@ public class IReduceTask extends IDriverTask {
 
     private final ISource src;
 
-    public IReduceTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src) {
-        super(name, executor, shared,driver);
+    public IReduceTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src, ISource tp) {
+        super(name, executor, shared, driver, tp);
         this.src = src;
     }
 

@@ -49,15 +49,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         super(data, properties);
     }
 
-    public ILazy<Long> reduce(ISource src, IDriver driver) throws IgnisException {
+    public ILazy<Long> reduce(ISource src, IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         IReduceTask.Shared shared = new IReduceTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IReduceTask(getName(), executor, shared, false, src));
+            builder.newTask(new IReduceTask(getName(), executor, shared, false, src,tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new IReduceTask(driver.getName(), driver.getExecutor(), shared, true, src));
+        builder.newTask(new IReduceTask(driver.getName(), driver.getExecutor(), shared, true, src,tp));
 
         LOGGER.info(log() + "Registering reduce");
         return () -> {
@@ -66,15 +66,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> treeReduce(ISource src, IDriver driver) throws IgnisException {
+    public ILazy<Long> treeReduce(ISource src, IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         ITreeReduceTask.Shared shared = new ITreeReduceTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new ITreeReduceTask(getName(), executor, shared, false, src));
+            builder.newTask(new ITreeReduceTask(getName(), executor, shared, false, src,tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new ITreeReduceTask(driver.getName(), driver.getExecutor(), shared, true, src));
+        builder.newTask(new ITreeReduceTask(driver.getName(), driver.getExecutor(), shared, true, src,tp));
 
         LOGGER.info(log() + "Registering treeReduce");
         return () -> {
@@ -83,15 +83,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> treeReduce(ISource src, long depth, IDriver driver) throws IgnisException {
+    public ILazy<Long> treeReduce(ISource src, long depth, IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         ITreeReduceTask.Shared shared = new ITreeReduceTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new ITreeReduceTask(getName(), executor, shared, false, src, depth));
+            builder.newTask(new ITreeReduceTask(getName(), executor, shared, false, src, depth,tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new ITreeReduceTask(driver.getName(), driver.getExecutor(), shared, true, src, depth));
+        builder.newTask(new ITreeReduceTask(driver.getName(), driver.getExecutor(), shared, true, src, depth,tp));
 
         LOGGER.info(log() + "Registering treeReduce");
         return () -> {
@@ -100,15 +100,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> collect(IDriver driver) throws IgnisException {
+    public ILazy<Long> collect(IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         ICollectTask.Shared shared = new ICollectTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new ICollectTask(getName(), executor, shared, false));
+            builder.newTask(new ICollectTask(getName(), executor, shared, false, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new ICollectTask(driver.getName(), driver.getExecutor(), shared, true));
+        builder.newTask(new ICollectTask(driver.getName(), driver.getExecutor(), shared, true, tp));
 
         LOGGER.info(log() + "Registering collect");
         return () -> {
@@ -117,15 +117,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> aggregate(ISource seqOp, ISource combOp, IDriver driver) throws IgnisException {
+    public ILazy<Long> aggregate(ISource seqOp, ISource combOp, IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         IAggregateTask.Shared shared = new IAggregateTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IAggregateTask(getName(), executor, shared, false, seqOp, combOp));
+            builder.newTask(new IAggregateTask(getName(), executor, shared, false, seqOp, combOp, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new IAggregateTask(driver.getName(), driver.getExecutor(), shared, true, seqOp, combOp));
+        builder.newTask(new IAggregateTask(driver.getName(), driver.getExecutor(), shared, true, seqOp, combOp, tp));
 
         LOGGER.info(log() + "Registering treeReduce");
         return () -> {
@@ -134,15 +134,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> treeAggregate(ISource seqOp, ISource combOp, IDriver driver) throws IgnisException {
+    public ILazy<Long> treeAggregate(ISource seqOp, ISource combOp, IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         ITreeAggregateTask.Shared shared = new ITreeAggregateTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new ITreeAggregateTask(getName(), executor, shared, false, seqOp, combOp));
+            builder.newTask(new ITreeAggregateTask(getName(), executor, shared, false, seqOp, combOp, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new ITreeAggregateTask(driver.getName(), driver.getExecutor(), shared, true, seqOp, combOp));
+        builder.newTask(new ITreeAggregateTask(driver.getName(), driver.getExecutor(), shared, true, seqOp, combOp, tp));
 
         LOGGER.info(log() + "Registering treeReduce");
         return () -> {
@@ -151,15 +151,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> treeAggregate(ISource seqOp, ISource combOp, long depth, IDriver driver) throws IgnisException {
+    public ILazy<Long> treeAggregate(ISource seqOp, ISource combOp, long depth, IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         ITreeAggregateTask.Shared shared = new ITreeAggregateTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new ITreeAggregateTask(getName(), executor, shared, false, seqOp, combOp, depth));
+            builder.newTask(new ITreeAggregateTask(getName(), executor, shared, false, seqOp, combOp, depth, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new ITreeAggregateTask(driver.getName(), driver.getExecutor(), shared, true, seqOp, combOp, depth));
+        builder.newTask(new ITreeAggregateTask(driver.getName(), driver.getExecutor(), shared, true, seqOp, combOp, depth, tp));
 
         LOGGER.info(log() + "Registering treeReduce");
         return () -> {
@@ -168,15 +168,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> fold(ISource src, IDriver driver) throws IgnisException {
+    public ILazy<Long> fold(ISource src, IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         IFoldTask.Shared shared = new IFoldTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IFoldTask(getName(), executor, shared, false, src));
+            builder.newTask(new IFoldTask(getName(), executor, shared, false, src, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new IFoldTask(driver.getName(), driver.getExecutor(), shared, true, src));
+        builder.newTask(new IFoldTask(driver.getName(), driver.getExecutor(), shared, true, src, tp));
 
         LOGGER.info(log() + "Registering treeReduce");
         return () -> {
@@ -185,15 +185,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> take(long num, IDriver driver) throws IgnisException {
+    public ILazy<Long> take(long num, IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         ITakeTask.Shared shared = new ITakeTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new ITakeTask(getName(), executor, shared, false, num));
+            builder.newTask(new ITakeTask(getName(), executor, shared, false, num, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new ITakeTask(driver.getName(), driver.getExecutor(), shared, true, num));
+        builder.newTask(new ITakeTask(driver.getName(), driver.getExecutor(), shared, true, num, tp));
 
         LOGGER.info(log() + "Registering treeReduce");
         return () -> {
@@ -230,15 +230,15 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
-    public ILazy<Long> top(long num, IDriver driver) throws IgnisException {
+    public ILazy<Long> top(long num, IDriver driver, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         ITopTask.Shared shared = new ITopTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new ITopTask(getName(), executor, shared, false, num));
+            builder.newTask(new ITopTask(getName(), executor, shared, false, num, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new ITopTask(driver.getName(), driver.getExecutor(), shared, true, num));
+        builder.newTask(new ITopTask(driver.getName(), driver.getExecutor(), shared, true, num, tp));
 
         LOGGER.info(log() + "Registering treeReduce");
         return () -> {

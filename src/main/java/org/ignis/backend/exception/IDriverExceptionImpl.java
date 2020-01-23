@@ -19,7 +19,7 @@ package org.ignis.backend.exception;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
-import org.ignis.rpc.IDriverException;
+import org.ignis.rpc.driver.IDriverException;
 
 /**
  *

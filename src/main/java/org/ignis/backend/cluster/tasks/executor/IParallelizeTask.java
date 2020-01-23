@@ -30,15 +30,12 @@ public class IParallelizeTask extends IDriverTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IParallelizeTask.class);
 
-    private final ISource src;
-
-    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver) {
-        this(name, executor, shared, driver, null);
+    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId) {
+        super(name, executor, shared, driver, dataId);
     }
 
-    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src) {
-        super(name, executor, shared, driver);
-        this.src = src;
+    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId, ISource src) {
+        super(name, executor, shared, driver, dataId, src);
     }
 
     @Override

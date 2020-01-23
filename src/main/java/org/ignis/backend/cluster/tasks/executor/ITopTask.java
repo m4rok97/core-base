@@ -49,12 +49,12 @@ public class ITopTask extends IDriverTask {
     private final long n;
     private final ISource src;
 
-    public ITopTask(String name, IExecutor executor, Shared shared, boolean driver, long n) {
-        this(name, executor, shared, driver, n, null);
+    public ITopTask(String name, IExecutor executor, Shared shared, boolean driver, long n, ISource tp) {
+        this(name, executor, shared, driver, n, null, tp);
     }
-    
-    public ITopTask(String name, IExecutor executor, Shared shared, boolean driver, long n, ISource src) {
-        super(name, executor, shared, driver);
+
+    public ITopTask(String name, IExecutor executor, Shared shared, boolean driver, long n, ISource src, ISource tp) {
+        super(name, executor, shared, driver, tp);
         this.n = n;
         this.shared = shared;
         this.src = src;
@@ -76,7 +76,11 @@ public class ITopTask extends IDriverTask {
             }
             shared.barrier.await();
             if (!driver) {
-                executor.getGeneralActionModule().top(n);
+                if (src != null) {
+                    executor.getGeneralActionModule().top2(n, src);
+                } else {
+                    executor.getGeneralActionModule().top(n);
+                }
             }
             shared.barrier.await();
             gather(context, true);
@@ -89,7 +93,7 @@ public class ITopTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-            LOGGER.info(log() + "Take executed");
+        LOGGER.info(log() + "Take executed");
     }
 
 }

@@ -77,7 +77,7 @@ public final class ICommGroupCreateTask extends IExecutorTask {
                 shared.group = executor.getCommModule().createGroup();
             }
             shared.barrier.await();
-            executor.getCommModule().joinGroupMembers(shared.group, shared.executors);
+            executor.getCommModule().joinGroupMembers(shared.group, executor.getId(), shared.executors);
             LOGGER.info(log() + "Executor mpi group ready");
             shared.barrier.await();
         } catch (IExecutorException ex) {

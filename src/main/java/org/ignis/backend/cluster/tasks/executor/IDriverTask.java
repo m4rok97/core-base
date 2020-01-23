@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.stream.Collectors;
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
@@ -29,6 +30,7 @@ import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.rpc.IExecutorException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -57,18 +59,67 @@ public abstract class IDriverTask extends IExecutorContextTask {
     protected final Shared shared;
     protected final boolean driver;
     protected final String id;
+    private final long dataId;
+    private final ISource src;
 
-    protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver) {
+    protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId, ISource src) {
         super(name, executor, !driver ? Mode.LOAD : Mode.NONE);
         this.shared = shared;
         this.driver = driver;
+        this.dataId = dataId;
+        this.src = src;
         this.id = executor.getContainer().getCluster() + "-" + executor.getWorker();
+    }
+
+    protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src) {
+        this(name, executor, shared, driver, 0, src);
+    }
+
+    protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId) {
+        this(name, executor, shared, driver, dataId, null);
+    }
+
+    private void driverConnection(ITaskContext context) throws IgnisException {
+        if (executor.getTransport().isOpen()) {
+            try {
+                executor.getExecutorServerModule().test();
+                return;
+            } catch (Exception ex) {
+                LOGGER.warn(log() + "driver conection lost");
+            }
+        }
+        LOGGER.warn(log() + "connecting to the driver");
+
+        for (int i = 0; i < 10; i++) {
+            try {
+                executor.getTransport().open();
+                break;
+            } catch (TException ex) {
+                if (i == 9) {
+                    throw new IgnisException(ex.getMessage(), ex);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    throw new IgnisException(ex.getMessage(), ex);
+                }
+            }
+        }
+        
+        try {
+            executor.getExecutorServerModule().updateProperties(executor.getProperties().toMap());
+        } catch (IExecutorException ex) {
+            throw new IExecutorExceptionWrapper(ex);
+        } catch (TException ex) {
+            throw new IgnisException(ex.getMessage(), ex);
+        }
     }
 
     private void mpiDriverGroup(ITaskContext context) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Testing mpi driver group");
         try {
             if (driver) {
+                driverConnection(context);
                 shared.flag = true;
             }
             shared.barrier.await();
@@ -102,9 +153,9 @@ public abstract class IDriverTask extends IExecutorContextTask {
         mpiDriverGroup(context);
         try {
             if (zero && executor.getId() == 0) { //Only Driver and executor 0 has id==0
-                executor.getCommModule().driverGather0(id);
+                executor.getCommModule().driverGather0(id, src);
             } else {
-                executor.getCommModule().driverGather(id);
+                executor.getCommModule().driverGather(id, src);
             }
         } catch (IExecutorException ex) {
             shared.barrier.fails();
@@ -120,7 +171,11 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "Executing mpiScatter");
         mpiDriverGroup(context);
         try {
-            executor.getCommModule().driverScatter(id);
+            if (src != null) {
+                executor.getCommModule().driverScatter3(id, dataId, src);
+            } else {
+                executor.getCommModule().driverScatter(id, dataId);
+            }
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);
@@ -135,6 +190,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "Executing rpcGather");
         try {
             if (driver) {
+                driverConnection(context);
                 shared.buffer = new ArrayList<>(Collections.nCopies(shared.executors, null));
             }
             shared.barrier.await();
@@ -167,6 +223,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "Executing rpcScatter");
         try {
             if (driver) {
+                driverConnection(context);
                 shared.buffer = new ArrayList<>();
             }
             shared.barrier.await();
@@ -186,8 +243,12 @@ public abstract class IDriverTask extends IExecutorContextTask {
                 shared.buffer.add(executor.getCommModule().getPartitions());
             }
             shared.barrier.await();
-            if (driver) {
-                executor.getCommModule().setPartitions(shared.buffer.get((int) executor.getId()));
+            if (!driver) {
+                if (src != null) {
+                    executor.getCommModule().setPartitions2(shared.buffer.get((int) executor.getId()), src);
+                } else {
+                    executor.getCommModule().setPartitions(shared.buffer.get((int) executor.getId()));
+                }
             }
             shared.barrier.await();
         } catch (IExecutorException ex) {

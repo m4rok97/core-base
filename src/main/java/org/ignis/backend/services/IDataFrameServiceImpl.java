@@ -27,7 +27,7 @@ import org.ignis.backend.cluster.helpers.dataframe.IDataIOHelper;
 import org.ignis.backend.cluster.helpers.dataframe.IDataMathHelper;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.exception.IDriverExceptionImpl;
-import org.ignis.rpc.IDriverException;
+import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.ISource;
 import org.ignis.rpc.driver.IDataFrameId;
 import org.ignis.rpc.driver.IDataFrameService;
@@ -378,14 +378,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long reduce(IDataFrameId id, ISource src) throws IDriverException, TException {
+    public long reduce(IDataFrameId id, ISource src, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).reduce(src, attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).reduce(src, attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -394,14 +394,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long treeReduce(IDataFrameId id, ISource src) throws IDriverException, TException {
+    public long treeReduce(IDataFrameId id, ISource src, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeReduce(src, attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeReduce(src, attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -410,14 +410,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long treeReduce3(IDataFrameId id, ISource src, long depth) throws IDriverException, TException {
+    public long treeReduce4(IDataFrameId id, ISource src, long depth, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeReduce(src, depth, attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeReduce(src, depth, attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -426,14 +426,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long collect(IDataFrameId id) throws IDriverException, TException {
+    public long collect(IDataFrameId id, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).collect(attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).collect(attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -442,14 +442,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long aggregate(IDataFrameId id, ISource seqOp, ISource combOp) throws IDriverException, TException {
+    public long aggregate(IDataFrameId id, ISource seqOp, ISource combOp, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).aggregate(seqOp, combOp, attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).aggregate(seqOp, combOp, attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -458,14 +458,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long treeAggregate(IDataFrameId id, ISource seqOp, ISource combOp) throws IDriverException, TException {
+    public long treeAggregate(IDataFrameId id, ISource seqOp, ISource combOp, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeAggregate(seqOp, combOp, attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeAggregate(seqOp, combOp, attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -474,14 +474,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long treeAggregate3(IDataFrameId id, ISource seqOp, ISource combOp, long depth) throws IDriverException, TException {
+    public long treeAggregate5(IDataFrameId id, ISource seqOp, ISource combOp, long depth, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeAggregate(seqOp, combOp, depth, attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).treeAggregate(seqOp, combOp, depth, attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -490,14 +490,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long fold(IDataFrameId id, ISource src) throws IDriverException, TException {
+    public long fold(IDataFrameId id, ISource src, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).fold(src, attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).fold(src, attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -506,14 +506,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long take(IDataFrameId id, long num) throws IDriverException, TException {
+    public long take(IDataFrameId id, long num, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).take(num, attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).take(num, attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -554,14 +554,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long top(IDataFrameId id, long num) throws IDriverException, TException {
+    public long top(IDataFrameId id, long num, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataGeneralActionHelper(data, worker.getProperties()).top(num, attributes.driver);
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).top(num, attributes.driver, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -570,7 +570,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long top2(IDataFrameId id, long num, ISource cmp) throws IDriverException, TException {
+    public long top4(IDataFrameId id, long num, ISource cmp, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
@@ -601,14 +601,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long takeSample(IDataFrameId id, boolean withReplacement, long num, int seed) throws IDriverException, TException {
+    public long takeSample(IDataFrameId id, boolean withReplacement, long num, int seed, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataMathHelper(data, worker.getProperties()).takeSample(attributes.driver, withReplacement, num, seed);
+                result = new IDataMathHelper(data, worker.getProperties()).takeSample(attributes.driver, withReplacement, num, seed, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -633,14 +633,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long max(IDataFrameId id, ISource cmp) throws IDriverException, TException {
+    public long max(IDataFrameId id, ISource cmp, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataMathHelper(data, worker.getProperties()).max(attributes.driver, cmp);
+                result = new IDataMathHelper(data, worker.getProperties()).max(attributes.driver, cmp, tp);
             }
             return result.execute();
         } catch (Exception ex) {
@@ -649,14 +649,14 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public long min(IDataFrameId id, ISource cmp) throws IDriverException, TException {
+    public long min(IDataFrameId id, ISource cmp, ISource tp) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             ILazy<Long> result;
             synchronized (worker.getLock()) {
-                result = new IDataMathHelper(data, worker.getProperties()).min(attributes.driver, cmp);
+                result = new IDataMathHelper(data, worker.getProperties()).min(attributes.driver, cmp, tp);
             }
             return result.execute();
         } catch (Exception ex) {

@@ -33,8 +33,8 @@ public class IMinTask extends IDriverTask {
 
     private final ISource cmp;
 
-    public IMinTask(String name, IExecutor executor, IDriverTask.Shared shared, boolean driver, ISource cmp) {
-        super(name, executor, shared, driver);
+    public IMinTask(String name, IExecutor executor, IDriverTask.Shared shared, boolean driver, ISource cmp, ISource tp) {
+        super(name, executor, shared, driver, tp);
         this.cmp = cmp;
     }
 

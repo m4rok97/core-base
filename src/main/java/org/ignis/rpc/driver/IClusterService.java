@@ -11,25 +11,33 @@ public class IClusterService {
 
   public interface Iface {
 
-    public long newInstance(long properties) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long newInstance0() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public long newInstance2(java.lang.String name, long properties) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long newInstance1a(java.lang.String name) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void setName(long id, java.lang.String name) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long newInstance1b(long properties) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void execute(long id, java.util.List<java.lang.String> cmd) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public long newInstance2(java.lang.String name, long properties) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void executeScript(long id, java.lang.String script) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void setName(long id, java.lang.String name) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void sendFile(long id, java.lang.String source, java.lang.String target) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void execute(long id, java.util.List<java.lang.String> cmd) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void sendCompressedFile(long id, java.lang.String source, java.lang.String target) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException;
+    public void executeScript(long id, java.lang.String script) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
+
+    public void sendFile(long id, java.lang.String source, java.lang.String target) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
+
+    public void sendCompressedFile(long id, java.lang.String source, java.lang.String target) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
   }
 
   public interface AsyncIface {
 
-    public void newInstance(long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+    public void newInstance0(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+
+    public void newInstance1a(java.lang.String name, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
+
+    public void newInstance1b(long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
     public void newInstance2(java.lang.String name, long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
@@ -65,33 +73,84 @@ public class IClusterService {
       super(iprot, oprot);
     }
 
-    public long newInstance(long properties) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long newInstance0() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_newInstance(properties);
-      return recv_newInstance();
+      send_newInstance0();
+      return recv_newInstance0();
     }
 
-    public void send_newInstance(long properties) throws org.apache.thrift.TException
+    public void send_newInstance0() throws org.apache.thrift.TException
     {
-      newInstance_args args = new newInstance_args();
-      args.setProperties(properties);
-      sendBase("newInstance", args);
+      newInstance0_args args = new newInstance0_args();
+      sendBase("newInstance0", args);
     }
 
-    public long recv_newInstance() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_newInstance0() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      newInstance_result result = new newInstance_result();
-      receiveBase(result, "newInstance");
+      newInstance0_result result = new newInstance0_result();
+      receiveBase(result, "newInstance0");
       if (result.isSetSuccess()) {
         return result.success;
       }
       if (result.ex != null) {
         throw result.ex;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "newInstance failed: unknown result");
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "newInstance0 failed: unknown result");
     }
 
-    public long newInstance2(java.lang.String name, long properties) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long newInstance1a(java.lang.String name) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    {
+      send_newInstance1a(name);
+      return recv_newInstance1a();
+    }
+
+    public void send_newInstance1a(java.lang.String name) throws org.apache.thrift.TException
+    {
+      newInstance1a_args args = new newInstance1a_args();
+      args.setName(name);
+      sendBase("newInstance1a", args);
+    }
+
+    public long recv_newInstance1a() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    {
+      newInstance1a_result result = new newInstance1a_result();
+      receiveBase(result, "newInstance1a");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "newInstance1a failed: unknown result");
+    }
+
+    public long newInstance1b(long properties) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    {
+      send_newInstance1b(properties);
+      return recv_newInstance1b();
+    }
+
+    public void send_newInstance1b(long properties) throws org.apache.thrift.TException
+    {
+      newInstance1b_args args = new newInstance1b_args();
+      args.setProperties(properties);
+      sendBase("newInstance1b", args);
+    }
+
+    public long recv_newInstance1b() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    {
+      newInstance1b_result result = new newInstance1b_result();
+      receiveBase(result, "newInstance1b");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "newInstance1b failed: unknown result");
+    }
+
+    public long newInstance2(java.lang.String name, long properties) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_newInstance2(name, properties);
       return recv_newInstance2();
@@ -105,7 +164,7 @@ public class IClusterService {
       sendBase("newInstance2", args);
     }
 
-    public long recv_newInstance2() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public long recv_newInstance2() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       newInstance2_result result = new newInstance2_result();
       receiveBase(result, "newInstance2");
@@ -118,7 +177,7 @@ public class IClusterService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "newInstance2 failed: unknown result");
     }
 
-    public void setName(long id, java.lang.String name) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void setName(long id, java.lang.String name) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_setName(id, name);
       recv_setName();
@@ -132,7 +191,7 @@ public class IClusterService {
       sendBase("setName", args);
     }
 
-    public void recv_setName() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_setName() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       setName_result result = new setName_result();
       receiveBase(result, "setName");
@@ -142,7 +201,7 @@ public class IClusterService {
       return;
     }
 
-    public void execute(long id, java.util.List<java.lang.String> cmd) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void execute(long id, java.util.List<java.lang.String> cmd) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_execute(id, cmd);
       recv_execute();
@@ -156,7 +215,7 @@ public class IClusterService {
       sendBase("execute", args);
     }
 
-    public void recv_execute() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_execute() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       execute_result result = new execute_result();
       receiveBase(result, "execute");
@@ -166,7 +225,7 @@ public class IClusterService {
       return;
     }
 
-    public void executeScript(long id, java.lang.String script) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void executeScript(long id, java.lang.String script) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_executeScript(id, script);
       recv_executeScript();
@@ -180,7 +239,7 @@ public class IClusterService {
       sendBase("executeScript", args);
     }
 
-    public void recv_executeScript() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_executeScript() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       executeScript_result result = new executeScript_result();
       receiveBase(result, "executeScript");
@@ -190,7 +249,7 @@ public class IClusterService {
       return;
     }
 
-    public void sendFile(long id, java.lang.String source, java.lang.String target) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void sendFile(long id, java.lang.String source, java.lang.String target) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_sendFile(id, source, target);
       recv_sendFile();
@@ -205,7 +264,7 @@ public class IClusterService {
       sendBase("sendFile", args);
     }
 
-    public void recv_sendFile() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_sendFile() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       sendFile_result result = new sendFile_result();
       receiveBase(result, "sendFile");
@@ -215,7 +274,7 @@ public class IClusterService {
       return;
     }
 
-    public void sendCompressedFile(long id, java.lang.String source, java.lang.String target) throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void sendCompressedFile(long id, java.lang.String source, java.lang.String target) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       send_sendCompressedFile(id, source, target);
       recv_sendCompressedFile();
@@ -230,7 +289,7 @@ public class IClusterService {
       sendBase("sendCompressedFile", args);
     }
 
-    public void recv_sendCompressedFile() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException
+    public void recv_sendCompressedFile() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
       sendCompressedFile_result result = new sendCompressedFile_result();
       receiveBase(result, "sendCompressedFile");
@@ -258,35 +317,96 @@ public class IClusterService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void newInstance(long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+    public void newInstance0(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      newInstance_call method_call = new newInstance_call(properties, resultHandler, this, ___protocolFactory, ___transport);
+      newInstance0_call method_call = new newInstance0_call(resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class newInstance_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
-      private long properties;
-      public newInstance_call(long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class newInstance0_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
+      public newInstance0_call(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.properties = properties;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("newInstance", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        newInstance_args args = new newInstance_args();
-        args.setProperties(properties);
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("newInstance0", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        newInstance0_args args = new newInstance0_args();
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_newInstance();
+        return (new Client(prot)).recv_newInstance0();
+      }
+    }
+
+    public void newInstance1a(java.lang.String name, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      newInstance1a_call method_call = new newInstance1a_call(name, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class newInstance1a_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
+      private java.lang.String name;
+      public newInstance1a_call(java.lang.String name, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.name = name;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("newInstance1a", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        newInstance1a_args args = new newInstance1a_args();
+        args.setName(name);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_newInstance1a();
+      }
+    }
+
+    public void newInstance1b(long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      newInstance1b_call method_call = new newInstance1b_call(properties, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class newInstance1b_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.Long> {
+      private long properties;
+      public newInstance1b_call(long properties, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.properties = properties;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("newInstance1b", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        newInstance1b_args args = new newInstance1b_args();
+        args.setProperties(properties);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_newInstance1b();
       }
     }
 
@@ -315,7 +435,7 @@ public class IClusterService {
         prot.writeMessageEnd();
       }
 
-      public java.lang.Long getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public java.lang.Long getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -350,7 +470,7 @@ public class IClusterService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -385,7 +505,7 @@ public class IClusterService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -420,7 +540,7 @@ public class IClusterService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -458,7 +578,7 @@ public class IClusterService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -496,7 +616,7 @@ public class IClusterService {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.ignis.rpc.IDriverException, org.apache.thrift.TException {
+      public Void getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -519,7 +639,9 @@ public class IClusterService {
     }
 
     private static <I extends Iface> java.util.Map<java.lang.String,  org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> getProcessMap(java.util.Map<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
-      processMap.put("newInstance", new newInstance());
+      processMap.put("newInstance0", new newInstance0());
+      processMap.put("newInstance1a", new newInstance1a());
+      processMap.put("newInstance1b", new newInstance1b());
       processMap.put("newInstance2", new newInstance2());
       processMap.put("setName", new setName());
       processMap.put("execute", new execute());
@@ -529,13 +651,13 @@ public class IClusterService {
       return processMap;
     }
 
-    public static class newInstance<I extends Iface> extends org.apache.thrift.ProcessFunction<I, newInstance_args> {
-      public newInstance() {
-        super("newInstance");
+    public static class newInstance0<I extends Iface> extends org.apache.thrift.ProcessFunction<I, newInstance0_args> {
+      public newInstance0() {
+        super("newInstance0");
       }
 
-      public newInstance_args getEmptyArgsInstance() {
-        return new newInstance_args();
+      public newInstance0_args getEmptyArgsInstance() {
+        return new newInstance0_args();
       }
 
       protected boolean isOneway() {
@@ -547,12 +669,72 @@ public class IClusterService {
         return false;
       }
 
-      public newInstance_result getResult(I iface, newInstance_args args) throws org.apache.thrift.TException {
-        newInstance_result result = new newInstance_result();
+      public newInstance0_result getResult(I iface, newInstance0_args args) throws org.apache.thrift.TException {
+        newInstance0_result result = new newInstance0_result();
         try {
-          result.success = iface.newInstance(args.properties);
+          result.success = iface.newInstance0();
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
+          result.ex = ex;
+        }
+        return result;
+      }
+    }
+
+    public static class newInstance1a<I extends Iface> extends org.apache.thrift.ProcessFunction<I, newInstance1a_args> {
+      public newInstance1a() {
+        super("newInstance1a");
+      }
+
+      public newInstance1a_args getEmptyArgsInstance() {
+        return new newInstance1a_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean rethrowUnhandledExceptions() {
+        return false;
+      }
+
+      public newInstance1a_result getResult(I iface, newInstance1a_args args) throws org.apache.thrift.TException {
+        newInstance1a_result result = new newInstance1a_result();
+        try {
+          result.success = iface.newInstance1a(args.name);
+          result.setSuccessIsSet(true);
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
+          result.ex = ex;
+        }
+        return result;
+      }
+    }
+
+    public static class newInstance1b<I extends Iface> extends org.apache.thrift.ProcessFunction<I, newInstance1b_args> {
+      public newInstance1b() {
+        super("newInstance1b");
+      }
+
+      public newInstance1b_args getEmptyArgsInstance() {
+        return new newInstance1b_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean rethrowUnhandledExceptions() {
+        return false;
+      }
+
+      public newInstance1b_result getResult(I iface, newInstance1b_args args) throws org.apache.thrift.TException {
+        newInstance1b_result result = new newInstance1b_result();
+        try {
+          result.success = iface.newInstance1b(args.properties);
+          result.setSuccessIsSet(true);
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -582,7 +764,7 @@ public class IClusterService {
         try {
           result.success = iface.newInstance2(args.name, args.properties);
           result.setSuccessIsSet(true);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -611,7 +793,7 @@ public class IClusterService {
         setName_result result = new setName_result();
         try {
           iface.setName(args.id, args.name);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -640,7 +822,7 @@ public class IClusterService {
         execute_result result = new execute_result();
         try {
           iface.execute(args.id, args.cmd);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -669,7 +851,7 @@ public class IClusterService {
         executeScript_result result = new executeScript_result();
         try {
           iface.executeScript(args.id, args.script);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -698,7 +880,7 @@ public class IClusterService {
         sendFile_result result = new sendFile_result();
         try {
           iface.sendFile(args.id, args.source, args.target);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -727,7 +909,7 @@ public class IClusterService {
         sendCompressedFile_result result = new sendCompressedFile_result();
         try {
           iface.sendCompressedFile(args.id, args.source, args.target);
-        } catch (org.ignis.rpc.IDriverException ex) {
+        } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
         return result;
@@ -747,7 +929,9 @@ public class IClusterService {
     }
 
     private static <I extends AsyncIface> java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
-      processMap.put("newInstance", new newInstance());
+      processMap.put("newInstance0", new newInstance0());
+      processMap.put("newInstance1a", new newInstance1a());
+      processMap.put("newInstance1b", new newInstance1b());
       processMap.put("newInstance2", new newInstance2());
       processMap.put("setName", new setName());
       processMap.put("execute", new execute());
@@ -757,20 +941,20 @@ public class IClusterService {
       return processMap;
     }
 
-    public static class newInstance<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, newInstance_args, java.lang.Long> {
-      public newInstance() {
-        super("newInstance");
+    public static class newInstance0<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, newInstance0_args, java.lang.Long> {
+      public newInstance0() {
+        super("newInstance0");
       }
 
-      public newInstance_args getEmptyArgsInstance() {
-        return new newInstance_args();
+      public newInstance0_args getEmptyArgsInstance() {
+        return new newInstance0_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<java.lang.Long>() { 
           public void onComplete(java.lang.Long o) {
-            newInstance_result result = new newInstance_result();
+            newInstance0_result result = new newInstance0_result();
             result.success = o;
             result.setSuccessIsSet(true);
             try {
@@ -786,9 +970,9 @@ public class IClusterService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            newInstance_result result = new newInstance_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            newInstance0_result result = new newInstance0_result();
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -818,8 +1002,140 @@ public class IClusterService {
         return false;
       }
 
-      public void start(I iface, newInstance_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
-        iface.newInstance(args.properties,resultHandler);
+      public void start(I iface, newInstance0_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+        iface.newInstance0(resultHandler);
+      }
+    }
+
+    public static class newInstance1a<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, newInstance1a_args, java.lang.Long> {
+      public newInstance1a() {
+        super("newInstance1a");
+      }
+
+      public newInstance1a_args getEmptyArgsInstance() {
+        return new newInstance1a_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.Long>() { 
+          public void onComplete(java.lang.Long o) {
+            newInstance1a_result result = new newInstance1a_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            newInstance1a_result result = new newInstance1a_result();
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, newInstance1a_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+        iface.newInstance1a(args.name,resultHandler);
+      }
+    }
+
+    public static class newInstance1b<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, newInstance1b_args, java.lang.Long> {
+      public newInstance1b() {
+        super("newInstance1b");
+      }
+
+      public newInstance1b_args getEmptyArgsInstance() {
+        return new newInstance1b_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.Long>() { 
+          public void onComplete(java.lang.Long o) {
+            newInstance1b_result result = new newInstance1b_result();
+            result.success = o;
+            result.setSuccessIsSet(true);
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            newInstance1b_result result = new newInstance1b_result();
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
+              result.setExIsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, newInstance1b_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException {
+        iface.newInstance1b(args.properties,resultHandler);
       }
     }
 
@@ -853,8 +1169,8 @@ public class IClusterService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             newInstance2_result result = new newInstance2_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -917,8 +1233,8 @@ public class IClusterService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             setName_result result = new setName_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -981,8 +1297,8 @@ public class IClusterService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             execute_result result = new execute_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -1045,8 +1361,8 @@ public class IClusterService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             executeScript_result result = new executeScript_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -1109,8 +1425,8 @@ public class IClusterService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             sendFile_result result = new sendFile_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -1173,8 +1489,8 @@ public class IClusterService {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             sendCompressedFile_result result = new sendCompressedFile_result();
-            if (e instanceof org.ignis.rpc.IDriverException) {
-              result.ex = (org.ignis.rpc.IDriverException) e;
+            if (e instanceof org.ignis.rpc.driver.IDriverException) {
+              result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
               msg = result;
             } else if (e instanceof org.apache.thrift.transport.TTransportException) {
@@ -1211,19 +1527,17 @@ public class IClusterService {
 
   }
 
-  public static class newInstance_args implements org.apache.thrift.TBase<newInstance_args, newInstance_args._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance_args");
+  public static class newInstance0_args implements org.apache.thrift.TBase<newInstance0_args, newInstance0_args._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance0_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance0_args");
 
-    private static final org.apache.thrift.protocol.TField PROPERTIES_FIELD_DESC = new org.apache.thrift.protocol.TField("properties", org.apache.thrift.protocol.TType.I64, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance0_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance0_argsTupleSchemeFactory();
 
-    private long properties; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      PROPERTIES((short)1, "properties");
+;
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -1239,8 +1553,6 @@ public class IClusterService {
       @org.apache.thrift.annotation.Nullable
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // PROPERTIES
-            return PROPERTIES;
           default:
             return null;
         }
@@ -1280,90 +1592,38 @@ public class IClusterService {
         return _fieldName;
       }
     }
-
-    // isset id assignments
-    private static final int __PROPERTIES_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.PROPERTIES, new org.apache.thrift.meta_data.FieldMetaData("properties", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance0_args.class, metaDataMap);
     }
 
-    public newInstance_args() {
-    }
-
-    public newInstance_args(
-      long properties)
-    {
-      this();
-      this.properties = properties;
-      setPropertiesIsSet(true);
+    public newInstance0_args() {
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public newInstance_args(newInstance_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.properties = other.properties;
+    public newInstance0_args(newInstance0_args other) {
     }
 
-    public newInstance_args deepCopy() {
-      return new newInstance_args(this);
+    public newInstance0_args deepCopy() {
+      return new newInstance0_args(this);
     }
 
     @Override
     public void clear() {
-      setPropertiesIsSet(false);
-      this.properties = 0;
-    }
-
-    public long getProperties() {
-      return this.properties;
-    }
-
-    public newInstance_args setProperties(long properties) {
-      this.properties = properties;
-      setPropertiesIsSet(true);
-      return this;
-    }
-
-    public void unsetProperties() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PROPERTIES_ISSET_ID);
-    }
-
-    /** Returns true if field properties is set (has been assigned a value) and false otherwise */
-    public boolean isSetProperties() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PROPERTIES_ISSET_ID);
-    }
-
-    public void setPropertiesIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PROPERTIES_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
-      case PROPERTIES:
-        if (value == null) {
-          unsetProperties();
-        } else {
-          setProperties((java.lang.Long)value);
-        }
-        break;
-
       }
     }
 
     @org.apache.thrift.annotation.Nullable
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
-      case PROPERTIES:
-        return getProperties();
-
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1375,8 +1635,6 @@ public class IClusterService {
       }
 
       switch (field) {
-      case PROPERTIES:
-        return isSetProperties();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1385,25 +1643,16 @@ public class IClusterService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof newInstance_args)
-        return this.equals((newInstance_args)that);
+      if (that instanceof newInstance0_args)
+        return this.equals((newInstance0_args)that);
       return false;
     }
 
-    public boolean equals(newInstance_args that) {
+    public boolean equals(newInstance0_args that) {
       if (that == null)
         return false;
       if (this == that)
         return true;
-
-      boolean this_present_properties = true;
-      boolean that_present_properties = true;
-      if (this_present_properties || that_present_properties) {
-        if (!(this_present_properties && that_present_properties))
-          return false;
-        if (this.properties != that.properties)
-          return false;
-      }
 
       return true;
     }
@@ -1412,29 +1661,17 @@ public class IClusterService {
     public int hashCode() {
       int hashCode = 1;
 
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(properties);
-
       return hashCode;
     }
 
     @Override
-    public int compareTo(newInstance_args other) {
+    public int compareTo(newInstance0_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
 
-      lastComparison = java.lang.Boolean.valueOf(isSetProperties()).compareTo(other.isSetProperties());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetProperties()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.properties, other.properties);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
       return 0;
     }
 
@@ -1453,12 +1690,9 @@ public class IClusterService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance0_args(");
       boolean first = true;
 
-      sb.append("properties:");
-      sb.append(this.properties);
-      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -1478,23 +1712,21 @@ public class IClusterService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
       }
     }
 
-    private static class newInstance_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public newInstance_argsStandardScheme getScheme() {
-        return new newInstance_argsStandardScheme();
+    private static class newInstance0_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance0_argsStandardScheme getScheme() {
+        return new newInstance0_argsStandardScheme();
       }
     }
 
-    private static class newInstance_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance_args> {
+    private static class newInstance0_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance0_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance0_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -1504,14 +1736,6 @@ public class IClusterService {
             break;
           }
           switch (schemeField.id) {
-            case 1: // PROPERTIES
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.properties = iprot.readI64();
-                struct.setPropertiesIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -1523,48 +1747,32 @@ public class IClusterService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance0_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(PROPERTIES_FIELD_DESC);
-        oprot.writeI64(struct.properties);
-        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
 
     }
 
-    private static class newInstance_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public newInstance_argsTupleScheme getScheme() {
-        return new newInstance_argsTupleScheme();
+    private static class newInstance0_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance0_argsTupleScheme getScheme() {
+        return new newInstance0_argsTupleScheme();
       }
     }
 
-    private static class newInstance_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance_args> {
+    private static class newInstance0_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance0_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance0_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetProperties()) {
-          optionals.set(0);
-        }
-        oprot.writeBitSet(optionals, 1);
-        if (struct.isSetProperties()) {
-          oprot.writeI64(struct.properties);
-        }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance0_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
-        if (incoming.get(0)) {
-          struct.properties = iprot.readI64();
-          struct.setPropertiesIsSet(true);
-        }
       }
     }
 
@@ -1573,17 +1781,17 @@ public class IClusterService {
     }
   }
 
-  public static class newInstance_result implements org.apache.thrift.TBase<newInstance_result, newInstance_result._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance_result");
+  public static class newInstance0_result implements org.apache.thrift.TBase<newInstance0_result, newInstance0_result._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance0_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance0_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance0_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance0_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -1657,17 +1865,17 @@ public class IClusterService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance0_result.class, metaDataMap);
     }
 
-    public newInstance_result() {
+    public newInstance0_result() {
     }
 
-    public newInstance_result(
+    public newInstance0_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -1678,16 +1886,16 @@ public class IClusterService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public newInstance_result(newInstance_result other) {
+    public newInstance0_result(newInstance0_result other) {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
-    public newInstance_result deepCopy() {
-      return new newInstance_result(this);
+    public newInstance0_result deepCopy() {
+      return new newInstance0_result(this);
     }
 
     @Override
@@ -1701,7 +1909,7 @@ public class IClusterService {
       return this.success;
     }
 
-    public newInstance_result setSuccess(long success) {
+    public newInstance0_result setSuccess(long success) {
       this.success = success;
       setSuccessIsSet(true);
       return this;
@@ -1721,11 +1929,11 @@ public class IClusterService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public newInstance_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public newInstance0_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -1759,7 +1967,7 @@ public class IClusterService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -1798,12 +2006,12 @@ public class IClusterService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof newInstance_result)
-        return this.equals((newInstance_result)that);
+      if (that instanceof newInstance0_result)
+        return this.equals((newInstance0_result)that);
       return false;
     }
 
-    public boolean equals(newInstance_result that) {
+    public boolean equals(newInstance0_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -1844,7 +2052,7 @@ public class IClusterService {
     }
 
     @Override
-    public int compareTo(newInstance_result other) {
+    public int compareTo(newInstance0_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -1889,7 +2097,7 @@ public class IClusterService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance0_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -1930,15 +2138,15 @@ public class IClusterService {
       }
     }
 
-    private static class newInstance_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public newInstance_resultStandardScheme getScheme() {
-        return new newInstance_resultStandardScheme();
+    private static class newInstance0_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance0_resultStandardScheme getScheme() {
+        return new newInstance0_resultStandardScheme();
       }
     }
 
-    private static class newInstance_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance_result> {
+    private static class newInstance0_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance0_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance0_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -1958,7 +2166,7 @@ public class IClusterService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -1976,7 +2184,7 @@ public class IClusterService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance0_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -1996,16 +2204,16 @@ public class IClusterService {
 
     }
 
-    private static class newInstance_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public newInstance_resultTupleScheme getScheme() {
-        return new newInstance_resultTupleScheme();
+    private static class newInstance0_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance0_resultTupleScheme getScheme() {
+        return new newInstance0_resultTupleScheme();
       }
     }
 
-    private static class newInstance_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance_result> {
+    private static class newInstance0_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance0_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance0_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetSuccess()) {
@@ -2024,7 +2232,7 @@ public class IClusterService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance0_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
@@ -2032,7 +2240,1678 @@ public class IClusterService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class newInstance1a_args implements org.apache.thrift.TBase<newInstance1a_args, newInstance1a_args._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance1a_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance1a_args");
+
+    private static final org.apache.thrift.protocol.TField NAME_FIELD_DESC = new org.apache.thrift.protocol.TField("name", org.apache.thrift.protocol.TType.STRING, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance1a_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance1a_argsTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable java.lang.String name; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      NAME((short)1, "name");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // NAME
+            return NAME;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.NAME, new org.apache.thrift.meta_data.FieldMetaData("name", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance1a_args.class, metaDataMap);
+    }
+
+    public newInstance1a_args() {
+    }
+
+    public newInstance1a_args(
+      java.lang.String name)
+    {
+      this();
+      this.name = name;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public newInstance1a_args(newInstance1a_args other) {
+      if (other.isSetName()) {
+        this.name = other.name;
+      }
+    }
+
+    public newInstance1a_args deepCopy() {
+      return new newInstance1a_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.name = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getName() {
+      return this.name;
+    }
+
+    public newInstance1a_args setName(@org.apache.thrift.annotation.Nullable java.lang.String name) {
+      this.name = name;
+      return this;
+    }
+
+    public void unsetName() {
+      this.name = null;
+    }
+
+    /** Returns true if field name is set (has been assigned a value) and false otherwise */
+    public boolean isSetName() {
+      return this.name != null;
+    }
+
+    public void setNameIsSet(boolean value) {
+      if (!value) {
+        this.name = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case NAME:
+        if (value == null) {
+          unsetName();
+        } else {
+          setName((java.lang.String)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case NAME:
+        return getName();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case NAME:
+        return isSetName();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof newInstance1a_args)
+        return this.equals((newInstance1a_args)that);
+      return false;
+    }
+
+    public boolean equals(newInstance1a_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_name = true && this.isSetName();
+      boolean that_present_name = true && that.isSetName();
+      if (this_present_name || that_present_name) {
+        if (!(this_present_name && that_present_name))
+          return false;
+        if (!this.name.equals(that.name))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetName()) ? 131071 : 524287);
+      if (isSetName())
+        hashCode = hashCode * 8191 + name.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(newInstance1a_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetName()).compareTo(other.isSetName());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetName()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.name, other.name);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance1a_args(");
+      boolean first = true;
+
+      sb.append("name:");
+      if (this.name == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.name);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class newInstance1a_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance1a_argsStandardScheme getScheme() {
+        return new newInstance1a_argsStandardScheme();
+      }
+    }
+
+    private static class newInstance1a_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance1a_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance1a_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // NAME
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.name = iprot.readString();
+                struct.setNameIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance1a_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.name != null) {
+          oprot.writeFieldBegin(NAME_FIELD_DESC);
+          oprot.writeString(struct.name);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class newInstance1a_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance1a_argsTupleScheme getScheme() {
+        return new newInstance1a_argsTupleScheme();
+      }
+    }
+
+    private static class newInstance1a_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance1a_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance1a_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetName()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetName()) {
+          oprot.writeString(struct.name);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance1a_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.name = iprot.readString();
+          struct.setNameIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class newInstance1a_result implements org.apache.thrift.TBase<newInstance1a_result, newInstance1a_result._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance1a_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance1a_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance1a_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance1a_resultTupleSchemeFactory();
+
+    private long success; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX((short)1, "ex");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          case 1: // EX
+            return EX;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance1a_result.class, metaDataMap);
+    }
+
+    public newInstance1a_result() {
+    }
+
+    public newInstance1a_result(
+      long success,
+      org.ignis.rpc.driver.IDriverException ex)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+      this.ex = ex;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public newInstance1a_result(newInstance1a_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
+      }
+    }
+
+    public newInstance1a_result deepCopy() {
+      return new newInstance1a_result(this);
+    }
+
+    @Override
+    public void clear() {
+      setSuccessIsSet(false);
+      this.success = 0;
+      this.ex = null;
+    }
+
+    public long getSuccess() {
+      return this.success;
+    }
+
+    public newInstance1a_result setSuccess(long success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.driver.IDriverException getEx() {
+      return this.ex;
+    }
+
+    public newInstance1a_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.Long)value);
+        }
+        break;
+
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.driver.IDriverException)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      case EX:
+        return getEx();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      case EX:
+        return isSetEx();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof newInstance1a_result)
+        return this.equals((newInstance1a_result)that);
+      return false;
+    }
+
+    public boolean equals(newInstance1a_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(success);
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(newInstance1a_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance1a_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class newInstance1a_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance1a_resultStandardScheme getScheme() {
+        return new newInstance1a_resultStandardScheme();
+      }
+    }
+
+    private static class newInstance1a_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance1a_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance1a_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.success = iprot.readI64();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance1a_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeI64(struct.success);
+          oprot.writeFieldEnd();
+        }
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class newInstance1a_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance1a_resultTupleScheme getScheme() {
+        return new newInstance1a_resultTupleScheme();
+      }
+    }
+
+    private static class newInstance1a_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance1a_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance1a_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        if (struct.isSetEx()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetSuccess()) {
+          oprot.writeI64(struct.success);
+        }
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance1a_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.success = iprot.readI64();
+          struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
+          struct.ex.read(iprot);
+          struct.setExIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class newInstance1b_args implements org.apache.thrift.TBase<newInstance1b_args, newInstance1b_args._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance1b_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance1b_args");
+
+    private static final org.apache.thrift.protocol.TField PROPERTIES_FIELD_DESC = new org.apache.thrift.protocol.TField("properties", org.apache.thrift.protocol.TType.I64, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance1b_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance1b_argsTupleSchemeFactory();
+
+    private long properties; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      PROPERTIES((short)1, "properties");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // PROPERTIES
+            return PROPERTIES;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __PROPERTIES_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.PROPERTIES, new org.apache.thrift.meta_data.FieldMetaData("properties", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance1b_args.class, metaDataMap);
+    }
+
+    public newInstance1b_args() {
+    }
+
+    public newInstance1b_args(
+      long properties)
+    {
+      this();
+      this.properties = properties;
+      setPropertiesIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public newInstance1b_args(newInstance1b_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.properties = other.properties;
+    }
+
+    public newInstance1b_args deepCopy() {
+      return new newInstance1b_args(this);
+    }
+
+    @Override
+    public void clear() {
+      setPropertiesIsSet(false);
+      this.properties = 0;
+    }
+
+    public long getProperties() {
+      return this.properties;
+    }
+
+    public newInstance1b_args setProperties(long properties) {
+      this.properties = properties;
+      setPropertiesIsSet(true);
+      return this;
+    }
+
+    public void unsetProperties() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PROPERTIES_ISSET_ID);
+    }
+
+    /** Returns true if field properties is set (has been assigned a value) and false otherwise */
+    public boolean isSetProperties() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PROPERTIES_ISSET_ID);
+    }
+
+    public void setPropertiesIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PROPERTIES_ISSET_ID, value);
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case PROPERTIES:
+        if (value == null) {
+          unsetProperties();
+        } else {
+          setProperties((java.lang.Long)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case PROPERTIES:
+        return getProperties();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case PROPERTIES:
+        return isSetProperties();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof newInstance1b_args)
+        return this.equals((newInstance1b_args)that);
+      return false;
+    }
+
+    public boolean equals(newInstance1b_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_properties = true;
+      boolean that_present_properties = true;
+      if (this_present_properties || that_present_properties) {
+        if (!(this_present_properties && that_present_properties))
+          return false;
+        if (this.properties != that.properties)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(properties);
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(newInstance1b_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetProperties()).compareTo(other.isSetProperties());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetProperties()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.properties, other.properties);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance1b_args(");
+      boolean first = true;
+
+      sb.append("properties:");
+      sb.append(this.properties);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class newInstance1b_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance1b_argsStandardScheme getScheme() {
+        return new newInstance1b_argsStandardScheme();
+      }
+    }
+
+    private static class newInstance1b_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance1b_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance1b_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // PROPERTIES
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.properties = iprot.readI64();
+                struct.setPropertiesIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance1b_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(PROPERTIES_FIELD_DESC);
+        oprot.writeI64(struct.properties);
+        oprot.writeFieldEnd();
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class newInstance1b_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance1b_argsTupleScheme getScheme() {
+        return new newInstance1b_argsTupleScheme();
+      }
+    }
+
+    private static class newInstance1b_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance1b_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance1b_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetProperties()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetProperties()) {
+          oprot.writeI64(struct.properties);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance1b_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.properties = iprot.readI64();
+          struct.setPropertiesIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class newInstance1b_result implements org.apache.thrift.TBase<newInstance1b_result, newInstance1b_result._Fields>, java.io.Serializable, Cloneable, Comparable<newInstance1b_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("newInstance1b_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I64, (short)0);
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new newInstance1b_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance1b_resultTupleSchemeFactory();
+
+    private long success; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX((short)1, "ex");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          case 1: // EX
+            return EX;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance1b_result.class, metaDataMap);
+    }
+
+    public newInstance1b_result() {
+    }
+
+    public newInstance1b_result(
+      long success,
+      org.ignis.rpc.driver.IDriverException ex)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+      this.ex = ex;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public newInstance1b_result(newInstance1b_result other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.success = other.success;
+      if (other.isSetEx()) {
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
+      }
+    }
+
+    public newInstance1b_result deepCopy() {
+      return new newInstance1b_result(this);
+    }
+
+    @Override
+    public void clear() {
+      setSuccessIsSet(false);
+      this.success = 0;
+      this.ex = null;
+    }
+
+    public long getSuccess() {
+      return this.success;
+    }
+
+    public newInstance1b_result setSuccess(long success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public org.ignis.rpc.driver.IDriverException getEx() {
+      return this.ex;
+    }
+
+    public newInstance1b_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.Long)value);
+        }
+        break;
+
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((org.ignis.rpc.driver.IDriverException)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      case EX:
+        return getEx();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      case EX:
+        return isSetEx();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof newInstance1b_result)
+        return this.equals((newInstance1b_result)that);
+      return false;
+    }
+
+    public boolean equals(newInstance1b_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(success);
+
+      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
+      if (isSetEx())
+        hashCode = hashCode * 8191 + ex.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(newInstance1b_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetEx()).compareTo(other.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("newInstance1b_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class newInstance1b_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance1b_resultStandardScheme getScheme() {
+        return new newInstance1b_resultStandardScheme();
+      }
+    }
+
+    private static class newInstance1b_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<newInstance1b_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, newInstance1b_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.success = iprot.readI64();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 1: // EX
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
+                struct.ex.read(iprot);
+                struct.setExIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, newInstance1b_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.isSetSuccess()) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeI64(struct.success);
+          oprot.writeFieldEnd();
+        }
+        if (struct.ex != null) {
+          oprot.writeFieldBegin(EX_FIELD_DESC);
+          struct.ex.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class newInstance1b_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public newInstance1b_resultTupleScheme getScheme() {
+        return new newInstance1b_resultTupleScheme();
+      }
+    }
+
+    private static class newInstance1b_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<newInstance1b_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, newInstance1b_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        if (struct.isSetEx()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetSuccess()) {
+          oprot.writeI64(struct.success);
+        }
+        if (struct.isSetEx()) {
+          struct.ex.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, newInstance1b_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.success = iprot.readI64();
+          struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -2521,7 +4400,7 @@ public class IClusterService {
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new newInstance2_resultTupleSchemeFactory();
 
     private long success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -2595,7 +4474,7 @@ public class IClusterService {
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(newInstance2_result.class, metaDataMap);
     }
@@ -2605,7 +4484,7 @@ public class IClusterService {
 
     public newInstance2_result(
       long success,
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.success = success;
@@ -2620,7 +4499,7 @@ public class IClusterService {
       __isset_bitfield = other.__isset_bitfield;
       this.success = other.success;
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -2659,11 +4538,11 @@ public class IClusterService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public newInstance2_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public newInstance2_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -2697,7 +4576,7 @@ public class IClusterService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -2896,7 +4775,7 @@ public class IClusterService {
               break;
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -2970,7 +4849,7 @@ public class IClusterService {
           struct.setSuccessIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -3457,7 +5336,7 @@ public class IClusterService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new setName_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new setName_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -3524,7 +5403,7 @@ public class IClusterService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(setName_result.class, metaDataMap);
     }
@@ -3533,7 +5412,7 @@ public class IClusterService {
     }
 
     public setName_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -3544,7 +5423,7 @@ public class IClusterService {
      */
     public setName_result(setName_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -3558,11 +5437,11 @@ public class IClusterService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public setName_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public setName_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -3588,7 +5467,7 @@ public class IClusterService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -3747,7 +5626,7 @@ public class IClusterService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -3806,7 +5685,7 @@ public class IClusterService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -4343,7 +6222,7 @@ public class IClusterService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new execute_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new execute_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -4410,7 +6289,7 @@ public class IClusterService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(execute_result.class, metaDataMap);
     }
@@ -4419,7 +6298,7 @@ public class IClusterService {
     }
 
     public execute_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -4430,7 +6309,7 @@ public class IClusterService {
      */
     public execute_result(execute_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -4444,11 +6323,11 @@ public class IClusterService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public execute_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public execute_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -4474,7 +6353,7 @@ public class IClusterService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -4633,7 +6512,7 @@ public class IClusterService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -4692,7 +6571,7 @@ public class IClusterService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -5179,7 +7058,7 @@ public class IClusterService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new executeScript_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new executeScript_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -5246,7 +7125,7 @@ public class IClusterService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(executeScript_result.class, metaDataMap);
     }
@@ -5255,7 +7134,7 @@ public class IClusterService {
     }
 
     public executeScript_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -5266,7 +7145,7 @@ public class IClusterService {
      */
     public executeScript_result(executeScript_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -5280,11 +7159,11 @@ public class IClusterService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public executeScript_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public executeScript_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -5310,7 +7189,7 @@ public class IClusterService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -5469,7 +7348,7 @@ public class IClusterService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -5528,7 +7407,7 @@ public class IClusterService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -6120,7 +7999,7 @@ public class IClusterService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new sendFile_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sendFile_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -6187,7 +8066,7 @@ public class IClusterService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sendFile_result.class, metaDataMap);
     }
@@ -6196,7 +8075,7 @@ public class IClusterService {
     }
 
     public sendFile_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -6207,7 +8086,7 @@ public class IClusterService {
      */
     public sendFile_result(sendFile_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -6221,11 +8100,11 @@ public class IClusterService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public sendFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public sendFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -6251,7 +8130,7 @@ public class IClusterService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -6410,7 +8289,7 @@ public class IClusterService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -6469,7 +8348,7 @@ public class IClusterService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
@@ -7061,7 +8940,7 @@ public class IClusterService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new sendCompressedFile_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new sendCompressedFile_resultTupleSchemeFactory();
 
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex; // required
+    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -7128,7 +9007,7 @@ public class IClusterService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IDriverException.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sendCompressedFile_result.class, metaDataMap);
     }
@@ -7137,7 +9016,7 @@ public class IClusterService {
     }
 
     public sendCompressedFile_result(
-      org.ignis.rpc.IDriverException ex)
+      org.ignis.rpc.driver.IDriverException ex)
     {
       this();
       this.ex = ex;
@@ -7148,7 +9027,7 @@ public class IClusterService {
      */
     public sendCompressedFile_result(sendCompressedFile_result other) {
       if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.IDriverException(other.ex);
+        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
       }
     }
 
@@ -7162,11 +9041,11 @@ public class IClusterService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.IDriverException getEx() {
+    public org.ignis.rpc.driver.IDriverException getEx() {
       return this.ex;
     }
 
-    public sendCompressedFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IDriverException ex) {
+    public sendCompressedFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -7192,7 +9071,7 @@ public class IClusterService {
         if (value == null) {
           unsetEx();
         } else {
-          setEx((org.ignis.rpc.IDriverException)value);
+          setEx((org.ignis.rpc.driver.IDriverException)value);
         }
         break;
 
@@ -7351,7 +9230,7 @@ public class IClusterService {
           switch (schemeField.id) {
             case 1: // EX
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.IDriverException();
+                struct.ex = new org.ignis.rpc.driver.IDriverException();
                 struct.ex.read(iprot);
                 struct.setExIsSet(true);
               } else { 
@@ -7410,7 +9289,7 @@ public class IClusterService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.ex = new org.ignis.rpc.IDriverException();
+          struct.ex = new org.ignis.rpc.driver.IDriverException();
           struct.ex.read(iprot);
           struct.setExIsSet(true);
         }
