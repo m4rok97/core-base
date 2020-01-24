@@ -114,7 +114,7 @@ public final class ITunnel {
         try {
             Channel channel = session.openChannel("shell");
             channel.connect();
-            PrintStream stream = new PrintStream(channel.getOutputStream(), false, StandardCharsets.UTF_8);
+            PrintStream stream = new PrintStream(channel.getOutputStream(), false, StandardCharsets.UTF_8.name());
             stream.println(script);
             stream.println("");
             stream.println("exit $?");
