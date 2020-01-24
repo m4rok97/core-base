@@ -24,9 +24,9 @@ RUN mv /root/thrift /root/thrift-src && \
 	rm -fR /root/thrift-src
 
 RUN cd ${IGNIS_HOME} && \
-	mkdir -p ${IGNIS_HOME}/core/cpp/include && \
-	mkdir -p ${IGNIS_HOME}/lib/native && \
-	cp -R /root/boost/include/* /core/cpp/include && \
+	mkdir -p core/cpp/include && \
+	mkdir -p lib/native && \
+	cp -R /root/boost/include/* core/cpp/include && \
 	cp -R /root/boost/lib/* lib/native/ && \
 	cp -R /root/thrift/include/* core/cpp/include/ && \
 	cp -R /root/thrift/lib/* lib/native/ && \
