@@ -52,9 +52,9 @@ public final class IWorker {
         this.executors = new ArrayList<>();
         setName(name);
         if (cluster.getProperties().getBoolean(IKeys.EXECUTOR_ISOLATION)) {
-            this.lock = cluster.getLock();
-        } else {
             this.lock = new ILock(cluster.getId(), id);
+        } else {
+            this.lock = cluster.getLock();
         }
         this.tasks = new IWorkerCreateHelper(this, cluster.getProperties()).create();//Must be the last
     }

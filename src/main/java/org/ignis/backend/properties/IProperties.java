@@ -42,18 +42,22 @@ public final class IProperties {
     
     private final static Pattern BOOLEAN = Pattern.compile("y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON");
     private final Properties inner;
-    
-    public IProperties(IProperties src, IProperties defaults) {
-        inner = new Properties(defaults.inner);
-        inner.putAll((Map) src.inner);
-    }
+    private final IProperties defaults;
     
     public IProperties(IProperties defaults) {
+        this.defaults = defaults;
         inner = new Properties(defaults.inner);
     }
     
     public IProperties() {
+        defaults =null;
         inner = new Properties();
+    }
+    
+    public IProperties copy(){
+        IProperties copy = defaults != null ? new IProperties(defaults):new IProperties();
+        copy.inner.putAll(inner);
+        return copy;
     }
     
     private String noNull(String value) {
@@ -73,6 +77,10 @@ public final class IProperties {
             throw new IPropertyException(noNull(key), " not found");
         }
         return value;
+    }
+    
+    public String rmProperty(String key){
+        return noNull((String)inner.remove(noNull(key)));
     }
     
     public boolean getBoolean(String key) throws IPropertyException {
@@ -162,18 +170,42 @@ public final class IProperties {
     }
     
     @SuppressWarnings("unchecked")
-    public Map<String, String> toMap() {
-        return new HashMap<>((Map) inner);
+    public Map<String, String> toMap(boolean defaults) {
+        if(!defaults){
+            return new HashMap<>((Map) inner);
+        }
+        Map<String, String> map = new HashMap<>((Map) this.defaults.inner);
+        inner.putAll((Map) inner);
+        return map;
+    }
+    
+    public void fromMap(Map<String, String> map) {
+        inner.putAll(map);
     }
     
     public void load(String path) throws IOException {
+        load(path,true);
+    }
+    
+    public void load(String path, boolean replace) throws IOException {
         try (InputStream in = new BufferedInputStream(new FileInputStream(path))) {
-            load(in);
+            load(in,replace);
         }
     }
     
     public void load(InputStream in) throws IOException {
-        inner.load(in);
+        load(in, true);
+    }
+    
+    public void load(InputStream in, boolean replace) throws IOException {
+        if(replace){
+            inner.load(in);
+        }else{
+            Properties tmp = new Properties();
+            tmp.putAll(inner);
+            inner.load(in);
+            inner.putAll(tmp);
+        }
     }
     
     public void store(String path) throws IOException {

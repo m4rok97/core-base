@@ -98,7 +98,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
 
         executor.setPid(Integer.parseInt(output));
         try {
-            executor.getExecutorServerModule().updateProperties(executor.getProperties().toMap());
+            executor.getExecutorServerModule().updateProperties(executor.getExecutorProperties());
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {

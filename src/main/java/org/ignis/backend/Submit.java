@@ -17,6 +17,8 @@
 package org.ignis.backend;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.Map;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.action.AppendArgumentAction;
 import net.sourceforge.argparse4j.inf.Argument;
@@ -76,9 +78,6 @@ public class Submit {
         try {
             IProperties props = new IProperties();
             props.fromEnv(System.getenv());
-            if (props.contains(IKeys.OPTIONS)) {
-                props.load(new ByteArrayInputStream(props.getProperty(IKeys.OPTIONS).getBytes()));
-            }
 
             props.setProperty(IKeys.DRIVER_IMAGE, ns.getString("image"));
             if (ns.get("property-file") != null) {
@@ -89,6 +88,8 @@ public class Submit {
                     props.setProperty(entry[0], entry[1]);
                 }
             }
+            ByteArrayOutputStream options = new ByteArrayOutputStream();
+            props.store(options);
 
             
             IScheduler scheduler = ISchedulerBuilder.create(props.getProperty(IKeys.SCHEDULER_TYPE),
@@ -103,7 +104,9 @@ public class Submit {
             builder.network(ISchedulerParser.parseNetwork(props, IKeys.DRIVER_PORT));
             builder.binds(ISchedulerParser.parseBinds(props, IKeys.DRIVER_BIND));
             builder.volumes(ISchedulerParser.parseVolumes(props, IKeys.DRIVER_VOLUME));
-            builder.environmentVariables(ISchedulerParser.parseEnv(props, IKeys.DRIVER_ENV));
+            Map<String, String> env = ISchedulerParser.parseEnv(props, IKeys.DRIVER_ENV);
+            env.put(IKeys.OPTIONS, options.toString());//Send submit options to driver            
+            builder.environmentVariables(env);
             if (props.contains(IKeys.DRIVER_HOSTS)) {
                 builder.preferedHosts(props.getStringList(IKeys.DRIVER_HOSTS));
             }
@@ -111,7 +114,7 @@ public class Submit {
             String group = null;
             try {
                 group = scheduler.createGroup(ns.get("name") != null ? ns.get("name") : "ignis");
-                props.setProperty(IKeys.GROUP, group);
+                props.setProperty(IKeys.JOB_GROUP, group);
                 scheduler.createSingleContainer(group, "driver", builder.build(), props);
             } catch (ISchedulerException ex) {
                 if (group != null) {

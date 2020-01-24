@@ -34,7 +34,7 @@ public final class IContainer {
     private IContainerDetails info;
     private int resets;
 
-    public IContainer(long id, long cluster, ITunnel tunnel, IProperties properties) throws IgnisException {
+    public IContainer(long id, long cluster, ITunnel tunnel, IProperties properties){
         this.id = id;
         this.cluster = cluster;
         this.tunnel = tunnel;

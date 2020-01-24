@@ -75,7 +75,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
             IProperties propertiesObject = attributes.getProperties(properties);
             IProperties clusterProperties;
             synchronized (propertiesObject) {
-                clusterProperties = new IProperties(propertiesObject, attributes.defaultProperties);
+                clusterProperties = propertiesObject.copy();
             }
             long id = attributes.newCluster();
             attributes.setCluster(new ICluster(name, id, clusterProperties, threadPool, scheduler, attributes.ssh));

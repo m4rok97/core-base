@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.cluster;
 
+import java.util.Map;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -75,9 +76,6 @@ public final class IExecutor {
     }
 
     public long getId() {
-        if (container == null) {
-            return 0;
-        }
         return container.getId();
     }
 
@@ -90,10 +88,15 @@ public final class IExecutor {
     }
 
     public IProperties getProperties() {
-        if (container == null) {
-            return null;
-        }
         return container.getProperties();
+    }
+
+    public Map<String, String> getExecutorProperties() {
+        Map<String, String> map = getProperties().toMap(true);
+        /*Executor dynamic properties*/
+        map.put(IKeys.JOB_DIRECTORY, map.get(IKeys.DFS_HOME + "/" + IKeys.JOB_NAME));
+
+        return map;
     }
 
     public TTransport getTransport() {

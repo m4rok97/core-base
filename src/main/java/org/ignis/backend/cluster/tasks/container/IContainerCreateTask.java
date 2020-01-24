@@ -105,7 +105,7 @@ public final class IContainerCreateTask extends IContainerTask {
         }
          LOGGER.info(log() + "Starting new containers");   
 
-        String group = container.getProperties().getString(IKeys.GROUP);
+        String group = container.getProperties().getString(IKeys.JOB_GROUP);
         List<String> ids = scheduler.createContainerIntances(group, name, parseContainer(), container.getProperties(), containers.size());
         List<IContainerDetails> details = scheduler.getContainerInstances(ids);
         for (int i = 0; i < containers.size(); i++) {

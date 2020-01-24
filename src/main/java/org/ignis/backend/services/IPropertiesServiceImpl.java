@@ -18,6 +18,8 @@ package org.ignis.backend.services;
 
 import java.util.Map;
 import org.apache.thrift.TException;
+import org.ignis.backend.exception.IDriverExceptionImpl;
+import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.driver.IPropertiesService;
 
@@ -33,131 +35,132 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
 
     @Override
     public long newInstance() throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            return attributes.addProperties(new IProperties(attributes.defaultProperties));
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
     public long newInstance2(long id) throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            IProperties source = attributes.getProperties(id);
+            IProperties properties;
+            synchronized (source) {
+                properties = source.copy();
+            }
+            return attributes.addProperties(properties);
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
     public String setProperty(long id, String key, String value) throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            IProperties properties = attributes.getProperties(id);
+            synchronized (properties) {
+                return properties.setProperty(key, value);
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
     public String getProperty(long id, String key) throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            IProperties properties = attributes.getProperties(id);
+            synchronized (properties) {
+                return properties.getProperty(key);
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public String rmProperty(long id, String key) throws IDriverException, TException {
+        try {
+            IProperties properties = attributes.getProperties(id);
+            synchronized (properties) {
+                return properties.rmProperty(key);
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
     public boolean contains(long id, String key) throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            IProperties properties = attributes.getProperties(id);
+            synchronized (properties) {
+                return properties.contains(key);
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
     public Map<String, String> toMap(long id, boolean defaults) throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            IProperties properties = attributes.getProperties(id);
+            synchronized (properties) {
+                return properties.toMap(defaults);
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
     public void fromMap(long id, Map<String, String> _map) throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            IProperties properties = attributes.getProperties(id);
+            synchronized (properties) {
+                properties.fromMap(_map);
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
     public void load(long id, String path) throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            IProperties properties = attributes.getProperties(id);
+            synchronized (properties) {
+                properties.load(path);
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
     public void store(long id, String path) throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            IProperties properties = attributes.getProperties(id);
+            synchronized (properties) {
+                properties.store(path);
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
     public void clear(long id) throws IDriverException, TException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /*
-    @Override
-    public long newInstance() throws TException {
-        synchronized (attributes.defaultProperties) {
-            return attributes.addProperties(new IProperties(attributes.defaultProperties));
+        try {
+            IProperties properties = attributes.getProperties(id);
+            synchronized (properties) {
+                properties.clear();
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
         }
     }
-
-    @Override
-    public long newInstance2(long id) throws TException {
-        IProperties properties = attributes.getProperties(id);
-        synchronized (properties) {
-            return attributes.addProperties(new IProperties(properties));
-        }
-    }
-
-    @Override
-    public String setProperty(long id, String key, String value) throws IRemoteException, TException {
-        IProperties properties = attributes.getProperties(id);
-        synchronized (properties) {
-            return properties.setProperty(key, value);
-        }
-    }
-
-    @Override
-    public String getProperty(long id, String key) throws IRemoteException, TException {
-        IProperties properties = attributes.getProperties(id);
-        synchronized (properties) {
-            return properties.getProperty(key);
-        }
-    }
-
-    @Override
-    public boolean isProperty(long id, String key) throws IRemoteException, TException {
-        IProperties properties = attributes.getProperties(id);
-        synchronized (properties) {
-            return properties.contains(key);
-        }
-    }
-
-    @Override
-    public Map<String, String> toMap(long id) throws IRemoteException, TException {
-        IProperties properties = attributes.getProperties(id);
-        synchronized (properties) {
-            return properties.toMap();
-        }
-    }
-
-    @Override
-    public void fromMap(long id, Map<String, String> _map) throws IRemoteException, TException {
-        IProperties properties = attributes.getProperties(id);
-        synchronized (properties) {
-            //properties.fromMap(_map);
-        }
-    }
-
-    @Override
-    public void toFile(long id, String path) throws IRemoteException, TException {
-        IProperties properties = attributes.getProperties(id);
-        synchronized (properties) {
-            //properties.store(path);
-        }
-    }
-
-    @Override
-    public void fromFile(long id, String path) throws IRemoteException, TException {
-        IProperties properties = attributes.getProperties(id);
-        synchronized (properties) {
-            //properties.load(path);
-        }
-    }
-
-    @Override
-    public void reset(long id) throws IRemoteException, TException {
-        IProperties properties = attributes.getProperties(id);
-        synchronized (properties) {
-            //properties.reset(attributes.defaultProperties);
-        }
-    }*/
 }

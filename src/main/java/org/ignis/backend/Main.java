@@ -16,8 +16,11 @@
  */
 package org.ignis.backend;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.exception.ISchedulerException;
@@ -53,12 +56,22 @@ public final class Main {
         IAttributes attributes = new IAttributes();
 
         LOGGER.info("Loading environment variables");
-        attributes.defaultProperties.fromEnv(System.getenv());//Only for IGNIS_HOME
+        attributes.defaultProperties.fromEnv(System.getenv());
+
+        if (attributes.defaultProperties.contains(IKeys.OPTIONS)) {//Submit user options
+            try {
+                attributes.defaultProperties.load(
+                        new ByteArrayInputStream(attributes.defaultProperties.getProperty(IKeys.OPTIONS).getBytes())
+                );
+            } catch (IOException ex) {
+            }
+            attributes.defaultProperties.setProperty(IKeys.OPTIONS, "");
+        }
 
         LOGGER.info("Loading configuration file");
         try {
             String conf = new File(attributes.defaultProperties.getString(IKeys.HOME), "etc/ignis.conf").getPath();
-            attributes.defaultProperties.load(conf);
+            attributes.defaultProperties.load(conf, false);//only load not set properties
         } catch (IPropertyException | IOException ex) {
             LOGGER.error("Error loading ignis.conf, aborting", ex);
             System.exit(-1);
@@ -124,7 +137,7 @@ public final class Main {
                 clusters.destroyClusters();
             }
             try {
-                if(attributes.driver.getExecutor().getTransport().isOpen()){
+                if (attributes.driver.getExecutor().getTransport().isOpen()) {
                     attributes.driver.getExecutor().getExecutorServerModule().stop();
                 }
             } catch (Exception ex) {

@@ -178,8 +178,11 @@ public class IMarathonScheduler implements IScheduler {
             app.getConstraints().add(Arrays.asList("hostname", "LIKE", String.join("|", container.getPreferedHosts())));
         }
 
+        app.setEnv(new HashMap<>());
+        app.getEnv().put(IKeys.JOB_NAME, app.getId());
+        app.getEnv().put(IKeys.JOB_GROUP, group);
         if (container.getEnvironmentVariables() != null) {
-            app.setEnv((Map) container.getEnvironmentVariables());
+            app.getEnv().putAll((Map) container.getEnvironmentVariables());
         }
 
         return app;

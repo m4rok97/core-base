@@ -107,7 +107,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         }
         
         try {
-            executor.getExecutorServerModule().updateProperties(executor.getProperties().toMap());
+            executor.getExecutorServerModule().updateProperties(executor.getExecutorProperties());
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {

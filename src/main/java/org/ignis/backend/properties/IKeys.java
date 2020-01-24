@@ -25,10 +25,10 @@ public final class IKeys {
     /*TOP*/
     public static final String DEBUG = "ignis.debug";
     public static final String HOME = "ignis.home";
-    public static final String GROUP = "ignis.group";
     public static final String OPTIONS = "ignis.options";
     /*JOB*/
     public static final String JOB_NAME = "ignis.job.name";
+    public static final String JOB_GROUP = "ignis.job.group";
     public static final String JOB_DIRECTORY = "ignis.job.directory";
     /*DFS*/
     public static final String DFS_ID = "ignis.dfs.id";
@@ -75,16 +75,14 @@ public final class IKeys {
     public static final String PARTITION_MINIMAL = "ignis.partition.minimal";
     public static final String PARTITION_COMPRESSION = "ignis.partition.compression";
     public static final String PARTITION_SERIALIZATION = "ignis.partition.serialization";
-    public static final String PARTITION_DIRECTORY = "ignis.partition.directory";
     /*TRANSPORT*/
     public static final String TRANSPORT_TYPE = "ignis.transport.type";
     public static final String TRANSPORT_PORT = "ignis.transport.port";
     public static final String TRANSPORT_PORTS = "ignis.transport.ports";
     public static final String TRANSPORT_MINIMAL = "ignis.transport.minimal";
     /*MODULES*/
- /*  IO*/
+    /*IO*/
     public static final String MODULES_IO_OVERWRITE = "ignis.modules.io.overwrite";
-    public static final String MODULES_IO_COMPRESSION = "ignis.modules.io.compression";
     /*  SORT*/
     public static final String MODULES_SORT_SAMPLES = "ignis.modules.sort.samples";
 

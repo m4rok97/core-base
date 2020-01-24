@@ -44,7 +44,7 @@ public final class IAttributes {
         this.propertiesList = new ArrayList<>();
         this.ssh = new ISSH(defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT) + 1,//backend + 1
                 defaultProperties.getInteger(IKeys.EXECUTOR_RPC_PORT) + 1);//ssh server + 1
-        this.driver = new IDriver(defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT));
+        this.driver = new IDriver(defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT), defaultProperties);
     }
 
     public IProperties getProperties(long id) throws IgnisException {
