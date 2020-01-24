@@ -31,6 +31,7 @@ RUN mkdir ${IGNIS_HOME}/lib/java && \
 	rm -rf ~/.gradle && \
 	mv build/libs/* ${IGNIS_HOME}/lib/java && \
 	cd ${IGNIS_HOME} && \
+	mv /tmp/backend/etc/* ./etc/ && \
 	rm -fr /tmp/backend && \
 	{ \
 		echo '#!/bin/bash'; \
