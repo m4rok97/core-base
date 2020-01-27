@@ -52,7 +52,7 @@ RUN mkdir -p /tmp/core-cpp && \
 	cd ${IGNIS_HOME} && \
 	mv core/cpp/bin/ignis-cpp bin/ && \
 	chmod +x bin/ignis-cpp && \
-	mv core/cpp/lib lib/native && \
+	cp core/cpp/lib/* lib/native && \
 	rm -fR core/cpp/bin
 
 
