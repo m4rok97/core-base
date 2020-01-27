@@ -68,7 +68,7 @@ public final class IProperties {
     }
     
     public String setProperty(String key, String value) {
-        return (String) inner.setProperty(noNull(key), noNull(key));
+        return (String) inner.setProperty(noNull(key), noNull(value));
     }
     
     public String getProperty(String key) throws IPropertyException {

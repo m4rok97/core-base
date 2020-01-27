@@ -16,7 +16,6 @@
  */
 package org.ignis.backend;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import net.sourceforge.argparse4j.ArgumentParsers;
