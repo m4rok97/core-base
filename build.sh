@@ -33,6 +33,9 @@ cd cpp
 	cd builder
 		docker build -t ignishpc/cpp-builder .
 	cd ..
+	cd compiler
+		docker build -t ignishpc/cpp-compiler .
+	cd ..
 	cd driver
 		docker build -t ignishpc/cpp-driver .
 	cd ..
