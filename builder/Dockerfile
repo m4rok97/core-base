@@ -39,3 +39,5 @@ RUN mkdir /tmp/mpi && \
 
 ENV THRIFT_VERSION=0.13.0
 RUN git clone --branch ${THRIFT_VERSION} https://github.com/apache/thrift /root/thrift
+COPY ignis-run $IGNIS_HOME/bin/ignis-run
+RUN chmod +x $IGNIS_HOME/bin/ignis-run
