@@ -54,8 +54,12 @@ public class ISSH {
         return publicKey;
     }
 
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
     public ITunnel createTunnel(IScheduler scheduler) {
-        return new ITunnel(scheduler, localPort, remotePortInit, privateKey);
+        return new ITunnel(scheduler, localPort, remotePortInit, privateKey, publicKey);
     }
 
 }

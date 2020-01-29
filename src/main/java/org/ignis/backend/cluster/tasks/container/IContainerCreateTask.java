@@ -19,6 +19,7 @@ package org.ignis.backend.cluster.tasks.container;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -60,12 +61,19 @@ public final class IContainerCreateTask extends IContainerTask {
         builder.network(network = ISchedulerParser.parseNetwork(props, IKeys.EXECUTOR_PORT));
         builder.binds(ISchedulerParser.parseBinds(props, IKeys.EXECUTOR_BIND));
         builder.volumes(ISchedulerParser.parseVolumes(props, IKeys.EXECUTOR_VOLUME));
-        builder.environmentVariables(ISchedulerParser.parseEnv(props, IKeys.EXECUTOR_ENV));
+        Map<String,String> env = ISchedulerParser.parseEnv(props, IKeys.EXECUTOR_ENV);
+        env.put("IGNIS_DRIVER_PUBLIC_KEY", props.getString(IKeys.DRIVER_PUBLIC_KEY));
+        env.put("IGNIS_DRIVER_HEALTHCHECK_INTERVAL", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_INTERVAL)));
+        env.put("IGNIS_DRIVER_HEALTHCHECK_TIMEOUT", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_TIMEOUT)));
+        env.put("IGNIS_DRIVER_HEALTHCHECK_RETRIES", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_RETRIES)));
+        env.put("IGNIS_DRIVER_HEALTHCHECK_URL", props.getString(IKeys.DRIVER_HEALTHCHECK_URL));
+        
+        builder.environmentVariables(env);
         if (props.contains(IKeys.EXECUTOR_HOSTS)) {
             builder.preferedHosts(props.getStringList(IKeys.EXECUTOR_HOSTS));
         }
         
-        network.getTcpMap().put(props.getInteger(IKeys.DRIVER_RPC_PORT), 0);
+        network.getTcpMap().put(props.getInteger(IKeys.EXECUTOR_RPC_PORT), 0);
         
         return builder.build();
     }

@@ -40,21 +40,30 @@ public final class ITunnel {
     private final AtomicInteger localPort;
     private final Map<Integer, Integer> ports;
     private final IScheduler scheduler;
+    private final String privateKey; 
+    private final String publicKey;
     private int remotePort;
     private Session session;
 
-    public ITunnel(IScheduler scheduler, AtomicInteger localPort, int remotePortInit, String privateKey) {
+    public ITunnel(IScheduler scheduler, AtomicInteger localPort, int remotePortInit, String privateKey, String publicKey) {
         this.scheduler = scheduler;
-        ports = new HashMap<>();
-        jsch = new JSch();
         this.localPort = localPort;
         this.remotePort = remotePortInit;
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
+        ports = new HashMap<>();
+        jsch = new JSch();
+    }
+
+    public String getPublicKey() {
+        return publicKey;
     }
 
     public void open(String host, int port) throws IgnisException {
         for (int i = 0; i < 10; i++) {
             try {
                 session = jsch.getSession("root", host, port);
+                jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
                 session.connect();
                 for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
                     session.setPortForwardingL(entry.getKey(), session.getHost(), entry.getValue());

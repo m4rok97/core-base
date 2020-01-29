@@ -26,13 +26,11 @@ import org.ignis.backend.scheduler.model.IContainerDetails;
  */
 public final class IDriver {
 
-    private final int port;
     private final ILock lock;
     private final IExecutor executor;
     private IContainerDetails info;
 
     public IDriver(int port, IProperties properties) {
-        this.port = port;
         this.lock = new ILock(-1);
         IContainer dummy = new IContainer(0, 0, null, properties);
         this.executor = new IExecutor(0, dummy, port);
@@ -50,10 +48,6 @@ public final class IDriver {
 
     public IContainerDetails getInfo() {
         return info;
-    }
-
-    public int getPort() {
-        return port;
     }
 
     public ILock getLock() {

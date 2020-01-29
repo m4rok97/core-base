@@ -56,6 +56,9 @@ public final class ICommGroupCreateTask extends IExecutorTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
+        if(shared.executors == 1){
+            return;
+        }
         LOGGER.info(log() + "Testing mpi group");
         try {
             shared.test = true;

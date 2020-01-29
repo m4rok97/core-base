@@ -51,7 +51,10 @@ public final class IKeys {
     public static final String DRIVER_VOLUME = "ignis.driver.volume";
     public static final String DRIVER_HOSTS = "ignis.driver.hosts";
     public static final String DRIVER_ENV = "ignis.driver.env";
+    public static final String DRIVER_PUBLIC_KEY= "ignis.driver.public.key";
+    public static final String DRIVER_PRIVATE_KEY = "ignis.driver.private.key";
     public static final String DRIVER_HEALTHCHECK_PORT = "ignis.driver.healthcheck.port";
+    public static final String DRIVER_HEALTHCHECK_URL = "ignis.driver.healthcheck.url";
     public static final String DRIVER_HEALTHCHECK_INTERVAL = "ignis.driver.healthcheck.interval";
     public static final String DRIVER_HEALTHCHECK_TIMEOUT = "ignis.driver.healthcheck.timeout";
     public static final String DRIVER_HEALTHCHECK_RETRIES = "ignis.driver.healthcheck.retries";

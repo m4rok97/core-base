@@ -105,6 +105,14 @@ public final class Main {
             System.exit(-1);
         }
 
+        LOGGER.info("Setting dynamic properties");
+        attributes.defaultProperties.setProperty(IKeys.DRIVER_PUBLIC_KEY, attributes.ssh.getPublicKey());
+        attributes.defaultProperties.setProperty(IKeys.DRIVER_PRIVATE_KEY, attributes.ssh.getPrivateKey());
+        int healthcheckPort = attributes.defaultProperties.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
+        String healthcheck = "http://" + attributes.driver.getInfo().getHost() + ":";
+        healthcheck += attributes.driver.getInfo().getNetwork().getTcpMap().get(healthcheckPort);
+        attributes.defaultProperties.setProperty(IKeys.DRIVER_HEALTHCHECK_URL, healthcheck);
+
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
         IBackendServiceImpl backend = null;
         IClusterServiceImpl clusters = null;
