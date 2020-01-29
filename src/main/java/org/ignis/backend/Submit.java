@@ -19,8 +19,11 @@ package org.ignis.backend;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.impl.action.AppendArgumentAction;
 import net.sourceforge.argparse4j.inf.Argument;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -57,6 +60,7 @@ public class Submit {
             parser.addArgument("args").nargs("*").help("Driver executable arguments");
 
             parser.addArgument("--name").metavar("str").help("Job name");
+            parser.addArgument("--direct").action(Arguments.storeTrue()).help("Execute cmd directly without ignis-run");
             parser.addArgument("-p", "--property").metavar("key=value").action(new AppendArgumentAction())
                     .type((ArgumentParser ap, Argument arg, String value) -> {
                         String array[] = value.split("=");
@@ -78,12 +82,13 @@ public class Submit {
         }
 
         try {
-            IProperties props = new IProperties();
+            IProperties defaults = new IProperties();
+            IProperties props = new IProperties(defaults);
             props.fromEnv(System.getenv());
 
             try {
                 String conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf").getPath();
-                props.load(conf, false);//only load not set properties
+                defaults.load(conf);
             } catch (IPropertyException | IOException ex) {
                 LOGGER.error("Error loading ignis.conf, ignoring", ex);
             }
@@ -107,8 +112,6 @@ public class Submit {
             builder.image(props.getProperty(IKeys.DRIVER_IMAGE));
             builder.cpus(props.getInteger(IKeys.DRIVER_CORES));
             builder.memory((long) Math.ceil(props.getSILong(IKeys.DRIVER_MEMORY) / 1024 / 1024));
-            builder.command(ns.getString("cmd"));
-            builder.arguments(ns.getList("args"));
             builder.network(ISchedulerParser.parseNetwork(props, IKeys.DRIVER_PORT));
             builder.binds(ISchedulerParser.parseBinds(props, IKeys.DRIVER_BIND));
             builder.volumes(ISchedulerParser.parseVolumes(props, IKeys.DRIVER_VOLUME));
@@ -117,6 +120,24 @@ public class Submit {
             builder.environmentVariables(env);
             if (props.contains(IKeys.DRIVER_HOSTS)) {
                 builder.preferedHosts(props.getStringList(IKeys.DRIVER_HOSTS));
+            }
+            
+            if(!props.contains(IKeys.WORKING_DIRECTORY)){
+                props.setProperty(IKeys.WORKING_DIRECTORY, props.getProperty(IKeys.DFS_HOME));
+            }
+
+            if (ns.getBoolean("direct")) {
+                builder.command(ns.getString("cmd"));
+                builder.arguments(ns.getList("args"));
+            } else {
+                env.put("IGNIS_WORKING_DIRECTORY", props.getProperty(IKeys.WORKING_DIRECTORY));
+                builder.command("ignis-run");
+                List<String> arguments = new ArrayList<>();
+                arguments.add(ns.getString("cmd"));
+                if (ns.getList("args") != null) {
+                    arguments.addAll(ns.getList("args"));
+                }
+                builder.arguments(arguments);
             }
 
             String group = null;
@@ -131,7 +152,7 @@ public class Submit {
                 throw ex;
             }
         } catch (Exception ex) {
-            LOGGER.error(ex.getLocalizedMessage());
+            LOGGER.error(ex.getLocalizedMessage(), ex);
         }
 
     }

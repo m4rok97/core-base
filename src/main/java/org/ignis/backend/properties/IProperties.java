@@ -42,10 +42,10 @@ public final class IProperties {
     
     private final static Pattern BOOLEAN = Pattern.compile("y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON");
     private final Properties inner;
-    private final IProperties defaults;
+    private final Properties defaults;
     
     public IProperties(IProperties defaults) {
-        this.defaults = defaults;
+        this.defaults = defaults.inner;
         inner = new Properties(defaults.inner);
     }
     
@@ -54,8 +54,14 @@ public final class IProperties {
         inner = new Properties();
     }
     
+    private IProperties(Properties defaults) {
+        this.defaults = defaults;
+        inner = new Properties();
+    }
+    
+    
     public IProperties copy(){
-        IProperties copy = defaults != null ? new IProperties(defaults):new IProperties();
+        IProperties copy = new IProperties(defaults);
         copy.inner.putAll(inner);
         return copy;
     }
@@ -174,7 +180,7 @@ public final class IProperties {
         if(!defaults){
             return new HashMap<>((Map) inner);
         }
-        Map<String, String> map = new HashMap<>((Map) this.defaults.inner);
+        Map<String, String> map = new HashMap<>((Map) this.defaults);
         inner.putAll((Map) inner);
         return map;
     }

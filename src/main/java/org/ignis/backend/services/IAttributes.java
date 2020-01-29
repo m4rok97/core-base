@@ -38,8 +38,8 @@ public final class IAttributes {
     private final List<ICluster> clusterList;
     private final List<IProperties> propertiesList;
 
-    public IAttributes() {
-        this.defaultProperties = new IProperties();
+    public IAttributes(IProperties defaultProperties) {
+        this.defaultProperties = defaultProperties;
         this.clusterList = new ArrayList<>();
         this.propertiesList = new ArrayList<>();
         this.ssh = new ISSH(defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT) + 1,//backend + 1

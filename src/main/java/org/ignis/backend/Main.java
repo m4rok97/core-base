@@ -23,6 +23,7 @@ import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IKeys;
+import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.IScheduler;
 import org.ignis.backend.scheduler.ISchedulerBuilder;
 import org.ignis.backend.services.IAttributes;
@@ -51,25 +52,23 @@ public final class Main {
      */
     public static void main(String[] args) {
         LOGGER.info("Backend started");
-        IAttributes attributes = new IAttributes();
+        IProperties props = new IProperties();        
 
         LOGGER.info("Loading environment variables");
-        attributes.defaultProperties.fromEnv(System.getenv());
+        props.fromEnv(System.getenv());
 
-        if (attributes.defaultProperties.contains(IKeys.OPTIONS)) {//Submit user options
+        if (props.contains(IKeys.OPTIONS)) {//Submit user options
             try {
-                attributes.defaultProperties.load(
-                        new ByteArrayInputStream(attributes.defaultProperties.getProperty(IKeys.OPTIONS).getBytes())
-                );
+                props.load(new ByteArrayInputStream(props.getProperty(IKeys.OPTIONS).getBytes()));
             } catch (IOException ex) {
             }
-            attributes.defaultProperties.setProperty(IKeys.OPTIONS, "");
+            props.setProperty(IKeys.OPTIONS, "");
         }
 
         LOGGER.info("Loading configuration file");
         try {
-            String conf = new File(attributes.defaultProperties.getString(IKeys.HOME), "etc/ignis.conf").getPath();
-            attributes.defaultProperties.load(conf, false);//only load not set properties
+            String conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf").getPath();
+            props.load(conf, false);//only load not set properties
         } catch (IPropertyException | IOException ex) {
             LOGGER.error("Error loading ignis.conf, aborting", ex);
             System.exit(-1);
@@ -80,8 +79,8 @@ public final class Main {
         String schedulerType = null;
         String schedulerUrl = null;
         try {
-            schedulerType = attributes.defaultProperties.getString(IKeys.SCHEDULER_TYPE);
-            schedulerUrl = attributes.defaultProperties.getString(IKeys.SCHEDULER_URL);
+            schedulerType = props.getString(IKeys.SCHEDULER_TYPE);
+            schedulerUrl = props.getString(IKeys.SCHEDULER_URL);
         } catch (IPropertyException ex) {
             LOGGER.error(ex.getMessage(), ex);
             System.exit(-1);
@@ -96,6 +95,7 @@ public final class Main {
             System.exit(-1);
         }
 
+        IAttributes attributes = new IAttributes(props);
         try {
             LOGGER.info("Getting Driver container info from scheduler");
             attributes.driver.initInfo(scheduler.getContainer(scheduler.getThisContainerId()));
@@ -106,14 +106,15 @@ public final class Main {
         }
 
         LOGGER.info("Setting dynamic properties");
-        attributes.defaultProperties.setProperty(IKeys.DRIVER_PUBLIC_KEY, attributes.ssh.getPublicKey());
-        attributes.defaultProperties.setProperty(IKeys.DRIVER_PRIVATE_KEY, attributes.ssh.getPrivateKey());
-        int healthcheckPort = attributes.defaultProperties.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
+        props.setProperty(IKeys.DRIVER_PUBLIC_KEY, attributes.ssh.getPublicKey());
+        props.setProperty(IKeys.DRIVER_PRIVATE_KEY, attributes.ssh.getPrivateKey());
+        int healthcheckPort = props.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
         String healthcheck = "http://" + attributes.driver.getInfo().getHost() + ":";
         healthcheck += attributes.driver.getInfo().getNetwork().getTcpMap().get(healthcheckPort);
-        attributes.defaultProperties.setProperty(IKeys.DRIVER_HEALTHCHECK_URL, healthcheck);
+        props.setProperty(IKeys.DRIVER_HEALTHCHECK_URL, healthcheck);
 
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
+        
         IBackendServiceImpl backend = null;
         IClusterServiceImpl clusters = null;
 
@@ -129,17 +130,17 @@ public final class Main {
         }
 
         try {
-            Integer backendPort = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT);
-            Integer backendCompression = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_COMPRESSION);
-            Integer driverPort = attributes.defaultProperties.getInteger(IKeys.EXECUTOR_RPC_PORT);
-            Integer driverCompression = attributes.defaultProperties.getInteger(IKeys.EXECUTOR_RPC_COMPRESSION);
+            Integer backendPort = props.getInteger(IKeys.DRIVER_RPC_PORT);
+            Integer backendCompression = props.getInteger(IKeys.DRIVER_RPC_COMPRESSION);
+            Integer driverPort = props.getInteger(IKeys.EXECUTOR_RPC_PORT);
+            Integer driverCompression = props.getInteger(IKeys.EXECUTOR_RPC_COMPRESSION);
             System.out.println(backendPort);
             System.out.println(backendCompression);
             System.out.println(driverPort);
             System.out.println(driverCompression);
             backend.start(processor, backendPort, backendCompression);
 
-            if (!attributes.defaultProperties.contains(IKeys.DEBUG)) {
+            if (!props.contains(IKeys.DEBUG)) {
                 clusters.destroyClusters();
             }
             try {

@@ -67,8 +67,12 @@ public final class IExecutorCreateTask extends IExecutorTask {
         startScript.append(mpiPorts.stream().map(String::valueOf).collect(Collectors.joining(" ")));
         startScript.append("'\n");
 
-        startScript.append("nohup ignis-executor ");
-        startScript.append(type).append(' ');
+        startScript.append("export IGNIS_WORKING_DIRECTORY='");
+        startScript.append(startScript.append(executor.getProperties().getString(IKeys.WORKING_DIRECTORY)));
+        startScript.append("'\n");
+        
+        startScript.append("nohup ignis-run ");
+        startScript.append("ignis-").append(type).append(' ');
         startScript.append(executor.getPort()).append(' ');
         startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
         if (executor.getProperties().getString(IKeys.SCHEDULER_CONTAINER).equals("docker")) {

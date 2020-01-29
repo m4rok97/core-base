@@ -185,6 +185,10 @@ public class IMarathonScheduler implements IScheduler {
             app.getEnv().putAll((Map) container.getEnvironmentVariables());
         }
 
+        app.setMaxLaunchDelaySeconds(10 * 365 * 24 * 60 * 60); //10 years
+        app.setBackoffFactor(app.getMaxLaunchDelaySeconds().doubleValue());
+        app.setBackoffSeconds(1);//Only two attempts every 10 years
+
         return app;
     }
 

@@ -26,6 +26,7 @@ public final class IKeys {
     public static final String DEBUG = "ignis.debug";
     public static final String HOME = "ignis.home";
     public static final String OPTIONS = "ignis.options";
+    public static final String WORKING_DIRECTORY = "ignis.working.directory";
     /*JOB*/
     public static final String JOB_NAME = "ignis.job.name";
     public static final String JOB_GROUP = "ignis.job.group";
