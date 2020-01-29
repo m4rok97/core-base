@@ -17,6 +17,8 @@
 package org.ignis.backend;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.action.AppendArgumentAction;
@@ -24,6 +26,7 @@ import net.sourceforge.argparse4j.inf.Argument;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
@@ -78,6 +81,13 @@ public class Submit {
             IProperties props = new IProperties();
             props.fromEnv(System.getenv());
 
+            try {
+                String conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf").getPath();
+                props.load(conf, false);//only load not set properties
+            } catch (IPropertyException | IOException ex) {
+                LOGGER.error("Error loading ignis.conf, ignoring", ex);
+            }
+
             props.setProperty(IKeys.DRIVER_IMAGE, ns.getString("image"));
             if (ns.get("property-file") != null) {
                 props.load("property-file");
@@ -90,7 +100,6 @@ public class Submit {
             ByteArrayOutputStream options = new ByteArrayOutputStream();
             props.store(options);
 
-            
             IScheduler scheduler = ISchedulerBuilder.create(props.getProperty(IKeys.SCHEDULER_TYPE),
                     props.getProperty(IKeys.SCHEDULER_URL));
 
