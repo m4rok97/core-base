@@ -28,6 +28,7 @@ RUN cd ${IGNIS_HOME} && \
 	mkdir -p lib/native && \
 	cp -R /root/boost/include/* core/cpp/include && \
 	cp -R /root/boost/lib/* lib/native/ && \
+	cp -L /usr/lib/x86_64-linux-gnu/libgomp.so* lib/native/ && \
 	cp -R /root/thrift/include/* core/cpp/include/ && \
 	cp -R /root/thrift/lib/* lib/native/ && \
 	cp -R /root/mpi/include/* core/cpp/include/ && \
