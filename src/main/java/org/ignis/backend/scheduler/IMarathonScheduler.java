@@ -315,7 +315,7 @@ public class IMarathonScheduler implements IScheduler {
 
     @Override
     public String getThisContainerId() throws ISchedulerException {
-        String id = System.getProperty("IGNIS_JOB_NAME");
+        String id = System.getenv("IGNIS_JOB_NAME");
         if (id == null) {
             throw new ISchedulerException("id not found, is this a container launched by marathon?");
         }
