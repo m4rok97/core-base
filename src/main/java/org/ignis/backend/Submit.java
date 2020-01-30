@@ -116,7 +116,7 @@ public class Submit {
             builder.binds(ISchedulerParser.parseBinds(props, IKeys.DRIVER_BIND));
             builder.volumes(ISchedulerParser.parseVolumes(props, IKeys.DRIVER_VOLUME));
             Map<String, String> env = ISchedulerParser.parseEnv(props, IKeys.DRIVER_ENV);
-            env.put(IKeys.OPTIONS, options.toString());//Send submit options to driver            
+            env.put("IGNIS_OPTIONS", options.toString());//Send submit options to driver            
             builder.environmentVariables(env);
             if (props.contains(IKeys.DRIVER_HOSTS)) {
                 builder.preferedHosts(props.getStringList(IKeys.DRIVER_HOSTS));

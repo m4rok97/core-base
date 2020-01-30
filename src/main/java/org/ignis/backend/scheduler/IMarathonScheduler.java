@@ -179,15 +179,15 @@ public class IMarathonScheduler implements IScheduler {
         }
 
         app.setEnv(new HashMap<>());
-        app.getEnv().put(IKeys.JOB_NAME, app.getId());
-        app.getEnv().put(IKeys.JOB_GROUP, group);
+        app.getEnv().put("IGNIS_JOB_NAME", app.getId());
+        app.getEnv().put("IGNIS_JOB_GROUP", group);
         if (container.getEnvironmentVariables() != null) {
             app.getEnv().putAll((Map) container.getEnvironmentVariables());
         }
 
-        app.setMaxLaunchDelaySeconds(10 * 365 * 24 * 60 * 60); //10 years
+        app.setMaxLaunchDelaySeconds(21474835); //Max value, no relaunch
         app.setBackoffFactor(app.getMaxLaunchDelaySeconds().doubleValue());
-        app.setBackoffSeconds(1);//Only two attempts every 10 years
+        app.setBackoffSeconds(app.getMaxLaunchDelaySeconds());
 
         return app;
     }
