@@ -193,7 +193,7 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     private String taskId(Task task) throws ISchedulerException {
-        return task.getId().split(".")[2];
+        return task.getId().split("\\.")[2];
     }
 
     private Task getTask(App app, String id) throws ISchedulerException {

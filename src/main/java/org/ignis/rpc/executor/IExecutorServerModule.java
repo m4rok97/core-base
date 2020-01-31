@@ -11,7 +11,7 @@ public class IExecutorServerModule {
 
   public interface Iface {
 
-    public void updateProperties(java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void start(java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
     public void stop() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
@@ -21,7 +21,7 @@ public class IExecutorServerModule {
 
   public interface AsyncIface {
 
-    public void updateProperties(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void start(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void stop(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -49,23 +49,23 @@ public class IExecutorServerModule {
       super(iprot, oprot);
     }
 
-    public void updateProperties(java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void start(java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
-      send_updateProperties(properties);
-      recv_updateProperties();
+      send_start(properties);
+      recv_start();
     }
 
-    public void send_updateProperties(java.util.Map<java.lang.String,java.lang.String> properties) throws org.apache.thrift.TException
+    public void send_start(java.util.Map<java.lang.String,java.lang.String> properties) throws org.apache.thrift.TException
     {
-      updateProperties_args args = new updateProperties_args();
+      start_args args = new start_args();
       args.setProperties(properties);
-      sendBase("updateProperties", args);
+      sendBase("start", args);
     }
 
-    public void recv_updateProperties() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void recv_start() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
-      updateProperties_result result = new updateProperties_result();
-      receiveBase(result, "updateProperties");
+      start_result result = new start_result();
+      receiveBase(result, "start");
       if (result.ex != null) {
         throw result.ex;
       }
@@ -137,23 +137,23 @@ public class IExecutorServerModule {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void updateProperties(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void start(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      updateProperties_call method_call = new updateProperties_call(properties, resultHandler, this, ___protocolFactory, ___transport);
+      start_call method_call = new start_call(properties, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class updateProperties_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class start_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private java.util.Map<java.lang.String,java.lang.String> properties;
-      public updateProperties_call(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public start_call(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.properties = properties;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("updateProperties", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        updateProperties_args args = new updateProperties_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("start", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        start_args args = new start_args();
         args.setProperties(properties);
         args.write(prot);
         prot.writeMessageEnd();
@@ -240,19 +240,19 @@ public class IExecutorServerModule {
     }
 
     private static <I extends Iface> java.util.Map<java.lang.String,  org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> getProcessMap(java.util.Map<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
-      processMap.put("updateProperties", new updateProperties());
+      processMap.put("start", new start());
       processMap.put("stop", new stop());
       processMap.put("test", new test());
       return processMap;
     }
 
-    public static class updateProperties<I extends Iface> extends org.apache.thrift.ProcessFunction<I, updateProperties_args> {
-      public updateProperties() {
-        super("updateProperties");
+    public static class start<I extends Iface> extends org.apache.thrift.ProcessFunction<I, start_args> {
+      public start() {
+        super("start");
       }
 
-      public updateProperties_args getEmptyArgsInstance() {
-        return new updateProperties_args();
+      public start_args getEmptyArgsInstance() {
+        return new start_args();
       }
 
       protected boolean isOneway() {
@@ -264,10 +264,10 @@ public class IExecutorServerModule {
         return false;
       }
 
-      public updateProperties_result getResult(I iface, updateProperties_args args) throws org.apache.thrift.TException {
-        updateProperties_result result = new updateProperties_result();
+      public start_result getResult(I iface, start_args args) throws org.apache.thrift.TException {
+        start_result result = new start_result();
         try {
-          iface.updateProperties(args.properties);
+          iface.start(args.properties);
         } catch (org.ignis.rpc.IExecutorException ex) {
           result.ex = ex;
         }
@@ -347,26 +347,26 @@ public class IExecutorServerModule {
     }
 
     private static <I extends AsyncIface> java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
-      processMap.put("updateProperties", new updateProperties());
+      processMap.put("start", new start());
       processMap.put("stop", new stop());
       processMap.put("test", new test());
       return processMap;
     }
 
-    public static class updateProperties<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, updateProperties_args, Void> {
-      public updateProperties() {
-        super("updateProperties");
+    public static class start<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, start_args, Void> {
+      public start() {
+        super("start");
       }
 
-      public updateProperties_args getEmptyArgsInstance() {
-        return new updateProperties_args();
+      public start_args getEmptyArgsInstance() {
+        return new start_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            updateProperties_result result = new updateProperties_result();
+            start_result result = new start_result();
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -380,7 +380,7 @@ public class IExecutorServerModule {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            updateProperties_result result = new updateProperties_result();
+            start_result result = new start_result();
             if (e instanceof org.ignis.rpc.IExecutorException) {
               result.ex = (org.ignis.rpc.IExecutorException) e;
               result.setExIsSet(true);
@@ -412,8 +412,8 @@ public class IExecutorServerModule {
         return false;
       }
 
-      public void start(I iface, updateProperties_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.updateProperties(args.properties,resultHandler);
+      public void start(I iface, start_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+        iface.start(args.properties,resultHandler);
       }
     }
 
@@ -549,13 +549,13 @@ public class IExecutorServerModule {
 
   }
 
-  public static class updateProperties_args implements org.apache.thrift.TBase<updateProperties_args, updateProperties_args._Fields>, java.io.Serializable, Cloneable, Comparable<updateProperties_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateProperties_args");
+  public static class start_args implements org.apache.thrift.TBase<start_args, start_args._Fields>, java.io.Serializable, Cloneable, Comparable<start_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("start_args");
 
     private static final org.apache.thrift.protocol.TField PROPERTIES_FIELD_DESC = new org.apache.thrift.protocol.TField("properties", org.apache.thrift.protocol.TType.MAP, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new updateProperties_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new updateProperties_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new start_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new start_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> properties; // required
 
@@ -628,13 +628,13 @@ public class IExecutorServerModule {
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING), 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING))));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateProperties_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(start_args.class, metaDataMap);
     }
 
-    public updateProperties_args() {
+    public start_args() {
     }
 
-    public updateProperties_args(
+    public start_args(
       java.util.Map<java.lang.String,java.lang.String> properties)
     {
       this();
@@ -644,15 +644,15 @@ public class IExecutorServerModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public updateProperties_args(updateProperties_args other) {
+    public start_args(start_args other) {
       if (other.isSetProperties()) {
         java.util.Map<java.lang.String,java.lang.String> __this__properties = new java.util.HashMap<java.lang.String,java.lang.String>(other.properties);
         this.properties = __this__properties;
       }
     }
 
-    public updateProperties_args deepCopy() {
-      return new updateProperties_args(this);
+    public start_args deepCopy() {
+      return new start_args(this);
     }
 
     @Override
@@ -676,7 +676,7 @@ public class IExecutorServerModule {
       return this.properties;
     }
 
-    public updateProperties_args setProperties(@org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> properties) {
+    public start_args setProperties(@org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> properties) {
       this.properties = properties;
       return this;
     }
@@ -736,12 +736,12 @@ public class IExecutorServerModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof updateProperties_args)
-        return this.equals((updateProperties_args)that);
+      if (that instanceof start_args)
+        return this.equals((start_args)that);
       return false;
     }
 
-    public boolean equals(updateProperties_args that) {
+    public boolean equals(start_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -771,7 +771,7 @@ public class IExecutorServerModule {
     }
 
     @Override
-    public int compareTo(updateProperties_args other) {
+    public int compareTo(start_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -806,7 +806,7 @@ public class IExecutorServerModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("updateProperties_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("start_args(");
       boolean first = true;
 
       sb.append("properties:");
@@ -841,15 +841,15 @@ public class IExecutorServerModule {
       }
     }
 
-    private static class updateProperties_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public updateProperties_argsStandardScheme getScheme() {
-        return new updateProperties_argsStandardScheme();
+    private static class start_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public start_argsStandardScheme getScheme() {
+        return new start_argsStandardScheme();
       }
     }
 
-    private static class updateProperties_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<updateProperties_args> {
+    private static class start_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<start_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, updateProperties_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, start_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -890,7 +890,7 @@ public class IExecutorServerModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, updateProperties_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, start_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -913,16 +913,16 @@ public class IExecutorServerModule {
 
     }
 
-    private static class updateProperties_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public updateProperties_argsTupleScheme getScheme() {
-        return new updateProperties_argsTupleScheme();
+    private static class start_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public start_argsTupleScheme getScheme() {
+        return new start_argsTupleScheme();
       }
     }
 
-    private static class updateProperties_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<updateProperties_args> {
+    private static class start_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<start_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, updateProperties_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, start_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetProperties()) {
@@ -942,7 +942,7 @@ public class IExecutorServerModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, updateProperties_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, start_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
@@ -968,13 +968,13 @@ public class IExecutorServerModule {
     }
   }
 
-  public static class updateProperties_result implements org.apache.thrift.TBase<updateProperties_result, updateProperties_result._Fields>, java.io.Serializable, Cloneable, Comparable<updateProperties_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateProperties_result");
+  public static class start_result implements org.apache.thrift.TBase<start_result, start_result._Fields>, java.io.Serializable, Cloneable, Comparable<start_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("start_result");
 
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new updateProperties_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new updateProperties_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new start_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new start_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex; // required
 
@@ -1045,13 +1045,13 @@ public class IExecutorServerModule {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.IExecutorException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateProperties_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(start_result.class, metaDataMap);
     }
 
-    public updateProperties_result() {
+    public start_result() {
     }
 
-    public updateProperties_result(
+    public start_result(
       org.ignis.rpc.IExecutorException ex)
     {
       this();
@@ -1061,14 +1061,14 @@ public class IExecutorServerModule {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public updateProperties_result(updateProperties_result other) {
+    public start_result(start_result other) {
       if (other.isSetEx()) {
         this.ex = new org.ignis.rpc.IExecutorException(other.ex);
       }
     }
 
-    public updateProperties_result deepCopy() {
-      return new updateProperties_result(this);
+    public start_result deepCopy() {
+      return new start_result(this);
     }
 
     @Override
@@ -1081,7 +1081,7 @@ public class IExecutorServerModule {
       return this.ex;
     }
 
-    public updateProperties_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
+    public start_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.IExecutorException ex) {
       this.ex = ex;
       return this;
     }
@@ -1141,12 +1141,12 @@ public class IExecutorServerModule {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof updateProperties_result)
-        return this.equals((updateProperties_result)that);
+      if (that instanceof start_result)
+        return this.equals((start_result)that);
       return false;
     }
 
-    public boolean equals(updateProperties_result that) {
+    public boolean equals(start_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -1176,7 +1176,7 @@ public class IExecutorServerModule {
     }
 
     @Override
-    public int compareTo(updateProperties_result other) {
+    public int compareTo(start_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -1211,7 +1211,7 @@ public class IExecutorServerModule {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("updateProperties_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("start_result(");
       boolean first = true;
 
       sb.append("ex:");
@@ -1246,15 +1246,15 @@ public class IExecutorServerModule {
       }
     }
 
-    private static class updateProperties_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public updateProperties_resultStandardScheme getScheme() {
-        return new updateProperties_resultStandardScheme();
+    private static class start_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public start_resultStandardScheme getScheme() {
+        return new start_resultStandardScheme();
       }
     }
 
-    private static class updateProperties_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<updateProperties_result> {
+    private static class start_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<start_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, updateProperties_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, start_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -1284,7 +1284,7 @@ public class IExecutorServerModule {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, updateProperties_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, start_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -1299,16 +1299,16 @@ public class IExecutorServerModule {
 
     }
 
-    private static class updateProperties_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public updateProperties_resultTupleScheme getScheme() {
-        return new updateProperties_resultTupleScheme();
+    private static class start_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public start_resultTupleScheme getScheme() {
+        return new start_resultTupleScheme();
       }
     }
 
-    private static class updateProperties_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<updateProperties_result> {
+    private static class start_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<start_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, updateProperties_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, start_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetEx()) {
@@ -1321,7 +1321,7 @@ public class IExecutorServerModule {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, updateProperties_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, start_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
