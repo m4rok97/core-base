@@ -394,11 +394,11 @@ public class IMarathonScheduler implements IScheduler {
             List<IContainerDetails> containers = new ArrayList<>(ids.size());
             VersionedApp app;
             int time = 1;
-            do {
+            while (containers.size() < ids.size()) {
                 app = marathon.getApp(appId).getApp();
                 Iterator<Task> it = app.getTasks().iterator();
 
-                while (it.hasNext()) {
+                while (it.hasNext() && containers.size() < ids.size()) {
                     if (taskAssignment.containsKey(ids.get(containers.size()))) {
                         containers.add(parseTaks(app, getTask(app, taskAssignment.get(ids.get(containers.size())))));
                     } else {
@@ -418,7 +418,7 @@ public class IMarathonScheduler implements IScheduler {
                 if (time < 30) {
                     time++;
                 }
-            } while (containers.size() == ids.size());
+            } 
             return containers;
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
