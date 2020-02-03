@@ -59,7 +59,7 @@ public final class IAttributes {
     public long addProperties(IProperties properties) {
         synchronized (propertiesList) {
             propertiesList.add(properties);
-            return propertiesList.size();
+            return propertiesList.size() - 1;
         }
     }
 
@@ -75,7 +75,7 @@ public final class IAttributes {
     public long newCluster() {
         synchronized (clusterList) {
             clusterList.add(null);
-            return clusterList.size();
+            return clusterList.size() - 1;
         }
     }
 
