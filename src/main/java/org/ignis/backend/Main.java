@@ -52,7 +52,7 @@ public final class Main {
      */
     public static void main(String[] args) {
         LOGGER.info("Backend started");
-        IProperties props = new IProperties();        
+        IProperties props = new IProperties();
 
         LOGGER.info("Loading environment variables");
         props.fromEnv(System.getenv());
@@ -113,8 +113,12 @@ public final class Main {
         healthcheck += attributes.driver.getInfo().getNetwork().getTcpMap().get(healthcheckPort);
         props.setProperty(IKeys.DRIVER_HEALTHCHECK_URL, healthcheck);
 
+        if (props.contains(IKeys.DEBUG)) {
+            LOGGER.info(props.toString());
+        }
+
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
-        
+
         IBackendServiceImpl backend = null;
         IClusterServiceImpl clusters = null;
 

@@ -37,6 +37,7 @@ import org.ignis.backend.scheduler.IScheduler;
 import org.ignis.backend.scheduler.ISchedulerBuilder;
 import org.ignis.backend.scheduler.ISchedulerParser;
 import org.ignis.backend.scheduler.model.IContainerDetails;
+import org.ignis.backend.scheduler.model.INetwork;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -112,7 +113,9 @@ public class Submit {
             builder.image(props.getProperty(IKeys.DRIVER_IMAGE));
             builder.cpus(props.getInteger(IKeys.DRIVER_CORES));
             builder.memory((long) Math.ceil(props.getSILong(IKeys.DRIVER_MEMORY) / 1024 / 1024));
-            builder.network(ISchedulerParser.parseNetwork(props, IKeys.DRIVER_PORT));
+            INetwork network;
+            builder.network(network = ISchedulerParser.parseNetwork(props, IKeys.DRIVER_PORT));
+            network.getTcpMap().put(props.getInteger(IKeys.DRIVER_HEALTHCHECK_URL), 0);
             builder.binds(ISchedulerParser.parseBinds(props, IKeys.DRIVER_BIND));
             builder.volumes(ISchedulerParser.parseVolumes(props, IKeys.DRIVER_VOLUME));
             Map<String, String> env = ISchedulerParser.parseEnv(props, IKeys.DRIVER_ENV);
@@ -124,7 +127,7 @@ public class Submit {
             
             if(!props.contains(IKeys.WORKING_DIRECTORY)){
                 props.setProperty(IKeys.WORKING_DIRECTORY, props.getProperty(IKeys.DFS_HOME));
-            }
+            }            
 
             if (ns.getBoolean("direct")) {
                 builder.command(ns.getString("cmd"));

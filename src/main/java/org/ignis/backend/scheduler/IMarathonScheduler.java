@@ -47,6 +47,7 @@ import org.ignis.backend.scheduler.model.IBind;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 import org.ignis.backend.scheduler.model.INetwork;
 import org.ignis.backend.scheduler.model.IVolume;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -54,6 +55,8 @@ import org.ignis.backend.scheduler.model.IVolume;
  */
 public class IMarathonScheduler implements IScheduler {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMarathonScheduler.class);
+    
     private final Marathon marathon;
     private final Map<String, String> taskAssignment;
     private final Set<String> taskAssigned;
@@ -194,6 +197,10 @@ public class IMarathonScheduler implements IScheduler {
         app.setBackoffFactor(app.getMaxLaunchDelaySeconds().doubleValue());
         app.setBackoffSeconds(app.getMaxLaunchDelaySeconds());
 
+        if(props.contains(IKeys.DEBUG)){
+            LOGGER.info(app.toString());
+        }
+        
         return app;
     }
 
@@ -213,6 +220,7 @@ public class IMarathonScheduler implements IScheduler {
     @SuppressWarnings("unchecked")
     private IContainerDetails parseTaks(App app, Task task) {
         IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
+        builder.host(task.getHost());
         builder.image(app.getContainer().getDocker().getImage());
         builder.cpus(app.getCpus().intValue());
         builder.memory(app.getMem().longValue());
