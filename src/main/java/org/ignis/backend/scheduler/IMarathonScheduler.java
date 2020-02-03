@@ -83,6 +83,10 @@ public class IMarathonScheduler implements IScheduler {
         taskAssigned = ConcurrentHashMap.<String>newKeySet();
     }
 
+    private String fixMarathonId(String id){
+        return id.replaceAll("[^\\w-]", "");
+    } 
+    
     @SuppressWarnings("unchecked")
     private App createApp(String group, String name, IContainerDetails container, IProperties props) {
         App app = new App();
@@ -93,6 +97,7 @@ public class IMarathonScheduler implements IScheduler {
         app.getContainer().setVolumes(new ArrayList<>());
         app.getContainer().setPortMappings(new ArrayList<>());
 
+        name = fixMarathonId(name);
         if (group != null) {
             app.setId(group + "/" + name + "-" + UUID.randomUUID().toString());
         } else {
@@ -188,7 +193,7 @@ public class IMarathonScheduler implements IScheduler {
         app.setMaxLaunchDelaySeconds(21474835); //Max value, no relaunch
         app.setBackoffFactor(app.getMaxLaunchDelaySeconds().doubleValue());
         app.setBackoffSeconds(app.getMaxLaunchDelaySeconds());
-        System.err.println(app);
+
         return app;
     }
 
@@ -296,7 +301,7 @@ public class IMarathonScheduler implements IScheduler {
     @Override
     public String createGroup(String name) throws ISchedulerException {
         try {
-            String id = name + "-" + UUID.randomUUID().toString();
+            String id = fixMarathonId(name) + "-" + UUID.randomUUID().toString();
             marathon.createGroup(new Group(id));
             return id;
         } catch (MarathonException ex) {

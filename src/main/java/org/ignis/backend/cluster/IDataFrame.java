@@ -89,7 +89,7 @@ public final class IDataFrame {
 
     public void setName(String name) {
         if (name.isEmpty()) {
-            name = worker.getName() + ", Data(" + getId() + ")";
+            name = worker.getName() + ", DataFrame(" + getId() + ")";
         }
         this.name = name;
     }
