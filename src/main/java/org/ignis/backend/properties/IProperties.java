@@ -34,6 +34,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.ignis.backend.exception.IPropertyException;
 
 /**
@@ -52,7 +53,7 @@ public final class IProperties {
     }
     
     public IProperties() {
-        defaults =null;
+        defaults = null;
         inner = new Properties();
     }
     
@@ -169,12 +170,15 @@ public final class IProperties {
     
     @SuppressWarnings("unchecked")
     public Collection<String> getKeysPrefix(String prefix){
-        return ((Set<String>)(Object)inner.keySet()).stream()
-                .filter((String key) -> key.startsWith(prefix)).collect(Collectors.toList());
+        Stream<String> keys = ((Set<String>)(Object)inner.keySet()).stream();
+        if(defaults != null){
+            keys = Stream.concat(((Set<String>)(Object)defaults.keySet()).stream(), keys);
+        }
+        return keys.filter((String key) -> key.startsWith(prefix)).collect(Collectors.toList());
     }
     
     public boolean contains(String key) {
-        return inner.containsKey(noNull(key));
+        return inner.getProperty(noNull(key)) != null;
     }
     
     @SuppressWarnings("unchecked")

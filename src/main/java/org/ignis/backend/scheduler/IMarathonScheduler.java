@@ -197,8 +197,6 @@ public class IMarathonScheduler implements IScheduler {
         app.setBackoffFactor(app.getMaxLaunchDelaySeconds().doubleValue());
         app.setBackoffSeconds(app.getMaxLaunchDelaySeconds());
 
-        LOGGER.info(props.toString());
-        LOGGER.info("debug: " + props.contains(IKeys.DEBUG));
         if(props.contains(IKeys.DEBUG)){
             LOGGER.info(app.toString());
         }
