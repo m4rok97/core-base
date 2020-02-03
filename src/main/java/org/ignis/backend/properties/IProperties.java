@@ -300,7 +300,9 @@ public final class IProperties {
     public String toString() {
         StringWriter writer = new StringWriter();
         PrintWriter printer  = new PrintWriter(writer);
-        defaults.list(printer);
+        if(defaults!= null){
+            defaults.list(printer);
+        }
         inner.list(printer);
         
         return "IProperties{\n" +writer.toString()+ "\n}";
