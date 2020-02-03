@@ -87,7 +87,7 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     private String fixMarathonId(String id){
-        return id.replaceAll("[^\\w-]", "");
+        return id.toLowerCase().replaceAll("[^\\w-]", "");
     } 
     
     @SuppressWarnings("unchecked")
