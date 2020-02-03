@@ -188,7 +188,7 @@ public class IMarathonScheduler implements IScheduler {
         app.setMaxLaunchDelaySeconds(21474835); //Max value, no relaunch
         app.setBackoffFactor(app.getMaxLaunchDelaySeconds().doubleValue());
         app.setBackoffSeconds(app.getMaxLaunchDelaySeconds());
-
+        System.err.println(app);
         return app;
     }
 

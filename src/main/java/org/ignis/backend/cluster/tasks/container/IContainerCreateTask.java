@@ -56,10 +56,10 @@ public final class IContainerCreateTask extends IContainerTask {
         builder.cpus(props.getInteger(IKeys.EXECUTOR_CORES));
         builder.memory((long) Math.ceil(props.getSILong(IKeys.EXECUTOR_MEMORY) / 1024 / 1024));
         builder.command("ignis-server");
-        /*builder.arguments(Arrays.asList(props.getString(IKeys.DRIVER_RPC_PORT)));*/
+        builder.arguments(Arrays.asList(props.getString(IKeys.DRIVER_RPC_PORT)));
         INetwork network;
         builder.network(network = ISchedulerParser.parseNetwork(props, IKeys.EXECUTOR_PORT));
-        /*builder.binds(ISchedulerParser.parseBinds(props, IKeys.EXECUTOR_BIND));
+        builder.binds(ISchedulerParser.parseBinds(props, IKeys.EXECUTOR_BIND));
         builder.volumes(ISchedulerParser.parseVolumes(props, IKeys.EXECUTOR_VOLUME));
         Map<String,String> env = ISchedulerParser.parseEnv(props, IKeys.EXECUTOR_ENV);
         env.put("IGNIS_DRIVER_PUBLIC_KEY", props.getString(IKeys.DRIVER_PUBLIC_KEY));
@@ -71,7 +71,7 @@ public final class IContainerCreateTask extends IContainerTask {
         builder.environmentVariables(env);
         if (props.contains(IKeys.EXECUTOR_HOSTS)) {
             builder.preferedHosts(props.getStringList(IKeys.EXECUTOR_HOSTS));
-        }*/
+        }
         
         network.getTcpMap().put(props.getInteger(IKeys.EXECUTOR_RPC_PORT), 0);
         
