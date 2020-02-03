@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.scheduler.IScheduler;
@@ -40,10 +41,10 @@ public final class ITunnel {
     private final AtomicInteger localPort;
     private final Map<Integer, Integer> ports;
     private final IScheduler scheduler;
-    private final String privateKey; 
+    private final String privateKey;
     private final String publicKey;
-    private int remotePort;
     private Session session;
+    private int remotePort;
 
     public ITunnel(IScheduler scheduler, AtomicInteger localPort, int remotePortInit, String privateKey, String publicKey) {
         this.scheduler = scheduler;
@@ -51,8 +52,8 @@ public final class ITunnel {
         this.remotePort = remotePortInit;
         this.privateKey = privateKey;
         this.publicKey = publicKey;
-        ports = new HashMap<>();
-        jsch = new JSch();
+        this.jsch = new JSch();
+        this.ports = new HashMap<>();
     }
 
     public String getPublicKey() {
@@ -62,8 +63,12 @@ public final class ITunnel {
     public void open(String host, int port) throws IgnisException {
         for (int i = 0; i < 10; i++) {
             try {
+                session.setHostKeyAlias(host);
                 session = jsch.getSession("root", host, port);
                 jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
+                for(Map.Entry<Integer, Integer> entry:ports.entrySet()){
+                    session.setPortForwardingL(entry.getValue(), session.getHost(), entry.getKey());
+                }
                 session.connect();
                 for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
                     session.setPortForwardingL(entry.getKey(), session.getHost(), entry.getValue());
@@ -98,12 +103,7 @@ public final class ITunnel {
     public int registerPort() throws IgnisException {
         int newLocalPort = localPort.getAndIncrement();
         int newRemotePort = remotePort++;
-        try {
-            ports.put(newRemotePort, newLocalPort);
-            session.setPortForwardingL(newLocalPort, session.getHost(), newRemotePort);
-        } catch (JSchException ex) {
-            throw new IgnisException(ex.getMessage(), ex);
-        }
+        ports.put(newRemotePort, newLocalPort);
         return newLocalPort;
     }
 

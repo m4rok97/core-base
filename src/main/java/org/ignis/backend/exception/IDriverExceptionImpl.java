@@ -28,11 +28,11 @@ import org.ignis.rpc.driver.IDriverException;
 public class IDriverExceptionImpl extends IDriverException {
 
     public IDriverExceptionImpl(Exception ex) {
-        this(ex.getMessage(), ex);
+        this(ex.getMessage() != null ? ex.getMessage() : ex.getClass().getName() , ex);
     }
 
     public IDriverExceptionImpl(String msg) {
-        super(msg, stackToString());
+        super(msg != null ? msg : "", stackToString());
     }
 
     public IDriverExceptionImpl(String msg, Throwable cause) {
@@ -40,7 +40,7 @@ public class IDriverExceptionImpl extends IDriverException {
     }
     
     public IDriverExceptionImpl(String msg, String cause) {
-        super(msg, stackToString() + "\nCaused by: " + cause);
+        super(msg != null ? msg : "", stackToString() + "\nCaused by: " + cause);
     }
 
     private static String exceptionToString(Throwable ex) {
