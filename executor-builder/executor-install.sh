@@ -27,7 +27,7 @@ while true; do
         attempt=0
     else
         if [ ${attempt} -eq ${retries} ];then
-            echo "Driver lost, exiting"
+            echo "Driver lost, exiting" 1>&2
             exit 1
         fi
         attempt=$(($attempt+1))
