@@ -431,6 +431,7 @@ public class IMarathonScheduler implements IScheduler {
                 if (time < 30) {
                     time++;
                 }
+                LOGGER.info("Waiting cluster deployment..." + containers.size() + " of " + ids.size());
             } 
             return containers;
         } catch (MarathonException ex) {
