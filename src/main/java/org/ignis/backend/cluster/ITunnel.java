@@ -87,7 +87,7 @@ public final class ITunnel {
 
     public boolean test() {
         try {
-            session.sendKeepAliveMsg();
+            execute("cd .");
             return true;
         } catch (Exception ex) {
             return false;
@@ -114,7 +114,7 @@ public final class ITunnel {
             builder.append('"');
             builder.append("  2>&1");
         }
-        return builder.toString();
+        return execute(builder.toString());
     }
 
     public String execute(String script) throws IgnisException {

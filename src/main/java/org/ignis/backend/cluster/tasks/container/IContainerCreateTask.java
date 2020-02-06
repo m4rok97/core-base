@@ -56,7 +56,7 @@ public final class IContainerCreateTask extends IContainerTask {
         builder.cpus(props.getInteger(IKeys.EXECUTOR_CORES));
         builder.memory((long) Math.ceil(props.getSILong(IKeys.EXECUTOR_MEMORY) / 1024 / 1024));
         builder.command("ignis-server");
-        builder.arguments(Arrays.asList(props.getString(IKeys.DRIVER_RPC_PORT)));
+        builder.arguments(Arrays.asList(props.getString(IKeys.EXECUTOR_RPC_PORT)));
         INetwork network;
         builder.network(network = ISchedulerParser.parseNetwork(props, IKeys.EXECUTOR_PORT));
         builder.binds(ISchedulerParser.parseBinds(props, IKeys.EXECUTOR_BIND));
