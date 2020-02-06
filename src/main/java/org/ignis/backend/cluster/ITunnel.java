@@ -61,7 +61,6 @@ public final class ITunnel {
     public void open(String host, int port) throws IgnisException {
         for (int i = 0; i < 10; i++) {
             try {
-                session.setHostKeyAlias(host);
                 session = jsch.getSession("root", host, port);
                 jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
                 for(Map.Entry<Integer, Integer> entry:ports.entrySet()){
