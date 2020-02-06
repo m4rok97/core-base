@@ -82,7 +82,7 @@ public final class IContainerCreateTask extends IContainerTask {
     public void run(ITaskContext context) throws IgnisException {
         List<Integer> stopped = new ArrayList<>();
         for (int i = 0; i < containers.size(); i++) {
-            if (containers.get(i).getInfo() != null) {
+            if (containers.get(i).getInfo() == null) {
                 stopped.add(i);
                 continue;
             }
