@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 public class IMarathonScheduler implements IScheduler {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMarathonScheduler.class);
-    
+
     private final Marathon marathon;
     private final Map<String, String> taskAssignment;
     private final Set<String> taskAssigned;
@@ -86,10 +86,10 @@ public class IMarathonScheduler implements IScheduler {
         taskAssigned = ConcurrentHashMap.<String>newKeySet();
     }
 
-    private String fixMarathonId(String id){
+    private String fixMarathonId(String id) {
         return id.toLowerCase().replaceAll("[^\\w-]", "");
-    } 
-    
+    }
+
     @SuppressWarnings("unchecked")
     private App createApp(String group, String name, IContainerDetails container, IProperties props) {
         App app = new App();
@@ -197,10 +197,10 @@ public class IMarathonScheduler implements IScheduler {
         app.setBackoffFactor(app.getMaxLaunchDelaySeconds().doubleValue());
         app.setBackoffSeconds(app.getMaxLaunchDelaySeconds());
 
-        if(props.contains(IKeys.DEBUG)){
+        if (props.contains(IKeys.DEBUG)) {
             LOGGER.info(app.toString());
         }
-        
+
         return app;
     }
 
@@ -218,8 +218,9 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     @SuppressWarnings("unchecked")
-    private IContainerDetails parseTaks(App app, Task task) {
+    private IContainerDetails parseTaks(String id, App app, Task task) {
         IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
+        builder.id(id);
         builder.host(task.getHost());
         builder.image(app.getContainer().getDocker().getImage());
         builder.cpus(app.getCpus().intValue());
@@ -412,8 +413,10 @@ public class IMarathonScheduler implements IScheduler {
                 Iterator<Task> it = app.getTasks().iterator();
 
                 while (it.hasNext() && containers.size() < ids.size()) {
+                    IContainerDetails info;
+                    String id = ids.get(containers.size());
                     if (taskAssignment.containsKey(ids.get(containers.size()))) {
-                        containers.add(parseTaks(app, getTask(app, taskAssignment.get(ids.get(containers.size())))));
+                        info = parseTaks(id, app, getTask(app, taskAssignment.get(id)));
                     } else {
                         Task t = it.next();
                         String taskId = taskId(t);
@@ -424,22 +427,22 @@ public class IMarathonScheduler implements IScheduler {
                         }
                         taskAssigned.add(taskId);
                         taskAssignment.put(ids.get(containers.size()), taskId);
-                        containers.add(parseTaks(app, t));
+                        info = parseTaks(id, app, t);
                     }
+                    containers.add(info);
                 }
                 Thread.sleep(time * 1000);
                 if (time < 30) {
                     time++;
                 }
                 LOGGER.info("Waiting cluster deployment..." + containers.size() + " of " + ids.size());
-            } 
+            }
             return containers;
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         } catch (InterruptedException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
-
     }
 
     @Override

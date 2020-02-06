@@ -81,32 +81,30 @@ public final class IContainerCreateTask extends IContainerTask {
     @Override
     public void run(ITaskContext context) throws IgnisException {
         List<Integer> stopped = new ArrayList<>();
-        if (container.getInfo() != null) {
-             for (int i = 0; i < containers.size(); i++) {
-                switch (scheduler.getStatus(container.getInfo().getId())) {
-                    case DESTROYED:
-                    case FINISHED:
-                    case ERROR:
-                        stopped.add(i);
-                        break;
-                    default:
-                        LOGGER.info(log() + "Container "+i+" already running");
-                        if(!containers.get(i).testConnection()){
-                            LOGGER.info(log() + "Reconnecting to the container " + i);
-                            try{
-                            containers.get(i).connect();
-                            }catch(IgnisException ex){
-                                LOGGER.warn(log() + "Container "+i+" dead");
-                                stopped.add(i);
-                            }
-                        }
-                }
-            }
-        }else{
-            for (int i = 0; i < containers.size(); i++) {
+        for (int i = 0; i < containers.size(); i++) {
+            if (containers.get(i).getInfo() != null) {
                 stopped.add(i);
+                continue;
             }
-        }
+           switch (scheduler.getStatus(containers.get(i).getInfo().getId())) {
+               case DESTROYED:
+               case FINISHED:
+               case ERROR:
+                   stopped.add(i);
+                   break;
+               default:
+                   LOGGER.info(log() + "Container "+ i +" already running");
+                   if(!containers.get(i).testConnection()){
+                       LOGGER.info(log() + "Reconnecting to the container " + i);
+                       try{
+                       containers.get(i).connect();
+                       }catch(IgnisException ex){
+                           LOGGER.warn(log() + "Container " + i + " dead");
+                           stopped.add(i);
+                       }
+                   }
+           }
+       }
         
         if(stopped.isEmpty()){
             return;

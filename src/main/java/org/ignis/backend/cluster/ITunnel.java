@@ -40,14 +40,12 @@ public final class ITunnel {
     private final JSch jsch;
     private final AtomicInteger localPort;
     private final Map<Integer, Integer> ports;
-    private final IScheduler scheduler;
     private final String privateKey;
     private final String publicKey;
     private Session session;
     private int remotePort;
 
-    public ITunnel(IScheduler scheduler, AtomicInteger localPort, int remotePortInit, String privateKey, String publicKey) {
-        this.scheduler = scheduler;
+    public ITunnel(AtomicInteger localPort, int remotePortInit, String privateKey, String publicKey) {
         this.localPort = localPort;
         this.remotePort = remotePortInit;
         this.privateKey = privateKey;

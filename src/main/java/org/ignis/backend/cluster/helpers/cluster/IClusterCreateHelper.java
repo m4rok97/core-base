@@ -45,7 +45,7 @@ public final class IClusterCreateHelper extends IClusterHelper {
         LOGGER.info(log() + "Registering cluster with " + instances + " containers");
 
         for (int i = 0; i < instances; i++) {
-            IContainer container = new IContainer(i, cluster.getId(), ssh.createTunnel(scheduler), properties);
+            IContainer container = new IContainer(i, cluster.getId(), ssh.createTunnel(), properties);
             cluster.getContainers().add(container);
         }
 

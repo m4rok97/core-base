@@ -58,8 +58,8 @@ public class ISSH {
         return privateKey;
     }
 
-    public ITunnel createTunnel(IScheduler scheduler) {
-        return new ITunnel(scheduler, localPort, remotePortInit, privateKey, publicKey);
+    public ITunnel createTunnel() {
+        return new ITunnel(localPort, remotePortInit, privateKey, publicKey);
     }
 
 }
