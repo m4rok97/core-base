@@ -26,10 +26,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.backend.scheduler.IScheduler;
 
 /**
  *
@@ -61,15 +59,18 @@ public final class ITunnel {
     public void open(String host, int port) throws IgnisException {
         for (int i = 0; i < 10; i++) {
             try {
+                if (session != null) {
+                    try {
+                        close();
+                    } catch (Exception ex) {
+                    }
+                }
                 session = jsch.getSession("root", host, port);
                 jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
-                for(Map.Entry<Integer, Integer> entry:ports.entrySet()){
+                for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
                     session.setPortForwardingL(entry.getValue(), session.getHost(), entry.getKey());
                 }
                 session.connect();
-                for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
-                    session.setPortForwardingL(entry.getKey(), session.getHost(), entry.getValue());
-                }
                 break;
             } catch (JSchException ex) {
                 if (i == 9) {
