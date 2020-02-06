@@ -66,6 +66,7 @@ public final class ITunnel {
                     }
                 }
                 session = jsch.getSession("root", host, port);
+                session.setConfig("StrictHostKeyChecking", "no");
                 jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
                 for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
                     session.setPortForwardingL(entry.getValue(), session.getHost(), entry.getKey());
