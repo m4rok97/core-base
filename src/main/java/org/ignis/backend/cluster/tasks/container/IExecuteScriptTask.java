@@ -43,7 +43,7 @@ public final class IExecuteScriptTask extends IContainerTask {
             return;
         }
         LOGGER.info(log() + "Executing script:\n\t" + script.replace("\n", "\t\n"));
-        container.getTunnel().execute(script);
+        container.getTunnel().execute(script, true);
         LOGGER.info(log() + "Script executed");
         attempt = container.getResets();
     }

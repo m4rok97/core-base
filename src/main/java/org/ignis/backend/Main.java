@@ -73,6 +73,12 @@ public final class Main {
             LOGGER.error("Error loading ignis.conf, aborting", ex);
             System.exit(-1);
         }
+        
+        if (props.contains(IKeys.DEBUG)) {
+            System.setProperty(IKeys.DEBUG, "true");
+        }else{
+            System.setProperty(IKeys.DEBUG, "false");
+        } 
 
         LOGGER.info("Loading scheduler");
         IScheduler scheduler = null;
@@ -113,8 +119,8 @@ public final class Main {
         healthcheck += attributes.driver.getInfo().getNetwork().getTcpMap().get(healthcheckPort);
         props.setProperty(IKeys.DRIVER_HEALTHCHECK_URL, healthcheck);
 
-        if (props.contains(IKeys.DEBUG)) {
-            LOGGER.info(props.toString());
+        if (Boolean.getBoolean(IKeys.DEBUG)) {
+            LOGGER.debug(props.toString());
         }
 
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
@@ -144,7 +150,7 @@ public final class Main {
             System.out.println(driverCompression);
             backend.start(processor, backendPort, backendCompression);
 
-            if (!props.contains(IKeys.DEBUG)) {
+            if (!Boolean.getBoolean(IKeys.DEBUG)) {
                 clusters.destroyClusters();
             }
             try {

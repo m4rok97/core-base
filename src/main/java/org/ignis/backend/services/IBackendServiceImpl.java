@@ -108,11 +108,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
             healthEndpoint = HttpServer.create(new InetSocketAddress(port), 0);
             HttpContext context = healthEndpoint.createContext("/");
             context.setHandler((HttpExchange exchange) -> {
-                String response = "Ok\n";
-                exchange.sendResponseHeaders(200, response.getBytes().length);
-                try ( OutputStream os = exchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
+                exchange.sendResponseHeaders(200, 0);
             });
             healthEndpoint.start();
             LOGGER.info("Backend health server started");

@@ -105,6 +105,11 @@ public class Submit {
             }
             ByteArrayOutputStream options = new ByteArrayOutputStream();
             props.store(options);
+            if (props.contains(IKeys.DEBUG)) {
+                System.setProperty(IKeys.DEBUG, "true");
+            } else {
+                System.setProperty(IKeys.DEBUG, "false");
+            }
 
             IScheduler scheduler = ISchedulerBuilder.create(props.getProperty(IKeys.SCHEDULER_TYPE),
                     props.getProperty(IKeys.SCHEDULER_URL));
@@ -124,10 +129,10 @@ public class Submit {
             if (props.contains(IKeys.DRIVER_HOSTS)) {
                 builder.preferedHosts(props.getStringList(IKeys.DRIVER_HOSTS));
             }
-            
-            if(!props.contains(IKeys.WORKING_DIRECTORY)){
+
+            if (!props.contains(IKeys.WORKING_DIRECTORY)) {
                 props.setProperty(IKeys.WORKING_DIRECTORY, props.getProperty(IKeys.DFS_HOME));
-            }            
+            }
 
             if (ns.getBoolean("direct")) {
                 builder.command(ns.getString("cmd"));

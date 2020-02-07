@@ -28,12 +28,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IKeys;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author César Pomar
  */
 public final class ITunnel {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITunnel.class);
 
     private final JSch jsch;
     private final AtomicInteger localPort;
@@ -75,7 +79,7 @@ public final class ITunnel {
                 break;
             } catch (JSchException ex) {
                 if (i == 9) {
-                    throw new IgnisException(ex.getMessage(), ex);
+                    throw new IgnisException("Could not connect to " + host + ":" + port, ex);
                 }
                 try {
                     Thread.sleep(1000);
@@ -88,7 +92,7 @@ public final class ITunnel {
 
     public boolean test() {
         try {
-            execute("cd .");
+            execute("cd .", false);
             return true;
         } catch (Exception ex) {
             return false;
@@ -109,23 +113,22 @@ public final class ITunnel {
     public String execute(List<String> cmds) throws IgnisException {
         StringBuilder builder = new StringBuilder();
         for (String cmd : cmds) {
-            builder.append("#!/bin/bash\n");
             builder.append('"');
             builder.append(cmd.replace("\"", "\\\""));
-            builder.append('"');
-            builder.append("  2>&1");
+            builder.append('"').append(' ');
         }
-        return execute(builder.toString());
+        return execute(builder.toString(), false);
     }
-
-    public String execute(String script) throws IgnisException {
+    
+    public String execute(String script, boolean stderr) throws IgnisException {
         try {
-            Channel channel = session.openChannel("shell");
+            Channel channel = session.openChannel("exec");
             channel.connect();
             PrintStream stream = new PrintStream(channel.getOutputStream(), false, StandardCharsets.UTF_8.name());
+            if(stderr){
+                stream.println("exec 2>&1");
+            }
             stream.println(script);
-            stream.println("");
-            stream.println("exit $?");
             stream.flush();
 
             StringBuilder out = new StringBuilder();
@@ -138,13 +141,20 @@ public final class ITunnel {
 
             channel.disconnect();
 
+            if (Boolean.getBoolean(IKeys.DEBUG)) {
+                LOGGER.debug("Script: \n\t" + script.replace("\n", "\n\t"));
+                LOGGER.debug("Script output: " + out.toString());
+            }
+
             if (channel.getExitStatus() == 0) {
                 return out.toString();
             } else {
-                String error = "\t" + script.replace("\n", "\t\n");
+                String error = "\t" + script.replace("\n", "\n\t");
 
-                throw new IgnisException("Script:\n" + error + " exits with non zero exit status "
+                LOGGER.error("Script:\n" + error + " exits with non zero exit status "
                         + "(" + channel.getExitStatus() + ") and output: " + out);
+
+                throw new IgnisException("Script exits with non zero exit status (" + channel.getExitStatus() + ")");
             }
 
         } catch (IOException | JSchException ex) {

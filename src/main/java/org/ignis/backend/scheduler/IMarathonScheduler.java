@@ -197,8 +197,8 @@ public class IMarathonScheduler implements IScheduler {
         app.setBackoffFactor(app.getMaxLaunchDelaySeconds().doubleValue());
         app.setBackoffSeconds(app.getMaxLaunchDelaySeconds());
 
-        if (props.contains(IKeys.DEBUG)) {
-            LOGGER.info(app.toString());
+        if (Boolean.getBoolean(IKeys.DEBUG)) {
+            LOGGER.debug(app.toString());
         }
 
         return app;
@@ -411,6 +411,9 @@ public class IMarathonScheduler implements IScheduler {
             while (containers.size() < ids.size()) {
                 app = marathon.getApp(appId).getApp();
                 Iterator<Task> it = app.getTasks().iterator();
+                if(Boolean.getBoolean(IKeys.DEBUG)){
+                    LOGGER.debug(app.toString());
+                }
 
                 while (it.hasNext() && containers.size() < ids.size()) {
                     IContainerDetails info;

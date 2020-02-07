@@ -58,8 +58,6 @@ public final class IExecutorCreateTask extends IExecutorTask {
         }
         LOGGER.info(log() + "Starting new executor");
         StringBuilder startScript = new StringBuilder();
-        startScript.append("#!/bin/bash\n");
-
         startScript.append("export MPICH_STATIC_PORTS='");
         int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
         List<Integer> tcpPorts = executor.getContainer().getInfo().getNetwork().getTcpPorts();
@@ -77,12 +75,12 @@ public final class IExecutorCreateTask extends IExecutorTask {
         startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
         if (executor.getProperties().getString(IKeys.SCHEDULER_CONTAINER).equals("docker")) {
             /*Redirect to docker log */
-            startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2");
+            startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2 ");
         }
         startScript.append("& \n");
         startScript.append("echo $!");/*get PID*/
 
-        String output = executor.getContainer().getTunnel().execute(startScript.toString());
+        String output = executor.getContainer().getTunnel().execute(startScript.toString(), true);
 
         for (int i = 0; i < 10; i++) {
             try {

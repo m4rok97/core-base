@@ -40,8 +40,7 @@ public final class ISendCompressedFileTask extends IContainerTask {
     }
 
     private final static String EXTRACTING_SCRIPT
-            = "#!/bin/bash\n"
-            + "if [ -f {file} ] ; then\n"
+            = "if [ -f {file} ] ; then\n"
             + "  case {file} in\n"
             + "    *.tar.bz2)  tar xjf {file}    ;;\n"
             + "    *.tar.gz)   tar xzf {file}    ;;\n"
@@ -69,7 +68,7 @@ public final class ISendCompressedFileTask extends IContainerTask {
         LOGGER.info(log() + "Sending file" + source + " to " + target);
         container.getTunnel().sendFile(source, target);
         LOGGER.info(log() + "File sent, extracting");
-        container.getTunnel().execute(EXTRACTING_SCRIPT.replace("{file}", target));
+        container.getTunnel().execute(EXTRACTING_SCRIPT.replace("{file}", target), true);
         LOGGER.info(log() + "File extracted successfully");
         attempt = container.getResets();
     }

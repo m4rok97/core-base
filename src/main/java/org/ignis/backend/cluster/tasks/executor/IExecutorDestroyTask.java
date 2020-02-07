@@ -43,9 +43,8 @@ public final class IExecutorDestroyTask extends IExecutorTask {
             throw new IgnisException(ex.getMessage(), ex);
         }
         try {
-            String killScript = "#!/bin/bash\n"
-                    + "timeout 10 wait " + executor.getPid() + " || kill -9  " + executor.getPid();
-            executor.getContainer().getTunnel().execute(killScript);
+            String killScript = "timeout 10 wait " + executor.getPid() + " || kill -9  " + executor.getPid();
+            executor.getContainer().getTunnel().execute(killScript, true);
         } catch (IgnisException ex) {
             LOGGER.warn(log() + ex.toString());
         }
