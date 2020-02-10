@@ -78,7 +78,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
             startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2 ");
         }
         startScript.append("& \n");
-        startScript.append("echo $!");/*get PID*/
+        startScript.append("printf $!");/*get PID*/
 
         String output = executor.getContainer().getTunnel().execute(startScript.toString(), false);
 
