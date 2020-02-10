@@ -21,7 +21,6 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.ignis.backend.scheduler.IScheduler;
 
 /**
  *

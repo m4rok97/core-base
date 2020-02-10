@@ -21,6 +21,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -104,10 +105,14 @@ public final class ITunnel {
     }
 
     public int registerPort() throws IgnisException {
-        int newLocalPort = localPort.getAndIncrement();
+        int newLocalPort = localPort.incrementAndGet();
         int newRemotePort = remotePort++;
         ports.put(newRemotePort, newLocalPort);
         return newLocalPort;
+    }
+
+    public int getRemotePort(int port) {
+        return ports.get(port);
     }
 
     public String execute(List<String> cmds) throws IgnisException {
@@ -119,10 +124,11 @@ public final class ITunnel {
         }
         return execute(builder.toString(), false);
     }
-    
+
     public String execute(String script, boolean stderr) throws IgnisException {
         try {
             Channel channel = session.openChannel("exec");
+            channel.setInputStream(null);
             channel.connect();
             PrintStream stream = new PrintStream(channel.getOutputStream(), false, StandardCharsets.UTF_8.name());
             if(stderr){
@@ -131,14 +137,29 @@ public final class ITunnel {
             stream.println(script);
             stream.flush();
 
+            InputStream in=channel.getInputStream();
             StringBuilder out = new StringBuilder();
-            byte[] buffer = new byte[256];
-            int bytes;
-
-            while ((bytes = channel.getInputStream().read(buffer)) > 0) {
-                out.append(new String(buffer, 0, bytes, StandardCharsets.UTF_8));
+            
+            byte[] buffer = new byte[1024];
+            while (true) {
+                while (in.available() > 0) {
+                    int i = in.read(buffer, 0, buffer.length);
+                    if (i < 0) {
+                        break;
+                    }
+                    out.append(new String(buffer, 0, i, StandardCharsets.UTF_8));
+                }
+                if (channel.isClosed()) {
+                    if (in.available() > 0) {
+                        continue;
+                    }
+                    break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception ee) {
+                }
             }
-
             channel.disconnect();
 
             if (Boolean.getBoolean(IKeys.DEBUG)) {

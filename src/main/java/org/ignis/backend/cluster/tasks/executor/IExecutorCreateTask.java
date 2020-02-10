@@ -71,7 +71,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
         
         startScript.append("nohup ignis-run ");
         startScript.append("ignis-").append(type).append(' ');
-        startScript.append(executor.getPort()).append(' ');
+        startScript.append(executor.getContainer().getTunnel().getRemotePort(executor.getPort())).append(' ');
         startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
         if (executor.getProperties().getString(IKeys.SCHEDULER_CONTAINER).equals("docker")) {
             /*Redirect to docker log */
