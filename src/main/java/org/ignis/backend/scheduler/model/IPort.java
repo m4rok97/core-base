@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 /**
@@ -27,17 +29,11 @@ import lombok.Getter;
  * @author César Pomar
  */
 @Getter
-public class INetwork {
+@Builder
+@AllArgsConstructor
+public class IPort {
 
-    public INetwork() {
-        tcpMap = new HashMap<>();
-        udpMap = new HashMap<>();
-        tcpPorts = new ArrayList<>();
-        udpPorts = new ArrayList<>();
-    }
-
-    private final Map<Integer, Integer> tcpMap;
-    private final Map<Integer, Integer> udpMap;
-    private final List<Integer> tcpPorts;
-    private final List<Integer> udpPorts;
+    private final Integer containerPort;
+    private final Integer hostPort;
+    private final String protocol;
 }

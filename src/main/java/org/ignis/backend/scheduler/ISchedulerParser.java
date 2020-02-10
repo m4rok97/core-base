@@ -26,7 +26,7 @@ import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IBind;
-import org.ignis.backend.scheduler.model.INetwork;
+import org.ignis.backend.scheduler.model.IPort;
 import org.ignis.backend.scheduler.model.IVolume;
 
 /**
@@ -35,14 +35,14 @@ import org.ignis.backend.scheduler.model.IVolume;
  */
 public class ISchedulerParser {
 
-    public static INetwork parseNetwork(IProperties props, String prefix) {
-        INetwork network = new INetwork();
-        Collection<String> ports = props.getKeysPrefix(prefix + ".");
-        
-        int transportPorts = props.getInteger(IKeys.TRANSPORT_PORTS);
-        network.getTcpPorts().addAll(Collections.nCopies(transportPorts, 0));
+    public static List<IPort> parsePorts(IProperties props, String prefix) {
+        List<IPort> ports = new ArrayList<>();
+        Collection<String> propsPorts = props.getKeysPrefix(prefix + ".");
 
-        for (String key : ports) {
+        int transportPorts = props.getInteger(IKeys.TRANSPORT_PORTS);
+        ports.addAll(Collections.nCopies(transportPorts, new IPort(0, 0, "tcp")));
+
+        for (String key : propsPorts) {
             String subkey = key.substring((prefix + ".").length());
             String[] portSpec = subkey.split(".");
             if (portSpec.length != 2) {
@@ -56,38 +56,22 @@ public class ISchedulerParser {
 
             int continerPort = Integer.parseInt(portSpec[1]);
             int hostPort = props.getInteger(key);
-
-            if (type.equals("tcp")) {
-                if (continerPort == 0) {
-                    network.getTcpPorts().add(continerPort);
-                } else {
-                    network.getTcpMap().put(continerPort, hostPort);
-                }
-            } else {
-                if (continerPort == 0) {
-                    network.getUdpPorts().add(continerPort);
-                } else {
-                    network.getUdpMap().put(continerPort, hostPort);
-                }
-            }
-
+            ports.add(new IPort(continerPort, hostPort, type));
         }
 
-        ports = props.getKeysPrefix(prefix + "s.");
-
-        for (String key : ports) {
-            String type = key.substring((prefix + "s.").length()).toLowerCase();
-            if (!type.equals("tcp") && !type.equals("udp")) {
-                throw new IPropertyException(key, " expected type tcp/udp found " + type);
-            }
-            if (type.equals("tcp")) {
-                network.getTcpPorts().addAll(props.getIntegerList(key));
-            } else {
-                network.getUdpPorts().addAll(props.getIntegerList(key));
+        if (props.contains(prefix + "s.tcp")) {
+            for (Integer port : props.getIntegerList(prefix + "s.tcp")) {
+                ports.add(new IPort(port, 0, "tcp"));
             }
         }
 
-        return network;
+        if (props.contains(prefix + "s.udp")) {
+            for (Integer port : props.getIntegerList(prefix + "s.udp")) {
+                ports.add(new IPort(port, 0, "tcp"));
+            }
+        }
+
+        return ports;
     }
 
     public static List<IBind> parseBinds(IProperties props, String prefix) {//TODO User volumes
@@ -100,7 +84,7 @@ public class ISchedulerParser {
     }
 
     public static List<IVolume> parseVolumes(IProperties props, String prefix) {//TODO User binds
-        return new ArrayList<>(); 
+        return new ArrayList<>();
     }
 
     public static Map<String, String> parseEnv(IProperties props, String prefix) {

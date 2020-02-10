@@ -45,7 +45,7 @@ import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IBind;
 import org.ignis.backend.scheduler.model.IContainerDetails;
-import org.ignis.backend.scheduler.model.INetwork;
+import org.ignis.backend.scheduler.model.IPort;
 import org.ignis.backend.scheduler.model.IVolume;
 import org.slf4j.LoggerFactory;
 
@@ -116,36 +116,13 @@ public class IMarathonScheduler implements IScheduler {
             app.getArgs().addAll(container.getArguments());
         }
 
-        if (container.getNetwork() != null) {
+        if (container.getPorts() != null) {
             app.setRequirePorts(true);
-            for (Map.Entry<Integer, Integer> port : container.getNetwork().getTcpMap().entrySet()) {
+            for(IPort port: container.getPorts()){
                 Port port2 = new Port();
-                port2.setContainerPort(port.getKey());
-                port2.setHostPort(port.getValue());
-                port2.setProtocol("tcp");
-                app.getContainer().getPortMappings().add(port2);
-            }
-            for (Map.Entry<Integer, Integer> port : container.getNetwork().getUdpMap().entrySet()) {
-                Port port2 = new Port();
-                port2.setContainerPort(port.getKey());
-                port2.setHostPort(port.getValue());
-                port2.setProtocol("udp");
-                app.getContainer().getPortMappings().add(port2);
-            }
-
-            for (Integer port : container.getNetwork().getTcpPorts()) {
-                Port port2 = new Port();
-                port2.setHostPort(0);
-                port2.setContainerPort(port);
-                port2.setProtocol("tcp");
-                app.getContainer().getPortMappings().add(port2);
-            }
-
-            for (Integer port : container.getNetwork().getUdpPorts()) {
-                Port port2 = new Port();
-                port2.setHostPort(0);
-                port2.setContainerPort(port);
-                port2.setProtocol("udp");
+                port2.setContainerPort(port.getContainerPort());
+                port2.setHostPort(port.getHostPort());
+                port2.setProtocol(port.getProtocol());
                 app.getContainer().getPortMappings().add(port2);
             }
         }
@@ -234,22 +211,16 @@ public class IMarathonScheduler implements IScheduler {
         if (app.getContainer() != null) {
 
             if (app.getContainer().getPortMappings() != null) {
-                INetwork network = new INetwork();
-                builder.network(network);
-                Iterator<Integer> ports = task.getPorts().iterator();
+                List<IPort> ports = new ArrayList<>();
+                builder.ports(ports);
+                Iterator<Integer> taskPorts = task.getPorts().iterator();
                 for (Port port : app.getContainer().getPortMappings()) {
-                    int portHost = ports.next();
+                    int portHost = taskPorts.next();
                     int portContainer = port.getContainerPort();
                     if (portContainer == 0) {
                         portContainer = portHost;
                     }
-                    if (port.getProtocol().equals("tcp")) {
-                        network.getTcpMap().put(portContainer, portHost);
-                        network.getTcpPorts().add(port.getContainerPort());
-                    } else {
-                        network.getUdpMap().put(portContainer, portHost);
-                        network.getUdpPorts().add(port.getContainerPort());
-                    }
+                    ports.add(new IPort(portContainer, portHost, port.getProtocol()));
                 }
             }
 
@@ -411,7 +382,7 @@ public class IMarathonScheduler implements IScheduler {
             while (containers.size() < ids.size()) {
                 app = marathon.getApp(appId).getApp();
                 Iterator<Task> it = app.getTasks().iterator();
-                if(Boolean.getBoolean(IKeys.DEBUG)){
+                if(Boolean.getBoolean(IKeys.DEBUG) && (time == 1 || !app.getTasks().isEmpty())){
                     LOGGER.info("Debug: "+app.toString());
                 }
 

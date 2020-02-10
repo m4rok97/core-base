@@ -24,6 +24,7 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
+import org.ignis.backend.scheduler.model.IPort;
 import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
@@ -60,13 +61,12 @@ public final class IExecutorCreateTask extends IExecutorTask {
         StringBuilder startScript = new StringBuilder();
         startScript.append("export MPICH_STATIC_PORTS='");
         int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
-        List<Integer> tcpPorts = executor.getContainer().getInfo().getNetwork().getTcpPorts();
-        List<Integer> mpiPorts = tcpPorts.subList(0, mpiMaxPorts);
-        startScript.append(mpiPorts.stream().map(String::valueOf).collect(Collectors.joining(" ")));
+        List<IPort> mpiPorts = executor.getContainer().getInfo().getPorts().subList(0, mpiMaxPorts);
+        startScript.append(mpiPorts.stream().map((IPort p)->String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
         startScript.append("'\n");
 
         startScript.append("export IGNIS_WORKING_DIRECTORY='");
-        startScript.append(startScript.append(executor.getProperties().getString(IKeys.WORKING_DIRECTORY)));
+        startScript.append(executor.getProperties().getString(IKeys.WORKING_DIRECTORY));
         startScript.append("'\n");
         
         startScript.append("nohup ignis-run ");

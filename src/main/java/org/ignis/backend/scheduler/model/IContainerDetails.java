@@ -31,7 +31,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class IContainerDetails {
 
-    public static enum ContainerStatus{
+    public static enum ContainerStatus {
         ACCEPTED,
         RUNNING,
         ERROR,
@@ -39,7 +39,7 @@ public class IContainerDetails {
         DESTROYED,
         UNKNOWN
     }
-    
+
     private final String id;
     private final String host;
     private final String image;
@@ -47,9 +47,18 @@ public class IContainerDetails {
     private final List<String> arguments;
     private final int cpus;
     private final long memory;//MiB
-    private final INetwork network;
+    private final List<IPort> ports;
     private final List<IBind> binds;
     private final List<IVolume> volumes;
     private final List<String> preferedHosts;
     private final Map<String, String> environmentVariables;
+
+    public Integer searchHostPort(Integer containerPort) {
+        for (IPort port : ports) {
+            if (containerPort.equals(port.getContainerPort())) {
+                return port.getHostPort();
+            }
+        }
+        return null;
+    }
 }

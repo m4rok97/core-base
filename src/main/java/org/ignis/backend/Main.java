@@ -117,7 +117,7 @@ public final class Main {
         props.setProperty(IKeys.DRIVER_PRIVATE_KEY, attributes.ssh.getPrivateKey());
         int healthcheckPort = props.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
         String healthcheck = "http://" + attributes.driver.getInfo().getHost() + ":";
-        healthcheck += attributes.driver.getInfo().getNetwork().getTcpMap().get(healthcheckPort);
+        healthcheck += attributes.driver.getInfo().searchHostPort(healthcheckPort);
         props.setProperty(IKeys.DRIVER_HEALTHCHECK_URL, healthcheck);
 
         if (Boolean.getBoolean(IKeys.DEBUG)) {

@@ -76,7 +76,7 @@ public final class IContainer {
     }
 
     public void connect() throws IgnisException {
-        tunnel.open(info.getHost(), info.getNetwork().getTcpMap().get(properties.getInteger(IKeys.EXECUTOR_RPC_PORT)));
+        tunnel.open(info.getHost(), info.searchHostPort(properties.getInteger(IKeys.EXECUTOR_RPC_PORT)));
     }
 
     public IExecutor createExecutor(long worker) throws IgnisException {
