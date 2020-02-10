@@ -142,8 +142,8 @@ public final class ITunnel {
             channel.disconnect();
 
             if (Boolean.getBoolean(IKeys.DEBUG)) {
-                LOGGER.debug("Script: \n\t" + script.replace("\n", "\n\t"));
-                LOGGER.debug("Script output: " + out.toString());
+                LOGGER.info("Debug: Script: \n\t" + script.replace("\n", "\n\t"));
+                LOGGER.info("Debug: Script output: " + out.toString());
             }
 
             if (channel.getExitStatus() == 0) {

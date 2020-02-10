@@ -73,13 +73,13 @@ public final class Main {
             LOGGER.error("Error loading ignis.conf, aborting", ex);
             System.exit(-1);
         }
-        
+
         if (props.contains(IKeys.DEBUG)) {
             System.setProperty(IKeys.DEBUG, "true");
             LOGGER.info("DEBUG enabled");
-        }else{
+        } else {
             System.setProperty(IKeys.DEBUG, "false");
-        } 
+        }
 
         LOGGER.info("Loading scheduler");
         IScheduler scheduler = null;
@@ -121,7 +121,7 @@ public final class Main {
         props.setProperty(IKeys.DRIVER_HEALTHCHECK_URL, healthcheck);
 
         if (Boolean.getBoolean(IKeys.DEBUG)) {
-            LOGGER.debug(props.toString());
+            LOGGER.info("Debug: " + props.toString());
         }
 
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
