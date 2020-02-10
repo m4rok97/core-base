@@ -107,6 +107,7 @@ public class Submit {
             props.store(options);
             if (props.contains(IKeys.DEBUG)) {
                 System.setProperty(IKeys.DEBUG, "true");
+                LOGGER.info("DEBUG enabled");
             } else {
                 System.setProperty(IKeys.DEBUG, "false");
             }
