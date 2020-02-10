@@ -17,12 +17,12 @@
 package org.ignis.backend.cluster;
 
 import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -129,13 +129,12 @@ public final class ITunnel {
         try {
             Channel channel = session.openChannel("exec");
             channel.setInputStream(null);
-            channel.connect();
-            PrintStream stream = new PrintStream(channel.getOutputStream(), false, StandardCharsets.UTF_8.name());
             if(stderr){
-                stream.println("exec 2>&1");
+                script = "exec 2>&1\n" + script;
             }
-            stream.println(script);
-            stream.flush();
+            ((ChannelExec)channel).setCommand(script);
+            
+            channel.connect();
 
             InputStream in=channel.getInputStream();
             StringBuilder out = new StringBuilder();
