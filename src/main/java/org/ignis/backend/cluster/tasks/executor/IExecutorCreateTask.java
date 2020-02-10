@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
@@ -62,13 +63,13 @@ public final class IExecutorCreateTask extends IExecutorTask {
         startScript.append("export MPICH_STATIC_PORTS='");
         int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
         List<IPort> mpiPorts = executor.getContainer().getInfo().getPorts().subList(0, mpiMaxPorts);
-        startScript.append(mpiPorts.stream().map((IPort p)->String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
+        startScript.append(mpiPorts.stream().map((IPort p) -> String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
         startScript.append("'\n");
 
         startScript.append("export IGNIS_WORKING_DIRECTORY='");
         startScript.append(executor.getProperties().getString(IKeys.WORKING_DIRECTORY));
         startScript.append("'\n");
-        
+
         startScript.append("nohup ignis-run ");
         startScript.append("ignis-").append(type).append(' ');
         startScript.append(executor.getContainer().getTunnel().getRemotePort(executor.getPort())).append(' ');
@@ -100,7 +101,15 @@ public final class IExecutorCreateTask extends IExecutorTask {
 
         executor.setPid(Integer.parseInt(output));
         try {
-            executor.getExecutorServerModule().start(executor.getExecutorProperties());
+            Map<String, String> executorProperties = executor.getExecutorProperties();
+            if (Boolean.getBoolean(IKeys.DEBUG)) {
+                StringBuilder writer = new StringBuilder();
+                for (Map.Entry<String, String> entry : executorProperties.entrySet()) {
+                    writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
+                }
+                LOGGER.info("Debug: ExecutorProperties{\n" + writer.toString()+'}');
+            }
+            executor.getExecutorServerModule().start(executorProperties);
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {

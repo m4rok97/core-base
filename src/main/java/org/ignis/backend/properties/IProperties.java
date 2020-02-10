@@ -302,14 +302,16 @@ public final class IProperties {
 
     @Override
     public String toString() {
-        StringWriter writer = new StringWriter();
-        PrintWriter printer  = new PrintWriter(writer);
+        StringBuilder writer = new StringBuilder();
         if(defaults!= null){
-            defaults.list(printer);
+            for(Map.Entry<Object,Object> entry : defaults.entrySet()){
+                writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
+            }
         }
-        inner.list(printer);
-        
-        return "IProperties{\n" +writer.toString()+ "\n}";
+        for(Map.Entry<Object,Object> entry : inner.entrySet()){
+            writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
+        }
+        return "IProperties{\n" +writer.toString()+ '}';
     }
     
     
