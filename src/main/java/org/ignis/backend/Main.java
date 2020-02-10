@@ -62,7 +62,7 @@ public final class Main {
                 props.load(new ByteArrayInputStream(props.getProperty(IKeys.OPTIONS).getBytes()));
             } catch (IOException ex) {
             }
-            props.setProperty(IKeys.OPTIONS, "");
+            props.rmProperty(IKeys.OPTIONS);
         }
 
         LOGGER.info("Loading configuration file");
@@ -76,6 +76,7 @@ public final class Main {
         
         if (props.contains(IKeys.DEBUG)) {
             System.setProperty(IKeys.DEBUG, "true");
+            LOGGER.info("DEBUG enabled");
         }else{
             System.setProperty(IKeys.DEBUG, "false");
         } 

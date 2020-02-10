@@ -52,6 +52,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.7'
     compile group: 'com.jcraft', name: 'jsch', version: '0.1.55'
     compile group: 'net.sourceforge.argparse4j', name: 'argparse4j', version: '0.8.1'
+    compile group: 'io.undertow', name: 'undertow-core', version: '2.0.29.Final'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
     
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'

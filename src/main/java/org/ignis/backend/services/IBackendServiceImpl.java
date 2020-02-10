@@ -19,7 +19,8 @@ package org.ignis.backend.services;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import java.io.OutputStream;
+import io.undertow.Undertow;
+import io.undertow.util.Headers;
 import java.net.InetSocketAddress;
 import org.apache.thrift.TException;
 import org.apache.thrift.TProcessor;
@@ -48,7 +49,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
 
     private TServerTransport transport;
     private TServer server;
-    private HttpServer healthEndpoint;
+    private Undertow healthEndpoint;
 
     public IBackendServiceImpl(IAttributes attributes) {
         super(attributes);
@@ -105,11 +106,10 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     private void startHealthServer() {
         try {
             int port = attributes.defaultProperties.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
-            healthEndpoint = HttpServer.create(new InetSocketAddress(port), 0);
-            HttpContext context = healthEndpoint.createContext("/");
-            context.setHandler((HttpExchange exchange) -> {
-                exchange.sendResponseHeaders(200, 0);
-            });
+            healthEndpoint = Undertow.builder().addHttpListener(port, "localhost").setHandler(exchange -> {
+                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+                exchange.getResponseSender().send("Ok");
+            }).build();
             healthEndpoint.start();
             LOGGER.info("Backend health server started");
         } catch (Exception ex) {
@@ -120,7 +120,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     private void stopHealthServer() {
         try {
             if (healthEndpoint != null) {
-                healthEndpoint.stop(10);
+                healthEndpoint.stop();
             }
             LOGGER.info("Backend health server stopped");
         } catch (Exception ex) {

@@ -80,7 +80,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
         startScript.append("& \n");
         startScript.append("echo $!");/*get PID*/
 
-        String output = executor.getContainer().getTunnel().execute(startScript.toString(), true);
+        String output = executor.getContainer().getTunnel().execute(startScript.toString(), false);
 
         for (int i = 0; i < 10; i++) {
             try {
