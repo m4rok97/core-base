@@ -74,7 +74,7 @@ public final class ITunnel {
                 session.setConfig("StrictHostKeyChecking", "no");
                 jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
                 for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
-                    session.setPortForwardingL(entry.getValue(), session.getHost(), entry.getKey());
+                    session.setPortForwardingL(entry.getKey(), session.getHost(), entry.getValue());
                 }
                 session.connect();
                 break;
@@ -107,7 +107,7 @@ public final class ITunnel {
     public int registerPort() throws IgnisException {
         int newLocalPort = localPort.incrementAndGet();
         int newRemotePort = remotePort++;
-        ports.put(newRemotePort, newLocalPort);
+        ports.put(newLocalPort, newRemotePort);
         return newLocalPort;
     }
 
