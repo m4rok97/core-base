@@ -107,7 +107,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 for (Map.Entry<String, String> entry : executorProperties.entrySet()) {
                     writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
                 }
-                LOGGER.info("Debug: ExecutorProperties{\n" + writer.toString()+'}');
+                LOGGER.info("Debug:" + log() + " ExecutorProperties{\n" + writer.toString() + '}');
             }
             executor.getExecutorServerModule().start(executorProperties);
         } catch (IExecutorException ex) {

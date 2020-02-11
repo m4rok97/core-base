@@ -121,6 +121,11 @@ public final class IContainerCreateTask extends IContainerTask {
         for (int i = 0; i < containers.size(); i++) {
             containers.get(i).connect();
         }
-
+        
+        if (Boolean.getBoolean(IKeys.DEBUG)) {
+            LOGGER.info("Debug:" + log() + " ExecutorEnvironment{\n" + 
+                    containers.get(0).getTunnel().execute("env", false).replace("\n", "\n\t")
+                    + '}');
+        }
     }
 }
