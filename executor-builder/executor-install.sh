@@ -10,6 +10,7 @@ sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd
 cat > ${IGNIS_HOME}/bin/ignis-server << 'EOL'
 #!/bin/bash
 export -p >> /etc/profile
+export -p | sed 's/^declare -x //' > /etc/environment
 mkdir -p ~/.ssh
 echo ${IGNIS_DRIVER_PUBLIC_KEY} >> ~/.ssh/authorized_keys
 /usr/sbin/sshd -p $1

@@ -23,6 +23,7 @@ RUN ${IGNIS_HOME}/bin/driver-install.sh && \
 	{ \
 		echo '#!/bin/bash'; \
 		echo 'export -p >> /etc/profile'; \
+		echo 'export -p | sed "s/^declare -x //" > /etc/environment'; \
 		echo 'mkdir -p ~/.ssh'; \
 		echo '/usr/sbin/sshd -D'; \
 	} > ignis-sshd  && \
