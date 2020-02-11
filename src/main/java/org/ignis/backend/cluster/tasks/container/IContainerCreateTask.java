@@ -124,7 +124,7 @@ public final class IContainerCreateTask extends IContainerTask {
         
         if (Boolean.getBoolean(IKeys.DEBUG)) {
             LOGGER.info("Debug:" + log() + " ExecutorEnvironment{\n" + 
-                    containers.get(0).getTunnel().execute("env", false).replace("\n", "\n\t")
+                    containers.get(0).getTunnel().execute("env", false)
                     + '}');
         }
     }
