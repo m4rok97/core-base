@@ -74,7 +74,7 @@ public final class ITunnel {
                 session.setConfig("StrictHostKeyChecking", "no");
                 jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
                 for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
-                    session.setPortForwardingL(entry.getKey(), session.getHost(), entry.getValue());
+                    session.setPortForwardingL(entry.getKey(), "localhost", entry.getValue());
                 }
                 session.connect();
                 break;
@@ -108,6 +108,12 @@ public final class ITunnel {
         int newLocalPort = localPort.incrementAndGet();
         int newRemotePort = remotePort++;
         ports.put(newLocalPort, newRemotePort);
+        if (session != null) {
+            try {
+                session.setPortForwardingL(newLocalPort, "localhost", newRemotePort);
+            } catch (JSchException ex) {
+            }
+        }
         return newLocalPort;
     }
 
@@ -129,16 +135,16 @@ public final class ITunnel {
         try {
             Channel channel = session.openChannel("exec");
             channel.setInputStream(null);
-            if(stderr){
+            if (stderr) {
                 script = "exec 2>&1\n" + script;
             }
-            ((ChannelExec)channel).setCommand(script);
-            
+            ((ChannelExec) channel).setCommand(script);
+
             channel.connect();
 
-            InputStream in=channel.getInputStream();
+            InputStream in = channel.getInputStream();
             StringBuilder out = new StringBuilder();
-            
+
             byte[] buffer = new byte[1024];
             while (true) {
                 while (in.available() > 0) {
