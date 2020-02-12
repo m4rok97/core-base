@@ -51,7 +51,7 @@ public final class IDataIOHelper extends IDataHelper {
 
     public ILazy<Long> partitions() {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        builder.newDependency(data.getWorker().getTasks());
+        builder.newDependency(data.getTasks());
         LOGGER.info(log() + "Registering partitions count");
         IPartitionsCountTask.Shared shared = new IPartitionsCountTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
@@ -65,7 +65,7 @@ public final class IDataIOHelper extends IDataHelper {
 
     public ILazy<Void> saveAsObjectFile(String path, byte compression) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        builder.newDependency(data.getWorker().getTasks());
+        builder.newDependency(data.getTasks());
         LOGGER.info(log() + "Registering saveAsPartitionObjectFile path: " + path + ", compression: " + compression);
         ISaveAsObjectFile.Shared shared = new ISaveAsObjectFile.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
@@ -79,7 +79,7 @@ public final class IDataIOHelper extends IDataHelper {
 
     public ILazy<Void> saveAsTextFile(String path) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        builder.newDependency(data.getWorker().getTasks());
+        builder.newDependency(data.getTasks());
         LOGGER.info(log() + "Registering saveAsTextFile path: " + path);
         ISaveAsTextFileTask.Shared shared = new ISaveAsTextFileTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
@@ -93,7 +93,7 @@ public final class IDataIOHelper extends IDataHelper {
 
     public ILazy<Void> saveAsJsonFile(String path, boolean pretty) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        builder.newDependency(data.getWorker().getTasks());
+        builder.newDependency(data.getTasks());
         LOGGER.info(log() + "Registering saveAsJsonFile path: " + path);
         ISaveAsJsonFileTask.Shared shared = new ISaveAsJsonFileTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {

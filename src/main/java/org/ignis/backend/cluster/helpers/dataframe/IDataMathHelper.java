@@ -46,7 +46,7 @@ public final class IDataMathHelper extends IDataHelper {
 
     public IDataFrame sample(boolean withReplacement, double fraction, int seed) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        builder.newDependency(data.getWorker().getTasks());
+        builder.newDependency(data.getTasks());
         ISampleTask.Shared shared = new ISampleTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
             builder.newTask(new ISampleTask(getName(), executor, shared, withReplacement, fraction, seed));
@@ -59,7 +59,7 @@ public final class IDataMathHelper extends IDataHelper {
 
     public ILazy<Long> takeSample(IDriver driver, boolean withReplacement, long num, int seed, ISource tp) {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        builder.newDependency(data.getWorker().getTasks());
+        builder.newDependency(data.getTasks());
         LOGGER.info(log() + "Registering takeSample withReplacement: " + withReplacement + ", num: " + num + ", seed: " + seed);
         ITakeSampleTask.Shared shared = new ITakeSampleTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
@@ -77,7 +77,7 @@ public final class IDataMathHelper extends IDataHelper {
 
     public ILazy<Long> count() throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        builder.newDependency(data.getWorker().getTasks());
+        builder.newDependency(data.getTasks());
         LOGGER.info(log() + "Registering count");
         ICountTask.Shared shared = new ICountTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
@@ -91,7 +91,7 @@ public final class IDataMathHelper extends IDataHelper {
 
     public ILazy<Long> max(IDriver driver, ISource cmp, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        builder.newDependency(data.getWorker().getTasks());
+        builder.newDependency(data.getTasks());
         IMaxTask.Shared shared = new IMaxTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
             builder.newTask(new IMaxTask(getName(), executor, shared, false, cmp, tp));
@@ -109,7 +109,7 @@ public final class IDataMathHelper extends IDataHelper {
 
     public ILazy<Long> min(IDriver driver, ISource cmp, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        builder.newDependency(data.getWorker().getTasks());
+        builder.newDependency(data.getTasks());
         IMinTask.Shared shared = new IMinTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
             builder.newTask(new IMinTask(getName(), executor, shared, false, cmp, tp));

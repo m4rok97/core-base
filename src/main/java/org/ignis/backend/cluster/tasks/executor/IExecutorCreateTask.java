@@ -112,9 +112,6 @@ public final class IExecutorCreateTask extends IExecutorTask {
 
         try {
             executor.getExecutorServerModule().test();
-            if (running) {
-                return;
-            }
             Map<String, String> executorProperties = executor.getExecutorProperties();
             if (Boolean.getBoolean(IKeys.DEBUG)) {
                 StringBuilder writer = new StringBuilder();
@@ -123,7 +120,9 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 }
                 LOGGER.info("Debug:" + log() + " ExecutorProperties{\n" + writer.toString() + '}');
             }
-            executor.getExecutorServerModule().start(executorProperties);
+            if(!running){
+                executor.getExecutorServerModule().start(executorProperties);
+            }
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
