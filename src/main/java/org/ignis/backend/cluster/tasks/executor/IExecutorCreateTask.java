@@ -129,6 +129,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
+        LOGGER.info(log() + "Executor ready");
     }
 
 }

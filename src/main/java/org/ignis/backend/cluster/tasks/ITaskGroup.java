@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IKeys;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -136,6 +137,9 @@ public class ITaskGroup {
     private void start(IThreadPool pool, List<ILock> locks, ITaskContext context) throws IgnisException {
         if (locks.isEmpty()) {
             List<Future<ITask>> futures = new ArrayList<>(tasks.size());
+            if(Boolean.getBoolean(IKeys.DEBUG) && !tasks.isEmpty()){
+                LOGGER.info("Debug: Executing task " + tasks.get(0).getClass().getName());
+            }
             for (ITask task : tasks) {
                 futures.add(pool.submit(task, context));
             }

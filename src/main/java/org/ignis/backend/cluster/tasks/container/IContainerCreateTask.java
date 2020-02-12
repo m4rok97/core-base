@@ -127,5 +127,6 @@ public final class IContainerCreateTask extends IContainerTask {
                     containers.get(0).getTunnel().execute("env", false)
                     + '}');
         }
+        LOGGER.info(log() + "Containers ready");
     }
 }
