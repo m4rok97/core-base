@@ -48,40 +48,51 @@ public final class IExecutorCreateTask extends IExecutorTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
+        boolean running = false;
         if (executor.getTransport().isOpen()) {
             try {
                 executor.getExecutorServerModule().test();
                 LOGGER.info(log() + "Executor already running");
                 return;
             } catch (TException ex) {
-                LOGGER.warn(log() + "Executor dead " + ex);
+                LOGGER.info(log() + "Executor connection lost, testing executor process");
+                String check = executor.getContainer().getTunnel().execute("ps -p " + executor.getPid() + " > /dev/null && echo $?", false);
+                running = check.startsWith("0");
+                if (running) {
+                    LOGGER.info(log() + "Executor process is alive, reconnecting");
+                } else {
+                    LOGGER.warn(log() + "Executor dead " + ex);
+                }
             }
 
         }
-        LOGGER.info(log() + "Starting new executor");
-        StringBuilder startScript = new StringBuilder();
-        startScript.append("export MPICH_STATIC_PORTS='");
-        int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
-        List<IPort> mpiPorts = executor.getContainer().getInfo().getPorts().subList(0, mpiMaxPorts);
-        startScript.append(mpiPorts.stream().map((IPort p) -> String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
-        startScript.append("'\n");
+        if (!running) {
+            LOGGER.info(log() + "Starting new executor");
+            StringBuilder startScript = new StringBuilder();
+            startScript.append("export MPICH_STATIC_PORTS='");
+            int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
+            List<IPort> mpiPorts = executor.getContainer().getInfo().getPorts().subList(0, mpiMaxPorts);
+            startScript.append(mpiPorts.stream().map((IPort p) -> String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
+            startScript.append("'\n");
 
-        startScript.append("export IGNIS_WORKING_DIRECTORY='");
-        startScript.append(executor.getProperties().getString(IKeys.WORKING_DIRECTORY));
-        startScript.append("'\n");
+            startScript.append("export IGNIS_WORKING_DIRECTORY='");
+            startScript.append(executor.getProperties().getString(IKeys.WORKING_DIRECTORY));
+            startScript.append("'\n");
 
-        startScript.append("nohup ignis-run ");
-        startScript.append("ignis-").append(type).append(' ');
-        startScript.append(executor.getContainer().getTunnel().getRemotePort(executor.getPort())).append(' ');
-        startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
-        if (executor.getProperties().getString(IKeys.SCHEDULER_CONTAINER).equals("docker")) {
-            /*Redirect to docker log */
-            startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2 ");
+            startScript.append("nohup ignis-run ");
+            startScript.append("ignis-").append(type).append(' ');
+            startScript.append(executor.getContainer().getTunnel().getRemotePort(executor.getPort())).append(' ');
+            startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
+            if (executor.getProperties().getString(IKeys.SCHEDULER_CONTAINER).equals("docker")) {
+                /*Redirect to docker log */
+                startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2 ");
+            }
+            startScript.append("& \n");
+            startScript.append("printf $!");/*get PID*/
+
+            String output = executor.getContainer().getTunnel().execute(startScript.toString(), false);
+            executor.setPid(Integer.parseInt(output));
         }
-        startScript.append("& \n");
-        startScript.append("printf $!");/*get PID*/
-
-        String output = executor.getContainer().getTunnel().execute(startScript.toString(), false);
 
         for (int i = 0; i < 10; i++) {
             try {
@@ -99,8 +110,11 @@ public final class IExecutorCreateTask extends IExecutorTask {
             }
         }
 
-        executor.setPid(Integer.parseInt(output));
         try {
+            executor.getExecutorServerModule().test();
+            if (running) {
+                return;
+            }
             Map<String, String> executorProperties = executor.getExecutorProperties();
             if (Boolean.getBoolean(IKeys.DEBUG)) {
                 StringBuilder writer = new StringBuilder();
