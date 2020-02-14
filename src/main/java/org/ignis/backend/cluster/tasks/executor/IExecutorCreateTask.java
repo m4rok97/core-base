@@ -56,12 +56,12 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 return;
             } catch (TException ex) {
                 LOGGER.info(log() + "Executor connection lost, testing executor process");
-                String check = executor.getContainer().getTunnel().execute("ps -p " + executor.getPid() + " > /dev/null && echo $?", false);
-                running = check.startsWith("0");
-                if (running) {
+                try{
+                    executor.getContainer().getTunnel().execute("ps -p " + executor.getPid() + " > /dev/null", false);
+                    running = true;
                     LOGGER.info(log() + "Executor process is alive, reconnecting");
                     executor.getTransport().close();
-                } else {
+                } catch (IgnisException ex2) {
                     LOGGER.warn(log() + "Executor dead " + ex);
                 }
             }
