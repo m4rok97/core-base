@@ -99,22 +99,22 @@ public final class IExecutor {
         return map;
     }
 
-    public boolean isConnected(){
-        return transport.getConcreteTransport() != null;
+    public boolean isConnected() {
+        return transport.getConcreteTransport() != null && transport.getConcreteTransport().isOpen();
     }
-    
-    public void connect() throws TException{
-        if (isConnected()) {
-            disconnect();
-        }
+
+    public void connect() throws TException {
+        disconnect();
         TSocket socket = new TSocket("localhost", port);
         TZlibTransport zlib = new TZlibTransport(socket, container.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION));
         transport.setConcreteTransport(zlib);
         zlib.open();
     }
-    
-    public void disconnect(){
-        protocol.getTransport().close();
+
+    public void disconnect() {
+        if (isConnected()) {
+            protocol.getTransport().close();
+        }
         transport.setConcreteTransport(null);
     }
 
