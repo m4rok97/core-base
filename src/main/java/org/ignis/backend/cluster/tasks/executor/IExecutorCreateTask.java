@@ -60,10 +60,10 @@ public final class IExecutorCreateTask extends IExecutorTask {
                     executor.getContainer().getTunnel().execute("ps -p " + executor.getPid() + " > /dev/null", false);
                     running = true;
                     LOGGER.info(log() + "Executor process is alive, reconnecting");
-                    executor.getTransport().close();
                 } catch (IgnisException ex2) {
-                    LOGGER.warn(log() + "Executor dead " + ex);
+                    LOGGER.warn(log() + "Executor dead " + ex2);
                 }
+                executor.getTransport().close();
             }
 
         }
