@@ -39,6 +39,7 @@ public final class IExecutorDestroyTask extends IExecutorTask {
         LOGGER.info(log() + "Destroying executor");
         try {
             executor.getExecutorServerModule().stop();
+            executor.disconnect();
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }

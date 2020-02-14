@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster;
 
 import java.util.Map;
+import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -39,11 +40,22 @@ import org.ignis.rpc.executor.IMathModule;
  */
 public final class IExecutor {
 
+    private class TCompactProtocolExt extends TCompactProtocol {
+
+        public TCompactProtocolExt() {
+            super(null);
+        }
+
+        public void setTransport(TTransport transport) {
+            this.trans_ = transport;
+        }
+
+    }
+
     private final long worker;
     private final int port;
     private final IContainer container;
-    private final TTransport transport;
-    private final TProtocol protocol;
+    private final TCompactProtocolExt protocol;
     private final IExecutorServerModule.Iface executorServerModule;
     private final IGeneralModule.Iface generalModule;
     private final IGeneralActionModule.Iface generalActionModule;
@@ -59,9 +71,7 @@ public final class IExecutor {
         this.container = container;
         this.port = port;
         this.resets = -1;
-        this.transport = new TSocket("localhost", port);
-        this.protocol = new TCompactProtocol(new TZlibTransport(transport,
-                container.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)));
+        this.protocol = new TCompactProtocolExt();
         executorServerModule = new IExecutorServerModule.Client(new TMultiplexedProtocol(protocol, "IExecutorServer"));
         generalModule = new IGeneralModule.Client(new TMultiplexedProtocol(protocol, "IGeneral"));
         generalActionModule = new IGeneralActionModule.Client(new TMultiplexedProtocol(protocol, "IGeneralAction"));
@@ -99,8 +109,23 @@ public final class IExecutor {
         return map;
     }
 
-    public TTransport getTransport() {
-        return transport;
+    public boolean isConnected(){
+        return protocol.getTransport() != null;
+    }
+    
+    public void connect() throws TException{
+        if (isConnected()) {
+            disconnect();
+        }
+        TSocket socket = new TSocket("localhost", port);
+        TZlibTransport zlib = new TZlibTransport(socket, container.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION));
+        protocol.setTransport(zlib);
+        zlib.open();
+    }
+    
+    public void disconnect(){
+        protocol.getTransport().close();
+        protocol.setTransport(null);
     }
 
     public int getPid() {

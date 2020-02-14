@@ -80,7 +80,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     private void driverConnection(ITaskContext context) throws IgnisException {
-        if (executor.getTransport().isOpen()) {
+        if (executor.isConnected()) {
             try {
                 executor.getExecutorServerModule().test();
                 return;
@@ -92,7 +92,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
 
         for (int i = 0; i < 10; i++) {
             try {
-                executor.getTransport().open();
+                executor.connect();
                 break;
             } catch (TException ex) {
                 if (i == 9) {
@@ -107,6 +107,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         }
         
         try {
+            executor.getExecutorServerModule().test();
             executor.getExecutorServerModule().start(executor.getExecutorProperties());
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);

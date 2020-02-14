@@ -155,8 +155,9 @@ public final class Main {
                 clusters.destroyClusters();
             }
             try {
-                if (attributes.driver.getExecutor().getTransport().isOpen()) {
+                if (attributes.driver.getExecutor().isConnected()) {
                     attributes.driver.getExecutor().getExecutorServerModule().stop();
+                    attributes.driver.getExecutor().disconnect();
                 }
             } catch (Exception ex) {
                 LOGGER.warn("Driver callback could not be stopped");
