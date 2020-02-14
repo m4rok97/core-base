@@ -40,22 +40,11 @@ import org.ignis.rpc.executor.IMathModule;
  */
 public final class IExecutor {
 
-    private class TCompactProtocolExt extends TCompactProtocol {
-
-        public TCompactProtocolExt() {
-            super(null);
-        }
-
-        public void setTransport(TTransport transport) {
-            this.trans_ = transport;
-        }
-
-    }
-
     private final long worker;
     private final int port;
     private final IContainer container;
-    private final TCompactProtocolExt protocol;
+    private final ITransportDecorator transport;
+    private final TProtocol protocol;
     private final IExecutorServerModule.Iface executorServerModule;
     private final IGeneralModule.Iface generalModule;
     private final IGeneralActionModule.Iface generalActionModule;
@@ -71,7 +60,8 @@ public final class IExecutor {
         this.container = container;
         this.port = port;
         this.resets = -1;
-        this.protocol = new TCompactProtocolExt();
+        this.transport = new ITransportDecorator();
+        this.protocol = new TCompactProtocol(transport);
         executorServerModule = new IExecutorServerModule.Client(new TMultiplexedProtocol(protocol, "IExecutorServer"));
         generalModule = new IGeneralModule.Client(new TMultiplexedProtocol(protocol, "IGeneral"));
         generalActionModule = new IGeneralActionModule.Client(new TMultiplexedProtocol(protocol, "IGeneralAction"));
@@ -110,7 +100,7 @@ public final class IExecutor {
     }
 
     public boolean isConnected(){
-        return protocol.getTransport() != null;
+        return transport.getConcreteTransport() != null;
     }
     
     public void connect() throws TException{
@@ -119,13 +109,13 @@ public final class IExecutor {
         }
         TSocket socket = new TSocket("localhost", port);
         TZlibTransport zlib = new TZlibTransport(socket, container.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION));
-        protocol.setTransport(zlib);
+        transport.setConcreteTransport(zlib);
         zlib.open();
     }
     
     public void disconnect(){
         protocol.getTransport().close();
-        protocol.setTransport(null);
+        transport.setConcreteTransport(null);
     }
 
     public int getPid() {
