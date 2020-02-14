@@ -60,6 +60,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 running = check.startsWith("0");
                 if (running) {
                     LOGGER.info(log() + "Executor process is alive, reconnecting");
+                    executor.getTransport().close();
                 } else {
                     LOGGER.warn(log() + "Executor dead " + ex);
                 }
