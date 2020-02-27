@@ -9,8 +9,8 @@ RUN apt update && \
 	g++ \
 	make \
 	cmake && \
-	mv /root/mpi/bin/* ${IGNIS_HOME}/bin && \
-	mv /root/mpi/lib/* ${IGNIS_HOME}/lib/native && \
+	cp -R /root/mpi/bin/* ${IGNIS_HOME}/bin && \
+	cp -R /root/mpi/lib/* ${IGNIS_HOME}/lib/native && \
 	rm -fR /root/mpi && \
 	echo ${IGNIS_HOME}/lib/native > /etc/ld.so.conf.d/ignis-lib.conf && \
 	ln /opt/ignis/lib/native/libigniscore.so /usr/local/lib/libigniscore.so && \
