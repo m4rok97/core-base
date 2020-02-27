@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.Callable;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.impl.action.AppendArgumentAction;
@@ -39,49 +41,48 @@ import org.ignis.backend.scheduler.ISchedulerParser;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 import org.ignis.backend.scheduler.model.IPort;
 import org.slf4j.LoggerFactory;
+import picocli.CommandLine;
+import picocli.CommandLine.IParameterConsumer;
+import picocli.CommandLine.Model.ArgSpec;
+import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 /**
  *
  * @author César Pomar
  */
-public class Submit {
+public class Submit implements Callable<Integer> {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Submit.class);
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        ArgumentParser parser = ArgumentParsers.newFor("ignis-submit").build();
-        Namespace ns = null;
-        try {
+    @Parameters(index = "0", paramLabel = "image", description = "Driver container image")
+    private String image;
 
-            parser.addArgument("image").help("Driver container image");
-            parser.addArgument("cmd").help("Driver executable");
-            parser.addArgument("args").nargs("*").help("Driver executable arguments");
+    @Parameters(index = "1", paramLabel = "cmd", description = "Driver executable")
+    private String cmd;
 
-            parser.addArgument("--name").metavar("str").help("Job name");
-            parser.addArgument("--direct").action(Arguments.storeTrue()).help("Execute cmd directly without ignis-run");
-            parser.addArgument("-p", "--property").metavar("key=value").action(new AppendArgumentAction())
-                    .type((ArgumentParser ap, Argument arg, String value) -> {
-                        String array[] = value.split("=");
-                        if (array.length != 2) {
-                            throw new ArgumentParserException("malformed property '" + value + "'", parser, arg);
-                        }
-                        return array;
-                    }).help("Job properties");
-            parser.addArgument("-pf", "--property-file").metavar("file").help("Job properties file");
-            ns = parser.parseArgs(args);
-        } catch (ArgumentParserException ex) {
-            if (args.length == 0) {
-                parser.printHelp();
-            } else {
-                System.err.println(ex.getLocalizedMessage());
-                parser.printUsage();
-            }
-            System.exit(-1);
-        }
+    @Parameters(index = "2", paramLabel = "args", description = "Driver executable arguments",
+            parameterConsumer = ConsumeRemainder.class)
+    private List<String> args;
 
+    @Option(names = {"--name"}, paramLabel = "NAME", description = "Job name")
+    private String name;
+
+    @Option(names = {"-p", "--property"}, paramLabel = "<key=value>", description = "Job properties")
+    Map<String, String> userProperties;
+
+    @Option(names = {"-f", "--property-file"}, paramLabel = "FILE", description = "Job properties file")
+    String userPropertiesFile;
+    
+    @Option(names = {"--direct"}, description = "Execute cmd directly without ignis-run")
+    boolean direct = false;
+
+    @Option(names = {"-h", "--help"}, usageHelp = true, description = "display a help message")
+    private boolean helpRequested = false;
+
+    @Override
+    public Integer call() throws Exception {
         try {
             IProperties defaults = new IProperties();
             IProperties props = new IProperties(defaults);
@@ -94,14 +95,12 @@ public class Submit {
                 LOGGER.error("Error loading ignis.conf, ignoring", ex);
             }
 
-            props.setProperty(IKeys.DRIVER_IMAGE, ns.getString("image"));
-            if (ns.get("property-file") != null) {
-                props.load("property-file");
+            props.setProperty(IKeys.DRIVER_IMAGE, image);
+            if (userPropertiesFile != null) {
+                props.load(userPropertiesFile);
             }
-            if (ns.get("property") != null) {
-                for (String[] entry : ns.<String[]>getList("property")) {
-                    props.setProperty(entry[0], entry[1]);
-                }
+            if (userProperties != null) {
+                props.fromMap(userProperties);
             }
             ByteArrayOutputStream options = new ByteArrayOutputStream();
             props.store(options);
@@ -135,23 +134,23 @@ public class Submit {
                 props.setProperty(IKeys.WORKING_DIRECTORY, props.getProperty(IKeys.DFS_HOME));
             }
 
-            if (ns.getBoolean("direct")) {
-                builder.command(ns.getString("cmd"));
-                builder.arguments(ns.getList("args"));
+            if (direct) {
+                builder.command(cmd);
+                builder.arguments(args);
             } else {
                 env.put("IGNIS_WORKING_DIRECTORY", props.getProperty(IKeys.WORKING_DIRECTORY));
                 builder.command("ignis-run");
                 List<String> arguments = new ArrayList<>();
-                arguments.add(ns.getString("cmd"));
-                if (ns.getList("args") != null) {
-                    arguments.addAll(ns.getList("args"));
+                arguments.add(cmd);
+                if (args != null) {
+                    arguments.addAll(args);
                 }
                 builder.arguments(arguments);
             }
 
             String group = null;
             try {
-                group = scheduler.createGroup(ns.get("name") != null ? ns.get("name") : "ignis");
+                group = scheduler.createGroup(name != null ? name : "ignis");
                 props.setProperty(IKeys.JOB_GROUP, group);
                 scheduler.createSingleContainer(group, "driver", builder.build(), props);
             } catch (ISchedulerException ex) {
@@ -162,8 +161,34 @@ public class Submit {
             }
         } catch (Exception ex) {
             LOGGER.error(ex.getLocalizedMessage(), ex);
+            return -1;
         }
+        return 0;
+    }
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        CommandLine cli = new CommandLine(new Submit())
+                .setCommandName("ignis-submit")
+                .setUsageHelpAutoWidth(true);
+        int exitCode = cli.execute(args);
+        System.exit(exitCode);
+    }
+
+
+    static class ConsumeRemainder implements IParameterConsumer {
+
+        @Override
+        public void consumeParameters(Stack<String> args, ArgSpec argSpec, CommandSpec commandSpec) {
+            List<String> list = new ArrayList<>();
+            while (!args.isEmpty()) {
+                String arg = args.pop();
+                list.add(arg);
+            }
+            argSpec.setValue(list);
+        }
     }
 
 }
