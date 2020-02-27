@@ -97,7 +97,7 @@ public class Submit implements Callable<Integer> {
             }
             ByteArrayOutputStream options = new ByteArrayOutputStream();
             props.store(options);
-            if (props.contains(IKeys.DEBUG)) {
+            if (props.contains(IKeys.DEBUG) && props.getBoolean(IKeys.DEBUG)) {
                 System.setProperty(IKeys.DEBUG, "true");
                 LOGGER.info("DEBUG enabled");
             } else {
