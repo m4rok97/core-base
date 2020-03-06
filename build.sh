@@ -47,6 +47,21 @@ cd cpp
 	cd ..
 cd ..
 
+cd python
+	cd builder
+		docker build -t ignishpc/python-builder .
+	cd ..
+	cd driver
+		docker build -t ignishpc/python-driver .
+	cd ..
+	cd executor
+		docker build -t ignishpc/python-executor .
+	cd ..
+	cd full
+		docker build -t ignishpc/python-full .
+	cd ..
+cd ..
+
 cd full
 	docker build -t ignishpc/full .
 cd ..

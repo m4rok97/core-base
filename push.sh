@@ -17,6 +17,10 @@ docker push ignishpc/cpp-compiler$tag
 docker push ignishpc/cpp-driver$tag
 docker push ignishpc/cpp-executor$tag
 docker push ignishpc/cpp-full$tag
+docker push ignishpc/python-builder$tag
+docker push ignishpc/python-driver$tag
+docker push ignishpc/python-executor$tag
+docker push ignishpc/python-full$tag
 docker push ignishpc/full$tag
 docker push ignishpc/submitter$tag
 docker push ignishpc/mesos$tag
