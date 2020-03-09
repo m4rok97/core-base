@@ -52,6 +52,7 @@ public final class ICommGroupCreateTask extends IExecutorTask {
     public ICommGroupCreateTask(String name, IExecutor executor, Shared shared) {
         super(name, executor);
         this.shared = shared;
+        this.attempt = executor.getResets() - 1;
     }
 
     @Override
