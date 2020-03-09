@@ -52,7 +52,7 @@ public final class ICommGroupCreateTask extends IExecutorTask {
     public ICommGroupCreateTask(String name, IExecutor executor, Shared shared) {
         super(name, executor);
         this.shared = shared;
-        this.attempt = executor.getResets() - 1;
+        this.attempt = -1;
     }
 
     @Override
@@ -72,7 +72,7 @@ public final class ICommGroupCreateTask extends IExecutorTask {
                 LOGGER.info(log() + "Executor mpi group ready");
                 return;
             }
-            if (attempt != null) {
+            if (attempt != -1) {
                 executor.getCommModule().destroyGroups();
             }
             attempt = executor.getResets();
