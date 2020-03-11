@@ -84,6 +84,11 @@ public class IAncorisScheduler implements IScheduler {
     }
 
     @Override
+    public void destroyContainerInstaces(List<String> ids) throws ISchedulerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public void healthCheck() throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet."); 
     }

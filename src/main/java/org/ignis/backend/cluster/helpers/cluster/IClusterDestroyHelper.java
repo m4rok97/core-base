@@ -17,7 +17,6 @@
 package org.ignis.backend.cluster.helpers.cluster;
 
 import org.ignis.backend.cluster.ICluster;
-import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.container.IContainerDestroyTask;
 import org.ignis.backend.exception.IgnisException;
@@ -40,11 +39,11 @@ public final class IClusterDestroyHelper extends IClusterHelper {
     public void destroy(IScheduler scheduler) throws IgnisException {
         LOGGER.info(log() + "Preparing cluster to destroy");
         ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
-        for (IContainer container : cluster.getContainers()) {
-            builder.newTask(new IContainerDestroyTask(getName(), container, scheduler));
+        if (!cluster.getContainers().isEmpty()) {// All containers are destroyed in single task, faster in some schedulers
+            builder.newTask(new IContainerDestroyTask(getName(), cluster.getContainers().get(0), scheduler,cluster.getContainers()));
+            LOGGER.info(log() + "Destroying cluster with " + cluster.getContainers().size() + " containers");
+            builder.build().start(cluster.getPool());
         }
-        LOGGER.info(log() + "Destroying cluster with " + cluster.getContainers().size() + " containers");
-        builder.build().start(cluster.getPool());
         LOGGER.info(log() + "Cluster destroyed");
     }
 

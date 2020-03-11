@@ -111,6 +111,13 @@ public interface IScheduler {
      * @throws ISchedulerException
      */
     public void destroyContainer(String id) throws ISchedulerException;
+    
+        /**
+     *
+     * @param ids
+     * @throws ISchedulerException
+     */
+    public void destroyContainerInstaces(List<String> ids) throws ISchedulerException;
 
     /**
      *

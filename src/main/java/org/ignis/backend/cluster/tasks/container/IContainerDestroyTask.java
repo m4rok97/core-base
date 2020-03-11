@@ -16,10 +16,13 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.scheduler.IScheduler;
 import org.slf4j.LoggerFactory;
 
@@ -31,48 +34,57 @@ public final class IContainerDestroyTask extends IContainerTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IContainerDestroyTask.class);
 
+    private final List<IContainer> containers;
     private final IScheduler scheduler;
 
-    public IContainerDestroyTask(String name, IContainer container, IScheduler scheduler) {
+    public IContainerDestroyTask(String name, IContainer container, IScheduler scheduler, List<IContainer> containers) {
         super(name, container);
+        this.containers = containers;
         this.scheduler = scheduler;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Check if container status");
-        if (container.getInfo() == null) {
-            LOGGER.info(log() + "Continer is not started");
-            return;
+        List<String> ids = new ArrayList<>();
+        for (int i = 0; i < containers.size(); i++) {
+            IContainer container = containers.get(i);
+            if (container.getInfo() == null) {
+                if (Boolean.getBoolean(IKeys.DEBUG)) {
+                    LOGGER.info(log() + "Continer " + i + " is not started");
+                }
+                return;
+            }
+            ids.add(container.getInfo().getId());
+
+            switch (scheduler.getStatus(container.getInfo().getId())) {
+                case ACCEPTED:
+                    LOGGER.info(log() + "Container " + i + " is not launched yet");
+                    break;
+                case RUNNING:
+                    LOGGER.info(log() + "Continer " + i + " is running");
+                    break;
+                case ERROR:
+                    LOGGER.info(log() + "Continer " + i + " has an error");
+                    break;
+                case FINISHED:
+                    LOGGER.info(log() + "Continer " + i + " is finieshed");
+                    break;
+                case DESTROYED:
+                    LOGGER.info(log() + "Continer " + i + " already destroyed");
+                    return;
+                case UNKNOWN:
+                    LOGGER.info(log() + "Continer " + i + " has a unknown status");
+                    break;
+            }
         }
 
-        switch (scheduler.getStatus(container.getInfo().getId())) {
-            case ACCEPTED:
-                LOGGER.info(log() + "Container is not launched yet");
-                break;
-            case RUNNING:
-                LOGGER.info(log() + "Continer is running");
-                break;
-            case ERROR:
-                LOGGER.info(log() + "Continer has an error");
-                break;
-            case FINISHED:
-                LOGGER.info(log() + "Continer is finieshed");
-                break;
-            case DESTROYED:
-                LOGGER.info(log() + "Continer already destroyed");
-                return;
-            case UNKNOWN:
-                LOGGER.info(log() + "Continer has a unknown status");
-                break;
-        }
-        LOGGER.info(log() + "Destroying container");
+        LOGGER.info(log() + "Destroying containers");
         try {
-            scheduler.destroyContainer(container.getInfo().getId());
+            scheduler.destroyContainerInstaces(ids);
+            LOGGER.info(log() + "Container destroyed");
         } catch (ISchedulerException ex) {
-            LOGGER.warn(log() + "Container destroyed " + ex);
+            LOGGER.warn(log() + "Containers destroyed with errors: " + ex);
         }
-        LOGGER.info(log() + "Container destroyed");
     }
 
 }

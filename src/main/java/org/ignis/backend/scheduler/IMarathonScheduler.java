@@ -118,7 +118,7 @@ public class IMarathonScheduler implements IScheduler {
 
         if (container.getPorts() != null) {
             app.setRequirePorts(true);
-            for(IPort port: container.getPorts()){
+            for (IPort port : container.getPorts()) {
                 Port port2 = new Port();
                 port2.setContainerPort(port.getContainerPort());
                 port2.setHostPort(port.getHostPort());
@@ -175,7 +175,7 @@ public class IMarathonScheduler implements IScheduler {
         app.setBackoffSeconds(app.getMaxLaunchDelaySeconds());
 
         if (Boolean.getBoolean(IKeys.DEBUG)) {
-            LOGGER.info("Debug: "+app.toString());
+            LOGGER.info("Debug: " + app.toString());
         }
 
         return app;
@@ -382,8 +382,8 @@ public class IMarathonScheduler implements IScheduler {
             while (containers.size() < ids.size()) {
                 app = marathon.getApp(appId).getApp();
                 Iterator<Task> it = app.getTasks().iterator();
-                if(Boolean.getBoolean(IKeys.DEBUG) && (time == 1 || !app.getTasks().isEmpty())){
-                    LOGGER.info("Debug: "+app.toString());
+                if (Boolean.getBoolean(IKeys.DEBUG) && (time == 1 || !app.getTasks().isEmpty())) {
+                    LOGGER.info("Debug: " + app.toString());
                 }
 
                 while (it.hasNext() && containers.size() < ids.size()) {
@@ -437,10 +437,54 @@ public class IMarathonScheduler implements IScheduler {
         String taskId = taskAssignment.get(id);
         try {
             VersionedApp app = marathon.getApp(appId).getApp();
-            marathon.deleteAppTask(appId, getTask(app, taskId).getId(), "true");
+            boolean locked = false;
+            do {
+                try {
+                    marathon.deleteAppTask(appId, getTask(app, taskId).getId(), "true");
+                    locked = false;
+                } catch (MarathonException ex0) {
+                    //Fix multiple instances deleted at same time
+                    locked = ex0.getStatus() == 409;
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex1) {
+                    }
+                }
+            } while (locked);
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
+    }
+
+    @Override
+    public void destroyContainerInstaces(List<String> ids) throws ISchedulerException {
+        String appId = ids.get(0).split(";")[0];
+        for (String id : ids) {
+            if (!appId.equals(id.split(";")[0])) {
+                throw new ISchedulerException("Instances must belong to the same container");
+            }
+        }
+        try {
+            VersionedApp app = marathon.getApp(appId).getApp();
+            if (app.getTasks().size() == ids.size()) {
+                marathon.deleteApp(appId);
+            } else {
+                MarathonException error = null;
+                for (String id : ids) {
+                    try {
+                        destroyContainer(id);
+                    } catch (MarathonException ex0) {
+                        error = ex0;
+                    }
+                }
+                if (error != null) {
+                    throw error;
+                }
+            }
+        } catch (MarathonException ex) {
+            throw new ISchedulerException(ex.getMessage(), ex);
+        }
+
     }
 
     @Override

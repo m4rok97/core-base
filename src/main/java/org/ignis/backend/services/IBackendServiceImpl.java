@@ -16,12 +16,8 @@
  */
 package org.ignis.backend.services;
 
-import com.sun.net.httpserver.HttpContext;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
 import io.undertow.Undertow;
 import io.undertow.util.Headers;
-import java.net.InetSocketAddress;
 import org.apache.thrift.TException;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TCompactProtocol;
@@ -35,7 +31,6 @@ import org.apache.thrift.transport.TTransportFactory;
 import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.properties.IKeys;
-import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.driver.IBackendService;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +74,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     }
 
     @Override
-    public void stop() throws IDriverException, TException {
+    public void stop() throws TException {
         LOGGER.info("Stopping Backend server");
         try {
             stopHealthServer();
