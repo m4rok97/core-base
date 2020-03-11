@@ -65,8 +65,8 @@ public final class ISaveAsTextFileTask extends IExecutorContextTask {
             shared.partitions.set(id, executor.getIoModule().partitionCount());
             shared.barrier.await();
             long first = 0;
-            for (int i = 1; i < id; i++) {
-                first += shared.partitions.get(i - 1);
+            for (int i = 0; i < id; i++) {
+                first += shared.partitions.get(i);
             }
             executor.getIoModule().saveAsTextFile(path, first);  
             shared.barrier.await();

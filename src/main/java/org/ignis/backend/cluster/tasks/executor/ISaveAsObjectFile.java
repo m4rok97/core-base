@@ -67,10 +67,10 @@ public final class ISaveAsObjectFile extends IExecutorContextTask {
             shared.partitions.set(id, executor.getIoModule().partitionCount());
             shared.barrier.await();
             long first = 0;
-            for (int i = 1; i < id; i++) {
-                first += shared.partitions.get(i - 1);
+            for (int i = 0; i < id; i++) {
+                first += shared.partitions.get(i);
             }
-            executor.getIoModule().saveAsObjectFile(path, compression,first);  
+            executor.getIoModule().saveAsObjectFile(path, compression, first);
             shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
