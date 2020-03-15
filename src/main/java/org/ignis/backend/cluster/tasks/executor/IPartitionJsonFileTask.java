@@ -25,24 +25,27 @@ import org.ignis.rpc.ISource;
  *
  * @author César Pomar
  */
-public final class IPartitionJsonFileTask extends IPartitionFileTask{
+public final class IPartitionJsonFileTask extends IPartitionFileTask {
 
-    public IPartitionJsonFileTask(String name, IExecutor executor, Shared shared, String path) {
+    private boolean objectMapping;
+
+    public IPartitionJsonFileTask(String name, IExecutor executor, Shared shared, String path, boolean objectMapping) {
         super(name, executor, shared, path);
+        this.objectMapping = objectMapping;
     }
 
     public IPartitionJsonFileTask(String name, IExecutor executor, Shared shared, String path, ISource src) {
         super(name, executor, shared, path, src);
     }
-    
+
     @Override
     public void read(String path, long first, long partitions, ISource src) throws IExecutorException, TException {
-        executor.getIoModule().partitionJsonFile4(path, first, partitions, src);
+        executor.getIoModule().partitionJsonFile4b(path, first, partitions, src);
     }
 
     @Override
     public void read(String path, long first, long partitions) throws IExecutorException, TException {
-        executor.getIoModule().partitionJsonFile(path, first, partitions);
+        executor.getIoModule().partitionJsonFile4a(path, first, partitions, objectMapping);
     }
-    
+
 }

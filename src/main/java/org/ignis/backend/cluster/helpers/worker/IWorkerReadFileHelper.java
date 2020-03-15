@@ -99,12 +99,12 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         return target;
     }
 
-    public IDataFrame partitionJsonFile(String path) throws IgnisException {
+    public IDataFrame partitionJsonFile(String path, boolean objectMapping) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newDependency(worker.getTasks());
         IPartitionJsonFileTask.Shared shared = new IPartitionJsonFileTask.Shared(worker.getExecutors().size());
         for (IExecutor executor : worker.getExecutors()) {
-            builder.newTask(new IPartitionJsonFileTask(getName(), executor, shared, path));
+            builder.newTask(new IPartitionJsonFileTask(getName(), executor, shared, path, objectMapping));
         }
         IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
         LOGGER.info(log() + "Registering partitionJsonFile path: " + path + " -> " + target.getName());

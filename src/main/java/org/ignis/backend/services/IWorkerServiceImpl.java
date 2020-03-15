@@ -297,12 +297,12 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId partitionJsonFile(IWorkerId id, String path) throws IDriverException, TException {
+    public IDataFrameId partitionJsonFile3a(IWorkerId id, String path, boolean objectMapping) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionJsonFile(path);
+                IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionJsonFile(path, objectMapping);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {
@@ -311,7 +311,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId partitionJsonFile3(IWorkerId id, String path, ISource src) throws IDriverException, TException {
+    public IDataFrameId partitionJsonFile3b(IWorkerId id, String path, ISource src) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());

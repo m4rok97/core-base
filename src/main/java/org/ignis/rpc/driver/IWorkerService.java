@@ -43,9 +43,9 @@ public class IWorkerService {
 
     public org.ignis.rpc.driver.IDataFrameId partitionTextFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public org.ignis.rpc.driver.IDataFrameId partitionJsonFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
+    public org.ignis.rpc.driver.IDataFrameId partitionJsonFile3a(IWorkerId id, java.lang.String path, boolean objectMapping) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public org.ignis.rpc.driver.IDataFrameId partitionJsonFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
+    public org.ignis.rpc.driver.IDataFrameId partitionJsonFile3b(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
   }
 
@@ -83,9 +83,9 @@ public class IWorkerService {
 
     public void partitionTextFile(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
-    public void partitionJsonFile(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
+    public void partitionJsonFile3a(IWorkerId id, java.lang.String path, boolean objectMapping, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
-    public void partitionJsonFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
+    public void partitionJsonFile3b(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -549,59 +549,60 @@ public class IWorkerService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitionTextFile failed: unknown result");
     }
 
-    public org.ignis.rpc.driver.IDataFrameId partitionJsonFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId partitionJsonFile3a(IWorkerId id, java.lang.String path, boolean objectMapping) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_partitionJsonFile(id, path);
-      return recv_partitionJsonFile();
+      send_partitionJsonFile3a(id, path, objectMapping);
+      return recv_partitionJsonFile3a();
     }
 
-    public void send_partitionJsonFile(IWorkerId id, java.lang.String path) throws org.apache.thrift.TException
+    public void send_partitionJsonFile3a(IWorkerId id, java.lang.String path, boolean objectMapping) throws org.apache.thrift.TException
     {
-      partitionJsonFile_args args = new partitionJsonFile_args();
+      partitionJsonFile3a_args args = new partitionJsonFile3a_args();
       args.setId(id);
       args.setPath(path);
-      sendBase("partitionJsonFile", args);
+      args.setObjectMapping(objectMapping);
+      sendBase("partitionJsonFile3a", args);
     }
 
-    public org.ignis.rpc.driver.IDataFrameId recv_partitionJsonFile() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId recv_partitionJsonFile3a() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      partitionJsonFile_result result = new partitionJsonFile_result();
-      receiveBase(result, "partitionJsonFile");
+      partitionJsonFile3a_result result = new partitionJsonFile3a_result();
+      receiveBase(result, "partitionJsonFile3a");
       if (result.isSetSuccess()) {
         return result.success;
       }
       if (result.ex != null) {
         throw result.ex;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitionJsonFile failed: unknown result");
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitionJsonFile3a failed: unknown result");
     }
 
-    public org.ignis.rpc.driver.IDataFrameId partitionJsonFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId partitionJsonFile3b(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_partitionJsonFile3(id, path, src);
-      return recv_partitionJsonFile3();
+      send_partitionJsonFile3b(id, path, src);
+      return recv_partitionJsonFile3b();
     }
 
-    public void send_partitionJsonFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
+    public void send_partitionJsonFile3b(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
     {
-      partitionJsonFile3_args args = new partitionJsonFile3_args();
+      partitionJsonFile3b_args args = new partitionJsonFile3b_args();
       args.setId(id);
       args.setPath(path);
       args.setSrc(src);
-      sendBase("partitionJsonFile3", args);
+      sendBase("partitionJsonFile3b", args);
     }
 
-    public org.ignis.rpc.driver.IDataFrameId recv_partitionJsonFile3() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId recv_partitionJsonFile3b() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      partitionJsonFile3_result result = new partitionJsonFile3_result();
-      receiveBase(result, "partitionJsonFile3");
+      partitionJsonFile3b_result result = new partitionJsonFile3b_result();
+      receiveBase(result, "partitionJsonFile3b");
       if (result.isSetSuccess()) {
         return result.success;
       }
       if (result.ex != null) {
         throw result.ex;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitionJsonFile3 failed: unknown result");
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitionJsonFile3b failed: unknown result");
     }
 
   }
@@ -1215,27 +1216,30 @@ public class IWorkerService {
       }
     }
 
-    public void partitionJsonFile(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+    public void partitionJsonFile3a(IWorkerId id, java.lang.String path, boolean objectMapping, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      partitionJsonFile_call method_call = new partitionJsonFile_call(id, path, resultHandler, this, ___protocolFactory, ___transport);
+      partitionJsonFile3a_call method_call = new partitionJsonFile3a_call(id, path, objectMapping, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class partitionJsonFile_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
+    public static class partitionJsonFile3a_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
       private IWorkerId id;
       private java.lang.String path;
-      public partitionJsonFile_call(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private boolean objectMapping;
+      public partitionJsonFile3a_call(IWorkerId id, java.lang.String path, boolean objectMapping, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.path = path;
+        this.objectMapping = objectMapping;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("partitionJsonFile", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        partitionJsonFile_args args = new partitionJsonFile_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("partitionJsonFile3a", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        partitionJsonFile3a_args args = new partitionJsonFile3a_args();
         args.setId(id);
         args.setPath(path);
+        args.setObjectMapping(objectMapping);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -1246,22 +1250,22 @@ public class IWorkerService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_partitionJsonFile();
+        return (new Client(prot)).recv_partitionJsonFile3a();
       }
     }
 
-    public void partitionJsonFile3(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+    public void partitionJsonFile3b(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      partitionJsonFile3_call method_call = new partitionJsonFile3_call(id, path, src, resultHandler, this, ___protocolFactory, ___transport);
+      partitionJsonFile3b_call method_call = new partitionJsonFile3b_call(id, path, src, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class partitionJsonFile3_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
+    public static class partitionJsonFile3b_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
       private IWorkerId id;
       private java.lang.String path;
       private org.ignis.rpc.ISource src;
-      public partitionJsonFile3_call(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public partitionJsonFile3b_call(IWorkerId id, java.lang.String path, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.path = path;
@@ -1269,8 +1273,8 @@ public class IWorkerService {
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("partitionJsonFile3", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        partitionJsonFile3_args args = new partitionJsonFile3_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("partitionJsonFile3b", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        partitionJsonFile3b_args args = new partitionJsonFile3b_args();
         args.setId(id);
         args.setPath(path);
         args.setSrc(src);
@@ -1284,7 +1288,7 @@ public class IWorkerService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_partitionJsonFile3();
+        return (new Client(prot)).recv_partitionJsonFile3b();
       }
     }
 
@@ -1317,8 +1321,8 @@ public class IWorkerService {
       processMap.put("partitionObjectFile", new partitionObjectFile());
       processMap.put("partitionObjectFile3", new partitionObjectFile3());
       processMap.put("partitionTextFile", new partitionTextFile());
-      processMap.put("partitionJsonFile", new partitionJsonFile());
-      processMap.put("partitionJsonFile3", new partitionJsonFile3());
+      processMap.put("partitionJsonFile3a", new partitionJsonFile3a());
+      processMap.put("partitionJsonFile3b", new partitionJsonFile3b());
       return processMap;
     }
 
@@ -1786,13 +1790,13 @@ public class IWorkerService {
       }
     }
 
-    public static class partitionJsonFile<I extends Iface> extends org.apache.thrift.ProcessFunction<I, partitionJsonFile_args> {
-      public partitionJsonFile() {
-        super("partitionJsonFile");
+    public static class partitionJsonFile3a<I extends Iface> extends org.apache.thrift.ProcessFunction<I, partitionJsonFile3a_args> {
+      public partitionJsonFile3a() {
+        super("partitionJsonFile3a");
       }
 
-      public partitionJsonFile_args getEmptyArgsInstance() {
-        return new partitionJsonFile_args();
+      public partitionJsonFile3a_args getEmptyArgsInstance() {
+        return new partitionJsonFile3a_args();
       }
 
       protected boolean isOneway() {
@@ -1804,10 +1808,10 @@ public class IWorkerService {
         return false;
       }
 
-      public partitionJsonFile_result getResult(I iface, partitionJsonFile_args args) throws org.apache.thrift.TException {
-        partitionJsonFile_result result = new partitionJsonFile_result();
+      public partitionJsonFile3a_result getResult(I iface, partitionJsonFile3a_args args) throws org.apache.thrift.TException {
+        partitionJsonFile3a_result result = new partitionJsonFile3a_result();
         try {
-          result.success = iface.partitionJsonFile(args.id, args.path);
+          result.success = iface.partitionJsonFile3a(args.id, args.path, args.objectMapping);
         } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
@@ -1815,13 +1819,13 @@ public class IWorkerService {
       }
     }
 
-    public static class partitionJsonFile3<I extends Iface> extends org.apache.thrift.ProcessFunction<I, partitionJsonFile3_args> {
-      public partitionJsonFile3() {
-        super("partitionJsonFile3");
+    public static class partitionJsonFile3b<I extends Iface> extends org.apache.thrift.ProcessFunction<I, partitionJsonFile3b_args> {
+      public partitionJsonFile3b() {
+        super("partitionJsonFile3b");
       }
 
-      public partitionJsonFile3_args getEmptyArgsInstance() {
-        return new partitionJsonFile3_args();
+      public partitionJsonFile3b_args getEmptyArgsInstance() {
+        return new partitionJsonFile3b_args();
       }
 
       protected boolean isOneway() {
@@ -1833,10 +1837,10 @@ public class IWorkerService {
         return false;
       }
 
-      public partitionJsonFile3_result getResult(I iface, partitionJsonFile3_args args) throws org.apache.thrift.TException {
-        partitionJsonFile3_result result = new partitionJsonFile3_result();
+      public partitionJsonFile3b_result getResult(I iface, partitionJsonFile3b_args args) throws org.apache.thrift.TException {
+        partitionJsonFile3b_result result = new partitionJsonFile3b_result();
         try {
-          result.success = iface.partitionJsonFile3(args.id, args.path, args.src);
+          result.success = iface.partitionJsonFile3b(args.id, args.path, args.src);
         } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
@@ -1873,8 +1877,8 @@ public class IWorkerService {
       processMap.put("partitionObjectFile", new partitionObjectFile());
       processMap.put("partitionObjectFile3", new partitionObjectFile3());
       processMap.put("partitionTextFile", new partitionTextFile());
-      processMap.put("partitionJsonFile", new partitionJsonFile());
-      processMap.put("partitionJsonFile3", new partitionJsonFile3());
+      processMap.put("partitionJsonFile3a", new partitionJsonFile3a());
+      processMap.put("partitionJsonFile3b", new partitionJsonFile3b());
       return processMap;
     }
 
@@ -2917,20 +2921,20 @@ public class IWorkerService {
       }
     }
 
-    public static class partitionJsonFile<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, partitionJsonFile_args, org.ignis.rpc.driver.IDataFrameId> {
-      public partitionJsonFile() {
-        super("partitionJsonFile");
+    public static class partitionJsonFile3a<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, partitionJsonFile3a_args, org.ignis.rpc.driver.IDataFrameId> {
+      public partitionJsonFile3a() {
+        super("partitionJsonFile3a");
       }
 
-      public partitionJsonFile_args getEmptyArgsInstance() {
-        return new partitionJsonFile_args();
+      public partitionJsonFile3a_args getEmptyArgsInstance() {
+        return new partitionJsonFile3a_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId>() { 
           public void onComplete(org.ignis.rpc.driver.IDataFrameId o) {
-            partitionJsonFile_result result = new partitionJsonFile_result();
+            partitionJsonFile3a_result result = new partitionJsonFile3a_result();
             result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
@@ -2945,7 +2949,7 @@ public class IWorkerService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            partitionJsonFile_result result = new partitionJsonFile_result();
+            partitionJsonFile3a_result result = new partitionJsonFile3a_result();
             if (e instanceof org.ignis.rpc.driver.IDriverException) {
               result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
@@ -2977,25 +2981,25 @@ public class IWorkerService {
         return false;
       }
 
-      public void start(I iface, partitionJsonFile_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-        iface.partitionJsonFile(args.id, args.path,resultHandler);
+      public void start(I iface, partitionJsonFile3a_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+        iface.partitionJsonFile3a(args.id, args.path, args.objectMapping,resultHandler);
       }
     }
 
-    public static class partitionJsonFile3<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, partitionJsonFile3_args, org.ignis.rpc.driver.IDataFrameId> {
-      public partitionJsonFile3() {
-        super("partitionJsonFile3");
+    public static class partitionJsonFile3b<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, partitionJsonFile3b_args, org.ignis.rpc.driver.IDataFrameId> {
+      public partitionJsonFile3b() {
+        super("partitionJsonFile3b");
       }
 
-      public partitionJsonFile3_args getEmptyArgsInstance() {
-        return new partitionJsonFile3_args();
+      public partitionJsonFile3b_args getEmptyArgsInstance() {
+        return new partitionJsonFile3b_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId>() { 
           public void onComplete(org.ignis.rpc.driver.IDataFrameId o) {
-            partitionJsonFile3_result result = new partitionJsonFile3_result();
+            partitionJsonFile3b_result result = new partitionJsonFile3b_result();
             result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
@@ -3010,7 +3014,7 @@ public class IWorkerService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            partitionJsonFile3_result result = new partitionJsonFile3_result();
+            partitionJsonFile3b_result result = new partitionJsonFile3b_result();
             if (e instanceof org.ignis.rpc.driver.IDriverException) {
               result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
@@ -3042,8 +3046,8 @@ public class IWorkerService {
         return false;
       }
 
-      public void start(I iface, partitionJsonFile3_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-        iface.partitionJsonFile3(args.id, args.path, args.src,resultHandler);
+      public void start(I iface, partitionJsonFile3b_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+        iface.partitionJsonFile3b(args.id, args.path, args.src,resultHandler);
       }
     }
 
@@ -19347,22 +19351,25 @@ public class IWorkerService {
     }
   }
 
-  public static class partitionJsonFile_args implements org.apache.thrift.TBase<partitionJsonFile_args, partitionJsonFile_args._Fields>, java.io.Serializable, Cloneable, Comparable<partitionJsonFile_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionJsonFile_args");
+  public static class partitionJsonFile3a_args implements org.apache.thrift.TBase<partitionJsonFile3a_args, partitionJsonFile3a_args._Fields>, java.io.Serializable, Cloneable, Comparable<partitionJsonFile3a_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionJsonFile3a_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)2);
+    private static final org.apache.thrift.protocol.TField OBJECT_MAPPING_FIELD_DESC = new org.apache.thrift.protocol.TField("objectMapping", org.apache.thrift.protocol.TType.BOOL, (short)3);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionJsonFile_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionJsonFile_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionJsonFile3a_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionJsonFile3a_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IWorkerId id; // required
     private @org.apache.thrift.annotation.Nullable java.lang.String path; // required
+    private boolean objectMapping; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      PATH((short)2, "path");
+      PATH((short)2, "path"),
+      OBJECT_MAPPING((short)3, "objectMapping");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -19382,6 +19389,8 @@ public class IWorkerService {
             return ID;
           case 2: // PATH
             return PATH;
+          case 3: // OBJECT_MAPPING
+            return OBJECT_MAPPING;
           default:
             return null;
         }
@@ -19423,6 +19432,8 @@ public class IWorkerService {
     }
 
     // isset id assignments
+    private static final int __OBJECTMAPPING_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -19430,42 +19441,51 @@ public class IWorkerService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IWorkerId.class)));
       tmpMap.put(_Fields.PATH, new org.apache.thrift.meta_data.FieldMetaData("path", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.OBJECT_MAPPING, new org.apache.thrift.meta_data.FieldMetaData("objectMapping", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionJsonFile_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionJsonFile3a_args.class, metaDataMap);
     }
 
-    public partitionJsonFile_args() {
+    public partitionJsonFile3a_args() {
     }
 
-    public partitionJsonFile_args(
+    public partitionJsonFile3a_args(
       IWorkerId id,
-      java.lang.String path)
+      java.lang.String path,
+      boolean objectMapping)
     {
       this();
       this.id = id;
       this.path = path;
+      this.objectMapping = objectMapping;
+      setObjectMappingIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public partitionJsonFile_args(partitionJsonFile_args other) {
+    public partitionJsonFile3a_args(partitionJsonFile3a_args other) {
+      __isset_bitfield = other.__isset_bitfield;
       if (other.isSetId()) {
         this.id = new IWorkerId(other.id);
       }
       if (other.isSetPath()) {
         this.path = other.path;
       }
+      this.objectMapping = other.objectMapping;
     }
 
-    public partitionJsonFile_args deepCopy() {
-      return new partitionJsonFile_args(this);
+    public partitionJsonFile3a_args deepCopy() {
+      return new partitionJsonFile3a_args(this);
     }
 
     @Override
     public void clear() {
       this.id = null;
       this.path = null;
+      setObjectMappingIsSet(false);
+      this.objectMapping = false;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -19473,7 +19493,7 @@ public class IWorkerService {
       return this.id;
     }
 
-    public partitionJsonFile_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
+    public partitionJsonFile3a_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
       this.id = id;
       return this;
     }
@@ -19498,7 +19518,7 @@ public class IWorkerService {
       return this.path;
     }
 
-    public partitionJsonFile_args setPath(@org.apache.thrift.annotation.Nullable java.lang.String path) {
+    public partitionJsonFile3a_args setPath(@org.apache.thrift.annotation.Nullable java.lang.String path) {
       this.path = path;
       return this;
     }
@@ -19516,6 +19536,29 @@ public class IWorkerService {
       if (!value) {
         this.path = null;
       }
+    }
+
+    public boolean isObjectMapping() {
+      return this.objectMapping;
+    }
+
+    public partitionJsonFile3a_args setObjectMapping(boolean objectMapping) {
+      this.objectMapping = objectMapping;
+      setObjectMappingIsSet(true);
+      return this;
+    }
+
+    public void unsetObjectMapping() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __OBJECTMAPPING_ISSET_ID);
+    }
+
+    /** Returns true if field objectMapping is set (has been assigned a value) and false otherwise */
+    public boolean isSetObjectMapping() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __OBJECTMAPPING_ISSET_ID);
+    }
+
+    public void setObjectMappingIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __OBJECTMAPPING_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
@@ -19536,6 +19579,14 @@ public class IWorkerService {
         }
         break;
 
+      case OBJECT_MAPPING:
+        if (value == null) {
+          unsetObjectMapping();
+        } else {
+          setObjectMapping((java.lang.Boolean)value);
+        }
+        break;
+
       }
     }
 
@@ -19547,6 +19598,9 @@ public class IWorkerService {
 
       case PATH:
         return getPath();
+
+      case OBJECT_MAPPING:
+        return isObjectMapping();
 
       }
       throw new java.lang.IllegalStateException();
@@ -19563,6 +19617,8 @@ public class IWorkerService {
         return isSetId();
       case PATH:
         return isSetPath();
+      case OBJECT_MAPPING:
+        return isSetObjectMapping();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -19571,12 +19627,12 @@ public class IWorkerService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof partitionJsonFile_args)
-        return this.equals((partitionJsonFile_args)that);
+      if (that instanceof partitionJsonFile3a_args)
+        return this.equals((partitionJsonFile3a_args)that);
       return false;
     }
 
-    public boolean equals(partitionJsonFile_args that) {
+    public boolean equals(partitionJsonFile3a_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -19600,6 +19656,15 @@ public class IWorkerService {
           return false;
       }
 
+      boolean this_present_objectMapping = true;
+      boolean that_present_objectMapping = true;
+      if (this_present_objectMapping || that_present_objectMapping) {
+        if (!(this_present_objectMapping && that_present_objectMapping))
+          return false;
+        if (this.objectMapping != that.objectMapping)
+          return false;
+      }
+
       return true;
     }
 
@@ -19615,11 +19680,13 @@ public class IWorkerService {
       if (isSetPath())
         hashCode = hashCode * 8191 + path.hashCode();
 
+      hashCode = hashCode * 8191 + ((objectMapping) ? 131071 : 524287);
+
       return hashCode;
     }
 
     @Override
-    public int compareTo(partitionJsonFile_args other) {
+    public int compareTo(partitionJsonFile3a_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -19646,6 +19713,16 @@ public class IWorkerService {
           return lastComparison;
         }
       }
+      lastComparison = java.lang.Boolean.valueOf(isSetObjectMapping()).compareTo(other.isSetObjectMapping());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetObjectMapping()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.objectMapping, other.objectMapping);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -19664,7 +19741,7 @@ public class IWorkerService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionJsonFile_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionJsonFile3a_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -19681,6 +19758,10 @@ public class IWorkerService {
       } else {
         sb.append(this.path);
       }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("objectMapping:");
+      sb.append(this.objectMapping);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -19704,21 +19785,23 @@ public class IWorkerService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
       }
     }
 
-    private static class partitionJsonFile_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionJsonFile_argsStandardScheme getScheme() {
-        return new partitionJsonFile_argsStandardScheme();
+    private static class partitionJsonFile3a_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public partitionJsonFile3a_argsStandardScheme getScheme() {
+        return new partitionJsonFile3a_argsStandardScheme();
       }
     }
 
-    private static class partitionJsonFile_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionJsonFile_args> {
+    private static class partitionJsonFile3a_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionJsonFile3a_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionJsonFile_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionJsonFile3a_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -19745,6 +19828,14 @@ public class IWorkerService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // OBJECT_MAPPING
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.objectMapping = iprot.readBool();
+                struct.setObjectMappingIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -19756,7 +19847,7 @@ public class IWorkerService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionJsonFile_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionJsonFile3a_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -19770,22 +19861,25 @@ public class IWorkerService {
           oprot.writeString(struct.path);
           oprot.writeFieldEnd();
         }
+        oprot.writeFieldBegin(OBJECT_MAPPING_FIELD_DESC);
+        oprot.writeBool(struct.objectMapping);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
 
     }
 
-    private static class partitionJsonFile_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionJsonFile_argsTupleScheme getScheme() {
-        return new partitionJsonFile_argsTupleScheme();
+    private static class partitionJsonFile3a_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public partitionJsonFile3a_argsTupleScheme getScheme() {
+        return new partitionJsonFile3a_argsTupleScheme();
       }
     }
 
-    private static class partitionJsonFile_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionJsonFile_args> {
+    private static class partitionJsonFile3a_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionJsonFile3a_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3a_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetId()) {
@@ -19794,19 +19888,25 @@ public class IWorkerService {
         if (struct.isSetPath()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetObjectMapping()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetPath()) {
           oprot.writeString(struct.path);
         }
+        if (struct.isSetObjectMapping()) {
+          oprot.writeBool(struct.objectMapping);
+        }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3a_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IWorkerId();
           struct.id.read(iprot);
@@ -19816,6 +19916,10 @@ public class IWorkerService {
           struct.path = iprot.readString();
           struct.setPathIsSet(true);
         }
+        if (incoming.get(2)) {
+          struct.objectMapping = iprot.readBool();
+          struct.setObjectMappingIsSet(true);
+        }
       }
     }
 
@@ -19824,14 +19928,14 @@ public class IWorkerService {
     }
   }
 
-  public static class partitionJsonFile_result implements org.apache.thrift.TBase<partitionJsonFile_result, partitionJsonFile_result._Fields>, java.io.Serializable, Cloneable, Comparable<partitionJsonFile_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionJsonFile_result");
+  public static class partitionJsonFile3a_result implements org.apache.thrift.TBase<partitionJsonFile3a_result, partitionJsonFile3a_result._Fields>, java.io.Serializable, Cloneable, Comparable<partitionJsonFile3a_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionJsonFile3a_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionJsonFile_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionJsonFile_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionJsonFile3a_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionJsonFile3a_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
@@ -19908,13 +20012,13 @@ public class IWorkerService {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionJsonFile_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionJsonFile3a_result.class, metaDataMap);
     }
 
-    public partitionJsonFile_result() {
+    public partitionJsonFile3a_result() {
     }
 
-    public partitionJsonFile_result(
+    public partitionJsonFile3a_result(
       org.ignis.rpc.driver.IDataFrameId success,
       org.ignis.rpc.driver.IDriverException ex)
     {
@@ -19926,7 +20030,7 @@ public class IWorkerService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public partitionJsonFile_result(partitionJsonFile_result other) {
+    public partitionJsonFile3a_result(partitionJsonFile3a_result other) {
       if (other.isSetSuccess()) {
         this.success = new org.ignis.rpc.driver.IDataFrameId(other.success);
       }
@@ -19935,8 +20039,8 @@ public class IWorkerService {
       }
     }
 
-    public partitionJsonFile_result deepCopy() {
-      return new partitionJsonFile_result(this);
+    public partitionJsonFile3a_result deepCopy() {
+      return new partitionJsonFile3a_result(this);
     }
 
     @Override
@@ -19950,7 +20054,7 @@ public class IWorkerService {
       return this.success;
     }
 
-    public partitionJsonFile_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
+    public partitionJsonFile3a_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
       this.success = success;
       return this;
     }
@@ -19975,7 +20079,7 @@ public class IWorkerService {
       return this.ex;
     }
 
-    public partitionJsonFile_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
+    public partitionJsonFile3a_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -20048,12 +20152,12 @@ public class IWorkerService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof partitionJsonFile_result)
-        return this.equals((partitionJsonFile_result)that);
+      if (that instanceof partitionJsonFile3a_result)
+        return this.equals((partitionJsonFile3a_result)that);
       return false;
     }
 
-    public boolean equals(partitionJsonFile_result that) {
+    public boolean equals(partitionJsonFile3a_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -20096,7 +20200,7 @@ public class IWorkerService {
     }
 
     @Override
-    public int compareTo(partitionJsonFile_result other) {
+    public int compareTo(partitionJsonFile3a_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -20141,7 +20245,7 @@ public class IWorkerService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionJsonFile_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionJsonFile3a_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -20187,15 +20291,15 @@ public class IWorkerService {
       }
     }
 
-    private static class partitionJsonFile_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionJsonFile_resultStandardScheme getScheme() {
-        return new partitionJsonFile_resultStandardScheme();
+    private static class partitionJsonFile3a_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public partitionJsonFile3a_resultStandardScheme getScheme() {
+        return new partitionJsonFile3a_resultStandardScheme();
       }
     }
 
-    private static class partitionJsonFile_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionJsonFile_result> {
+    private static class partitionJsonFile3a_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionJsonFile3a_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionJsonFile_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionJsonFile3a_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -20234,7 +20338,7 @@ public class IWorkerService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionJsonFile_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionJsonFile3a_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -20254,16 +20358,16 @@ public class IWorkerService {
 
     }
 
-    private static class partitionJsonFile_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionJsonFile_resultTupleScheme getScheme() {
-        return new partitionJsonFile_resultTupleScheme();
+    private static class partitionJsonFile3a_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public partitionJsonFile3a_resultTupleScheme getScheme() {
+        return new partitionJsonFile3a_resultTupleScheme();
       }
     }
 
-    private static class partitionJsonFile_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionJsonFile_result> {
+    private static class partitionJsonFile3a_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionJsonFile3a_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3a_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetSuccess()) {
@@ -20282,7 +20386,7 @@ public class IWorkerService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3a_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
@@ -20303,15 +20407,15 @@ public class IWorkerService {
     }
   }
 
-  public static class partitionJsonFile3_args implements org.apache.thrift.TBase<partitionJsonFile3_args, partitionJsonFile3_args._Fields>, java.io.Serializable, Cloneable, Comparable<partitionJsonFile3_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionJsonFile3_args");
+  public static class partitionJsonFile3b_args implements org.apache.thrift.TBase<partitionJsonFile3b_args, partitionJsonFile3b_args._Fields>, java.io.Serializable, Cloneable, Comparable<partitionJsonFile3b_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionJsonFile3b_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)2);
     private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionJsonFile3_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionJsonFile3_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionJsonFile3b_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionJsonFile3b_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IWorkerId id; // required
     private @org.apache.thrift.annotation.Nullable java.lang.String path; // required
@@ -20394,13 +20498,13 @@ public class IWorkerService {
       tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionJsonFile3_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionJsonFile3b_args.class, metaDataMap);
     }
 
-    public partitionJsonFile3_args() {
+    public partitionJsonFile3b_args() {
     }
 
-    public partitionJsonFile3_args(
+    public partitionJsonFile3b_args(
       IWorkerId id,
       java.lang.String path,
       org.ignis.rpc.ISource src)
@@ -20414,7 +20518,7 @@ public class IWorkerService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public partitionJsonFile3_args(partitionJsonFile3_args other) {
+    public partitionJsonFile3b_args(partitionJsonFile3b_args other) {
       if (other.isSetId()) {
         this.id = new IWorkerId(other.id);
       }
@@ -20426,8 +20530,8 @@ public class IWorkerService {
       }
     }
 
-    public partitionJsonFile3_args deepCopy() {
-      return new partitionJsonFile3_args(this);
+    public partitionJsonFile3b_args deepCopy() {
+      return new partitionJsonFile3b_args(this);
     }
 
     @Override
@@ -20442,7 +20546,7 @@ public class IWorkerService {
       return this.id;
     }
 
-    public partitionJsonFile3_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
+    public partitionJsonFile3b_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
       this.id = id;
       return this;
     }
@@ -20467,7 +20571,7 @@ public class IWorkerService {
       return this.path;
     }
 
-    public partitionJsonFile3_args setPath(@org.apache.thrift.annotation.Nullable java.lang.String path) {
+    public partitionJsonFile3b_args setPath(@org.apache.thrift.annotation.Nullable java.lang.String path) {
       this.path = path;
       return this;
     }
@@ -20492,7 +20596,7 @@ public class IWorkerService {
       return this.src;
     }
 
-    public partitionJsonFile3_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
+    public partitionJsonFile3b_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
       this.src = src;
       return this;
     }
@@ -20578,12 +20682,12 @@ public class IWorkerService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof partitionJsonFile3_args)
-        return this.equals((partitionJsonFile3_args)that);
+      if (that instanceof partitionJsonFile3b_args)
+        return this.equals((partitionJsonFile3b_args)that);
       return false;
     }
 
-    public boolean equals(partitionJsonFile3_args that) {
+    public boolean equals(partitionJsonFile3b_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -20639,7 +20743,7 @@ public class IWorkerService {
     }
 
     @Override
-    public int compareTo(partitionJsonFile3_args other) {
+    public int compareTo(partitionJsonFile3b_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -20694,7 +20798,7 @@ public class IWorkerService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionJsonFile3_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionJsonFile3b_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -20751,15 +20855,15 @@ public class IWorkerService {
       }
     }
 
-    private static class partitionJsonFile3_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionJsonFile3_argsStandardScheme getScheme() {
-        return new partitionJsonFile3_argsStandardScheme();
+    private static class partitionJsonFile3b_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public partitionJsonFile3b_argsStandardScheme getScheme() {
+        return new partitionJsonFile3b_argsStandardScheme();
       }
     }
 
-    private static class partitionJsonFile3_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionJsonFile3_args> {
+    private static class partitionJsonFile3b_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionJsonFile3b_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionJsonFile3_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionJsonFile3b_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -20806,7 +20910,7 @@ public class IWorkerService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionJsonFile3_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionJsonFile3b_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -20831,16 +20935,16 @@ public class IWorkerService {
 
     }
 
-    private static class partitionJsonFile3_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionJsonFile3_argsTupleScheme getScheme() {
-        return new partitionJsonFile3_argsTupleScheme();
+    private static class partitionJsonFile3b_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public partitionJsonFile3b_argsTupleScheme getScheme() {
+        return new partitionJsonFile3b_argsTupleScheme();
       }
     }
 
-    private static class partitionJsonFile3_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionJsonFile3_args> {
+    private static class partitionJsonFile3b_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionJsonFile3b_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3b_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetId()) {
@@ -20865,7 +20969,7 @@ public class IWorkerService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3b_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
@@ -20890,14 +20994,14 @@ public class IWorkerService {
     }
   }
 
-  public static class partitionJsonFile3_result implements org.apache.thrift.TBase<partitionJsonFile3_result, partitionJsonFile3_result._Fields>, java.io.Serializable, Cloneable, Comparable<partitionJsonFile3_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionJsonFile3_result");
+  public static class partitionJsonFile3b_result implements org.apache.thrift.TBase<partitionJsonFile3b_result, partitionJsonFile3b_result._Fields>, java.io.Serializable, Cloneable, Comparable<partitionJsonFile3b_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("partitionJsonFile3b_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionJsonFile3_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionJsonFile3_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new partitionJsonFile3b_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new partitionJsonFile3b_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
@@ -20974,13 +21078,13 @@ public class IWorkerService {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionJsonFile3_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(partitionJsonFile3b_result.class, metaDataMap);
     }
 
-    public partitionJsonFile3_result() {
+    public partitionJsonFile3b_result() {
     }
 
-    public partitionJsonFile3_result(
+    public partitionJsonFile3b_result(
       org.ignis.rpc.driver.IDataFrameId success,
       org.ignis.rpc.driver.IDriverException ex)
     {
@@ -20992,7 +21096,7 @@ public class IWorkerService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public partitionJsonFile3_result(partitionJsonFile3_result other) {
+    public partitionJsonFile3b_result(partitionJsonFile3b_result other) {
       if (other.isSetSuccess()) {
         this.success = new org.ignis.rpc.driver.IDataFrameId(other.success);
       }
@@ -21001,8 +21105,8 @@ public class IWorkerService {
       }
     }
 
-    public partitionJsonFile3_result deepCopy() {
-      return new partitionJsonFile3_result(this);
+    public partitionJsonFile3b_result deepCopy() {
+      return new partitionJsonFile3b_result(this);
     }
 
     @Override
@@ -21016,7 +21120,7 @@ public class IWorkerService {
       return this.success;
     }
 
-    public partitionJsonFile3_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
+    public partitionJsonFile3b_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
       this.success = success;
       return this;
     }
@@ -21041,7 +21145,7 @@ public class IWorkerService {
       return this.ex;
     }
 
-    public partitionJsonFile3_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
+    public partitionJsonFile3b_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -21114,12 +21218,12 @@ public class IWorkerService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof partitionJsonFile3_result)
-        return this.equals((partitionJsonFile3_result)that);
+      if (that instanceof partitionJsonFile3b_result)
+        return this.equals((partitionJsonFile3b_result)that);
       return false;
     }
 
-    public boolean equals(partitionJsonFile3_result that) {
+    public boolean equals(partitionJsonFile3b_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -21162,7 +21266,7 @@ public class IWorkerService {
     }
 
     @Override
-    public int compareTo(partitionJsonFile3_result other) {
+    public int compareTo(partitionJsonFile3b_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -21207,7 +21311,7 @@ public class IWorkerService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionJsonFile3_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("partitionJsonFile3b_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -21253,15 +21357,15 @@ public class IWorkerService {
       }
     }
 
-    private static class partitionJsonFile3_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionJsonFile3_resultStandardScheme getScheme() {
-        return new partitionJsonFile3_resultStandardScheme();
+    private static class partitionJsonFile3b_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public partitionJsonFile3b_resultStandardScheme getScheme() {
+        return new partitionJsonFile3b_resultStandardScheme();
       }
     }
 
-    private static class partitionJsonFile3_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionJsonFile3_result> {
+    private static class partitionJsonFile3b_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<partitionJsonFile3b_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionJsonFile3_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, partitionJsonFile3b_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -21300,7 +21404,7 @@ public class IWorkerService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionJsonFile3_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, partitionJsonFile3b_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -21320,16 +21424,16 @@ public class IWorkerService {
 
     }
 
-    private static class partitionJsonFile3_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public partitionJsonFile3_resultTupleScheme getScheme() {
-        return new partitionJsonFile3_resultTupleScheme();
+    private static class partitionJsonFile3b_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public partitionJsonFile3b_resultTupleScheme getScheme() {
+        return new partitionJsonFile3b_resultTupleScheme();
       }
     }
 
-    private static class partitionJsonFile3_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionJsonFile3_result> {
+    private static class partitionJsonFile3b_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<partitionJsonFile3b_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3b_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetSuccess()) {
@@ -21348,7 +21452,7 @@ public class IWorkerService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, partitionJsonFile3b_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
