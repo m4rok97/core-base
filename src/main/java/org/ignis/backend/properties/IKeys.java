@@ -31,6 +31,7 @@ public final class IKeys {
     public static final String JOB_NAME = "ignis.job.name";
     public static final String JOB_GROUP = "ignis.job.group";
     public static final String JOB_DIRECTORY = "ignis.job.directory";
+    public static final String JOB_WORKER = "ignis.job.worker";
     /*DFS*/
     public static final String DFS_ID = "ignis.dfs.id";
     public static final String DFS_HOME = "ignis.dfs.home";
@@ -47,7 +48,7 @@ public final class IKeys {
     public static final String DRIVER_RPC_COMPRESSION = "ignis.driver.rpc.compression";
     public static final String DRIVER_RPC_POOL = "ignis.driver.pool";
     public static final String DRIVER_PORT = "ignis.driver.port";
-    public static final String DRIVER_PORTS = "ignis.driver.ports";
+    public static final String DRIVER_PORTS = "ignis.driver.ports";//TODO
     public static final String DRIVER_BIND = "ignis.driver.bind";
     public static final String DRIVER_VOLUME = "ignis.driver.volume";
     public static final String DRIVER_HOSTS = "ignis.driver.hosts";
@@ -64,12 +65,14 @@ public final class IKeys {
     public static final String EXECUTOR_ATTEMPTS = "ignis.executor.attempts";
     public static final String EXECUTOR_IMAGE = "ignis.executor.image";
     public static final String EXECUTOR_CORES = "ignis.executor.cores";
+    public static final String EXECUTOR_CORES_SINGLE = "ignis.executor.cores.single";
     public static final String EXECUTOR_MEMORY = "ignis.executor.memory";
     public static final String EXECUTOR_RPC_PORT = "ignis.executor.rpc.port";
     public static final String EXECUTOR_RPC_COMPRESSION = "ignis.executor.rpc.compression";
     public static final String EXECUTOR_ISOLATION = "ignis.executor.isolation";
+    public static final String EXECUTOR_DIRECTORY = "ignis.executor.directory";
     public static final String EXECUTOR_PORT = "ignis.executor.port";
-    public static final String EXECUTOR_PORTS = "ignis.executor.ports";
+    public static final String EXECUTOR_PORTS = "ignis.executor.ports";//TODO
     public static final String EXECUTOR_BIND = "ignis.executor.bind";
     public static final String EXECUTOR_VOLUME = "ignis.executor.volume";
     public static final String EXECUTOR_HOSTS = "ignis.executor.hosts";
@@ -84,6 +87,7 @@ public final class IKeys {
     public static final String TRANSPORT_TYPE = "ignis.transport.type";
     public static final String TRANSPORT_PORT = "ignis.transport.port";
     public static final String TRANSPORT_PORTS = "ignis.transport.ports";
+    public static final String TRANSPORT_ELEMENT_SIZE = "ignis.transport.element.size";
     public static final String TRANSPORT_MINIMAL = "ignis.transport.minimal";
     /*MODULES*/
     /*IO*/

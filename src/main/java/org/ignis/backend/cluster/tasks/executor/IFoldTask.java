@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import java.util.concurrent.BrokenBarrierException;
+
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -24,26 +25,27 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public class IFoldTask extends IDriverTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IFoldTask.class);
 
+    private final ISource zero;
     private final ISource src;
 
-    public IFoldTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src, ISource tp) {
+    public IFoldTask(String name, IExecutor executor, Shared shared, boolean driver, ISource zero, ISource src, ISource tp) {
         super(name, executor, shared, driver, tp);
+        this.zero = zero;
         this.src = src;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing fold");
+        LOGGER.info(log() + "fold started");
         try {
             if (!driver) {
-                executor.getGeneralActionModule().fold(src);
+                executor.getGeneralActionModule().fold(zero, src);
             }
             shared.barrier.await();
             gather(context, true);
@@ -56,7 +58,7 @@ public class IFoldTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Fold executed");
+        LOGGER.info(log() + "fold finished");
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,42 +16,38 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.concurrent.BrokenBarrierException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.BrokenBarrierException;
+
 /**
- *
  * @author César Pomar
  */
 public class ITreeAggregateTask extends IDriverTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITreeAggregateTask.class);
 
+    private final ISource zero;
     private final ISource seqOp;
     private final ISource combOp;
-    private final long depth;
 
-    public ITreeAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp, ISource tp) {
-        this(name, executor, shared, driver, seqOp, combOp, 2, tp);
-    }
-
-    public ITreeAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp, long depth, ISource tp) {
+    public ITreeAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource zero, ISource seqOp, ISource combOp, ISource tp) {
         super(name, executor, shared, driver, tp);
+        this.zero = zero;
         this.seqOp = seqOp;
         this.combOp = combOp;
-        this.depth = depth;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing treeAggregate");
+        LOGGER.info(log() + "treeAggregate started");
         try {
             if (!driver) {
-                executor.getGeneralActionModule().treeAggregate(seqOp, combOp, depth);
+                executor.getGeneralActionModule().treeAggregate(zero, seqOp, combOp);
             }
             shared.barrier.await();
             gather(context, true);
@@ -64,7 +60,6 @@ public class ITreeAggregateTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "TreeAggregate executed");
+        LOGGER.info(log() + "treeAggregate finished");
     }
-
 }

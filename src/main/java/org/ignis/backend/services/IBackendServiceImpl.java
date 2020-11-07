@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
  */
 package org.ignis.backend.services;
 
-import io.undertow.Undertow;
-import io.undertow.util.Headers;
+import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpServer;
 import org.apache.thrift.TException;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TCompactProtocol;
@@ -34,8 +34,9 @@ import org.ignis.backend.properties.IKeys;
 import org.ignis.rpc.driver.IBackendService;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
+
 /**
- *
  * @author César Pomar
  */
 public final class IBackendServiceImpl extends IService implements IBackendService.Iface {
@@ -44,7 +45,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
 
     private TServerTransport transport;
     private TServer server;
-    private Undertow healthEndpoint;
+    private HttpServer healthEndpoint;
 
     public IBackendServiceImpl(IAttributes attributes) {
         super(attributes);
@@ -101,10 +102,16 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     private void startHealthServer() {
         try {
             int port = attributes.defaultProperties.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
-            healthEndpoint = Undertow.builder().addHttpListener(port, "localhost").setHandler(exchange -> {
-                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-                exchange.getResponseSender().send("Ok");
-            }).build();
+            healthEndpoint = HttpServer.create(new InetSocketAddress("localhost",port), 0);
+            HttpContext context = healthEndpoint.createContext("/");
+            context.setHandler(exchange -> {
+                exchange.getResponseHeaders().add("Content-Type", "text/html");
+                exchange.sendResponseHeaders(200, 2);
+                try (var os = exchange.getResponseBody()) {
+                    os.write("Ok".getBytes());
+                }
+            });
+            healthEndpoint.start();
             healthEndpoint.start();
             LOGGER.info("Backend health server started");
         } catch (Exception ex) {
@@ -115,7 +122,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     private void stopHealthServer() {
         try {
             if (healthEndpoint != null) {
-                healthEndpoint.stop();
+                healthEndpoint.stop(0);
             }
             LOGGER.info("Backend health server stopped");
         } catch (Exception ex) {

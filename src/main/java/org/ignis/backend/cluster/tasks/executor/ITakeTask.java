@@ -56,7 +56,7 @@ public class ITakeTask extends IDriverTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing take");
+        LOGGER.info(log() + "take started");
         try {
             if (!driver) {
                 shared.count.set((int) executor.getId(), executor.getMathModule().count());
@@ -94,7 +94,7 @@ public class ITakeTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Take executed");
+        LOGGER.info(log() + "Take finished");
     }
 
 }

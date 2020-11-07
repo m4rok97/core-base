@@ -16,41 +16,45 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
-import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.rpc.IExecutorException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.BrokenBarrierException;
 
 /**
  *
  * @author César Pomar
  */
-public final class IApplyPartitionTask extends IExecutorContextTask {
+public class IValuesTask extends IDriverTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IApplyPartitionTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IValuesTask.class);
 
-    private final ISource function;
-
-    public IApplyPartitionTask(String name, IExecutor executor, ISource function) {
-        super(name, executor, Mode.LOAD_AND_SAVE);
-        this.function = function;
+    public IValuesTask(String name, IExecutor executor, Shared shared, boolean driver, ISource tp) {
+        super(name, executor, shared, driver, tp);
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing applyPartition");
+        LOGGER.info(log() + "values started");
         try {
-            executor.getGeneralModule().flatmap(function);
-        } catch (IExecutorException ex) {
-            throw new IExecutorExceptionWrapper(ex);
-        } catch (TException ex) {
+            if (!driver) {
+                executor.getGeneralActionModule().values();
+            }
+            shared.barrier.await();
+            gather(context);
+        } catch (IgnisException ex) {
+            shared.barrier.fails();
+            throw ex;
+        } catch (BrokenBarrierException ex) {
+            //Other Task has failed
+        } catch (Exception ex) {
+            shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "ApplyPartition executed");
+        LOGGER.info(log() + "values finished");
     }
 
 }

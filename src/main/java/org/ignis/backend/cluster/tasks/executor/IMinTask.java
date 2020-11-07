@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import java.util.concurrent.BrokenBarrierException;
+
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -24,7 +25,6 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public class IMinTask extends IDriverTask {
@@ -38,12 +38,20 @@ public class IMinTask extends IDriverTask {
         this.cmp = cmp;
     }
 
+    public IMinTask(String name, IExecutor executor, IDriverTask.Shared shared, boolean driver, ISource tp) {
+        this(name, executor, shared, driver, null, tp);
+    }
+
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing max");
+        LOGGER.info(log() + "min started");
         try {
             if (!driver) {
-                executor.getMathModule().min(cmp);
+                if (cmp != null) {
+                    executor.getMathModule().min1(cmp);
+                } else {
+                    executor.getMathModule().min();
+                }
             }
             shared.barrier.await();
             gather(context, true);
@@ -56,7 +64,7 @@ public class IMinTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Max executed");
+        LOGGER.info(log() + "min finished");
     }
 
 }

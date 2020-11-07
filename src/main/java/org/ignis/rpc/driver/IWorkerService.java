@@ -21,9 +21,9 @@ public class IWorkerService {
 
     public void setName(IWorkerId id, java.lang.String name) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public org.ignis.rpc.driver.IDataFrameId parallelize(IWorkerId id, long dataId) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
+    public org.ignis.rpc.driver.IDataFrameId parallelize(IWorkerId id, long dataId, long partitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public org.ignis.rpc.driver.IDataFrameId parallelize3(IWorkerId id, long dataId, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
+    public org.ignis.rpc.driver.IDataFrameId parallelize4(IWorkerId id, long dataId, long partitions, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
     public org.ignis.rpc.driver.IDataFrameId importDataFrame(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
@@ -61,9 +61,9 @@ public class IWorkerService {
 
     public void setName(IWorkerId id, java.lang.String name, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void parallelize(IWorkerId id, long dataId, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
+    public void parallelize(IWorkerId id, long dataId, long partitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
-    public void parallelize3(IWorkerId id, long dataId, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
+    public void parallelize4(IWorkerId id, long dataId, long partitions, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
     public void importDataFrame(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
@@ -245,17 +245,18 @@ public class IWorkerService {
       return;
     }
 
-    public org.ignis.rpc.driver.IDataFrameId parallelize(IWorkerId id, long dataId) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId parallelize(IWorkerId id, long dataId, long partitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_parallelize(id, dataId);
+      send_parallelize(id, dataId, partitions);
       return recv_parallelize();
     }
 
-    public void send_parallelize(IWorkerId id, long dataId) throws org.apache.thrift.TException
+    public void send_parallelize(IWorkerId id, long dataId, long partitions) throws org.apache.thrift.TException
     {
       parallelize_args args = new parallelize_args();
       args.setId(id);
       args.setDataId(dataId);
+      args.setPartitions(partitions);
       sendBase("parallelize", args);
     }
 
@@ -272,32 +273,33 @@ public class IWorkerService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "parallelize failed: unknown result");
     }
 
-    public org.ignis.rpc.driver.IDataFrameId parallelize3(IWorkerId id, long dataId, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId parallelize4(IWorkerId id, long dataId, long partitions, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_parallelize3(id, dataId, src);
-      return recv_parallelize3();
+      send_parallelize4(id, dataId, partitions, src);
+      return recv_parallelize4();
     }
 
-    public void send_parallelize3(IWorkerId id, long dataId, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
+    public void send_parallelize4(IWorkerId id, long dataId, long partitions, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
     {
-      parallelize3_args args = new parallelize3_args();
+      parallelize4_args args = new parallelize4_args();
       args.setId(id);
       args.setDataId(dataId);
+      args.setPartitions(partitions);
       args.setSrc(src);
-      sendBase("parallelize3", args);
+      sendBase("parallelize4", args);
     }
 
-    public org.ignis.rpc.driver.IDataFrameId recv_parallelize3() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId recv_parallelize4() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      parallelize3_result result = new parallelize3_result();
-      receiveBase(result, "parallelize3");
+      parallelize4_result result = new parallelize4_result();
+      receiveBase(result, "parallelize4");
       if (result.isSetSuccess()) {
         return result.success;
       }
       if (result.ex != null) {
         throw result.ex;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "parallelize3 failed: unknown result");
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "parallelize4 failed: unknown result");
     }
 
     public org.ignis.rpc.driver.IDataFrameId importDataFrame(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
@@ -810,9 +812,9 @@ public class IWorkerService {
       }
     }
 
-    public void parallelize(IWorkerId id, long dataId, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+    public void parallelize(IWorkerId id, long dataId, long partitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      parallelize_call method_call = new parallelize_call(id, dataId, resultHandler, this, ___protocolFactory, ___transport);
+      parallelize_call method_call = new parallelize_call(id, dataId, partitions, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -820,10 +822,12 @@ public class IWorkerService {
     public static class parallelize_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
       private IWorkerId id;
       private long dataId;
-      public parallelize_call(IWorkerId id, long dataId, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private long partitions;
+      public parallelize_call(IWorkerId id, long dataId, long partitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.dataId = dataId;
+        this.partitions = partitions;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
@@ -831,6 +835,7 @@ public class IWorkerService {
         parallelize_args args = new parallelize_args();
         args.setId(id);
         args.setDataId(dataId);
+        args.setPartitions(partitions);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -845,29 +850,32 @@ public class IWorkerService {
       }
     }
 
-    public void parallelize3(IWorkerId id, long dataId, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+    public void parallelize4(IWorkerId id, long dataId, long partitions, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      parallelize3_call method_call = new parallelize3_call(id, dataId, src, resultHandler, this, ___protocolFactory, ___transport);
+      parallelize4_call method_call = new parallelize4_call(id, dataId, partitions, src, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class parallelize3_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
+    public static class parallelize4_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
       private IWorkerId id;
       private long dataId;
+      private long partitions;
       private org.ignis.rpc.ISource src;
-      public parallelize3_call(IWorkerId id, long dataId, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public parallelize4_call(IWorkerId id, long dataId, long partitions, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.dataId = dataId;
+        this.partitions = partitions;
         this.src = src;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("parallelize3", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        parallelize3_args args = new parallelize3_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("parallelize4", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        parallelize4_args args = new parallelize4_args();
         args.setId(id);
         args.setDataId(dataId);
+        args.setPartitions(partitions);
         args.setSrc(src);
         args.write(prot);
         prot.writeMessageEnd();
@@ -879,7 +887,7 @@ public class IWorkerService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_parallelize3();
+        return (new Client(prot)).recv_parallelize4();
       }
     }
 
@@ -1311,7 +1319,7 @@ public class IWorkerService {
       processMap.put("newInstance4", new newInstance4());
       processMap.put("setName", new setName());
       processMap.put("parallelize", new parallelize());
-      processMap.put("parallelize3", new parallelize3());
+      processMap.put("parallelize4", new parallelize4());
       processMap.put("importDataFrame", new importDataFrame());
       processMap.put("importDataFrame3a", new importDataFrame3a());
       processMap.put("importDataFrame3b", new importDataFrame3b());
@@ -1492,7 +1500,7 @@ public class IWorkerService {
       public parallelize_result getResult(I iface, parallelize_args args) throws org.apache.thrift.TException {
         parallelize_result result = new parallelize_result();
         try {
-          result.success = iface.parallelize(args.id, args.dataId);
+          result.success = iface.parallelize(args.id, args.dataId, args.partitions);
         } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
@@ -1500,13 +1508,13 @@ public class IWorkerService {
       }
     }
 
-    public static class parallelize3<I extends Iface> extends org.apache.thrift.ProcessFunction<I, parallelize3_args> {
-      public parallelize3() {
-        super("parallelize3");
+    public static class parallelize4<I extends Iface> extends org.apache.thrift.ProcessFunction<I, parallelize4_args> {
+      public parallelize4() {
+        super("parallelize4");
       }
 
-      public parallelize3_args getEmptyArgsInstance() {
-        return new parallelize3_args();
+      public parallelize4_args getEmptyArgsInstance() {
+        return new parallelize4_args();
       }
 
       protected boolean isOneway() {
@@ -1518,10 +1526,10 @@ public class IWorkerService {
         return false;
       }
 
-      public parallelize3_result getResult(I iface, parallelize3_args args) throws org.apache.thrift.TException {
-        parallelize3_result result = new parallelize3_result();
+      public parallelize4_result getResult(I iface, parallelize4_args args) throws org.apache.thrift.TException {
+        parallelize4_result result = new parallelize4_result();
         try {
-          result.success = iface.parallelize3(args.id, args.dataId, args.src);
+          result.success = iface.parallelize4(args.id, args.dataId, args.partitions, args.src);
         } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
@@ -1867,7 +1875,7 @@ public class IWorkerService {
       processMap.put("newInstance4", new newInstance4());
       processMap.put("setName", new setName());
       processMap.put("parallelize", new parallelize());
-      processMap.put("parallelize3", new parallelize3());
+      processMap.put("parallelize4", new parallelize4());
       processMap.put("importDataFrame", new importDataFrame());
       processMap.put("importDataFrame3a", new importDataFrame3a());
       processMap.put("importDataFrame3b", new importDataFrame3b());
@@ -2267,24 +2275,24 @@ public class IWorkerService {
       }
 
       public void start(I iface, parallelize_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-        iface.parallelize(args.id, args.dataId,resultHandler);
+        iface.parallelize(args.id, args.dataId, args.partitions,resultHandler);
       }
     }
 
-    public static class parallelize3<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, parallelize3_args, org.ignis.rpc.driver.IDataFrameId> {
-      public parallelize3() {
-        super("parallelize3");
+    public static class parallelize4<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, parallelize4_args, org.ignis.rpc.driver.IDataFrameId> {
+      public parallelize4() {
+        super("parallelize4");
       }
 
-      public parallelize3_args getEmptyArgsInstance() {
-        return new parallelize3_args();
+      public parallelize4_args getEmptyArgsInstance() {
+        return new parallelize4_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId>() { 
           public void onComplete(org.ignis.rpc.driver.IDataFrameId o) {
-            parallelize3_result result = new parallelize3_result();
+            parallelize4_result result = new parallelize4_result();
             result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
@@ -2299,7 +2307,7 @@ public class IWorkerService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            parallelize3_result result = new parallelize3_result();
+            parallelize4_result result = new parallelize4_result();
             if (e instanceof org.ignis.rpc.driver.IDriverException) {
               result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
@@ -2331,8 +2339,8 @@ public class IWorkerService {
         return false;
       }
 
-      public void start(I iface, parallelize3_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-        iface.parallelize3(args.id, args.dataId, args.src,resultHandler);
+      public void start(I iface, parallelize4_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+        iface.parallelize4(args.id, args.dataId, args.partitions, args.src,resultHandler);
       }
     }
 
@@ -8090,17 +8098,20 @@ public class IWorkerService {
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField DATA_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("dataId", org.apache.thrift.protocol.TType.I64, (short)2);
+    private static final org.apache.thrift.protocol.TField PARTITIONS_FIELD_DESC = new org.apache.thrift.protocol.TField("partitions", org.apache.thrift.protocol.TType.I64, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new parallelize_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new parallelize_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IWorkerId id; // required
     private long dataId; // required
+    private long partitions; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      DATA_ID((short)2, "dataId");
+      DATA_ID((short)2, "dataId"),
+      PARTITIONS((short)3, "partitions");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -8120,6 +8131,8 @@ public class IWorkerService {
             return ID;
           case 2: // DATA_ID
             return DATA_ID;
+          case 3: // PARTITIONS
+            return PARTITIONS;
           default:
             return null;
         }
@@ -8162,6 +8175,7 @@ public class IWorkerService {
 
     // isset id assignments
     private static final int __DATAID_ISSET_ID = 0;
+    private static final int __PARTITIONS_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
@@ -8169,6 +8183,8 @@ public class IWorkerService {
       tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IWorkerId.class)));
       tmpMap.put(_Fields.DATA_ID, new org.apache.thrift.meta_data.FieldMetaData("dataId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.PARTITIONS, new org.apache.thrift.meta_data.FieldMetaData("partitions", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(parallelize_args.class, metaDataMap);
@@ -8179,12 +8195,15 @@ public class IWorkerService {
 
     public parallelize_args(
       IWorkerId id,
-      long dataId)
+      long dataId,
+      long partitions)
     {
       this();
       this.id = id;
       this.dataId = dataId;
       setDataIdIsSet(true);
+      this.partitions = partitions;
+      setPartitionsIsSet(true);
     }
 
     /**
@@ -8196,6 +8215,7 @@ public class IWorkerService {
         this.id = new IWorkerId(other.id);
       }
       this.dataId = other.dataId;
+      this.partitions = other.partitions;
     }
 
     public parallelize_args deepCopy() {
@@ -8207,6 +8227,8 @@ public class IWorkerService {
       this.id = null;
       setDataIdIsSet(false);
       this.dataId = 0;
+      setPartitionsIsSet(false);
+      this.partitions = 0;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -8257,6 +8279,29 @@ public class IWorkerService {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __DATAID_ISSET_ID, value);
     }
 
+    public long getPartitions() {
+      return this.partitions;
+    }
+
+    public parallelize_args setPartitions(long partitions) {
+      this.partitions = partitions;
+      setPartitionsIsSet(true);
+      return this;
+    }
+
+    public void unsetPartitions() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
+    }
+
+    /** Returns true if field partitions is set (has been assigned a value) and false otherwise */
+    public boolean isSetPartitions() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
+    }
+
+    public void setPartitionsIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PARTITIONS_ISSET_ID, value);
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
@@ -8275,6 +8320,14 @@ public class IWorkerService {
         }
         break;
 
+      case PARTITIONS:
+        if (value == null) {
+          unsetPartitions();
+        } else {
+          setPartitions((java.lang.Long)value);
+        }
+        break;
+
       }
     }
 
@@ -8286,6 +8339,9 @@ public class IWorkerService {
 
       case DATA_ID:
         return getDataId();
+
+      case PARTITIONS:
+        return getPartitions();
 
       }
       throw new java.lang.IllegalStateException();
@@ -8302,6 +8358,8 @@ public class IWorkerService {
         return isSetId();
       case DATA_ID:
         return isSetDataId();
+      case PARTITIONS:
+        return isSetPartitions();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -8339,6 +8397,15 @@ public class IWorkerService {
           return false;
       }
 
+      boolean this_present_partitions = true;
+      boolean that_present_partitions = true;
+      if (this_present_partitions || that_present_partitions) {
+        if (!(this_present_partitions && that_present_partitions))
+          return false;
+        if (this.partitions != that.partitions)
+          return false;
+      }
+
       return true;
     }
 
@@ -8351,6 +8418,8 @@ public class IWorkerService {
         hashCode = hashCode * 8191 + id.hashCode();
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(dataId);
+
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(partitions);
 
       return hashCode;
     }
@@ -8379,6 +8448,16 @@ public class IWorkerService {
       }
       if (isSetDataId()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.dataId, other.dataId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetPartitions()).compareTo(other.isSetPartitions());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetPartitions()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.partitions, other.partitions);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -8414,6 +8493,10 @@ public class IWorkerService {
       if (!first) sb.append(", ");
       sb.append("dataId:");
       sb.append(this.dataId);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("partitions:");
+      sb.append(this.partitions);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -8480,6 +8563,14 @@ public class IWorkerService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // PARTITIONS
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.partitions = iprot.readI64();
+                struct.setPartitionsIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -8502,6 +8593,9 @@ public class IWorkerService {
         }
         oprot.writeFieldBegin(DATA_ID_FIELD_DESC);
         oprot.writeI64(struct.dataId);
+        oprot.writeFieldEnd();
+        oprot.writeFieldBegin(PARTITIONS_FIELD_DESC);
+        oprot.writeI64(struct.partitions);
         oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
@@ -8527,19 +8621,25 @@ public class IWorkerService {
         if (struct.isSetDataId()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetPartitions()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetDataId()) {
           oprot.writeI64(struct.dataId);
         }
+        if (struct.isSetPartitions()) {
+          oprot.writeI64(struct.partitions);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, parallelize_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
+        java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.id = new IWorkerId();
           struct.id.read(iprot);
@@ -8548,6 +8648,10 @@ public class IWorkerService {
         if (incoming.get(1)) {
           struct.dataId = iprot.readI64();
           struct.setDataIdIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.partitions = iprot.readI64();
+          struct.setPartitionsIsSet(true);
         }
       }
     }
@@ -9036,25 +9140,28 @@ public class IWorkerService {
     }
   }
 
-  public static class parallelize3_args implements org.apache.thrift.TBase<parallelize3_args, parallelize3_args._Fields>, java.io.Serializable, Cloneable, Comparable<parallelize3_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("parallelize3_args");
+  public static class parallelize4_args implements org.apache.thrift.TBase<parallelize4_args, parallelize4_args._Fields>, java.io.Serializable, Cloneable, Comparable<parallelize4_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("parallelize4_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField DATA_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("dataId", org.apache.thrift.protocol.TType.I64, (short)2);
-    private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)3);
+    private static final org.apache.thrift.protocol.TField PARTITIONS_FIELD_DESC = new org.apache.thrift.protocol.TField("partitions", org.apache.thrift.protocol.TType.I64, (short)3);
+    private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)4);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new parallelize3_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new parallelize3_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new parallelize4_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new parallelize4_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IWorkerId id; // required
     private long dataId; // required
+    private long partitions; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
       DATA_ID((short)2, "dataId"),
-      SRC((short)3, "src");
+      PARTITIONS((short)3, "partitions"),
+      SRC((short)4, "src");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -9074,7 +9181,9 @@ public class IWorkerService {
             return ID;
           case 2: // DATA_ID
             return DATA_ID;
-          case 3: // SRC
+          case 3: // PARTITIONS
+            return PARTITIONS;
+          case 4: // SRC
             return SRC;
           default:
             return null;
@@ -9118,6 +9227,7 @@ public class IWorkerService {
 
     // isset id assignments
     private static final int __DATAID_ISSET_ID = 0;
+    private static final int __PARTITIONS_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
@@ -9126,43 +9236,49 @@ public class IWorkerService {
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IWorkerId.class)));
       tmpMap.put(_Fields.DATA_ID, new org.apache.thrift.meta_data.FieldMetaData("dataId", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.PARTITIONS, new org.apache.thrift.meta_data.FieldMetaData("partitions", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(parallelize3_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(parallelize4_args.class, metaDataMap);
     }
 
-    public parallelize3_args() {
+    public parallelize4_args() {
     }
 
-    public parallelize3_args(
+    public parallelize4_args(
       IWorkerId id,
       long dataId,
+      long partitions,
       org.ignis.rpc.ISource src)
     {
       this();
       this.id = id;
       this.dataId = dataId;
       setDataIdIsSet(true);
+      this.partitions = partitions;
+      setPartitionsIsSet(true);
       this.src = src;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public parallelize3_args(parallelize3_args other) {
+    public parallelize4_args(parallelize4_args other) {
       __isset_bitfield = other.__isset_bitfield;
       if (other.isSetId()) {
         this.id = new IWorkerId(other.id);
       }
       this.dataId = other.dataId;
+      this.partitions = other.partitions;
       if (other.isSetSrc()) {
         this.src = new org.ignis.rpc.ISource(other.src);
       }
     }
 
-    public parallelize3_args deepCopy() {
-      return new parallelize3_args(this);
+    public parallelize4_args deepCopy() {
+      return new parallelize4_args(this);
     }
 
     @Override
@@ -9170,6 +9286,8 @@ public class IWorkerService {
       this.id = null;
       setDataIdIsSet(false);
       this.dataId = 0;
+      setPartitionsIsSet(false);
+      this.partitions = 0;
       this.src = null;
     }
 
@@ -9178,7 +9296,7 @@ public class IWorkerService {
       return this.id;
     }
 
-    public parallelize3_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
+    public parallelize4_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
       this.id = id;
       return this;
     }
@@ -9202,7 +9320,7 @@ public class IWorkerService {
       return this.dataId;
     }
 
-    public parallelize3_args setDataId(long dataId) {
+    public parallelize4_args setDataId(long dataId) {
       this.dataId = dataId;
       setDataIdIsSet(true);
       return this;
@@ -9221,12 +9339,35 @@ public class IWorkerService {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __DATAID_ISSET_ID, value);
     }
 
+    public long getPartitions() {
+      return this.partitions;
+    }
+
+    public parallelize4_args setPartitions(long partitions) {
+      this.partitions = partitions;
+      setPartitionsIsSet(true);
+      return this;
+    }
+
+    public void unsetPartitions() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
+    }
+
+    /** Returns true if field partitions is set (has been assigned a value) and false otherwise */
+    public boolean isSetPartitions() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
+    }
+
+    public void setPartitionsIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PARTITIONS_ISSET_ID, value);
+    }
+
     @org.apache.thrift.annotation.Nullable
     public org.ignis.rpc.ISource getSrc() {
       return this.src;
     }
 
-    public parallelize3_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
+    public parallelize4_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
       this.src = src;
       return this;
     }
@@ -9264,6 +9405,14 @@ public class IWorkerService {
         }
         break;
 
+      case PARTITIONS:
+        if (value == null) {
+          unsetPartitions();
+        } else {
+          setPartitions((java.lang.Long)value);
+        }
+        break;
+
       case SRC:
         if (value == null) {
           unsetSrc();
@@ -9284,6 +9433,9 @@ public class IWorkerService {
       case DATA_ID:
         return getDataId();
 
+      case PARTITIONS:
+        return getPartitions();
+
       case SRC:
         return getSrc();
 
@@ -9302,6 +9454,8 @@ public class IWorkerService {
         return isSetId();
       case DATA_ID:
         return isSetDataId();
+      case PARTITIONS:
+        return isSetPartitions();
       case SRC:
         return isSetSrc();
       }
@@ -9312,12 +9466,12 @@ public class IWorkerService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof parallelize3_args)
-        return this.equals((parallelize3_args)that);
+      if (that instanceof parallelize4_args)
+        return this.equals((parallelize4_args)that);
       return false;
     }
 
-    public boolean equals(parallelize3_args that) {
+    public boolean equals(parallelize4_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -9338,6 +9492,15 @@ public class IWorkerService {
         if (!(this_present_dataId && that_present_dataId))
           return false;
         if (this.dataId != that.dataId)
+          return false;
+      }
+
+      boolean this_present_partitions = true;
+      boolean that_present_partitions = true;
+      if (this_present_partitions || that_present_partitions) {
+        if (!(this_present_partitions && that_present_partitions))
+          return false;
+        if (this.partitions != that.partitions)
           return false;
       }
 
@@ -9363,6 +9526,8 @@ public class IWorkerService {
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(dataId);
 
+      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(partitions);
+
       hashCode = hashCode * 8191 + ((isSetSrc()) ? 131071 : 524287);
       if (isSetSrc())
         hashCode = hashCode * 8191 + src.hashCode();
@@ -9371,7 +9536,7 @@ public class IWorkerService {
     }
 
     @Override
-    public int compareTo(parallelize3_args other) {
+    public int compareTo(parallelize4_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -9394,6 +9559,16 @@ public class IWorkerService {
       }
       if (isSetDataId()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.dataId, other.dataId);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetPartitions()).compareTo(other.isSetPartitions());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetPartitions()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.partitions, other.partitions);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -9426,7 +9601,7 @@ public class IWorkerService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("parallelize3_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("parallelize4_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -9439,6 +9614,10 @@ public class IWorkerService {
       if (!first) sb.append(", ");
       sb.append("dataId:");
       sb.append(this.dataId);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("partitions:");
+      sb.append(this.partitions);
       first = false;
       if (!first) sb.append(", ");
       sb.append("src:");
@@ -9481,15 +9660,15 @@ public class IWorkerService {
       }
     }
 
-    private static class parallelize3_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public parallelize3_argsStandardScheme getScheme() {
-        return new parallelize3_argsStandardScheme();
+    private static class parallelize4_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public parallelize4_argsStandardScheme getScheme() {
+        return new parallelize4_argsStandardScheme();
       }
     }
 
-    private static class parallelize3_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<parallelize3_args> {
+    private static class parallelize4_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<parallelize4_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, parallelize3_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, parallelize4_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -9516,7 +9695,15 @@ public class IWorkerService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 3: // SRC
+            case 3: // PARTITIONS
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.partitions = iprot.readI64();
+                struct.setPartitionsIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 4: // SRC
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.src = new org.ignis.rpc.ISource();
                 struct.src.read(iprot);
@@ -9536,7 +9723,7 @@ public class IWorkerService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, parallelize3_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, parallelize4_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -9547,6 +9734,9 @@ public class IWorkerService {
         }
         oprot.writeFieldBegin(DATA_ID_FIELD_DESC);
         oprot.writeI64(struct.dataId);
+        oprot.writeFieldEnd();
+        oprot.writeFieldBegin(PARTITIONS_FIELD_DESC);
+        oprot.writeI64(struct.partitions);
         oprot.writeFieldEnd();
         if (struct.src != null) {
           oprot.writeFieldBegin(SRC_FIELD_DESC);
@@ -9559,16 +9749,16 @@ public class IWorkerService {
 
     }
 
-    private static class parallelize3_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public parallelize3_argsTupleScheme getScheme() {
-        return new parallelize3_argsTupleScheme();
+    private static class parallelize4_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public parallelize4_argsTupleScheme getScheme() {
+        return new parallelize4_argsTupleScheme();
       }
     }
 
-    private static class parallelize3_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<parallelize3_args> {
+    private static class parallelize4_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<parallelize4_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, parallelize3_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, parallelize4_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetId()) {
@@ -9577,15 +9767,21 @@ public class IWorkerService {
         if (struct.isSetDataId()) {
           optionals.set(1);
         }
-        if (struct.isSetSrc()) {
+        if (struct.isSetPartitions()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetSrc()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetId()) {
           struct.id.write(oprot);
         }
         if (struct.isSetDataId()) {
           oprot.writeI64(struct.dataId);
+        }
+        if (struct.isSetPartitions()) {
+          oprot.writeI64(struct.partitions);
         }
         if (struct.isSetSrc()) {
           struct.src.write(oprot);
@@ -9593,9 +9789,9 @@ public class IWorkerService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, parallelize3_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, parallelize4_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
+        java.util.BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.id = new IWorkerId();
           struct.id.read(iprot);
@@ -9606,6 +9802,10 @@ public class IWorkerService {
           struct.setDataIdIsSet(true);
         }
         if (incoming.get(2)) {
+          struct.partitions = iprot.readI64();
+          struct.setPartitionsIsSet(true);
+        }
+        if (incoming.get(3)) {
           struct.src = new org.ignis.rpc.ISource();
           struct.src.read(iprot);
           struct.setSrcIsSet(true);
@@ -9618,14 +9818,14 @@ public class IWorkerService {
     }
   }
 
-  public static class parallelize3_result implements org.apache.thrift.TBase<parallelize3_result, parallelize3_result._Fields>, java.io.Serializable, Cloneable, Comparable<parallelize3_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("parallelize3_result");
+  public static class parallelize4_result implements org.apache.thrift.TBase<parallelize4_result, parallelize4_result._Fields>, java.io.Serializable, Cloneable, Comparable<parallelize4_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("parallelize4_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new parallelize3_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new parallelize3_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new parallelize4_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new parallelize4_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
@@ -9702,13 +9902,13 @@ public class IWorkerService {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(parallelize3_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(parallelize4_result.class, metaDataMap);
     }
 
-    public parallelize3_result() {
+    public parallelize4_result() {
     }
 
-    public parallelize3_result(
+    public parallelize4_result(
       org.ignis.rpc.driver.IDataFrameId success,
       org.ignis.rpc.driver.IDriverException ex)
     {
@@ -9720,7 +9920,7 @@ public class IWorkerService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public parallelize3_result(parallelize3_result other) {
+    public parallelize4_result(parallelize4_result other) {
       if (other.isSetSuccess()) {
         this.success = new org.ignis.rpc.driver.IDataFrameId(other.success);
       }
@@ -9729,8 +9929,8 @@ public class IWorkerService {
       }
     }
 
-    public parallelize3_result deepCopy() {
-      return new parallelize3_result(this);
+    public parallelize4_result deepCopy() {
+      return new parallelize4_result(this);
     }
 
     @Override
@@ -9744,7 +9944,7 @@ public class IWorkerService {
       return this.success;
     }
 
-    public parallelize3_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
+    public parallelize4_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
       this.success = success;
       return this;
     }
@@ -9769,7 +9969,7 @@ public class IWorkerService {
       return this.ex;
     }
 
-    public parallelize3_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
+    public parallelize4_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -9842,12 +10042,12 @@ public class IWorkerService {
     public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
-      if (that instanceof parallelize3_result)
-        return this.equals((parallelize3_result)that);
+      if (that instanceof parallelize4_result)
+        return this.equals((parallelize4_result)that);
       return false;
     }
 
-    public boolean equals(parallelize3_result that) {
+    public boolean equals(parallelize4_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -9890,7 +10090,7 @@ public class IWorkerService {
     }
 
     @Override
-    public int compareTo(parallelize3_result other) {
+    public int compareTo(parallelize4_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -9935,7 +10135,7 @@ public class IWorkerService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("parallelize3_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("parallelize4_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -9981,15 +10181,15 @@ public class IWorkerService {
       }
     }
 
-    private static class parallelize3_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public parallelize3_resultStandardScheme getScheme() {
-        return new parallelize3_resultStandardScheme();
+    private static class parallelize4_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public parallelize4_resultStandardScheme getScheme() {
+        return new parallelize4_resultStandardScheme();
       }
     }
 
-    private static class parallelize3_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<parallelize3_result> {
+    private static class parallelize4_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<parallelize4_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, parallelize3_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, parallelize4_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -10028,7 +10228,7 @@ public class IWorkerService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, parallelize3_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, parallelize4_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -10048,16 +10248,16 @@ public class IWorkerService {
 
     }
 
-    private static class parallelize3_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public parallelize3_resultTupleScheme getScheme() {
-        return new parallelize3_resultTupleScheme();
+    private static class parallelize4_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public parallelize4_resultTupleScheme getScheme() {
+        return new parallelize4_resultTupleScheme();
       }
     }
 
-    private static class parallelize3_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<parallelize3_result> {
+    private static class parallelize4_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<parallelize4_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, parallelize3_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, parallelize4_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetSuccess()) {
@@ -10076,7 +10276,7 @@ public class IWorkerService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, parallelize3_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, parallelize4_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {

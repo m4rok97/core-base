@@ -38,12 +38,20 @@ public class IMaxTask extends IDriverTask {
         this.cmp = cmp;
     }
 
+    public IMaxTask(String name, IExecutor executor, Shared shared, boolean driver, ISource tp) {
+        this(name, executor, shared, driver, null, tp);
+    }
+
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing max");
+        LOGGER.info(log() + "max started");
         try {
             if (!driver) {
-                executor.getMathModule().max(cmp);
+                if(cmp != null){
+                    executor.getMathModule().max1(cmp);
+                }else{
+                    executor.getMathModule().max();
+                }
             }
             shared.barrier.await();
             gather(context, true);
@@ -56,7 +64,7 @@ public class IMaxTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Max executed");
+        LOGGER.info(log() + "max finished");
     }
 
 }

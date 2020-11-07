@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IWorkerParallelizeDataHelper extends IWorkerHelper {
@@ -39,33 +38,36 @@ public final class IWorkerParallelizeDataHelper extends IWorkerHelper {
         super(job, properties);
     }
 
-    public IDataFrame parallelize(IDriver driver, long dataId) throws IgnisException {
+    public IDataFrame parallelize(IDriver driver, long dataId, long partitions) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newDependency(worker.getTasks());
         IParallelizeTask.Shared shared = new IParallelizeTask.Shared(worker.getExecutors().size());
         for (IExecutor executor : worker.getExecutors()) {
-            builder.newTask(new IParallelizeTask(getName(), executor, shared, false, dataId));
+            builder.newTask(new IParallelizeTask(getName(), executor, shared, false, partitions, dataId));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new IParallelizeTask(getName(), driver.getExecutor(), shared, true, dataId));
+        builder.newTask(new IParallelizeTask(getName(), driver.getExecutor(), shared, true, partitions, dataId));
 
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering parallelize -> " + target.getName());
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "parallelize(" +
+                ") registered -> " + target.getName());
         return target;
     }
 
-    public IDataFrame parallelize(IDriver driver, long dataId, ISource src) throws IgnisException {
+    public IDataFrame parallelize(IDriver driver, long dataId, long partitions, ISource src) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newDependency(worker.getTasks());
         IParallelizeTask.Shared shared = new IParallelizeTask.Shared(worker.getExecutors().size());
         for (IExecutor executor : worker.getExecutors()) {
-            builder.newTask(new IParallelizeTask(getName(), executor, shared, false, dataId, src));
+            builder.newTask(new IParallelizeTask(getName(), executor, shared, false, dataId, partitions, src));
         }
         builder.newLock(driver.getLock());
-        builder.newTask(new IParallelizeTask(getName(), driver.getExecutor(), shared, true, dataId, src));
+        builder.newTask(new IParallelizeTask(getName(), driver.getExecutor(), shared, true, dataId, partitions, src));
 
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering parallelize -> " + target.getName());
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "parallelize(" +
+                "partitions=" + partitions +
+                ") registered -> " + target.getName());
         return target;
     }
 }

@@ -42,7 +42,7 @@ public final class IMapTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing map");
+        LOGGER.info(log() + "map started");
         try {
             executor.getGeneralModule().map_(function);
         } catch (IExecutorException ex) {
@@ -50,7 +50,7 @@ public final class IMapTask extends IExecutorContextTask {
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Map executed");
+        LOGGER.info(log() + "map finished");
     }
 
 }

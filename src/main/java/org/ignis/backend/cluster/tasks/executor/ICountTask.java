@@ -55,7 +55,7 @@ public class ICountTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing count");
+        LOGGER.info(log() + "count started");
         try {
             if (shared.barrier.await() == 0) {
                 shared.result.set(0);
@@ -74,7 +74,7 @@ public class ICountTask extends IExecutorContextTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Count executed");
+        LOGGER.info(log() + "count finished");
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import java.util.concurrent.BrokenBarrierException;
+
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
@@ -26,7 +27,6 @@ import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class ICommGroupCreateTask extends IExecutorTask {
@@ -57,10 +57,10 @@ public final class ICommGroupCreateTask extends IExecutorTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        if(shared.executors == 1){
+        if (shared.executors == 1) {
             return;
         }
-        LOGGER.info(log() + "Testing mpi group");
+        LOGGER.info(log() + "testing worker mpi group");
         try {
             shared.test = true;
             shared.barrier.await();
@@ -68,21 +68,19 @@ public final class ICommGroupCreateTask extends IExecutorTask {
                 shared.test = false;
             }
             shared.barrier.await();
-            if (shared.test) {
-                LOGGER.info(log() + "Executor mpi group ready");
-                return;
+            if (!shared.test) {
+                if (attempt != -1) {
+                    executor.getCommModule().destroyGroups();
+                }
+                attempt = executor.getResets();
+                if (executor.getId() == 0) {
+                    LOGGER.info(log() + "worker mpi group not found, creating a new one");
+                    shared.group = executor.getCommModule().createGroup();
+                }
+                shared.barrier.await();
+                executor.getCommModule().joinGroupMembers(shared.group, executor.getId(), shared.executors);
             }
-            if (attempt != -1) {
-                executor.getCommModule().destroyGroups();
-            }
-            attempt = executor.getResets();
-            if (executor.getId() == 0) {
-                LOGGER.info(log() + "Mpi driver group not found, creating a new one");
-                shared.group = executor.getCommModule().createGroup();
-            }
-            shared.barrier.await();
-            executor.getCommModule().joinGroupMembers(shared.group, executor.getId(), shared.executors);
-            LOGGER.info(log() + "Executor mpi group ready");
+            LOGGER.info(log() + "worker mpi group ready");
             shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();

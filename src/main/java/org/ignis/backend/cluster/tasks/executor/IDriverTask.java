@@ -51,6 +51,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         protected final IBarrier barrier;
         protected final int executors;
         private String group;
+        private byte protocol;
         private boolean flag;
         private List<List<ByteBuffer>> buffer;
 
@@ -61,6 +62,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
     protected final String id;
     private final long dataId;
     private final ISource src;
+    private Integer attempt;
 
     protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId, ISource src) {
         super(name, executor, !driver ? Mode.LOAD : Mode.NONE);
@@ -69,6 +71,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         this.dataId = dataId;
         this.src = src;
         this.id = executor.getContainer().getCluster() + "-" + executor.getWorker();
+        this.attempt = -1;
     }
 
     protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src) {
@@ -105,7 +108,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
                 }
             }
         }
-        
+
         try {
             executor.getExecutorServerModule().test();
             executor.getExecutorServerModule().start(executor.getExecutorProperties());
@@ -124,11 +127,15 @@ public abstract class IDriverTask extends IExecutorContextTask {
                 shared.flag = true;
             }
             shared.barrier.await();
-            if (!executor.getCommModule().hasGroup(id)) {
+            if (!executor.getCommModule().hasGroup(id) || executor.getResets() != attempt) {
                 shared.flag = false;
             }
             shared.barrier.await();
             if (!shared.flag) {
+                if(attempt != -1){
+                    executor.getCommModule().destroyGroup(id);
+                }
+                attempt = executor.getResets();
                 if (!driver && executor.getId() == 0) {
                     LOGGER.info(log() + "Mpi driver group not found, creating a new one");
                     shared.group = executor.getCommModule().createGroup();
@@ -168,14 +175,18 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "MpiGather executed");
     }
 
-    protected void mpiScatter(ITaskContext context) throws IgnisException, BrokenBarrierException {
+    protected void mpiScatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Executing mpiScatter");
         mpiDriverGroup(context);
         try {
+            if (driver) {
+                executor.getCacheContextModule().loadCache(dataId);
+            }
+            shared.barrier.await();
             if (src != null) {
-                executor.getCommModule().driverScatter3(id, dataId, src);
+                executor.getCommModule().driverScatter3(id, partitions, src);
             } else {
-                executor.getCommModule().driverScatter(id, dataId);
+                executor.getCommModule().driverScatter(id, partitions);
             }
         } catch (IExecutorException ex) {
             shared.barrier.fails();
@@ -192,18 +203,19 @@ public abstract class IDriverTask extends IExecutorContextTask {
         try {
             if (driver) {
                 driverConnection(context);
+                shared.protocol = executor.getCommModule().getProtocol();
                 shared.buffer = new ArrayList<>(Collections.nCopies(shared.executors, null));
             }
             shared.barrier.await();
             if (!driver) {
-                shared.buffer.set((int) executor.getId(), executor.getCommModule().getPartitions());
+                shared.buffer.set((int) executor.getId(), executor.getCommModule().getPartitions(shared.protocol));
             }
             shared.barrier.await();
-            List<ByteBuffer> partitions = shared.buffer.stream().flatMap(x -> x.stream()).collect(Collectors.toList());
             if (driver) {
-                executor.getCommModule().setPartitions(partitions);
+                List<ByteBuffer> group = shared.buffer.stream().flatMap(x -> x.stream()).collect(Collectors.toList());
+                executor.getCommModule().setPartitions2(group, src);
                 context.saveContext(executor);
-                context.set("result", context.contextStack(executor).get(0));
+                context.set("result", context.contextStack(executor).remove(0));
             }
             shared.barrier.await();
         } catch (IExecutorException ex) {
@@ -220,28 +232,30 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "RpcGather executed");
     }
 
-    protected void rpcScatter(ITaskContext context) throws IgnisException, BrokenBarrierException {
+    protected void rpcScatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Executing rpcScatter");
         try {
             if (driver) {
                 driverConnection(context);
+                executor.getCacheContextModule().loadCache(dataId);
                 shared.buffer = new ArrayList<>();
+            } else if (executor.getId() == 0) {
+                shared.protocol = executor.getCommModule().getProtocol();
             }
             shared.barrier.await();
             if (driver) {
-                List<ByteBuffer> partitions = executor.getCommModule().getPartitions();
-                int executorPartitions = partitions.size() / shared.executors;
-                int remainder = partitions.size() % shared.executors;
+                List<ByteBuffer> group = executor.getCommModule().getPartitions2(shared.protocol, partitions);
+                int executorPartitions = group.size() / shared.executors;
+                int remainder = group.size() % shared.executors;
                 int init = 0;
                 for (int i = 0; i < shared.executors; i++) {
                     int end = init + executorPartitions;
                     if (remainder < i) {
                         end++;
                     }
-                    partitions.addAll(partitions.subList(init, end));
+                    shared.buffer.add(group.subList(init, end));
                     init = end;
                 }
-                shared.buffer.add(executor.getCommModule().getPartitions());
             }
             shared.barrier.await();
             if (!driver) {
@@ -298,11 +312,11 @@ public abstract class IDriverTask extends IExecutorContextTask {
         }
     }
 
-    protected void scatter(ITaskContext context) throws IgnisException, BrokenBarrierException {
+    protected void scatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
         if (isTransportMinimal(context)) {
-            rpcScatter(context);
+            rpcScatter(context, partitions);
         } else {
-            mpiScatter(context);
+            mpiScatter(context, partitions);
         }
     }
 

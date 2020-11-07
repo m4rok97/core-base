@@ -30,9 +30,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author César Pomar
  */
-public class IPartitionsCountTask extends IExecutorContextTask {
+public class IPartitionsTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPartitionsCountTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPartitionsTask.class);
 
     public static class Shared {
 
@@ -48,14 +48,14 @@ public class IPartitionsCountTask extends IExecutorContextTask {
 
     private final Shared shared;
 
-    public IPartitionsCountTask(String name, IExecutor executor, Shared shared) {
+    public IPartitionsTask(String name, IExecutor executor, Shared shared) {
         super(name, executor, Mode.LOAD);
         this.shared = shared;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing partition count");
+        LOGGER.info(log() + "partitions started");
         try {
             if (shared.barrier.await() == 0) {
                 shared.result.set(0);
@@ -74,7 +74,7 @@ public class IPartitionsCountTask extends IExecutorContextTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Partition Count executed");
+        LOGGER.info(log() + "partitions finished");
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import java.util.concurrent.BrokenBarrierException;
+
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -24,28 +25,29 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public class IAggregateTask extends IDriverTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IAggregateTask.class);
 
+    private final ISource zero;
     private final ISource seqOp;
     private final ISource combOp;
 
-    public IAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource seqOp, ISource combOp, ISource tp) {
+    public IAggregateTask(String name, IExecutor executor, Shared shared, boolean driver, ISource zero, ISource seqOp, ISource combOp, ISource tp) {
         super(name, executor, shared, driver, tp);
+        this.zero = zero;
         this.seqOp = seqOp;
         this.combOp = combOp;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing aggregate");
+        LOGGER.info(log() + "aggregate started");
         try {
             if (!driver) {
-                executor.getGeneralActionModule().aggregate(seqOp, combOp);
+                executor.getGeneralActionModule().aggregate(zero, seqOp, combOp);
             }
             shared.barrier.await();
             gather(context, true);
@@ -58,6 +60,6 @@ public class IAggregateTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Aggregate executed");
+        LOGGER.info(log() + "aggregate finished");
     }
 }

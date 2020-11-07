@@ -41,6 +41,8 @@ public abstract class IExecutorContextTask extends IExecutorTask {
     protected final void before(ITaskContext context) throws IgnisException {
         if (mode == Mode.LOAD || mode == Mode.LOAD_AND_SAVE) {
             context.loadContext(executor);
+        }else{
+            context.clearContext(executor);
         }
     }
 

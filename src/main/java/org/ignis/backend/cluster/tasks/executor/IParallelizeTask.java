@@ -29,20 +29,23 @@ import org.slf4j.LoggerFactory;
 public class IParallelizeTask extends IDriverTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IParallelizeTask.class);
+    private final long partitions;
 
-    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId) {
+    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId, long partitions) {
         super(name, executor, shared, driver, dataId);
+        this.partitions = partitions;
     }
 
-    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId, ISource src) {
+    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId, long partitions, ISource src) {
         super(name, executor, shared, driver, dataId, src);
+        this.partitions = partitions;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "Executing parallelize");
         try {
-            gather(context);
+            scatter(context, partitions);
         } catch (IgnisException ex) {
             throw ex;
         } catch (Exception ex) {

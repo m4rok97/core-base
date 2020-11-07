@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.tasks.executor;
 
 import java.util.concurrent.BrokenBarrierException;
+
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -24,7 +25,6 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public class ITreeReduceTask extends IDriverTask {
@@ -32,24 +32,18 @@ public class ITreeReduceTask extends IDriverTask {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITreeReduceTask.class);
 
     private final ISource src;
-    private final long depth;
 
     public ITreeReduceTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src, ISource tp) {
-        this(name, executor, shared, driver, src, 2, tp);
-    }
-
-    public ITreeReduceTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src, long depth, ISource tp) {
         super(name, executor, shared, driver, tp);
         this.src = src;
-        this.depth = depth;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing treeReduce");
+        LOGGER.info(log() + "treeReduce started");
         try {
             if (!driver) {
-                executor.getGeneralActionModule().treeReduce(src, depth);
+                executor.getGeneralActionModule().treeReduce(src);
             }
             shared.barrier.await();
             gather(context, true);
@@ -62,7 +56,7 @@ public class ITreeReduceTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "TreeReduce executed");
+        LOGGER.info(log() + "treeReduce finished");
     }
 
 }

@@ -42,7 +42,7 @@ public final class IFlatmapTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing flatmap");
+        LOGGER.info(log() + "flatmap started");
         try {
             executor.getGeneralModule().flatmap(function);
         } catch (IExecutorException ex) {
@@ -50,7 +50,7 @@ public final class IFlatmapTask extends IExecutorContextTask {
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Flatmap executed");
+        LOGGER.info(log() + "flatmap finished");
     }
 
 }

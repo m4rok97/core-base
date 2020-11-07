@@ -22,7 +22,6 @@ import org.ignis.rpc.IExecutorException;
 import org.ignis.rpc.ISource;
 
 /**
- *
  * @author César Pomar
  */
 public final class IPartitionJsonFileTask extends IPartitionFileTask {
@@ -30,12 +29,12 @@ public final class IPartitionJsonFileTask extends IPartitionFileTask {
     private boolean objectMapping;
 
     public IPartitionJsonFileTask(String name, IExecutor executor, Shared shared, String path, boolean objectMapping) {
-        super(name, executor, shared, path);
+        super("partitionJsonFile", name, executor, shared, path);
         this.objectMapping = objectMapping;
     }
 
     public IPartitionJsonFileTask(String name, IExecutor executor, Shared shared, String path, ISource src) {
-        super(name, executor, shared, path, src);
+        super("partitionJsonFile", name, executor, shared, path, src);
     }
 
     @Override

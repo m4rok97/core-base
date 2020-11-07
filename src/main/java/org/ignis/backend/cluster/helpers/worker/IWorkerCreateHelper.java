@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,11 @@ import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.executor.ICommGroupCreateTask;
 import org.ignis.backend.cluster.tasks.executor.IExecutorCreateTask;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IWorkerCreateHelper extends IWorkerHelper {
@@ -39,17 +39,46 @@ public final class IWorkerCreateHelper extends IWorkerHelper {
     }
 
     public ITaskGroup create() throws IgnisException {
+        if (worker.getProperties().getStringList(IKeys.EXECUTOR_CORES_SINGLE).contains(worker.getType())) {
+            return createSingle();
+        }
+
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         ITaskGroup.Builder commBuilder = new ITaskGroup.Builder();
-        ICommGroupCreateTask.Shared commShared = new ICommGroupCreateTask.Shared(worker.getCluster().getContainers().size());
+        int instances = worker.getCluster().getContainers().size();
+        ICommGroupCreateTask.Shared commShared = new ICommGroupCreateTask.Shared(instances);
 
         builder.newDependency(worker.getCluster().getTasks());
-        LOGGER.info(log() + "Registering worker with " + worker.getCluster().getContainers().size() + " executors");
+        LOGGER.info(log() + "Registering worker with " + instances + " executors");
         for (IContainer container : worker.getCluster().getContainers()) {
-            IExecutor executor = container.createExecutor(worker.getId());
+            IExecutor executor = container.createExecutor(container.getId(), worker.getId());
             builder.newTask(new IExecutorCreateTask(getName(), executor, worker.getType(), worker.getCores()));
             commBuilder.newTask(new ICommGroupCreateTask(getName(), executor, commShared));
             worker.getExecutors().add(executor);
+        }
+
+        ITaskGroup taskGroup = builder.build();
+        taskGroup.getSubTasksGroup().add(commBuilder.build());
+
+        return taskGroup;
+    }
+
+    public ITaskGroup createSingle() throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
+        ITaskGroup.Builder commBuilder = new ITaskGroup.Builder();
+        int cores = worker.getCores();
+        int instances = worker.getCluster().getContainers().size() * cores;
+        ICommGroupCreateTask.Shared commShared = new ICommGroupCreateTask.Shared(instances);
+
+        builder.newDependency(worker.getCluster().getTasks());
+        LOGGER.info(log() + "Registering worker with " + instances + " executors");
+        for (IContainer container : worker.getCluster().getContainers()) {
+            for (int i = 0; i < cores; i++) {
+                IExecutor executor = container.createExecutor(container.getId() * cores + i, worker.getId());
+                builder.newTask(new IExecutorCreateTask(getName(), executor, worker.getType(), 1));
+                commBuilder.newTask(new ICommGroupCreateTask(getName(), executor, commShared));
+                worker.getExecutors().add(executor);
+            }
         }
 
         ITaskGroup taskGroup = builder.build();

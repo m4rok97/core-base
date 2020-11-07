@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
+
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -27,7 +28,6 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public class ITakeSampleTask extends IDriverTask {
@@ -38,10 +38,10 @@ public class ITakeSampleTask extends IDriverTask {
 
         public Shared(int executors) {
             super(executors);
-            count = new ArrayList<>(Collections.nCopies(executors, 0l));
+            count = new List[executors];
         }
 
-        private final List<Long> count;
+        private final List<Long>[] count;
 
     }
 
@@ -60,23 +60,24 @@ public class ITakeSampleTask extends IDriverTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing takeSample");
+        LOGGER.info(log() + "takeSample started");
         try {
             if (!driver) {
-                shared.count.set((int) executor.getId(), executor.getMathModule().count());
+                shared.count[(int) executor.getId()] = executor.getIoModule().countByPartition();
             }
-            if (driver && !withReplacement) {
-                long elems = shared.count.stream().reduce(0l, Long::sum);
-                if (elems < num) {
+            if (shared.barrier.await() == 0) {
+                long elems = 0;
+                for (List<Long> l : shared.count) {
+                    elems += l.stream().reduce(0l, Long::sum);
+                }
+                if (!withReplacement && elems < num) {
                     throw new IgnisException("There are not enough elements");
                 }
-            }
-            if (driver) {
-                ISampleTask.sample(context, shared.count, withReplacement, num, seed);
+                ISampleTask.sample(context, shared.count, withReplacement, num, elems, seed);
             }
             shared.barrier.await();
             if (!driver) {
-                executor.getMathModule().takeSample(withReplacement, shared.count.get((int) executor.getId()), seed);
+                executor.getMathModule().sample(withReplacement, shared.count[(int) executor.getId()], seed);
             }
             shared.barrier.await();
             gather(context);
@@ -89,7 +90,7 @@ public class ITakeSampleTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "TakeSample executed");
+        LOGGER.info(log() + "takeSample finished");
     }
 
 }

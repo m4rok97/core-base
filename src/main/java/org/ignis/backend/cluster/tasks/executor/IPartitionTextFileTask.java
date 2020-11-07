@@ -22,13 +22,12 @@ import org.ignis.rpc.IExecutorException;
 import org.ignis.rpc.ISource;
 
 /**
- *
  * @author César Pomar
  */
-public final class IPartitionTextFileTask extends IPartitionFileTask{
+public final class IPartitionTextFileTask extends IPartitionFileTask {
 
     public IPartitionTextFileTask(String name, IExecutor executor, Shared shared, String path) {
-        super(name, executor, shared, path);
+        super("partitionTextFile", name, executor, shared, path);
     }
 
     @Override
@@ -39,5 +38,5 @@ public final class IPartitionTextFileTask extends IPartitionFileTask{
     public void read(String path, long first, long partitions) throws IExecutorException, TException {
         executor.getIoModule().partitionTextFile(path, first, partitions);
     }
-    
+
 }

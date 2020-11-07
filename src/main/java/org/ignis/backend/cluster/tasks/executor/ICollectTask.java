@@ -36,7 +36,7 @@ public class ICollectTask extends IDriverTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing collect");
+        LOGGER.info(log() + "collect started");
         try {
             gather(context);
         } catch (IgnisException ex) {
@@ -44,7 +44,7 @@ public class ICollectTask extends IDriverTask {
         } catch (Exception ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Collect executed");
+        LOGGER.info(log() + "collect finished");
     }
 
 }

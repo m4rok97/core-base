@@ -79,6 +79,16 @@ public class ITaskContext {
             throw new IgnisException(ex.getMessage(), ex);
         }
     }
+    
+    public void clearContext(IExecutor e) throws IgnisException {
+        try {
+             e.getCacheContextModule().clearContext();
+         } catch (IExecutorException ex) {
+            throw new IExecutorExceptionWrapper(ex);
+        } catch (TException ex) {
+            throw new IgnisException(ex.getMessage(), ex);
+        }
+    }
 
     public void set(String key, Object value) {
         vars.put(key, value);

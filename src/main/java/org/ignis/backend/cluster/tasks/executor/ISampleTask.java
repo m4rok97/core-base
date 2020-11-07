@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,10 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.stream.Collectors;
+
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
@@ -28,7 +27,6 @@ import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public class ISampleTask extends IExecutorContextTask {
@@ -38,11 +36,11 @@ public class ISampleTask extends IExecutorContextTask {
     public static class Shared {
 
         public Shared(int executors) {
-            count = new ArrayList<>(Collections.nCopies(executors, 0l));
+            count = new List[executors];
             barrier = new IBarrier(executors);
         }
 
-        private final List<Long> count;
+        private final List<Long>[] count;
         private final IBarrier barrier;
 
     }
@@ -62,19 +60,22 @@ public class ISampleTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing sample");
+        LOGGER.info(log() + "sample started");
         try {
-            shared.count.set((int) executor.getId(), executor.getMathModule().count());
+            shared.count[(int) executor.getId()] = executor.getIoModule().countByPartition();
             if (shared.barrier.await() == 0) {
-                long elems = shared.count.stream().reduce(0l, Long::sum);
+                long elems = 0;
+                for (List<Long> l : shared.count) {
+                    elems += l.stream().reduce(0l, Long::sum);
+                }
                 long num = (long) Math.ceil(elems * fraction);
                 if (!withReplacement && elems < num) {
                     throw new IgnisException("There are not enough elements");
                 }
-                ISampleTask.sample(context, shared.count, withReplacement, num, seed);
+                sample(context, shared.count, withReplacement, num, elems, seed);
             }
             shared.barrier.await();
-            executor.getMathModule().takeSample(withReplacement, shared.count.get((int) executor.getId()), seed);
+            executor.getMathModule().sample(withReplacement, shared.count[(int) executor.getId()], seed);
             shared.barrier.await();
         } catch (IgnisException ex) {
             shared.barrier.fails();
@@ -85,28 +86,32 @@ public class ISampleTask extends IExecutorContextTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Sample executed");
+        LOGGER.info(log() + "sample executed");
     }
 
-    public static void sample(ITaskContext context, List<Long> countList, boolean withReplacement, long num, int seed) throws Exception {
-        if (countList.size() == 1) {
-            countList.set(0, num);
+    public static void sample(ITaskContext context, List<Long>[] countListArray, boolean withReplacement, long num, long elems, int seed) throws Exception {
+        if ((countListArray.length == 1 && countListArray[0].size() == 1) || num == 0) {
+            countListArray[0].set(0, num);
             return;
         }
-        long[] count = new long[countList.size()];
-        long[] elemsExecutor = new long[countList.size()];
-        double[] probs = new double[countList.size()];
-        long elems = countList.stream().reduce(0l, Long::sum);
+        int countListSize = Arrays.stream(countListArray).map(List::size).reduce(0, Integer::sum);
+        long[] count = new long[countListSize];
+        long[] elemsExecutor = new long[countListSize];
+        double[] probs = new double[countListSize];
         double totalProb = 0;
-        for (int i = 0; i < countList.size(); i++) {
-            count[i] = countList.get(i);
-            probs[i] = ((double) count[i]) / elems;
-            totalProb += probs[i];
+        int global_i = 0;
+        for (List<Long> countList : countListArray) {
+            for (int i = 0; i < countList.size(); i++) {
+                count[global_i] = countList.get(i);
+                probs[global_i] = ((double) count[global_i]) / elems;
+                totalProb += probs[global_i];
+                global_i++;
+            }
         }
         Random rand = new Random(seed);
-        long sample = Math.min(20 * countList.size(), num);
+        long sample = Math.min(20 * countListSize, num);
         double csum = 0;
-        for (long i = 0; i < sample; i++) {
+        for (long i = 0; i < num; i++) {
             double r = rand.nextDouble() * totalProb;
             for (int j = 0; j < probs.length; j++) {
                 csum += probs[j];
@@ -134,7 +139,7 @@ public class ISampleTask extends IExecutorContextTask {
                 elemsExecutor[i] = aux;
             }
             //if not exact
-            for (long i = total; i < num;) {
+            for (long i = total; i < num; ) {
                 int r = rand.nextInt(elemsExecutor.length);
                 if (elemsExecutor[r] == count[r]) {
                     continue;
@@ -144,8 +149,12 @@ public class ISampleTask extends IExecutorContextTask {
             }
         }
 
-        for (int i = 0; i < countList.size(); i++) {
-            countList.set(i, elemsExecutor[i]);
+        global_i = 0;
+        for (List<Long> countList : countListArray) {
+            for (int i = 0; i < countList.size(); i++) {
+                countList.set(i, elemsExecutor[global_i]);
+                global_i++;
+            }
         }
     }
 

@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.helpers;
 
 import org.ignis.backend.properties.IProperties;
+import org.ignis.rpc.ISource;
 
 /**
  *
@@ -34,6 +35,36 @@ public abstract class IHelper {
 
     protected String log() {
         return getName() + ": ";
+    }
+
+    protected String srcToString(ISource src) {
+        StringBuilder result = new StringBuilder("ISource(");
+        boolean flag = false;
+        if (src.isSetObj()) {
+            if (src.getObj().isSetBytes()) {
+                result.append("[..binary..]");
+                flag = true;
+            } else if (src.getObj().isSetName()) {
+                result.append('"');
+                result.append(src.getObj().getName());
+                result.append('"');
+                flag = true;
+            }
+        }
+        if (src.isSetParams() && !src.getParams().isEmpty()) {
+            if (flag) {
+                result.append(", ");
+            }
+            result.append("args=[");
+            for (String var : src.getParams().keySet()) {
+                result.append(var);
+                result.append(", ");
+            }
+            result.delete(result.length() - 2, result.length());
+        }
+
+        result.append(')');
+        return result.toString();
     }
 
 }

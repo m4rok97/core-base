@@ -42,7 +42,7 @@ public final class IForEachTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing foreach");
+        LOGGER.info(log() + "foreach started");
         try {
             executor.getGeneralActionModule().foreach_(function);
         } catch (IExecutorException ex) {
@@ -50,7 +50,7 @@ public final class IForEachTask extends IExecutorContextTask {
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Foreach executed");
+        LOGGER.info(log() + "foreach finished");
     }
 
 }

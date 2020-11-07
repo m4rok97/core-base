@@ -40,7 +40,7 @@ public class IReduceTask extends IDriverTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing treeReduce");
+        LOGGER.info(log() + "reduce started");
         try {
             if (!driver) {
                 executor.getGeneralActionModule().reduce(src);
@@ -56,6 +56,6 @@ public class IReduceTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "TreeReduce executed");
+        LOGGER.info(log() + "reduce finished");
     }
 }

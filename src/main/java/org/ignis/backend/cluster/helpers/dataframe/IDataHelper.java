@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@ package org.ignis.backend.cluster.helpers.dataframe;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.properties.IProperties;
+import org.ignis.rpc.ISource;
 
 /**
- *
  * @author César Pomar
  */
 public abstract class IDataHelper extends IHelper {

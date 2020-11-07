@@ -59,7 +59,7 @@ public final class ISortTask extends IExecutorContextTask {
     @Override
     public void run(ITaskContext context) throws IgnisException {
         try {
-            LOGGER.info(log() + "Executing sort");
+            LOGGER.info(log() + "sort started");
 
             if (src == null) {
                 if (partitions == null) {
@@ -74,7 +74,7 @@ public final class ISortTask extends IExecutorContextTask {
                     executor.getGeneralModule().sortBy3(src, ascending, partitions);
                 }
             }
-            LOGGER.info(log() + "Sort executed");
+            LOGGER.info(log() + "sort finished");
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {

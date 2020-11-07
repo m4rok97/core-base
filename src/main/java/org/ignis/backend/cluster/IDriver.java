@@ -21,7 +21,6 @@ import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 
 /**
- *
  * @author César Pomar
  */
 public final class IDriver {
@@ -32,8 +31,8 @@ public final class IDriver {
 
     public IDriver(int port, IProperties properties) {
         this.lock = new ILock(-1);
-        IContainer dummy = new IContainer(0, 0, null, properties);
-        this.executor = new IExecutor(0, dummy, port);
+        IContainer dummy = new IContainer(-1, -1, null, properties);
+        this.executor = new IExecutor(-1, -1, dummy, port);
     }
 
     public void initInfo(IContainerDetails info) {

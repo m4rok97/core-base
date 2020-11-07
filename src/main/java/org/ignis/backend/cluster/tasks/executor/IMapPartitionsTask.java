@@ -42,15 +42,15 @@ public final class IMapPartitionsTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing mapPartitions");
+        LOGGER.info(log() + "mapPartitions started");
         try {
-            executor.getGeneralModule().flatmap(function);
+            executor.getGeneralModule().mapPartitions(function);
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "MapPartitions executed");
+        LOGGER.info(log() + "mapPartitions finished");
     }
 
 }

@@ -22,17 +22,16 @@ import org.ignis.rpc.IExecutorException;
 import org.ignis.rpc.ISource;
 
 /**
- *
  * @author César Pomar
  */
 public final class IPartitionObjectFileTask extends IPartitionFileTask {
 
     public IPartitionObjectFileTask(String name, IExecutor executor, Shared shared, String path) {
-        super(name, executor, shared, path);
+        super("partitionObjectFile", name, executor, shared, path);
     }
 
     public IPartitionObjectFileTask(String name, IExecutor executor, Shared shared, String path, ISource src) {
-        super(name, executor, shared, path, src);
+        super("partitionObjectFile", name, executor, shared, path, src);
     }
 
     @Override

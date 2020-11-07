@@ -90,12 +90,12 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId parallelize(IWorkerId id, long dataId) throws IDriverException, TException {
+    public IDataFrameId parallelize(IWorkerId id, long dataId, long partitions) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver, dataId);
+                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver, dataId, partitions);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {
@@ -105,12 +105,12 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId parallelize3(IWorkerId id, long dataId, ISource src) throws IDriverException, TException {
+    public IDataFrameId parallelize4(IWorkerId id, long dataId, long partitions, ISource src) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver,dataId, src);
+                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver, dataId, partitions, src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {

@@ -34,23 +34,25 @@ public final class IMapPartitionsWithIndexTask extends IExecutorContextTask {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMapPartitionsWithIndexTask.class);
 
     private final ISource function;
+    private final boolean preservesPartitioning;
 
-    public IMapPartitionsWithIndexTask(String name, IExecutor executor, ISource function) {
+    public IMapPartitionsWithIndexTask(String name, IExecutor executor, ISource function, boolean preservesPartitioning) {
         super(name, executor, Mode.LOAD_AND_SAVE);
         this.function = function;
+        this.preservesPartitioning = preservesPartitioning;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing mapPartitionsWithIndex");
+        LOGGER.info(log() + "mapPartitionsWithIndex started");
         try {
-            executor.getGeneralModule().flatmap(function);
+            executor.getGeneralModule().mapPartitionsWithIndex(function, preservesPartitioning);
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "MapPartitionsWithIndex executed");
+        LOGGER.info(log() + "mapPartitionsWithIndex finished");
     }
 
 }

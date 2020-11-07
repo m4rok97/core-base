@@ -47,7 +47,7 @@ public final class ITextFileTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Reading file");
+        LOGGER.info(log() + "textFile started");
         try {
             if (partitions == null) {
                 executor.getIoModule().textFile(path);
@@ -59,7 +59,7 @@ public final class ITextFileTask extends IExecutorContextTask {
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "File read");
+        LOGGER.info(log() + "textFile finished");
     }
 
 }

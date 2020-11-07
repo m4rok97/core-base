@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 
 /**
- *
  * @author César Pomar
  */
 public final class IContainer {
@@ -34,7 +33,7 @@ public final class IContainer {
     private IContainerDetails info;
     private int resets;
 
-    public IContainer(long id, long cluster, ITunnel tunnel, IProperties properties){
+    public IContainer(long id, long cluster, ITunnel tunnel, IProperties properties) {
         this.id = id;
         this.cluster = cluster;
         this.tunnel = tunnel;
@@ -79,7 +78,7 @@ public final class IContainer {
         tunnel.open(info.getHost(), info.searchHostPort(properties.getInteger(IKeys.EXECUTOR_RPC_PORT)));
     }
 
-    public IExecutor createExecutor(long worker) throws IgnisException {
-        return new IExecutor(worker, this, tunnel.registerPort());
+    public IExecutor createExecutor(long id, long worker) throws IgnisException {
+        return new IExecutor(id, worker, this, tunnel.registerPort());
     }
 }

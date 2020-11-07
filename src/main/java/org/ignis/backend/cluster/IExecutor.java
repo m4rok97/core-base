@@ -39,6 +39,7 @@ import org.ignis.rpc.executor.IMathModule;
  */
 public final class IExecutor {
 
+    private final long id;
     private final long worker;
     private final int port;
     private final IContainer container;
@@ -54,7 +55,8 @@ public final class IExecutor {
     private int pid;
     private int resets;
 
-    public IExecutor(long worker, IContainer container, int port) {
+    public IExecutor(long id, long worker, IContainer container, int port) {
+        this.id = id;
         this.worker = worker;
         this.container = container;
         this.port = port;
@@ -75,7 +77,7 @@ public final class IExecutor {
     }
 
     public long getId() {
-        return container.getId();
+        return id;
     }
 
     public IContainer getContainer() {
@@ -94,7 +96,8 @@ public final class IExecutor {
         Map<String, String> map = getProperties().toMap(true);
         /*Executor dynamic properties*/
         map.put(IKeys.JOB_DIRECTORY, map.get(IKeys.DFS_HOME) + "/" + map.get(IKeys.JOB_NAME));
-
+        map.put(IKeys.JOB_WORKER, String.valueOf(worker));
+        map.put(IKeys.EXECUTOR_DIRECTORY, map.get(IKeys.JOB_DIRECTORY) + "/" + map.get(IKeys.JOB_WORKER) + "/" + id);
         return map;
     }
 

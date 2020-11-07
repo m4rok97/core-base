@@ -63,7 +63,7 @@ public class ITopTask extends IDriverTask {
     @Override
     public void run(ITaskContext context) throws IgnisException {
         try {
-            LOGGER.info(log() + "Executing take");
+            LOGGER.info(log() + "top started");
             if (!driver) {
                 shared.count.set((int) executor.getId(), executor.getMathModule().count());
             }
@@ -93,7 +93,7 @@ public class ITopTask extends IDriverTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Take executed");
+        LOGGER.info(log() + "take finished");
     }
 
 }

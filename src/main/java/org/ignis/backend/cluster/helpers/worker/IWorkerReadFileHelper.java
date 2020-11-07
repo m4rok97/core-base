@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IWorkerReadFileHelper extends IWorkerHelper {
@@ -47,8 +46,10 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new ITextFileTask(getName(), executor, path));
         }
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering textFile path: " + path + " -> " + target.getName());
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "textFile(" +
+                "path=" + path +
+                ") registered -> " + target.getName());
         return target;
     }
 
@@ -58,8 +59,11 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new ITextFileTask(getName(), executor, path, partitions));
         }
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering textFile path: " + path + ", partitions: " + partitions + " -> " + target.getName());
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "textFile(" +
+                "path=" + path +
+                "partitions=" + partitions +
+                ") registered -> " + target.getName());
         return target;
     }
 
@@ -70,8 +74,10 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new IPartitionObjectFileTask(getName(), executor, shared, path));
         }
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering partitionObjectFile path: " + path + " -> " + target.getName());
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "partitionObjectFile(" +
+                "path=" + path +
+                ") registered -> " + target.getName());
         return target;
     }
 
@@ -82,8 +88,11 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new IPartitionObjectFileTask(getName(), executor, shared, path, src));
         }
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering  partitionObjectFile: " + path + " -> " + target.getName());
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "partitionObjectFile(" +
+                "path=" + path +
+                "src=" + srcToString(src) +
+                ") registered -> " + target.getName());
         return target;
     }
 
@@ -94,8 +103,10 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new IPartitionTextFileTask(getName(), executor, shared, path));
         }
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering partitionTextFile path: " + path + " -> " + target.getName());
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "partitionTextFile(" +
+                "path=" + path +
+                ") registered -> " + target.getName());
         return target;
     }
 
@@ -106,8 +117,11 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new IPartitionJsonFileTask(getName(), executor, shared, path, objectMapping));
         }
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering partitionJsonFile path: " + path + " -> " + target.getName());
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "partitionJsonFile(" +
+                "path=" + path +
+                "objectMapping=" + objectMapping +
+                ") registered -> " + target.getName());
         return target;
     }
 
@@ -118,8 +132,11 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new IPartitionJsonFileTask(getName(), executor, shared, path, src));
         }
-        IDataFrame target = worker.createDataFrame("", worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "Registering  partitionJsonFile: " + path + " -> " + target.getName());
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "partitionJsonFile(" +
+                "path=" + path +
+                "src=" + srcToString(src) +
+                ") registered -> " + target.getName());
         return target;
     }
 

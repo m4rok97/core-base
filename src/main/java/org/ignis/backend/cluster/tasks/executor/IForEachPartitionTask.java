@@ -42,7 +42,7 @@ public final class IForEachPartitionTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing foreachPartition");
+        LOGGER.info(log() + "foreachPartition started");
         try {
             executor.getGeneralActionModule().foreachPartition(function);
         } catch (IExecutorException ex) {
@@ -50,7 +50,7 @@ public final class IForEachPartitionTask extends IExecutorContextTask {
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "ForeachPartition executed");
+        LOGGER.info(log() + "foreachPartition finished");
     }
 
 }

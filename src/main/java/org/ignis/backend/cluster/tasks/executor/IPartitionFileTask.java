@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.tasks.executor;
 
 import java.io.File;
 import java.util.concurrent.BrokenBarrierException;
+
 import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
@@ -30,7 +31,6 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public abstract class IPartitionFileTask extends IExecutorContextTask {
@@ -49,16 +49,18 @@ public abstract class IPartitionFileTask extends IExecutorContextTask {
         private final long executors;
     }
 
+    private final String function;
     private final Shared shared;
     private final String path;
     private final ISource src;
 
-    public IPartitionFileTask(String name, IExecutor executor, Shared shared, String path) {
-        this(name, executor, shared, path, null);
+    public IPartitionFileTask(String function, String name, IExecutor executor, Shared shared, String path) {
+        this(function, name, executor, shared, path, null);
     }
 
-    public IPartitionFileTask(String name, IExecutor executor, Shared shared, String path, ISource src) {
+    public IPartitionFileTask(String function, String name, IExecutor executor, Shared shared, String path, ISource src) {
         super(name, executor, Mode.SAVE);
+        this.function = function;
         this.shared = shared;
         this.path = path;
         this.src = src;
@@ -66,7 +68,7 @@ public abstract class IPartitionFileTask extends IExecutorContextTask {
 
     @Override
     public final void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing partitionFile");
+        LOGGER.info(log() + function + " started");
         try {
             if (shared.barrier.await() == 0) {
                 File directory = new File(path);
@@ -103,7 +105,7 @@ public abstract class IPartitionFileTask extends IExecutorContextTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "PartitionFile executed");
+        LOGGER.info(log() + function + " finished");
     }
 
     public abstract void read(String path, long first, long partitions, ISource src) throws IExecutorException, TException;

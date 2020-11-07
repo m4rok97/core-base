@@ -42,7 +42,7 @@ public final class IFilterTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "Executing filter");
+        LOGGER.info(log() + "filter started");
         try {
             executor.getGeneralModule().filter(function);
         } catch (IExecutorException ex) {
@@ -50,7 +50,7 @@ public final class IFilterTask extends IExecutorContextTask {
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Filter executed");
+        LOGGER.info(log() + "filter finished");
     }
 
 }

@@ -22,18 +22,13 @@ import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
-import org.ignis.backend.cluster.tasks.executor.ICountTask;
-import org.ignis.backend.cluster.tasks.executor.IMaxTask;
-import org.ignis.backend.cluster.tasks.executor.IMinTask;
-import org.ignis.backend.cluster.tasks.executor.ISampleTask;
-import org.ignis.backend.cluster.tasks.executor.ITakeSampleTask;
+import org.ignis.backend.cluster.tasks.executor.*;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IDataMathHelper extends IDataHelper {
@@ -52,15 +47,17 @@ public final class IDataMathHelper extends IDataHelper {
             builder.newTask(new ISampleTask(getName(), executor, shared, withReplacement, fraction, seed));
         }
         IDataFrame target = data.createDataFrame("", builder.build());
-        LOGGER.info(log() + "Registering sample withReplacement: " + withReplacement + ", fraction: "
-                + fraction + ", seed:" + seed + " -> " + target.getName());
+        LOGGER.info(log() + "sample(" +
+                "withReplacement=" + withReplacement +
+                "fraction=" + fraction +
+                "seed=" + seed +
+                ") registered -> " + target.getName());
         return target;
     }
 
     public ILazy<Long> takeSample(IDriver driver, boolean withReplacement, long num, int seed, ISource tp) {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
-        LOGGER.info(log() + "Registering takeSample withReplacement: " + withReplacement + ", num: " + num + ", seed: " + seed);
         ITakeSampleTask.Shared shared = new ITakeSampleTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
             builder.newTask(new ITakeSampleTask(getName(), executor, shared, false, withReplacement, num, seed, tp));
@@ -68,7 +65,11 @@ public final class IDataMathHelper extends IDataHelper {
 
         builder.newLock(driver.getLock());
         builder.newTask(new ITakeSampleTask(getName(), driver.getExecutor(), shared, true, withReplacement, num, seed, tp));
-
+        LOGGER.info(log() + "takeSample(" +
+                "withReplacement=" + withReplacement +
+                "num=" + num +
+                "seed=" + seed +
+                ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
             return context.<Long>get("result");
@@ -78,11 +79,30 @@ public final class IDataMathHelper extends IDataHelper {
     public ILazy<Long> count() throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
-        LOGGER.info(log() + "Registering count");
         ICountTask.Shared shared = new ICountTask.Shared(data.getExecutors().size());
         for (IExecutor executor : data.getExecutors()) {
             builder.newTask(new ICountTask(getName(), executor, shared));
         }
+        LOGGER.info(log() + "count(" +
+                ") registered");
+        return () -> {
+            ITaskContext context = builder.build().start(data.getPool());
+            return context.<Long>get("result");
+        };
+    }
+
+    public ILazy<Long> max(IDriver driver, ISource tp) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        IMaxTask.Shared shared = new IMaxTask.Shared(data.getExecutors().size());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IMaxTask(getName(), executor, shared, false, tp));
+        }
+
+        builder.newLock(driver.getLock());
+        builder.newTask(new IMaxTask(driver.getName(), driver.getExecutor(), shared, true, tp));
+        LOGGER.info(log() + "max(" +
+                ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
             return context.<Long>get("result");
@@ -99,8 +119,27 @@ public final class IDataMathHelper extends IDataHelper {
 
         builder.newLock(driver.getLock());
         builder.newTask(new IMaxTask(driver.getName(), driver.getExecutor(), shared, true, cmp, tp));
+        LOGGER.info(log() + "max(" +
+                "cmp=" + srcToString(cmp) +
+                ") registered");
+        return () -> {
+            ITaskContext context = builder.build().start(data.getPool());
+            return context.<Long>get("result");
+        };
+    }
 
-        LOGGER.info(log() + "Registering max");
+    public ILazy<Long> min(IDriver driver, ISource tp) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        IMinTask.Shared shared = new IMinTask.Shared(data.getExecutors().size());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IMinTask(getName(), executor, shared, false, tp));
+        }
+
+        builder.newLock(driver.getLock());
+        builder.newTask(new IMinTask(driver.getName(), driver.getExecutor(), shared, true, tp));
+        LOGGER.info(log() + "min(" +
+                ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
             return context.<Long>get("result");
@@ -117,8 +156,49 @@ public final class IDataMathHelper extends IDataHelper {
 
         builder.newLock(driver.getLock());
         builder.newTask(new IMinTask(driver.getName(), driver.getExecutor(), shared, true, cmp, tp));
+        LOGGER.info(log() + "min(" +
+                "cmp=" + srcToString(cmp) +
+                ") registered");
+        return () -> {
+            ITaskContext context = builder.build().start(data.getPool());
+            return context.<Long>get("result");
+        };
+    }
 
-        LOGGER.info(log() + "Registering min");
+    public IDataFrame sampleByKey(boolean withReplacement, ISource fractions, int seed) throws IgnisException {
+        throw new UnsupportedOperationException("Not supported on this version."); //TODO next version
+    }
+
+    public ILazy<Long> countByKey(IDriver driver, ISource tp) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        ICountByKeyTask.Shared shared = new ICountByKeyTask.Shared(data.getExecutors().size());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new ICountByKeyTask(getName(), executor, shared, false, tp));
+        }
+
+        builder.newLock(driver.getLock());
+        builder.newTask(new ICountByKeyTask(driver.getName(), driver.getExecutor(), shared, true, tp));
+        LOGGER.info(log() + "countByKey(" +
+                ") registered");
+        return () -> {
+            ITaskContext context = builder.build().start(data.getPool());
+            return context.<Long>get("result");
+        };
+    }
+
+    public ILazy<Long> countByValue(IDriver driver, ISource tp) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        ICountByValueTask.Shared shared = new ICountByValueTask.Shared(data.getExecutors().size());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new ICountByValueTask(getName(), executor, shared, false, tp));
+        }
+
+        builder.newLock(driver.getLock());
+        builder.newTask(new ICountByValueTask(driver.getName(), driver.getExecutor(), shared, true, tp));
+        LOGGER.info(log() + "countByValue(" +
+                ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
             return context.<Long>get("result");

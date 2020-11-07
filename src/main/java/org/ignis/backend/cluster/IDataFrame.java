@@ -98,4 +98,8 @@ public final class IDataFrame {
         return worker.createDataFrame(name, executors, tasks);
     }
 
+    public IDataFrame createDataFrame(ITaskGroup tasks) throws IgnisException{
+        return worker.createDataFrame("", executors, tasks);
+    }
+
 }
