@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.Callable;
+
 import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IKeys;
@@ -42,7 +43,6 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 /**
- *
  * @author César Pomar
  */
 public class Submit implements Callable<Integer> {
@@ -67,7 +67,7 @@ public class Submit implements Callable<Integer> {
 
     @Option(names = {"-f", "--property-file"}, paramLabel = "FILE", description = "Job properties file")
     String userPropertiesFile;
-    
+
     @Option(names = {"--direct"}, description = "Execute cmd directly without ignis-run")
     boolean direct = false;
 
@@ -108,7 +108,11 @@ public class Submit implements Callable<Integer> {
                     props.getProperty(IKeys.SCHEDULER_URL));
 
             IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
-            builder.image(props.getProperty(IKeys.DRIVER_IMAGE));
+            if (props.contains(IKeys.REGISTRY)) {
+                builder.image(props.getProperty(IKeys.REGISTRY) + "/" + props.getProperty(IKeys.DRIVER_IMAGE));
+            } else {
+                builder.image(props.getProperty(IKeys.DRIVER_IMAGE));
+            }
             builder.cpus(props.getInteger(IKeys.DRIVER_CORES));
             builder.memory((long) Math.ceil(props.getSILong(IKeys.DRIVER_MEMORY) / 1024 / 1024));
             List<IPort> ports;

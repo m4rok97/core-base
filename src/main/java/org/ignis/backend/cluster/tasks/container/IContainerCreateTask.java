@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -32,7 +33,6 @@ import org.ignis.backend.scheduler.model.IPort;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IContainerCreateTask extends IContainerTask {
@@ -47,12 +47,16 @@ public final class IContainerCreateTask extends IContainerTask {
         this.containers = containers;
         this.scheduler = scheduler;
     }
-    
-    private IContainerDetails parseContainer(){
+
+    private IContainerDetails parseContainer() {
         IProperties props = container.getProperties();
         IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
 
-        builder.image(props.getProperty(IKeys.EXECUTOR_IMAGE));
+        if (props.contains(IKeys.REGISTRY)) {
+            builder.image(props.getProperty(IKeys.REGISTRY) + "/" + props.getProperty(IKeys.EXECUTOR_IMAGE));
+        } else {
+            builder.image(props.getProperty(IKeys.EXECUTOR_IMAGE));
+        }
         builder.cpus(props.getInteger(IKeys.EXECUTOR_CORES));
         builder.memory((long) Math.ceil(props.getSILong(IKeys.EXECUTOR_MEMORY) / 1024 / 1024));
         builder.command("ignis-server");
@@ -61,20 +65,20 @@ public final class IContainerCreateTask extends IContainerTask {
         builder.ports(ports = ISchedulerParser.parsePorts(props, IKeys.EXECUTOR_PORT));
         builder.binds(ISchedulerParser.parseBinds(props, IKeys.EXECUTOR_BIND));
         builder.volumes(ISchedulerParser.parseVolumes(props, IKeys.EXECUTOR_VOLUME));
-        Map<String,String> env = ISchedulerParser.parseEnv(props, IKeys.EXECUTOR_ENV);
+        Map<String, String> env = ISchedulerParser.parseEnv(props, IKeys.EXECUTOR_ENV);
         env.put("IGNIS_DRIVER_PUBLIC_KEY", props.getString(IKeys.DRIVER_PUBLIC_KEY));
         env.put("IGNIS_DRIVER_HEALTHCHECK_INTERVAL", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_INTERVAL)));
         env.put("IGNIS_DRIVER_HEALTHCHECK_TIMEOUT", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_TIMEOUT)));
         env.put("IGNIS_DRIVER_HEALTHCHECK_RETRIES", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_RETRIES)));
         env.put("IGNIS_DRIVER_HEALTHCHECK_URL", props.getString(IKeys.DRIVER_HEALTHCHECK_URL));
-        
+
         builder.environmentVariables(env);
         if (props.contains(IKeys.EXECUTOR_HOSTS)) {
             builder.preferedHosts(props.getStringList(IKeys.EXECUTOR_HOSTS));
         }
-        
-        ports.add(new IPort(props.getInteger(IKeys.EXECUTOR_RPC_PORT), 0,"tcp"));
-        
+
+        ports.add(new IPort(props.getInteger(IKeys.EXECUTOR_RPC_PORT), 0, "tcp"));
+
         return builder.build();
     }
 
@@ -86,30 +90,30 @@ public final class IContainerCreateTask extends IContainerTask {
                 stopped.add(i);
                 continue;
             }
-           switch (scheduler.getStatus(containers.get(i).getInfo().getId())) {
-               case DESTROYED:
-               case FINISHED:
-               case ERROR:
-                   stopped.add(i);
-                   break;
-               default:
-                   LOGGER.info(log() + "Container "+ i +" already running");
-                   if(!containers.get(i).testConnection()){
-                       LOGGER.info(log() + "Reconnecting to the container " + i);
-                       try{
-                       containers.get(i).connect();
-                       }catch(IgnisException ex){
-                           LOGGER.warn(log() + "Container " + i + " dead");
-                           stopped.add(i);
-                       }
-                   }
-           }
-       }
-        
-        if(stopped.isEmpty()){
+            switch (scheduler.getStatus(containers.get(i).getInfo().getId())) {
+                case DESTROYED:
+                case FINISHED:
+                case ERROR:
+                    stopped.add(i);
+                    break;
+                default:
+                    LOGGER.info(log() + "Container " + i + " already running");
+                    if (!containers.get(i).testConnection()) {
+                        LOGGER.info(log() + "Reconnecting to the container " + i);
+                        try {
+                            containers.get(i).connect();
+                        } catch (IgnisException ex) {
+                            LOGGER.warn(log() + "Container " + i + " dead");
+                            stopped.add(i);
+                        }
+                    }
+            }
+        }
+
+        if (stopped.isEmpty()) {
             return;
         }
-         LOGGER.info(log() + "Starting new containers");   
+        LOGGER.info(log() + "Starting new containers");
 
         String group = container.getProperties().getString(IKeys.JOB_GROUP);
         List<String> ids = scheduler.createContainerIntances(group, name, parseContainer(), container.getProperties(), containers.size());
@@ -121,9 +125,9 @@ public final class IContainerCreateTask extends IContainerTask {
         for (int i = 0; i < containers.size(); i++) {
             containers.get(i).connect();
         }
-        
+
         if (Boolean.getBoolean(IKeys.DEBUG)) {
-            LOGGER.info("Debug:" + log() + " ExecutorEnvironment{\n" + 
+            LOGGER.info("Debug:" + log() + " ExecutorEnvironment{\n" +
                     containers.get(0).getTunnel().execute("env", false)
                     + '}');
         }

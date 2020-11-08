@@ -85,6 +85,13 @@ public final class IProperties {
         }
         return value;
     }
+
+    public String getProperty(String key, String def){
+        if(inner.contains(noNull(key))){
+            return getProperty(key);
+        }
+        return def;
+    }
     
     public String rmProperty(String key){
         return noNull((String)inner.remove(noNull(key)));
@@ -93,6 +100,13 @@ public final class IProperties {
     public boolean getBoolean(String key) throws IPropertyException {
         return BOOLEAN.matcher(getProperty(key)).matches();
     }
+
+    public boolean getBoolean(String key, boolean def) throws IPropertyException {
+        if(inner.contains(noNull(key))){
+            return getBoolean(key);
+        }
+        return def;
+    }
     
     public int getInteger(String key) throws IPropertyException {
         try {
@@ -100,6 +114,13 @@ public final class IProperties {
         } catch (NumberFormatException ex) {
             throw new IPropertyException(noNull(key), ex.getMessage());
         }
+    }
+
+    public int getInteger(String key, int def) throws IPropertyException {
+        if(inner.contains(noNull(key))){
+            return getInteger(key);
+        }
+        return def;
     }
     
     public List<Integer> getIntegerList(String key) throws IPropertyException {
@@ -117,6 +138,13 @@ public final class IProperties {
             throw new IPropertyException(noNull(key), ex.getMessage());
         }
     }
+
+    public long getLong(String key, long def) throws IPropertyException {
+        if(inner.contains(noNull(key))){
+            return getLong(key);
+        }
+        return def;
+    }
     
     public List<Long> getLongList(String key) throws IPropertyException {
         try {
@@ -133,6 +161,13 @@ public final class IProperties {
             throw new IPropertyException(noNull(key), ex.getMessage());
         }
     }
+
+    public float getFloat(String key, float def) throws IPropertyException {
+        if(inner.contains(noNull(key))){
+            return getFloat(key);
+        }
+        return def;
+    }
     
     public List<Float> getFloatList(String key) throws IPropertyException {
         try {
@@ -148,6 +183,13 @@ public final class IProperties {
         } catch (NumberFormatException ex) {
             throw new IPropertyException(noNull(key), ex.getMessage());
         }
+    }
+
+    public double getDouble(String key, double def) throws IPropertyException {
+        if(inner.contains(noNull(key))){
+            return getDouble(key);
+        }
+        return def;
     }
     
     public List<Double> getDoubleList(String key) throws IPropertyException {
