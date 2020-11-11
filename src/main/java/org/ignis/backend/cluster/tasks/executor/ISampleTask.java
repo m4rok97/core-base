@@ -35,6 +35,7 @@ public class ISampleTask extends IExecutorContextTask {
 
     public static class Shared {
 
+        @SuppressWarnings("unchecked")
         public Shared(int executors) {
             count = new List[executors];
             barrier = new IBarrier(executors);

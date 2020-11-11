@@ -72,7 +72,7 @@ test {
 }*/
 
 task copyToLib(type: Copy, description: 'Copy project dependencies.') {
-    from configurations.compile
+    from project.configurations.compileClasspath
     into "$buildDir/libs"
 }
 build.dependsOn(copyToLib)

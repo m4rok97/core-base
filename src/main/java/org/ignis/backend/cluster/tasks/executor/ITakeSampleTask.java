@@ -36,6 +36,7 @@ public class ITakeSampleTask extends IDriverTask {
 
     public static class Shared extends IDriverTask.Shared {
 
+        @SuppressWarnings("unchecked")
         public Shared(int executors) {
             super(executors);
             count = new List[executors];
