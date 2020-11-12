@@ -2,7 +2,7 @@
 
 export DEBIAN_FRONTEND=noninteractive
 apt update
-apt -y install python3.8 python3.8-distutils openssl
+apt -y install python3.8 python3.8-distutils python3-numpy openssl
 
 python3 ${IGNIS_HOME}/bin/get-pip.py
 rm -f ${IGNIS_HOME}/bin/get-pip.py
