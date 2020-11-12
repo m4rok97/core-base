@@ -1,7 +1,8 @@
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
-RUN apt update && \
+RUN export DEBIAN_FRONTEND=noninteractive && \
+	apt update && \
 	apt install -y \
 		tar \
 		wget \

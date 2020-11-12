@@ -1,27 +1,19 @@
 
-FROM ignishpc/base
+ARG REGISTRY=""
+ARG TAG=""
+FROM ${REGISTRY}ignishpc/base${TAG}
 
-RUN apt update && \
+RUN export DEBIAN_FRONTEND=noninteractive && \
+	apt update && \
 	apt -y install \
 		build-essential \
+		gfortran \
 		git \
 		wget \
 		cmake \
 		automake \
-		unzip
-
-ENV BOOST_VERSION=1.71.0
-RUN mkdir /tmp/boost && \
-	cd /tmp/boost && \
-	wget https://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_$(echo ${BOOST_VERSION} | tr . _).tar.gz -O src.tar.gz && \
-	tar xvf src.tar.gz && \
-	cd boost_$(echo ${BOOST_VERSION} | tr . _) && \
-	./bootstrap.sh && \
-	./b2 -j 4&& \
-	mkdir -p /root/boost/include/ && \
-	mv boost /root/boost/include/ && \
-	mv stage/lib /root/boost/ && \
-	rm -fR /tmp/boost
+		unzip \
+		pkg-config 
 
 COPY mpich_static_port.c /tmp/mpich_static_port.c
 ENV MPICH_VERSION=3.3.2
@@ -32,9 +24,10 @@ RUN mkdir /tmp/mpi && \
 	cd mpich-${MPICH_VERSION} && \
 	sed -e '/.*MPL_listen_anyport.*/ {' -e 'r /tmp/mpich_static_port.c' -e 'd' -e '}' -i $(find . -name mpl_sockaddr.c) && \
 	rm -f /tmp/mpich_static_port.c && \
-	./configure --disable-fortran --prefix /root/mpi && \
-	make -j 4 && \
+	./configure --prefix /root/mpi && \
+	make -j && \
 	make install && \
+	rm -f /root/mpi/lib/*.a && \
 	rm -fR /tmp/mpi
 
 ENV THRIFT_VERSION=0.13.0

@@ -2,26 +2,30 @@
 
 tag=":latest"
 if [ $# -ge 1 ]; then
-    tag=":$1"
+    rty="$1/"
 fi
 
-docker push ignishpc/base$tag
-docker push ignishpc/builder$tag
-docker push ignishpc/driver-builder$tag
-docker push ignishpc/executor-builder$tag
-docker push ignishpc/base-driver$tag
-docker push ignishpc/base-executor$tag
-docker push ignishpc/base-full$tag
-docker push ignishpc/cpp-builder$tag
-docker push ignishpc/cpp-compiler$tag
-docker push ignishpc/cpp-driver$tag
-docker push ignishpc/cpp-executor$tag
-docker push ignishpc/cpp-full$tag
-docker push ignishpc/python-builder$tag
-docker push ignishpc/python-driver$tag
-docker push ignishpc/python-executor$tag
-docker push ignishpc/python-full$tag
-docker push ignishpc/full$tag
-docker push ignishpc/submitter$tag
-docker push ignishpc/mesos$tag
-docker push ignishpc/zookeeper$tag
+if [ $# -ge 2 ]; then
+	tag=":$2"
+fi
+
+docker push ${rty}ignishpc/base${tag}
+docker push ${rty}ignishpc/builder${tag}
+docker push ${rty}ignishpc/driver-builder${tag}
+docker push ${rty}ignishpc/executor-builder${tag}
+docker push ${rty}ignishpc/base-driver${tag}
+docker push ${rty}ignishpc/base-executor${tag}
+docker push ${rty}ignishpc/base-full${tag}
+docker push ${rty}ignishpc/cpp-builder${tag}
+docker push ${rty}ignishpc/cpp-compiler${tag}
+docker push ${rty}ignishpc/cpp-driver${tag}
+docker push ${rty}ignishpc/cpp-executor${tag}
+docker push ${rty}ignishpc/cpp-full${tag}
+docker push ${rty}ignishpc/python-builder${tag}
+docker push ${rty}ignishpc/python-driver${tag}
+docker push ${rty}ignishpc/python-executor${tag}
+docker push ${rty}ignishpc/python-full${tag}
+docker push ${rty}ignishpc/full${tag}
+docker push ${rty}ignishpc/submitter${tag}
+docker push ${rty}ignishpc/mesos${tag}
+docker push ${rty}ignishpc/zookeeper${tag}

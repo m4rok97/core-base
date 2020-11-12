@@ -1,17 +1,19 @@
 
-FROM ignishpc/base
+ARG REGISTRY=""
+ARG TAG=""
+FROM ${REGISTRY}ignishpc/base${TAG}
 
 COPY --from=ignishpc/driver-builder ${IGNIS_HOME} ${IGNIS_HOME}
 RUN ${IGNIS_HOME}/bin/driver-install.sh && \
 	rm -f ${IGNIS_HOME}/bin/driver-install.sh && \
 	rm -f ${IGNIS_HOME}/bin/ignis-backend && \
+	export DEBIAN_FRONTEND=noninteractive && \
 	apt update && \
 	apt install -y \
 		git \
 		wget \
 		unzip \
 		openssh-server \
-		openjdk-8-jre \
 		python3 \
 		python3-distutils && \
 	wget https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py && \

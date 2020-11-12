@@ -1,5 +1,7 @@
 
-FROM ignishpc/base-driver
+ARG REGISTRY=""
+ARG TAG=""
+FROM ${REGISTRY}ignishpc/base-driver${TAG}
 
 COPY --from=ignishpc/cpp-builder ${IGNIS_HOME} ${IGNIS_HOME}
 RUN ${IGNIS_HOME}/bin/cpp-core-install.sh && \

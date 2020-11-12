@@ -1,16 +1,18 @@
 
-FROM ignishpc/builder
+ARG REGISTRY=""
+ARG TAG=""
+FROM ${REGISTRY}ignishpc/builder${TAG}
 
 COPY driver-install.sh ${IGNIS_HOME}/bin
 RUN chmod +x ${IGNIS_HOME}/bin/driver-install.sh && \
 	mv /root/mpi/bin/* ${IGNIS_HOME}/bin && \
-	mkdir ${IGNIS_HOME}/lib/native && \
-	mv /root/mpi/lib/* ${IGNIS_HOME}/lib/native
+	mv /root/mpi/lib/* ${IGNIS_HOME}/lib
 
-RUN apt update && \
-	apt -y install openjdk-8-jdk
+RUN export DEBIAN_FRONTEND=noninteractive && \
+	apt update && \
+	apt -y install openjdk-14-jdk
 
-ENV GRADLE_VERSION=5.0
+ENV GRADLE_VERSION=6.7
 RUN \
 	mkdir -p /tmp/gradle && \ 
 	cd /tmp/gradle && \
