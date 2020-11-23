@@ -2,12 +2,13 @@
 cd "$(dirname "$0")"
 
 tag=":latest"
+rty=""
 if [ $# -ge 1 ]; then
-    rty="$1/"
+    rty=":$1"
 fi
 
 if [ $# -ge 2 ]; then
-	tag=":$2"
+	rty="$2/"
 fi
 
 cd base
