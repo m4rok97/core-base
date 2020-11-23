@@ -53,7 +53,11 @@ public final class IContainerCreateTask extends IContainerTask {
         IContainerDetails.IContainerDetailsBuilder builder = IContainerDetails.builder();
 
         if (props.contains(IKeys.REGISTRY)) {
-            builder.image(props.getProperty(IKeys.REGISTRY) + "/" + props.getProperty(IKeys.EXECUTOR_IMAGE));
+            String registry = props.getProperty(IKeys.REGISTRY);
+            if (!registry.endsWith("/")) {
+                registry += "/";
+            }
+            builder.image(registry + props.getProperty(IKeys.EXECUTOR_IMAGE));
         } else {
             builder.image(props.getProperty(IKeys.EXECUTOR_IMAGE));
         }
