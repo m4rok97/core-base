@@ -28,5 +28,7 @@ docker push ${rty}ignishpc/python-executor${tag}
 docker push ${rty}ignishpc/python-full${tag}
 docker push ${rty}ignishpc/full${tag}
 docker push ${rty}ignishpc/submitter${tag}
-docker push ${rty}ignishpc/mesos${tag}
+docker push ${rty}ignishpc/mesos-base${tag}
+docker push ${rty}ignishpc/mesos-marathon${tag}
+docker push ${rty}ignishpc/mesos-singularity${tag}
 docker push ${rty}ignishpc/zookeeper${tag}

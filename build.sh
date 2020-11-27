@@ -81,7 +81,15 @@ cd submitter
 cd ..
 
 cd mesos
-	docker build -t ${rty}ignishpc/mesos${tag} .
+	cd base
+		docker build -t ${rty}ignishpc/mesos-base${tag} .
+	cd ..
+	cd marathon 
+		docker build -t ${rty}ignishpc/mesos-marathon${tag} --build-arg REGISTRY=${rty} --build-arg TAG=${tag} .
+	cd ..
+	cd singularity 
+		docker build -t ${rty}ignishpc/mesos-singularity${tag} --build-arg REGISTRY=${rty} --build-arg TAG=${tag} .
+	cd ..
 cd ..
 
 cd zookeeper
