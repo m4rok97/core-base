@@ -1,10 +1,11 @@
 
 ARG REGISTRY=""
 ARG TAG=""
+FROM ${REGISTRY}ignishpc/cpp-builder${TAG} as cpp-builder
 FROM ${REGISTRY}ignishpc/base${TAG}
 
-COPY --from=ignishpc/cpp-builder ${IGNIS_HOME} ${IGNIS_HOME}
-COPY --from=ignishpc/cpp-builder /root/mpi/bin/* ${IGNIS_HOME}/bin/
+COPY --from=cpp-builder ${IGNIS_HOME} ${IGNIS_HOME}
+COPY --from=cpp-builder /root/mpi/bin/* ${IGNIS_HOME}/bin/
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
 	apt update && \
