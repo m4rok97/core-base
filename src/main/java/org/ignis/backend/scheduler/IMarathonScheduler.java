@@ -129,7 +129,7 @@ public class IMarathonScheduler implements IScheduler {
         if (props.contains(IKeys.SCHEDULER_DNS)) {
             List<String> hostnames = props.getStringList(IKeys.SCHEDULER_DNS);
             for (String hostname : hostnames) {
-                app.getContainer().getDocker().getParameters().add(new Parameter("--add-host", hostname));
+                app.getContainer().getDocker().getParameters().add(new Parameter("add-host", hostname));
             }
         }
 
