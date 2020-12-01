@@ -17,29 +17,15 @@
 package org.ignis.backend.scheduler;
 
 import com.google.gson.Gson;
+
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
 import mesosphere.marathon.client.Marathon;
 import mesosphere.marathon.client.MarathonClient;
 import mesosphere.marathon.client.MarathonException;
-import mesosphere.marathon.client.model.v2.App;
-import mesosphere.marathon.client.model.v2.Container;
-import mesosphere.marathon.client.model.v2.Docker;
-import mesosphere.marathon.client.model.v2.Group;
-import mesosphere.marathon.client.model.v2.LocalVolume;
-import mesosphere.marathon.client.model.v2.PersistentLocalVolume;
-import mesosphere.marathon.client.model.v2.Port;
-import mesosphere.marathon.client.model.v2.Task;
-import mesosphere.marathon.client.model.v2.VersionedApp;
-import mesosphere.marathon.client.model.v2.Volume;
+import mesosphere.marathon.client.model.v2.*;
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
@@ -50,7 +36,6 @@ import org.ignis.backend.scheduler.model.IVolume;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public class IMarathonScheduler implements IScheduler {
@@ -81,6 +66,19 @@ public class IMarathonScheduler implements IScheduler {
     };
 
     public IMarathonScheduler(String url) {
+        if (url.contains(",")) {
+            for (String url2 : url.split(",")) {
+                url = url2;
+                try {
+                    Marathon candidate = MarathonClient.getInstance(url);
+                    candidate.getServerInfo();
+                    break;
+                } catch (Exception ex) {
+                    LOGGER.warn(url + "Connection refused");
+                }
+
+            }
+        }
         marathon = MarathonClient.getInstance(url);
         taskAssignment = new ConcurrentHashMap<>();
         taskAssigned = ConcurrentHashMap.<String>newKeySet();
@@ -127,12 +125,11 @@ public class IMarathonScheduler implements IScheduler {
             }
         }
 
-        if (props.contains(IKeys.SCHEDULER_DNS) && props.getString(IKeys.SCHEDULER_DNS).toLowerCase().equals("host")) {
-            LocalVolume vol = new LocalVolume();
-            vol.setHostPath("/etc/hosts");
-            vol.setContainerPath("/etc/hosts");
-            vol.setMode("RO");
-            app.getContainer().getVolumes().add(vol);
+        if (props.contains(IKeys.SCHEDULER_DNS)) {
+            List<String> hostnames = props.getStringList(IKeys.SCHEDULER_DNS);
+            for (String hostname : hostnames) {
+                app.getContainer().getDocker().getParameters().add(new Parameter("--add-host", hostname));
+            }
         }
 
         if (props.contains(IKeys.SCHEDULER_CONTAINER)) {
@@ -359,7 +356,6 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     /**
-     *
      * @param ids
      * @return
      * @throws ISchedulerException
