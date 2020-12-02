@@ -76,12 +76,22 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
 
     @Override
     public void stop() throws TException {
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);//wait driver disconnection
+            } catch (InterruptedException ex) {
+            }
+            stopAll();
+        }).start();
+    }
+
+    private void stopAll() {
         LOGGER.info("Stopping Backend server");
         try {
             stopHealthServer();
             server.stop();
         } catch (Exception ex) {
-            throw new IDriverExceptionImpl(ex);
+            LOGGER.error(ex.getMessage(), ex);
         }
     }
 
@@ -91,10 +101,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
                 System.in.read();
             } catch (Exception ex) {
             }
-            try {
-                stop();
-            } catch (TException ex) {
-            }
+            stopAll();
         });
         lc.start();
     }
@@ -102,7 +109,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     private void startHealthServer() {
         try {
             int port = attributes.defaultProperties.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
-            healthEndpoint = HttpServer.create(new InetSocketAddress("localhost",port), 0);
+            healthEndpoint = HttpServer.create(new InetSocketAddress("localhost", port), 0);
             HttpContext context = healthEndpoint.createContext("/");
             context.setHandler(exchange -> {
                 exchange.getResponseHeaders().add("Content-Type", "text/html");
@@ -111,7 +118,6 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
                     os.write("Ok".getBytes());
                 }
             });
-            healthEndpoint.start();
             healthEndpoint.start();
             LOGGER.info("Backend health server started");
         } catch (Exception ex) {
