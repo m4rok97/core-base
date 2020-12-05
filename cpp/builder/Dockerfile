@@ -19,33 +19,47 @@ RUN mkdir /tmp/boost && \
 	tar xvf src.tar.gz && \
 	cd boost_$(echo ${BOOST_VERSION} | tr . _) && \
 	./bootstrap.sh && \
-	./b2 && \
-	mkdir -p /root/boost/include/ && \
-	mv boost /root/boost/include/ && \
-	rm -f stage/lib/*.a && \
-	mv stage/lib /root/boost/ && \
+	./b2 headers && \
+	./b2 tools/bcp && \ 
+	mv ./dist/bin/bcp /usr/bin/ && \
+	mv boost /usr/include/ && \
 	rm -fR /tmp/boost
 
 RUN mv /root/thrift /root/thrift-src && \
 	cd /root/thrift-src && \
 	./bootstrap.sh && \
-	./configure --with-boost=/root/boost --enable-tests=no --prefix /root/thrift && \
+	./configure --enable-tests=no --prefix /root/thrift && \
 	cd lib/cpp && \
 	make -j && \
 	make install && \
 	rm -fR /root/thrift-src && \
 	rm -f /root/thrift/lib/*.a
 
+ENV SPDLOG_VERSION=1.7.0
+RUN cd /tmp && \
+	git clone https://github.com/gabime/spdlog --branch v${SPDLOG_VERSION} --single-branch spdlog && \
+	cd spdlog && \
+	cmake -DSPDLOG_BUILD_EXAMPLE=FALSE . && \
+	make -j && \
+	make install && \
+	cd .. && \
+	rm -fR spdlog
+
+ENV GHC_FILESYSTEM_VERSION=1.3.8
+RUN cd /usr/include && \
+	mkdir ghc && \
+	cd ghc && \
+	wget https://github.com/gulrak/filesystem/releases/download/v${GHC_FILESYSTEM_VERSION}/filesystem.hpp
+
 RUN cd ${IGNIS_HOME} && \
 	mkdir -p core/cpp/include && \
-	cp -R /root/boost/include/* core/cpp/include && \
+	bcp --boost=/usr/include noncopyable tokenizer endian scoped_array cast core/cpp/include && \ 
 	cp -R /root/thrift/include/* core/cpp/include && \
 	cp -R /usr/include/rapidjson core/cpp/include/ && \
 	cp -R /root/mpi/include/* core/cpp/include/ && \
 	cp /usr/include/zlib.h core/cpp/include/ && \
 	cp /usr/include/zconf.h core/cpp/include/ && \
 	mkdir -p core/cpp/lib && \
-	cp -R /root/boost/lib/* core/cpp/lib && \
 	cp -P /usr/lib/x86_64-linux-gnu/libgomp.so* core/cpp/lib && \
 	cp -R /root/thrift/lib/* core/cpp/lib && \
 	cp -R /root/mpi/lib/* core/cpp/lib
