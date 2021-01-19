@@ -45,8 +45,7 @@ public class IMarathonScheduler implements IScheduler {
     private final Marathon marathon;
     private final Map<String, String> taskAssignment;
     private final Set<String> taskAssigned;
-    private final static Map<String, IContainerDetails.ContainerStatus> TASK_STATUS
-            = new HashMap<String, IContainerDetails.ContainerStatus>() {
+    private final static Map<String, IContainerDetails.ContainerStatus> TASK_STATUS = new HashMap<>() {
         {
             put("TASK_DROPPED", IContainerDetails.ContainerStatus.ERROR);
             put("TASK_ERROR", IContainerDetails.ContainerStatus.ERROR);
@@ -120,7 +119,7 @@ public class IMarathonScheduler implements IScheduler {
             for (IPort port : container.getPorts()) {
                 Port port2 = new Port();
                 port2.setContainerPort(port.getContainerPort());
-                port2.setHostPort(port.getHostPort());
+                port2.setHostPort(0);
                 port2.setProtocol(port.getProtocol());
                 app.getContainer().getPortMappings().add(port2);
             }
@@ -165,7 +164,7 @@ public class IMarathonScheduler implements IScheduler {
         app.getEnv().put("IGNIS_JOB_NAME", app.getId());
         app.getEnv().put("IGNIS_JOB_GROUP", group);
         if (container.getEnvironmentVariables() != null) {
-            app.getEnv().putAll((Map) container.getEnvironmentVariables());
+            app.getEnv().putAll(container.getEnvironmentVariables());
         }
 
         app.setMaxLaunchDelaySeconds(21474835); //Max value, no relaunch
@@ -297,15 +296,6 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     @Override
-    public String getThisContainerId() throws ISchedulerException {
-        String id = System.getenv("IGNIS_JOB_NAME");
-        if (id == null) {
-            throw new ISchedulerException("id not found, is this a container launched by marathon?");
-        }
-        return id + ";0";
-    }
-
-    @Override
     public String createSingleContainer(String group, String name, IContainerDetails container, IProperties props) throws ISchedulerException {
         return createContainerIntances(group, name, container, props, 1).get(0);
     }
@@ -417,12 +407,14 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     @Override
-    public void restartContainer(String id) throws ISchedulerException {
+    public IContainerDetails restartContainer(String id) throws ISchedulerException {
         String appId = id.split(";")[0];
         String taskId = taskAssignment.get(id);
         try {
             VersionedApp app = marathon.getApp(appId).getApp();
             marathon.deleteAppTask(appId, getTask(app, taskId).getId(), "false");
+            taskAssignment.remove(id);
+            return getContainer(id);
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
@@ -448,6 +440,7 @@ public class IMarathonScheduler implements IScheduler {
                     }
                 }
             } while (locked);
+            taskAssignment.remove(id);
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }

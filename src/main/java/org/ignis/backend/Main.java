@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package org.ignis.backend;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.exception.ISchedulerException;
@@ -40,7 +41,6 @@ import org.ignis.rpc.driver.IWorkerService;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class Main {
@@ -105,7 +105,7 @@ public final class Main {
         IAttributes attributes = new IAttributes(props);
         try {
             LOGGER.info("Getting Driver container info from scheduler");
-            attributes.driver.initInfo(scheduler.getContainer(scheduler.getThisContainerId()));
+            attributes.driver.initInfo(scheduler.getContainer(props.getProperty(IKeys.JOB_NAME)));
             LOGGER.info("Driver container info found");
         } catch (ISchedulerException ex) {
             LOGGER.error("Not found", ex);

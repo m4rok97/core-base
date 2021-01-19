@@ -44,13 +44,6 @@ public interface IScheduler {
 
     /**
      *
-     * @return
-     * @throws ISchedulerException
-     */
-    public String getThisContainerId() throws ISchedulerException;
-    
-    /**
-     *
      * @param group
      * @param name
      * @param container
@@ -103,7 +96,7 @@ public interface IScheduler {
      * @param id
      * @throws ISchedulerException
      */
-    public void restartContainer(String id) throws ISchedulerException;
+    public IContainerDetails restartContainer(String id) throws ISchedulerException;
 
     /**
      *

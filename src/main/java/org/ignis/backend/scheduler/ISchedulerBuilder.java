@@ -32,6 +32,8 @@ public class ISchedulerBuilder {
                 return new IAncorisScheduler(url);
             case "marathon":
                 return new IMarathonScheduler(url);
+            case "singularity":
+                return new ISingularityScheduler(url);
             default:
                 throw new ISchedulerException("Scheduler " + type + " not found");
         }

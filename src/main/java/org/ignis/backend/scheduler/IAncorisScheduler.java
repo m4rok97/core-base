@@ -42,11 +42,6 @@ public class IAncorisScheduler implements IScheduler {
     }
 
     @Override
-    public String getThisContainerId() throws ISchedulerException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public String createSingleContainer(String group, String name, IContainerDetails container,
             IProperties props) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -74,7 +69,7 @@ public class IAncorisScheduler implements IScheduler {
     }
 
     @Override
-    public void restartContainer(String id) throws ISchedulerException {
+    public IContainerDetails restartContainer(String id) throws ISchedulerException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

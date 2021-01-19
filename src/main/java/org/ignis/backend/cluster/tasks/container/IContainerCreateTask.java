@@ -88,17 +88,18 @@ public final class IContainerCreateTask extends IContainerTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        List<Integer> stopped = new ArrayList<>();
+        List<IContainer> stopped = new ArrayList<>();
+        boolean news = false;
         for (int i = 0; i < containers.size(); i++) {
             if (containers.get(i).getInfo() == null) {
-                stopped.add(i);
-                continue;
+                news = true;
+                break;
             }
             switch (scheduler.getStatus(containers.get(i).getInfo().getId())) {
                 case DESTROYED:
                 case FINISHED:
                 case ERROR:
-                    stopped.add(i);
+                    stopped.add(containers.get(i));
                     break;
                 default:
                     LOGGER.info(log() + "Container " + i + " already running");
@@ -108,7 +109,7 @@ public final class IContainerCreateTask extends IContainerTask {
                             containers.get(i).connect();
                         } catch (IgnisException ex) {
                             LOGGER.warn(log() + "Container " + i + " dead");
-                            stopped.add(i);
+                            stopped.add(containers.get(i));
                         }
                     }
             }
@@ -119,12 +120,19 @@ public final class IContainerCreateTask extends IContainerTask {
         }
         LOGGER.info(log() + "Starting new containers");
 
-        String group = container.getProperties().getString(IKeys.JOB_GROUP);
-        List<String> ids = scheduler.createContainerIntances(group, name, parseContainer(), container.getProperties(), containers.size());
-        List<IContainerDetails> details = scheduler.getContainerInstances(ids);
-        for (int i = 0; i < containers.size(); i++) {
-            containers.get(i).setInfo(details.get(i));
+        if (news || stopped.size() == containers.size()) {
+            String group = container.getProperties().getString(IKeys.JOB_GROUP);
+            List<String> ids = scheduler.createContainerIntances(group, name, parseContainer(), container.getProperties(), containers.size());
+            List<IContainerDetails> details = scheduler.getContainerInstances(ids);
+            for (int i = 0; i < containers.size(); i++) {
+                containers.get(i).setInfo(details.get(i));
+            }
+        } else {
+            for (IContainer container: stopped) {
+                container.setInfo(scheduler.restartContainer(container.getInfo().getId()));
+            }
         }
+
         LOGGER.info(log() + "Connecting to the containers");
         for (int i = 0; i < containers.size(); i++) {
             containers.get(i).connect();
