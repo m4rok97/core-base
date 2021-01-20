@@ -155,9 +155,12 @@ public final class Main {
                 clusters.destroyClusters();
             }
             try {
-                attributes.driver.getExecutor().disconnect();
+                if (attributes.driver.getExecutor().isConnected()) {
+                    attributes.driver.getExecutor().getExecutorServerModule().stop();
+                    attributes.driver.getExecutor().disconnect();
+                }
             } catch (Exception ex) {
-                LOGGER.warn("Driver callback disconnect error", ex);
+                LOGGER.warn("Driver callback could not be stopped");
             }
 
             LOGGER.info("Backend stopped");
