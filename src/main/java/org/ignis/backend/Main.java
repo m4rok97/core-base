@@ -154,6 +154,7 @@ public final class Main {
             if (!Boolean.getBoolean(IKeys.DEBUG)) {
                 clusters.destroyClusters();
             }
+
             try {
                 if (attributes.driver.getExecutor().isConnected()) {
                     attributes.driver.getExecutor().getExecutorServerModule().stop();
