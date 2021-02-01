@@ -3,7 +3,7 @@
 tag=":latest"
 rty=""
 if [ $# -ge 1 ]; then
-    rty=":$1"
+    tag=":$1"
 fi
 
 if [ $# -ge 2 ]; then
