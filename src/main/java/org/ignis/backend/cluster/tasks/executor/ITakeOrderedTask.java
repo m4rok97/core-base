@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
 /**
- *
  * @author César Pomar
  */
 public class ITakeOrderedTask extends IDriverTask {
@@ -43,6 +42,7 @@ public class ITakeOrderedTask extends IDriverTask {
         }
 
         private final List<Long> count;
+        private boolean useSort;
 
     }
 
@@ -74,13 +74,35 @@ public class ITakeOrderedTask extends IDriverTask {
                 if (elems < n) {
                     throw new IgnisException("There are not enough elements");
                 }
+                shared.useSort = elems * elems > n;
+                if(shared.useSort){
+                    long remainder = n;
+                    for (int i = 0; i < shared.executors; i++) {
+                        long localN = shared.count.get((int) executor.getId());
+                        if (remainder >= localN) {
+                            remainder -= localN;
+                        } else {
+                            shared.count.set((int) executor.getId(), remainder);
+                            remainder = 0;
+                        }
+                    }
+                }
             }
             shared.barrier.await();
             if (!driver) {
-                if (src != null) {
-                    executor.getGeneralActionModule().takeOrdered2(n, src);
+                if (shared.useSort) {
+                    if (src != null) {
+                        executor.getGeneralModule().sortBy(src, true);
+                    } else {
+                        executor.getGeneralModule().sort(true);
+                    }
+                    executor.getGeneralActionModule().take(shared.count.get((int) executor.getId()));
                 } else {
-                    executor.getGeneralActionModule().takeOrdered(n);
+                    if (src != null) {
+                        executor.getGeneralActionModule().takeOrdered2(n, src);
+                    } else {
+                        executor.getGeneralActionModule().takeOrdered(n);
+                    }
                 }
             }
             shared.barrier.await();

@@ -42,6 +42,7 @@ public class ITopTask extends IDriverTask {
         }
 
         private final List<Long> count;
+        private boolean useSort;
 
     }
 
@@ -73,13 +74,35 @@ public class ITopTask extends IDriverTask {
                 if (elems < n) {
                     throw new IgnisException("There are not enough elements");
                 }
+                shared.useSort = elems * elems > n;
+                if(shared.useSort){
+                    long remainder = n;
+                    for (int i = 0; i < shared.executors; i++) {
+                        long localN = shared.count.get((int) executor.getId());
+                        if (remainder >= localN) {
+                            remainder -= localN;
+                        } else {
+                            shared.count.set((int) executor.getId(), remainder);
+                            remainder = 0;
+                        }
+                    }
+                }
             }
             shared.barrier.await();
             if (!driver) {
-                if (src != null) {
-                    executor.getGeneralActionModule().top2(n, src);
-                } else {
-                    executor.getGeneralActionModule().top(n);
+                if(shared.useSort){
+                    if (src != null) {
+                        executor.getGeneralModule().sortBy(src,false);
+                    }else{
+                        executor.getGeneralModule().sort(false);
+                    }
+                    executor.getGeneralActionModule().take(shared.count.get((int) executor.getId()));
+                }else{
+                    if (src != null) {
+                        executor.getGeneralActionModule().top2(n, src);
+                    } else {
+                        executor.getGeneralActionModule().top(n);
+                    }
                 }
             }
             shared.barrier.await();
