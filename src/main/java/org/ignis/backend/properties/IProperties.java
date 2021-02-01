@@ -217,7 +217,7 @@ public final class IProperties {
             return new HashMap<>((Map) inner);
         }
         Map<String, String> map = new HashMap<>((Map) this.defaults);
-        inner.putAll((Map) inner);
+        map.putAll((Map) inner);
         return map;
     }
 
