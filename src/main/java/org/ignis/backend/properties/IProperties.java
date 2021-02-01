@@ -212,8 +212,8 @@ public final class IProperties {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, String> toMap(boolean defaults) {
-        if (!defaults) {
+    public Map<String, String> toMap(boolean useDefaults) {
+        if (!useDefaults || this.defaults == null) {
             return new HashMap<>((Map) inner);
         }
         Map<String, String> map = new HashMap<>((Map) this.defaults);
