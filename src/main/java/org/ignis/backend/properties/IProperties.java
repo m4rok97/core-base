@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,51 +33,51 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.ignis.backend.exception.IPropertyException;
 
 /**
- *
  * @author César Pomar
  */
 public final class IProperties {
-    
+
     private final static Pattern BOOLEAN = Pattern.compile("y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON");
     private final Properties inner;
     private final Properties defaults;
-    
+
     public IProperties(IProperties defaults) {
         this.defaults = defaults.inner;
         inner = new Properties(defaults.inner);
     }
-    
+
     public IProperties() {
         defaults = null;
         inner = new Properties();
     }
-    
+
     private IProperties(Properties defaults) {
         this.defaults = defaults;
         inner = new Properties();
     }
-    
-    
-    public IProperties copy(){
+
+
+    public IProperties copy() {
         IProperties copy = new IProperties(defaults);
         copy.inner.putAll(inner);
         return copy;
     }
-    
+
     private String noNull(String value) {
         if (value == null) {
             return "";
         }
         return value;
     }
-    
+
     public String setProperty(String key, String value) {
-        return (String) inner.setProperty(noNull(key), noNull(value));
+        return noNull((String) inner.setProperty(noNull(key), noNull(value)));
     }
-    
+
     public String getProperty(String key) throws IPropertyException {
         String value = inner.getProperty(noNull(key));
         if (value == null) {
@@ -86,28 +86,28 @@ public final class IProperties {
         return value;
     }
 
-    public String getProperty(String key, String def){
-        if(inner.contains(noNull(key))){
+    public String getProperty(String key, String def) {
+        if (inner.contains(noNull(key))) {
             return getProperty(key);
         }
         return def;
     }
-    
-    public String rmProperty(String key){
-        return noNull((String)inner.remove(noNull(key)));
+
+    public String rmProperty(String key) {
+        return noNull((String) inner.remove(noNull(key)));
     }
-    
+
     public boolean getBoolean(String key) throws IPropertyException {
         return BOOLEAN.matcher(getProperty(key)).matches();
     }
 
     public boolean getBoolean(String key, boolean def) throws IPropertyException {
-        if(inner.contains(noNull(key))){
+        if (inner.contains(noNull(key))) {
             return getBoolean(key);
         }
         return def;
     }
-    
+
     public int getInteger(String key) throws IPropertyException {
         try {
             return Integer.parseInt(getProperty(key));
@@ -117,12 +117,12 @@ public final class IProperties {
     }
 
     public int getInteger(String key, int def) throws IPropertyException {
-        if(inner.contains(noNull(key))){
+        if (inner.contains(noNull(key))) {
             return getInteger(key);
         }
         return def;
     }
-    
+
     public List<Integer> getIntegerList(String key) throws IPropertyException {
         try {
             return getStringList(key).stream().map((String value) -> Integer.parseInt(value)).collect(Collectors.toList());
@@ -130,7 +130,7 @@ public final class IProperties {
             throw new IPropertyException(noNull(key), ex.getMessage());
         }
     }
-    
+
     public long getLong(String key) throws IPropertyException {
         try {
             return Long.parseLong(getProperty(key));
@@ -140,12 +140,12 @@ public final class IProperties {
     }
 
     public long getLong(String key, long def) throws IPropertyException {
-        if(inner.contains(noNull(key))){
+        if (inner.contains(noNull(key))) {
             return getLong(key);
         }
         return def;
     }
-    
+
     public List<Long> getLongList(String key) throws IPropertyException {
         try {
             return getStringList(key).stream().map((String value) -> Long.parseLong(value)).collect(Collectors.toList());
@@ -153,7 +153,7 @@ public final class IProperties {
             throw new IPropertyException(noNull(key), ex.getMessage());
         }
     }
-    
+
     public float getFloat(String key) throws IPropertyException {
         try {
             return Float.parseFloat(getProperty(key));
@@ -163,12 +163,12 @@ public final class IProperties {
     }
 
     public float getFloat(String key, float def) throws IPropertyException {
-        if(inner.contains(noNull(key))){
+        if (inner.contains(noNull(key))) {
             return getFloat(key);
         }
         return def;
     }
-    
+
     public List<Float> getFloatList(String key) throws IPropertyException {
         try {
             return getStringList(key).stream().map((String value) -> Float.parseFloat(value)).collect(Collectors.toList());
@@ -176,7 +176,7 @@ public final class IProperties {
             throw new IPropertyException(noNull(key), ex.getMessage());
         }
     }
-    
+
     public double getDouble(String key) throws IPropertyException {
         try {
             return Double.parseDouble(getProperty(key));
@@ -186,12 +186,12 @@ public final class IProperties {
     }
 
     public double getDouble(String key, double def) throws IPropertyException {
-        if(inner.contains(noNull(key))){
+        if (inner.contains(noNull(key))) {
             return getDouble(key);
         }
         return def;
     }
-    
+
     public List<Double> getDoubleList(String key) throws IPropertyException {
         try {
             return getStringList(key).stream().map((String value) -> Double.parseDouble(value)).collect(Collectors.toList());
@@ -199,81 +199,81 @@ public final class IProperties {
             throw new IPropertyException(noNull(key), ex.getMessage());
         }
     }
-    
+
     public String getString(String key) throws IPropertyException {
         return getProperty(key);
     }
-    
+
     public List<String> getStringList(String key) throws IPropertyException {
         return Arrays.asList(getProperty(key).split(","));
     }
-    
+
     @SuppressWarnings("unchecked")
-    public Collection<String> getKeysPrefix(String prefix){
-        Stream<String> keys = ((Set<String>)(Object)inner.keySet()).stream();
-        if(defaults != null){
-            keys = Stream.concat(((Set<String>)(Object)defaults.keySet()).stream(), keys);
+    public Collection<String> getKeysPrefix(String prefix) {
+        Stream<String> keys = ((Set<String>) (Object) inner.keySet()).stream();
+        if (defaults != null) {
+            keys = Stream.concat(((Set<String>) (Object) defaults.keySet()).stream(), keys);
         }
         return keys.filter((String key) -> key.startsWith(prefix)).collect(Collectors.toList());
     }
-    
+
     public boolean contains(String key) {
         return inner.getProperty(noNull(key)) != null;
     }
-    
+
     @SuppressWarnings("unchecked")
     public Map<String, String> toMap(boolean defaults) {
-        if(!defaults){
+        if (!defaults) {
             return new HashMap<>((Map) inner);
         }
         Map<String, String> map = new HashMap<>((Map) this.defaults);
         inner.putAll((Map) inner);
         return map;
     }
-    
+
     public void fromMap(Map<String, String> map) {
         inner.putAll(map);
     }
-    
+
     public void load(String path) throws IOException {
-        load(path,true);
+        load(path, true);
     }
-    
+
     public void load(String path, boolean replace) throws IOException {
         try (InputStream in = new BufferedInputStream(new FileInputStream(path))) {
-            load(in,replace);
+            load(in, replace);
         }
     }
-    
+
     public void load(InputStream in) throws IOException {
         load(in, true);
     }
-    
+
     public void load(InputStream in, boolean replace) throws IOException {
-        if(replace){
+        if (replace) {
             inner.load(in);
-        }else{
+        } else {
             Properties tmp = new Properties();
             tmp.putAll(inner);
             inner.load(in);
             inner.putAll(tmp);
         }
     }
-    
+
     public void store(String path) throws IOException {
         try (OutputStream out = new BufferedOutputStream(new FileOutputStream(path))) {
             store(out);
         }
     }
-    
+
     public void store(OutputStream out) throws IOException {
         inner.store(out, "Ignis Job properties");
     }
-    
+
     public void clear() {
         inner.clear();
     }
-    
+
     public void fromEnv(Map<String, String> env) {
         for (Map.Entry<String, String> entry : env.entrySet()) {
             if (entry.getKey().startsWith("IGNIS_")) {
@@ -281,7 +281,7 @@ public final class IProperties {
             }
         }
     }
-    
+
     public long getSILong(String key) throws IPropertyException {
         String str = getProperty(key).trim();
         final String UNITS = "KMGTPEZY";
@@ -343,17 +343,16 @@ public final class IProperties {
     @Override
     public String toString() {
         StringBuilder writer = new StringBuilder();
-        if(defaults!= null){
-            for(Map.Entry<Object,Object> entry : defaults.entrySet()){
+        if (defaults != null) {
+            for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
                 writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
             }
         }
-        for(Map.Entry<Object,Object> entry : inner.entrySet()){
+        for (Map.Entry<Object, Object> entry : inner.entrySet()) {
             writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
         }
-        return "IProperties{\n" +writer.toString()+ '}';
+        return "IProperties{\n" + writer.toString() + '}';
     }
-    
-    
-    
+
+
 }
