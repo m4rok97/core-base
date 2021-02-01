@@ -115,7 +115,7 @@ public final class IContainerCreateTask extends IContainerTask {
             }
         }
 
-        if (stopped.isEmpty()) {
+        if (stopped.isEmpty() && !news) {
             return;
         }
         LOGGER.info(log() + "Starting new containers");

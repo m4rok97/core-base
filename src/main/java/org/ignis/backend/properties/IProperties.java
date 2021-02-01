@@ -23,13 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -57,7 +51,7 @@ public final class IProperties {
 
     private IProperties(Properties defaults) {
         this.defaults = defaults;
-        inner = new Properties();
+        inner = new Properties(defaults);
     }
 
 
@@ -210,11 +204,7 @@ public final class IProperties {
 
     @SuppressWarnings("unchecked")
     public Collection<String> getKeysPrefix(String prefix) {
-        Stream<String> keys = ((Set<String>) (Object) inner.keySet()).stream();
-        if (defaults != null) {
-            keys = Stream.concat(((Set<String>) (Object) defaults.keySet()).stream(), keys);
-        }
-        return keys.filter((String key) -> key.startsWith(prefix)).collect(Collectors.toList());
+        return inner.stringPropertyNames().stream().filter((String key) -> key.startsWith(prefix)).collect(Collectors.toList());
     }
 
     public boolean contains(String key) {
@@ -343,12 +333,7 @@ public final class IProperties {
     @Override
     public String toString() {
         StringBuilder writer = new StringBuilder();
-        if (defaults != null) {
-            for (Map.Entry<Object, Object> entry : defaults.entrySet()) {
-                writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
-            }
-        }
-        for (Map.Entry<Object, Object> entry : inner.entrySet()) {
+        for (Map.Entry<String, String> entry : toMap(true).entrySet()) {
             writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
         }
         return "IProperties{\n" + writer.toString() + '}';
