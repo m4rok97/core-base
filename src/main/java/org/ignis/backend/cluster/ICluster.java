@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,20 +18,24 @@ package org.ignis.backend.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterDestroyHelper;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.IScheduler;
+import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class ICluster {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICluster.class);
 
     private String name;
     private final long id;
@@ -52,6 +56,9 @@ public final class ICluster {
         this.lock = new ILock(id);
         setName(name);
         this.tasks = new IClusterCreateHelper(this, properties).create(scheduler, ssh);//Must be the last
+        if (Boolean.getBoolean(IKeys.DEBUG)) {
+            LOGGER.info("Debug: " + getName() + " " + properties.toString());
+        }
     }
 
     public long getId() {
