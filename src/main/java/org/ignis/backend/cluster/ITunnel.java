@@ -21,6 +21,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -28,12 +29,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class ITunnel {
@@ -101,7 +102,15 @@ public final class ITunnel {
     }
 
     public void close() {
-        session.disconnect();
+        if (session != null) {
+            for (Integer port : ports.keySet()) {
+                try {
+                    session.delPortForwardingL(port);
+                } catch (JSchException e) {
+                }
+            }
+            session.disconnect();
+        }
     }
 
     public int registerPort() throws IgnisException {
