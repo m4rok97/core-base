@@ -110,13 +110,8 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
         try {
             int port = attributes.defaultProperties.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
             healthEndpoint = HttpServer.create(new InetSocketAddress(port), 0);
-            HttpContext context = healthEndpoint.createContext("/");
-            context.setHandler(exchange -> {
-                exchange.getResponseHeaders().add("Content-Type", "text/html");
-                exchange.sendResponseHeaders(200, 2);
-                try (var os = exchange.getResponseBody()) {
-                    os.write("Ok".getBytes());
-                }
+            healthEndpoint.createContext("/", exchange -> {
+                exchange.sendResponseHeaders(200, -1);
             });
             healthEndpoint.start();
             LOGGER.info("Backend health server started");
