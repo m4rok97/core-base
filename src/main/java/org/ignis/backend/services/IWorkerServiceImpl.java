@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import org.ignis.backend.cluster.IWorker;
 import org.ignis.backend.cluster.helpers.worker.IWorkerImportDataHelper;
 import org.ignis.backend.cluster.helpers.worker.IWorkerParallelizeDataHelper;
 import org.ignis.backend.cluster.helpers.worker.IWorkerReadFileHelper;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.exception.IgnisException;
@@ -34,7 +35,6 @@ import org.ignis.rpc.driver.IWorkerId;
 import org.ignis.rpc.driver.IWorkerService;
 
 /**
- *
  * @author César Pomar
  */
 public final class IWorkerServiceImpl extends IService implements IWorkerService.Iface {
@@ -46,6 +46,36 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IWorkerId newInstance(long id, String type) throws IDriverException, TException {
         return newInstance3a(id, "", type);
+    }
+
+    @Override
+    public void start(IWorkerId id) throws TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            ILazy<Void> result;
+            synchronized (worker.getLock()) {
+                result = worker.start();
+            }
+            result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void destroy(IWorkerId id) throws TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            ILazy<Void> result;
+            synchronized (worker.getLock()) {
+                result = worker.destroy();
+            }
+            result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override

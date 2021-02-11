@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.helpers.worker;
 
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IWorker;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.executor.IExecutorDestroyTask;
 import org.ignis.backend.exception.IgnisException;
@@ -36,15 +37,20 @@ public final class IWorkerDestroyHelper extends IWorkerHelper {
         super(worker, properties);
     }
 
-    public void destroy() throws IgnisException {
+    public ILazy<Void> destroy() {
         LOGGER.info(log() + "Preparing worker to destroy");
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new IExecutorDestroyTask(getName(), executor));
         }
-        LOGGER.info(log() + "Destroying worker with " + worker.getExecutors().size() + " executors");
-        builder.build().start(worker.getCluster().getPool());
-        LOGGER.info(log() + "Worker destroyed");
+        ITaskGroup target = builder.build();
+
+        return () -> {
+            LOGGER.info(log() + "Destroying worker with " + worker.getExecutors().size() + " executors");
+            target.start(worker.getCluster().getPool());
+            LOGGER.info(log() + "Worker destroyed");
+            return null;
+        };
     }
 
 }

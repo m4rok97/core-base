@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterDestroyHelper;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.IThreadPool;
@@ -111,8 +112,15 @@ public final class ICluster {
         throw new IgnisException("Worker doesn't exist");
     }
 
-    public void destroy(IScheduler scheduler) throws IgnisException {
-        new IClusterDestroyHelper(this, properties).destroy(scheduler);
+    public ILazy<Void> start() {
+        return () -> {
+            tasks.start(pool);
+            return null;
+        };
+    }
+
+    public ILazy<Void> destroy(IScheduler scheduler) {
+        return new IClusterDestroyHelper(this, properties).destroy(scheduler);
     }
 
 }

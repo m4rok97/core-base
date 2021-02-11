@@ -21,6 +21,7 @@ import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.helpers.cluster.IClusterExecuteHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.exception.IgnisException;
@@ -45,6 +46,34 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
         int attempts = attributes.defaultProperties.getInteger(IKeys.EXECUTOR_ATTEMPTS);
         this.threadPool = new IThreadPool(minWorkers, attempts);
         this.scheduler = scheduler;
+    }
+
+    @Override
+    public void start(long id) throws TException {
+        try {
+            ICluster clusterObject = attributes.getCluster(id);
+            ILazy<Void> result;
+            synchronized (clusterObject.getLock()) {
+                result = clusterObject.start();
+            }
+            result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void destroy(long id) throws TException {
+        try {
+            ICluster clusterObject = attributes.getCluster(id);
+            ILazy<Void> result;
+            synchronized (clusterObject.getLock()) {
+                result = clusterObject.destroy(scheduler);
+            }
+            result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
     }
 
     @Override
@@ -148,7 +177,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     public void destroyClusters() {
         for (ICluster cluster : attributes.getClusters()) {
             try {
-                cluster.destroy(scheduler);
+                cluster.destroy(scheduler).execute();
             } catch (IgnisException ex) {
             }
         }

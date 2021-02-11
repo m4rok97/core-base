@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.ignis.backend.cluster.helpers.worker.IWorkerCreateHelper;
 import org.ignis.backend.cluster.helpers.worker.IWorkerDestroyHelper;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.IThreadPool;
@@ -125,8 +126,15 @@ public final class IWorker {
         throw new IgnisException("IDataFrame doesn't exist");
     }
 
-    public void destroy() throws IgnisException {
-        new IWorkerDestroyHelper(this, cluster.getProperties()).destroy();
+    public ILazy<Void> start(){
+        return () -> {
+            tasks.start(cluster.getPool());
+            return null;
+        };
+    }
+
+    public ILazy<Void> destroy(){
+        return new IWorkerDestroyHelper(this, cluster.getProperties()).destroy();
     }
 
 }
