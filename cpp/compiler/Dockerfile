@@ -16,4 +16,5 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 	cmake 
 
 RUN cd ${IGNIS_HOME}/core/cpp && \
-	for file in */*; do ln -s ${IGNIS_HOME}/core/cpp/$file /usr/local/$file ; done
+	for file in */*; do ln -s ${IGNIS_HOME}/core/cpp/$file /usr/local/$file ; done && \
+	ldconfig
