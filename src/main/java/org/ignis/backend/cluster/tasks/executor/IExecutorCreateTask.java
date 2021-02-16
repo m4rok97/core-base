@@ -61,7 +61,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
                     running = true;
                     LOGGER.info(log() + "Executor process is alive, reconnecting");
                 } catch (IgnisException ex2) {
-                    LOGGER.warn(log() + "Executor dead " + ex2);
+                    LOGGER.warn(log() + "Executor dead");
                 }
             }
 

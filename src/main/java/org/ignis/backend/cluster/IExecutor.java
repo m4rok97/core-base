@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,9 @@
  */
 package org.ignis.backend.cluster;
 
+import java.net.SocketException;
 import java.util.Map;
+
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
@@ -34,7 +36,6 @@ import org.ignis.rpc.executor.IIOModule;
 import org.ignis.rpc.executor.IMathModule;
 
 /**
- *
  * @author César Pomar
  */
 public final class IExecutor {
@@ -115,7 +116,10 @@ public final class IExecutor {
 
     public void disconnect() {
         if (isConnected()) {
-            protocol.getTransport().close();
+            try {
+                protocol.getTransport().close();
+            } catch (Exception ex) {
+            }
         }
         transport.setConcreteTransport(null);
     }
