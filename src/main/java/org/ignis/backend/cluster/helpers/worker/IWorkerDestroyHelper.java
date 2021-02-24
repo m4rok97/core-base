@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IWorkerDestroyHelper extends IWorkerHelper {
@@ -37,20 +36,13 @@ public final class IWorkerDestroyHelper extends IWorkerHelper {
         super(worker, properties);
     }
 
-    public ILazy<Void> destroy() {
+    public ITaskGroup destroy() {
         LOGGER.info(log() + "Preparing worker to destroy");
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new IExecutorDestroyTask(getName(), executor));
         }
-        ITaskGroup target = builder.build();
-
-        return () -> {
-            LOGGER.info(log() + "Destroying worker with " + worker.getExecutors().size() + " executors");
-            target.start(worker.getCluster().getPool());
-            LOGGER.info(log() + "Worker destroyed");
-            return null;
-        };
+        return builder.build();
     }
 
 }

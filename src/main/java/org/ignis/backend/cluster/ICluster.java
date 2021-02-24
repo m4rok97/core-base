@@ -112,6 +112,10 @@ public final class ICluster {
         throw new IgnisException("Worker doesn't exist");
     }
 
+    public int workers(){
+        return workers.size();
+    }
+
     public ILazy<Void> start() {
         return () -> {
             tasks.start(pool);

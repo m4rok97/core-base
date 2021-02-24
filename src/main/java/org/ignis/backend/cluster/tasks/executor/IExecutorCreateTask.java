@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package org.ignis.backend.cluster.tasks.executor;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
@@ -30,7 +31,6 @@ import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IExecutorCreateTask extends IExecutorTask {
@@ -46,6 +46,14 @@ public final class IExecutorCreateTask extends IExecutorTask {
         this.cores = cores;
     }
 
+    private void kill() {
+        try {
+            executor.disconnect();
+            executor.getContainer().getTunnel().execute("kill -9 " + executor.getPid(), false);
+        } catch (Exception ex0) {
+        }
+    }
+
     @Override
     public void run(ITaskContext context) throws IgnisException {
         boolean running = false;
@@ -56,7 +64,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 return;
             } catch (TException ex) {
                 LOGGER.info(log() + "Executor connection lost, testing executor process");
-                try{
+                try {
                     executor.getContainer().getTunnel().execute("ps -p " + executor.getPid() + " > /dev/null", false);
                     running = true;
                     LOGGER.info(log() + "Executor process is alive, reconnecting");
@@ -100,6 +108,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 break;
             } catch (TException ex) {
                 if (i == 9) {
+                    kill();
                     throw new IgnisException(ex.getMessage(), ex);
                 }
                 try {
@@ -120,12 +129,14 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 }
                 LOGGER.info("Debug:" + log() + " ExecutorProperties{\n" + writer.toString() + '}');
             }
-            if(!running){
+            if (!running) {
                 executor.getExecutorServerModule().start(executorProperties);
             }
         } catch (IExecutorException ex) {
+            kill();
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
+            kill();
             throw new IgnisException(ex.getMessage(), ex);
         }
         LOGGER.info(log() + "Executor ready");

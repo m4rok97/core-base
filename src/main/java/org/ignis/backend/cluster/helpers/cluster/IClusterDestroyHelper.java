@@ -44,6 +44,13 @@ public final class IClusterDestroyHelper extends IClusterHelper {
         }
         ITaskGroup target = builder.build();
 
+        for (int i = 0; i < cluster.workers(); i++) {
+            try {
+                target.getSubTasksGroup().add(cluster.getWorker(i).destroy());
+            } catch (IgnisException ex) {
+            }
+        }
+
         return () -> {
             LOGGER.info(log() + "Destroying cluster with " + cluster.getContainers().size() + " containers");
             target.start(cluster.getPool());
