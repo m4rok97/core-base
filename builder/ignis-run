@@ -1,4 +1,7 @@
 #!/bin/bash
 
+export FI_TCP_PORT_HIGH_RANGE=1
+export FI_TCP_STATIC_PORTS=$MPICH_STATIC_PORTS
+
 cd $IGNIS_WORKING_DIRECTORY;
 mpirun "$@"
