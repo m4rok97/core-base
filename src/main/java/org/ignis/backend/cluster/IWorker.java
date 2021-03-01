@@ -133,8 +133,11 @@ public final class IWorker {
         };
     }
 
-    public ITaskGroup destroy(){
-        return new IWorkerDestroyHelper(this, cluster.getProperties()).destroy();
+    public ILazy<Void> destroy(){
+        return () -> {
+            new IWorkerDestroyHelper(this, cluster.getProperties()).destroy().start(cluster.getPool());
+            return null;
+        };
     }
 
 }

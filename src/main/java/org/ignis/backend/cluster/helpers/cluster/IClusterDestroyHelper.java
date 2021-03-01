@@ -17,6 +17,7 @@
 package org.ignis.backend.cluster.helpers.cluster;
 
 import org.ignis.backend.cluster.ICluster;
+import org.ignis.backend.cluster.helpers.worker.IWorkerDestroyHelper;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.container.IContainerDestroyTask;
@@ -46,7 +47,7 @@ public final class IClusterDestroyHelper extends IClusterHelper {
 
         for (int i = 0; i < cluster.workers(); i++) {
             try {
-                target.getSubTasksGroup().add(cluster.getWorker(i).destroy());
+                target.getSubTasksGroup().add(new IWorkerDestroyHelper(cluster.getWorker(i), cluster.getProperties()).destroy());
             } catch (IgnisException ex) {
             }
         }
