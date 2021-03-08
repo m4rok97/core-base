@@ -9,7 +9,7 @@ EOF
 ######## MPICH SERVICE PATH ########
 file_path="src/mpid/ch4/netmod/ofi/ofi_init.c"
 position='NULL, NULL, 0ULL, hints, \&prov_list'
-source='getenv("MPICH_HOST"), NULL, getenv("MPICH_HOST") == NULL ? 0ULL : FI_SOURCE, hints, \&prov_list'
+source='getenv("MPICH_SERVICE"), NULL, getenv("MPICH_SERVICE") == NULL ? 0ULL : FI_SOURCE, hints, \&prov_list'
 
 sed  "s/$position/$source/g" -i $file_path
 
