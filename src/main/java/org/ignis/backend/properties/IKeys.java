@@ -84,6 +84,7 @@ public final class IKeys {
     public static final String PARTITION_COMPRESSION = "ignis.partition.compression";
     public static final String PARTITION_SERIALIZATION = "ignis.partition.serialization";
     /*TRANSPORT*/
+    public static final String TRANSPORT_CORES = "ignis.transport.cores";
     public static final String TRANSPORT_COMPRESSION = "ignis.transport.compression";
     public static final String TRANSPORT_TYPE = "ignis.transport.type";
     public static final String TRANSPORT_PORT = "ignis.transport.port";

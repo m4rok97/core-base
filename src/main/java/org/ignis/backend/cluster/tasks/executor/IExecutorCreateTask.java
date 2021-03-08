@@ -77,6 +77,9 @@ public final class IExecutorCreateTask extends IExecutorTask {
         if (!running) {
             LOGGER.info(log() + "Starting new executor");
             StringBuilder startScript = new StringBuilder();
+            if(executor.getProperties().getDouble(IKeys.TRANSPORT_CORES) > 0) {
+                startScript.append("export MPI_THREAD_MULTIPLE");
+            }
             startScript.append("export MPICH_SERVICE=").append(executor.getContainer().getInfo().getHost()).append('\n');
             startScript.append("export MPICH_LIST_PORTS='");
             int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
