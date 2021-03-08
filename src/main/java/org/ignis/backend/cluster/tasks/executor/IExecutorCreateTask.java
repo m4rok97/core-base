@@ -77,7 +77,8 @@ public final class IExecutorCreateTask extends IExecutorTask {
         if (!running) {
             LOGGER.info(log() + "Starting new executor");
             StringBuilder startScript = new StringBuilder();
-            startScript.append("export MPICH_STATIC_PORTS='");
+            startScript.append("export MPICH_SERVICE=").append(executor.getContainer().getInfo().getHost()).append('\n');
+            startScript.append("export MPICH_LIST_PORTS='");
             int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
             List<IPort> mpiPorts = executor.getContainer().getInfo().getPorts().subList(0, mpiMaxPorts);
             startScript.append(mpiPorts.stream().map((IPort p) -> String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
