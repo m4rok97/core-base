@@ -1,16 +1,15 @@
-int isspace(int argument);
-int isdigit(int argument);
+
 int MPL_env2str(const char *envName, const char **val);
 int MPL_listen_anyport_aux(int sock_fd, unsigned short *p_port);
-#include<stdio.h> 
+
 int MPL_listen_anyport(int sock_fd, unsigned short *p_port)
 {
-    const char* static_ports;
-    if (MPL_env2str("MPICH_STATIC_PORTS", &static_ports)){ 
+    const char* list_ports;
+    if (MPL_env2str("MPICH_LIST_PORTS", &list_ports)){ 
         MPL_sockaddr_t addr;
         int i;
         int ret;
-        char *p = (char*)static_ports;
+        char *p = (char*)list_ports;
 
         if (_use_loopback) {
             MPL_get_sockaddr_direct(MPL_SOCKADDR_LOOPBACK, &addr);
@@ -26,7 +25,7 @@ int MPL_listen_anyport(int sock_fd, unsigned short *p_port)
                 i = 10 * i + (*p++ - '0');
             }
             if(i==0){
-                fprintf(stderr,"Invalid character %c in %s\n", *p, "MPICH_STATIC_PORTS");
+                fprintf(stderr,"Invalid character %c in %s\n", *p, "MPICH_LIST_PORTS");
                 return -1;
             }
             ret = MPL_listen(sock_fd, i);
@@ -39,7 +38,7 @@ int MPL_listen_anyport(int sock_fd, unsigned short *p_port)
                 return -1;
             }
         }
-        fprintf(stderr,"not enough ports in %s\n", "MPICH_STATIC_PORTS");
+        fprintf(stderr,"not enough ports in %s\n", "MPICH_LIST_PORTS");
         return -2;
     }
     return MPL_listen_anyport_aux(sock_fd, p_port);
