@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package org.ignis.backend.cluster.tasks.container;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.ISchedulerException;
@@ -27,7 +28,6 @@ import org.ignis.backend.scheduler.IScheduler;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IContainerDestroyTask extends IContainerTask {
@@ -78,7 +78,14 @@ public final class IContainerDestroyTask extends IContainerTask {
             }
         }
 
-        LOGGER.info(log() + "Destroying containers");
+        try {
+            String killScript = "kill -SIGTERM 1";
+            container.getTunnel().execute(killScript, true);
+            Thread.sleep(2000);
+        } catch (IgnisException | InterruptedException ex) {
+            LOGGER.warn(log() + ex.toString());
+        }
+
         try {
             scheduler.destroyContainerInstaces(ids);
             LOGGER.info(log() + "Container destroyed");
