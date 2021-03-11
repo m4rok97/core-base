@@ -20,10 +20,8 @@ timeout=${IGNIS_DRIVER_HEALTHCHECK_TIMEOUT}
 retries=${IGNIS_DRIVER_HEALTHCHECK_RETRIES}
 url=${IGNIS_DRIVER_HEALTHCHECK_URL}
 attempt=0
+trap "exit 0" TERM 
 while true; do
-    if [ -f "${IGNIS_HOME}/exit" ]; then
-        exit 0
-    fi
     if $(curl --output /dev/null --silent --head --fail --connect-timeout ${timeout} ${url}); then
         attempt=0
     else
@@ -33,7 +31,8 @@ while true; do
         fi
         attempt=$(($attempt+1))
     fi
-    sleep ${interval}
+    sleep ${interval} &
+    wait $!
 done
 
 EOL
