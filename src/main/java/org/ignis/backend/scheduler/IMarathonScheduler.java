@@ -107,6 +107,7 @@ public class IMarathonScheduler implements IScheduler {
         app.getContainer().getDocker().setNetwork("BRIDGE");
         app.getContainer().getDocker().setParameters(new ArrayList<>());
         app.getContainer().getDocker().getParameters().add(new Parameter("memory-swappiness", "0"));
+        app.getContainer().getDocker().getParameters().add(new Parameter("privileged", "true"));// TODO remove
         app.setCpus((double) container.getCpus());
         app.setMem((double) container.getMemory());
         app.getArgs().add(container.getCommand());
