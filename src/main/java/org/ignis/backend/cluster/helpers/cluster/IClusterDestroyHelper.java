@@ -43,14 +43,15 @@ public final class IClusterDestroyHelper extends IClusterHelper {
         if (!cluster.getContainers().isEmpty()) {// All containers are destroyed in single task, faster in some schedulers
             builder.newTask(new IContainerDestroyTask(getName(), cluster.getContainers().get(0), scheduler, cluster.getContainers()));
         }
-        ITaskGroup target = builder.build();
 
         for (int i = 0; i < cluster.workers(); i++) {
             try {
-                target.getSubTasksGroup().add(new IWorkerDestroyHelper(cluster.getWorker(i), cluster.getProperties()).destroy());
+                builder.newDependency(new IWorkerDestroyHelper(cluster.getWorker(i), cluster.getProperties()).destroy());
             } catch (IgnisException ex) {
             }
         }
+
+        ITaskGroup target = builder.build();
 
         return () -> {
             LOGGER.info(log() + "Destroying cluster with " + cluster.getContainers().size() + " containers");

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IExecutorDestroyTask extends IExecutorTask {
@@ -44,8 +43,9 @@ public final class IExecutorDestroyTask extends IExecutorTask {
             throw new IgnisException(ex.getMessage(), ex);
         }
         try {
-            String killScript = "timeout 10 wait " + executor.getPid() + " || kill -9  " + executor.getPid();
-            executor.getContainer().getTunnel().execute(killScript, true);
+            String killScript = "timeout 30 bash -c \"while kill -0 " + executor.getPid() +
+                    "; do sleep 1; done\" || kill -9 " + executor.getPid();
+            executor.getContainer().getTunnel().execute(killScript, false);
         } catch (IgnisException ex) {
             LOGGER.warn(log() + ex.toString());
         }
