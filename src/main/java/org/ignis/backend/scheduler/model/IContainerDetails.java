@@ -47,6 +47,7 @@ public class IContainerDetails {
     private final List<String> arguments;
     private final int cpus;
     private final long memory;//MiB
+    private final Integer swappiness;
     private final List<IPort> ports;
     private final List<IBind> binds;
     private final List<IVolume> volumes;

@@ -63,6 +63,7 @@ public final class IContainerCreateTask extends IContainerTask {
         }
         builder.cpus(props.getInteger(IKeys.EXECUTOR_CORES));
         builder.memory((long) Math.ceil(props.getSILong(IKeys.EXECUTOR_MEMORY) / 1024 / 1024));
+        builder.swappiness(props.contains(IKeys.EXECUTOR_SWAPPINESS) ? props.getInteger(IKeys.EXECUTOR_SWAPPINESS) : null);
         builder.command("ignis-server");
         builder.arguments(Arrays.asList(props.getString(IKeys.EXECUTOR_RPC_PORT)));
         List<IPort> ports;
@@ -128,7 +129,7 @@ public final class IContainerCreateTask extends IContainerTask {
                 containers.get(i).setInfo(details.get(i));
             }
         } else {
-            for (IContainer container: stopped) {
+            for (IContainer container : stopped) {
                 container.setInfo(scheduler.restartContainer(container.getInfo().getId()));
             }
         }

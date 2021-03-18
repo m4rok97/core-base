@@ -106,11 +106,14 @@ public class IMarathonScheduler implements IScheduler {
         app.getContainer().getDocker().setImage(container.getImage());
         app.getContainer().getDocker().setNetwork("BRIDGE");
         app.getContainer().getDocker().setParameters(new ArrayList<>());
-        app.getContainer().getDocker().getParameters().add(new Parameter("memory-swappiness", "0"));
-        app.getContainer().getDocker().getParameters().add(new Parameter("privileged", "true"));// TODO remove
         app.setCpus((double) container.getCpus());
         app.setMem((double) container.getMemory());
         app.getArgs().add(container.getCommand());
+
+        if(container.getSwappiness() != null){
+            app.getContainer().getDocker().getParameters().add(new Parameter("memory-swappiness", "" + container.getSwappiness()));
+            app.addLabel("memory-swappiness", "" + container.getSwappiness());
+        }
 
         if (container.getArguments() != null) {
             app.getArgs().addAll(container.getArguments());
@@ -205,6 +208,10 @@ public class IMarathonScheduler implements IScheduler {
         if (app.getArgs() != null && !app.getArgs().isEmpty()) {
             builder.command(app.getArgs().get(0));
             builder.arguments(app.getArgs().subList(1, app.getArgs().size()));
+        }
+
+        if(app.getLabels().containsKey("memory-swappiness")){
+            builder.swappiness(Integer.parseInt(app.getLabels().get("memory-swappiness")));
         }
 
         if (app.getContainer() != null) {

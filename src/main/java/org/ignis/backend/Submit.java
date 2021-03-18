@@ -119,6 +119,7 @@ public class Submit implements Callable<Integer> {
             }
             builder.cpus(props.getInteger(IKeys.DRIVER_CORES));
             builder.memory((long) Math.ceil(props.getSILong(IKeys.DRIVER_MEMORY) / 1024 / 1024));
+            builder.swappiness(props.contains(IKeys.DRIVER_SWAPPINESS) ? props.getInteger(IKeys.DRIVER_SWAPPINESS): null);
             List<IPort> ports;
             builder.ports(ports = ISchedulerParser.parsePorts(props, IKeys.DRIVER_PORT));
             ports.add(new IPort(props.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT), 0, "tcp"));
