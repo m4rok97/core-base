@@ -44,6 +44,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 		libcurl4-nss-dev \
 		libevent-dev \
 		libsvn1 \
+		libltdl7 \
 		libsasl2-modules
 
 ENV JAVA_HOME=/usr/lib/jvm/java-13-openjdk-amd64/
