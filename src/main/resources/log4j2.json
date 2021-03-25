@@ -10,6 +10,10 @@
       }
     },
     "Loggers": {
+      "Logger": {
+        "name": "org.apache.thrift.transport",
+        "level": "ERROR"
+      },
       "Root": {
         "level": "info",
         "AppenderRef": [

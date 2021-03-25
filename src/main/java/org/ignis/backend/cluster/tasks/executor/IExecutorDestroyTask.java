@@ -35,6 +35,9 @@ public final class IExecutorDestroyTask extends IExecutorTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
+        if(!executor.isConnected()){
+            return;
+        }
         LOGGER.info(log() + "Destroying executor");
         try {
             executor.getExecutorServerModule().stop();

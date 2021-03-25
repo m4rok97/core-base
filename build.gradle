@@ -54,7 +54,7 @@ dependencies {
     implementation group: 'com.mesosphere', name: 'marathon-client', version: '0.6.3'
     implementation group: 'com.hubspot', name: 'SingularityClient', version: '1.4.0'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'
-    implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
+    implementation group: 'com.github.mwiede', name: 'jsch', version: '0.1.62'
     implementation group: 'info.picocli', name: 'picocli', version: '4.5.2'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
 
