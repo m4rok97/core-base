@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import mesosphere.marathon.client.Marathon;
 import mesosphere.marathon.client.MarathonClient;
@@ -43,8 +42,6 @@ public class IMarathonScheduler implements IScheduler {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMarathonScheduler.class);
 
     private final Marathon marathon;
-    private final Map<String, String> taskAssignment;
-    private final Set<String> taskAssigned;
     private final static Map<String, IContainerDetails.ContainerStatus> TASK_STATUS = new HashMap<>() {
         {
             put("TASK_DROPPED", IContainerDetails.ContainerStatus.ERROR);
@@ -79,12 +76,14 @@ public class IMarathonScheduler implements IScheduler {
             }
         }
         marathon = MarathonClient.getInstance(url);
-        taskAssignment = new ConcurrentHashMap<>();
-        taskAssigned = ConcurrentHashMap.<String>newKeySet();
     }
 
     private String fixMarathonId(String id) {
         return id.toLowerCase().replaceAll("[^\\w-]", "");
+    }
+
+    private String appId(String taskId) {
+        return "/" + taskId.split("\\.")[0].replace('_', '/');
     }
 
     @SuppressWarnings("unchecked")
@@ -110,7 +109,7 @@ public class IMarathonScheduler implements IScheduler {
         app.setMem((double) container.getMemory());
         app.getArgs().add(container.getCommand());
 
-        if(container.getSwappiness() != null){
+        if (container.getSwappiness() != null) {
             app.getContainer().getDocker().getParameters().add(new Parameter("memory-swappiness", "" + container.getSwappiness()));
             app.addLabel("memory-swappiness", "" + container.getSwappiness());
         }
@@ -183,17 +182,13 @@ public class IMarathonScheduler implements IScheduler {
         return app;
     }
 
-    private String taskId(Task task) throws ISchedulerException {
-        return task.getId().split("\\.")[1];
-    }
-
-    private Task getTask(App app, String id) throws ISchedulerException {
-        for (Task t : app.getTasks()) {
-            if (id.equals(taskId(t))) {
+    private Task getTask(Collection<Task> tasks, String id) throws ISchedulerException {
+        for (Task t : tasks) {
+            if (t.getId().startsWith(id)) {
                 return t;
             }
         }
-        throw new ISchedulerException("not found");
+        throw new ISchedulerException("marathon task not found");
     }
 
     @SuppressWarnings("unchecked")
@@ -210,7 +205,7 @@ public class IMarathonScheduler implements IScheduler {
             builder.arguments(app.getArgs().subList(1, app.getArgs().size()));
         }
 
-        if(app.getLabels().containsKey("memory-swappiness")){
+        if (app.getLabels().containsKey("memory-swappiness")) {
             builder.swappiness(Integer.parseInt(app.getLabels().get("memory-swappiness")));
         }
 
@@ -311,40 +306,78 @@ public class IMarathonScheduler implements IScheduler {
 
     @Override
     public List<String> createContainerIntances(String group, String name, IContainerDetails container, IProperties props, int instances) throws ISchedulerException {
-        App app = createApp(group, name, container, props);
-        app.setInstances(instances);
         try {
-            marathon.createApp(app);
+            App app = createApp(group, name, container, props);
+            app.setInstances(instances);
+            boolean first = false;
+            int taks = 0;
+
+            app = marathon.createApp(app);
+            int time = 1;
+            while (!app.getDeployments().isEmpty()) {
+                app = marathon.getApp(app.getId()).getApp();
+                LOGGER.info("Waiting cluster deployment..." + app.getTasks().size() + " of " + instances);
+                Thread.sleep(time * 1000);
+
+                if (first || taks > app.getTasks().size()) {
+                    taks = app.getTasks().size();
+                    continue;
+                }
+
+                if (time < 30) {
+                    time++;
+                    continue;
+                }
+
+                String dpId = app.getDeployments().get(0).getId();
+                app = marathon.getApp(app.getId()).getApp();
+                List<Deployment> deployments = marathon.getDeployments();
+                if (deployments.isEmpty()) {
+                    continue;
+                }
+
+                String dpFirst = deployments.get(0).getId();
+                if (first = dpFirst.equals(dpId)) {
+                    continue;
+                }
+
+                marathon.deleteApp(app.getId());
+                Thread.sleep(10000);
+                time = 1;
+                app = null;
+                while (app != null) {
+                    try {
+                        app = marathon.createApp(app);
+                    } catch (MarathonException response) {
+                        if (response.getStatus() != 409) {// App is not destroyed yet
+                            throw response;
+                        }
+                        Thread.sleep(10000);
+                    }
+                }
+            }
             List<String> ids = new ArrayList<>();
-            for (int i = 0; i < instances; i++) {
-                ids.add(app.getId() + ";" + i);
+            for (Task t : app.getTasks()) {
+                String[] fields = t.getId().split("\\.");
+                ids.add(fields[0] + "." + fields[1] + ".");
             }
             return ids;
         } catch (MarathonException ex) {
+            throw new ISchedulerException(ex.getMessage(), ex);
+        } catch (InterruptedException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
 
     @Override
     public IContainerDetails.ContainerStatus getStatus(String id) throws ISchedulerException {
-        String appId = id.split(";")[0];
         try {
-            VersionedApp app = marathon.getApp(appId).getApp();
-            if (app.getInstances() == 0) {
-                return IContainerDetails.ContainerStatus.DESTROYED;
-            }
-            String taskId = taskAssignment.get(id);
-            if (taskId == null) {
-                getContainer(id);
-                taskId = taskAssignment.get(id);
-            }
-            Task task;
+            List<Task> tasks = marathon.getAppTasks(appId(id)).getTasks();
             try {
-                task = getTask(app, taskId);
+                return TASK_STATUS.get(getTask(tasks, id));
             } catch (ISchedulerException ex) {
                 return IContainerDetails.ContainerStatus.DESTROYED;
             }
-            return TASK_STATUS.get(task.getState());
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
@@ -365,64 +398,53 @@ public class IMarathonScheduler implements IScheduler {
         if (ids.isEmpty()) {
             return new ArrayList<>();
         }
-        String appId = ids.get(0).split(";")[0];
+        String appId = appId(ids.get(0));
         for (String id : ids) {
-            if (!appId.equals(id.split(";")[0])) {
+            if (!appId.equals(appId(id))) {
                 throw new ISchedulerException("Instances must belong to the same container");
             }
         }
         try {
-            List<IContainerDetails> containers = new ArrayList<>(ids.size());
-            VersionedApp app;
-            int time = 1;
-            while (containers.size() < ids.size()) {
-                app = marathon.getApp(appId).getApp();
-                Iterator<Task> it = app.getTasks().iterator();
-                if (Boolean.getBoolean(IKeys.DEBUG) && (time == 1 || !app.getTasks().isEmpty())) {
-                    LOGGER.info("Debug: " + app.toString());
-                }
+            App app;
 
-                while (it.hasNext() && containers.size() < ids.size()) {
-                    IContainerDetails info;
-                    String id = ids.get(containers.size());
-                    if (taskAssignment.containsKey(ids.get(containers.size()))) {
-                        info = parseTaks(id, app, getTask(app, taskAssignment.get(id)));
-                    } else {
-                        Task t = it.next();
-                        String taskId = taskId(t);
-                        if (taskAssigned.contains(taskId)) {
-                            continue;
-                        } else if (containers.size() == ids.size()) {
-                            break;
-                        }
-                        taskAssigned.add(taskId);
-                        taskAssignment.put(ids.get(containers.size()), taskId);
-                        info = parseTaks(id, app, t);
-                    }
-                    containers.add(info);
+            while ((app = marathon.getApp(appId).getApp()) != null && !app.getDeployments().isEmpty()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
                 }
-                Thread.sleep(time * 1000);
-                if (time < 30) {
-                    time++;
-                }
-                LOGGER.info("Waiting cluster deployment..." + containers.size() + " of " + ids.size());
+            }
+            if (Boolean.getBoolean(IKeys.DEBUG)) {
+                LOGGER.info("Debug: " + app.toString());
+            }
+
+            List<IContainerDetails> containers = new ArrayList<>();
+            for (String id : ids) {
+                Task t = getTask(app.getTasks(), id);
+                containers.add(parseTaks(id, app, t));
             }
             return containers;
         } catch (MarathonException ex) {
-            throw new ISchedulerException(ex.getMessage(), ex);
-        } catch (InterruptedException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
 
     @Override
     public IContainerDetails restartContainer(String id) throws ISchedulerException {
-        String appId = id.split(";")[0];
-        String taskId = taskAssignment.get(id);
         try {
-            VersionedApp app = marathon.getApp(appId).getApp();
-            marathon.deleteAppTask(appId, getTask(app, taskId).getId(), "false");
-            taskAssignment.remove(id);
+            String appId = appId(id);
+            List<Task> tasks = marathon.getAppTasks(appId).getTasks();
+            String realId = getTask(tasks, id).getId();
+            marathon.deleteAppTask(appId, realId, "false");
+            OUT:
+            while (tasks != null) {
+                tasks = marathon.getAppTasks(appId).getTasks();
+                for (Task t : tasks) {
+                    if (t.getId().equals(realId)) {
+                        continue OUT;
+                    }
+                }
+                break;
+            }
             return getContainer(id);
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
@@ -431,25 +453,10 @@ public class IMarathonScheduler implements IScheduler {
 
     @Override
     public void destroyContainer(String id) throws ISchedulerException {
-        String appId = id.split(";")[0];
-        String taskId = taskAssignment.get(id);
         try {
-            VersionedApp app = marathon.getApp(appId).getApp();
-            boolean locked = false;
-            do {
-                try {
-                    marathon.deleteAppTask(appId, getTask(app, taskId).getId(), "true");
-                    locked = false;
-                } catch (MarathonException ex0) {
-                    //Fix multiple instances deleted at same time
-                    locked = ex0.getStatus() == 409;
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex1) {
-                    }
-                }
-            } while (locked);
-            taskAssignment.remove(id);
+            String appId = appId(id);
+            String realId = getTask(marathon.getAppTasks(appId).getTasks(), id).getId();
+            marathon.deleteAppTask(appId, realId, "true");
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
@@ -457,21 +464,25 @@ public class IMarathonScheduler implements IScheduler {
 
     @Override
     public void destroyContainerInstaces(List<String> ids) throws ISchedulerException {
-        String appId = ids.get(0).split(";")[0];
-        for (String id : ids) {
-            if (!appId.equals(id.split(";")[0])) {
-                throw new ISchedulerException("Instances must belong to the same container");
-            }
-        }
         try {
-            VersionedApp app = marathon.getApp(appId).getApp();
+            if (ids.isEmpty()) {
+                return;
+            }
+            String appId = appId(ids.get(0));
+            for (String id : ids) {
+                if (!appId.equals(appId(id))) {
+                    throw new ISchedulerException("Instances must belong to the same container");
+                }
+            }
+            App app = marathon.getApp(appId).getApp();
             if (app.getTasks().size() == ids.size()) {
                 marathon.deleteApp(appId);
             } else {
                 MarathonException error = null;
                 for (String id : ids) {
                     try {
-                        destroyContainer(id);
+                        String realId = getTask(app.getTasks(), id).getId();
+                        marathon.deleteAppTask(appId, realId, "true");
                     } catch (MarathonException ex0) {
                         error = ex0;
                     }
