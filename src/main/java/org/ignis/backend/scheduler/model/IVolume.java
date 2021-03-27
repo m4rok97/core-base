@@ -19,6 +19,7 @@ package org.ignis.backend.scheduler.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  *
@@ -27,6 +28,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
+@ToString
 public class IVolume {
 
     private String containerPath;

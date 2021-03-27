@@ -83,6 +83,9 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     private String appId(String taskId) {
+        if(taskId.startsWith("/")){
+            return taskId;
+        }
         return "/" + taskId.split("\\.")[0].replace('_', '/');
     }
 
@@ -183,6 +186,9 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     private Task getTask(Collection<Task> tasks, String id) throws ISchedulerException {
+        if(id.startsWith("/") && tasks.size() == 1){
+            return tasks.iterator().next();
+        }
         for (Task t : tasks) {
             if (t.getId().startsWith(id)) {
                 return t;
@@ -301,7 +307,7 @@ public class IMarathonScheduler implements IScheduler {
 
     @Override
     public String createSingleContainer(String group, String name, IContainerDetails container, IProperties props) throws ISchedulerException {
-        return createContainerIntances(group, name, container, props, 1).get(0);
+        return appId(createContainerIntances(group, name, container, props, 1).get(0));
     }
 
     @Override
@@ -316,7 +322,9 @@ public class IMarathonScheduler implements IScheduler {
             int time = 1;
             while (!app.getDeployments().isEmpty()) {
                 app = marathon.getApp(app.getId()).getApp();
-                LOGGER.info("Waiting cluster deployment..." + app.getTasks().size() + " of " + instances);
+                if(instances > 1) {
+                    LOGGER.info("Waiting cluster deployment..." + app.getTasks().size() + " of " + instances);
+                }
                 Thread.sleep(time * 1000);
 
                 if (first || taks > app.getTasks().size()) {
@@ -453,13 +461,7 @@ public class IMarathonScheduler implements IScheduler {
 
     @Override
     public void destroyContainer(String id) throws ISchedulerException {
-        try {
-            String appId = appId(id);
-            String realId = getTask(marathon.getAppTasks(appId).getTasks(), id).getId();
-            marathon.deleteAppTask(appId, realId, "true");
-        } catch (MarathonException ex) {
-            throw new ISchedulerException(ex.getMessage(), ex);
-        }
+        destroyContainerInstaces(Arrays.asList(id));
     }
 
     @Override

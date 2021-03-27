@@ -126,11 +126,17 @@ public final class IContainerCreateTask extends IContainerTask {
             List<String> ids = scheduler.createContainerIntances(group, name, parseContainer(), container.getProperties(), containers.size());
             List<IContainerDetails> details = scheduler.getContainerInstances(ids);
             for (int i = 0; i < containers.size(); i++) {
+                if (Boolean.getBoolean(IKeys.DEBUG)) {
+                    LOGGER.info("Debug:" + log() + "[" + i + "]" + details.get(i));
+                }
                 containers.get(i).setInfo(details.get(i));
             }
         } else {
             for (IContainer container : stopped) {
                 container.setInfo(scheduler.restartContainer(container.getInfo().getId()));
+                if (Boolean.getBoolean(IKeys.DEBUG)) {
+                    LOGGER.info("Debug:" + log() + "[" + container.getId() + "]" + container.getInfo());
+                }
             }
         }
 
