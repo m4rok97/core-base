@@ -83,7 +83,7 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     private String appId(String taskId) {
-        if(taskId.startsWith("/")){
+        if (taskId.startsWith("/")) {
             return taskId;
         }
         return "/" + taskId.split("\\.")[0].replace('_', '/');
@@ -186,7 +186,7 @@ public class IMarathonScheduler implements IScheduler {
     }
 
     private Task getTask(Collection<Task> tasks, String id) throws ISchedulerException {
-        if(id.startsWith("/") && tasks.size() == 1){
+        if (id.startsWith("/") && tasks.size() == 1) {
             return tasks.iterator().next();
         }
         for (Task t : tasks) {
@@ -307,6 +307,14 @@ public class IMarathonScheduler implements IScheduler {
 
     @Override
     public String createSingleContainer(String group, String name, IContainerDetails container, IProperties props) throws ISchedulerException {
+        try {
+            App app = createApp(group, name, container, props);
+            app.setInstances(1);
+            marathon.createApp(app).getId();
+        } catch (MarathonException ex) {
+            throw new ISchedulerException(ex.getMessage(), ex);
+        }
+
         return appId(createContainerIntances(group, name, container, props, 1).get(0));
     }
 
@@ -322,9 +330,7 @@ public class IMarathonScheduler implements IScheduler {
             int time = 1;
             while (!app.getDeployments().isEmpty()) {
                 app = marathon.getApp(app.getId()).getApp();
-                if(instances > 1) {
-                    LOGGER.info("Waiting cluster deployment..." + app.getTasks().size() + " of " + instances);
-                }
+                LOGGER.info("Waiting cluster deployment..." + app.getTasks().size() + " of " + instances);
                 Thread.sleep(time * 1000);
 
                 if (first || taks > app.getTasks().size()) {
