@@ -386,7 +386,7 @@ public class IMarathonScheduler implements IScheduler {
         try {
             List<Task> tasks = marathon.getAppTasks(appId(id)).getTasks();
             try {
-                return TASK_STATUS.get(getTask(tasks, id));
+                return TASK_STATUS.get(getTask(tasks, id).getState());
             } catch (ISchedulerException ex) {
                 return IContainerDetails.ContainerStatus.DESTROYED;
             }
