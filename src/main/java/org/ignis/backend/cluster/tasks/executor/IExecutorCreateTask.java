@@ -77,7 +77,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
         if (!running) {
             LOGGER.info(log() + "Starting new executor");
             StringBuilder startScript = new StringBuilder();
-            if(executor.getProperties().getDouble(IKeys.TRANSPORT_CORES) > 0) {
+            if (executor.getProperties().getDouble(IKeys.TRANSPORT_CORES) > 0) {
                 startScript.append("export MPI_THREAD_MULTIPLE=1");
             }
             startScript.append("export MPICH_SERVICE=").append(executor.getContainer().getInfo().getHost()).append('\n');
@@ -109,10 +109,12 @@ public final class IExecutorCreateTask extends IExecutorTask {
         for (int i = 0; i < 10; i++) {
             try {
                 executor.connect();
+                executor.getExecutorServerModule().test();
                 break;
             } catch (TException ex) {
                 if (i == 9) {
                     kill();
+                    executor.disconnect();
                     throw new IgnisException(ex.getMessage(), ex);
                 }
                 try {
@@ -124,16 +126,15 @@ public final class IExecutorCreateTask extends IExecutorTask {
         }
 
         try {
-            executor.getExecutorServerModule().test();
-            Map<String, String> executorProperties = executor.getExecutorProperties();
-            if (Boolean.getBoolean(IKeys.DEBUG)) {
-                StringBuilder writer = new StringBuilder();
-                for (Map.Entry<String, String> entry : executorProperties.entrySet()) {
-                    writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
-                }
-                LOGGER.info("Debug:" + log() + " ExecutorProperties{\n" + writer.toString() + '}');
-            }
             if (!running) {
+                Map<String, String> executorProperties = executor.getExecutorProperties();
+                if (Boolean.getBoolean(IKeys.DEBUG)) {
+                    StringBuilder writer = new StringBuilder();
+                    for (Map.Entry<String, String> entry : executorProperties.entrySet()) {
+                        writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
+                    }
+                    LOGGER.info("Debug:" + log() + " ExecutorProperties{\n" + writer.toString() + '}');
+                }
                 executor.getExecutorServerModule().start(executorProperties);
             }
         } catch (IExecutorException ex) {

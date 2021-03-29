@@ -35,16 +35,16 @@ public final class IExecutorDestroyTask extends IExecutorTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        if(!executor.isConnected()){
+        if (!executor.isConnected()) {
             return;
         }
         LOGGER.info(log() + "Destroying executor");
         try {
             executor.getExecutorServerModule().stop();
-            executor.disconnect();
         } catch (TException ex) {
-            throw new IgnisException(ex.getMessage(), ex);
+            LOGGER.warn(log() + "Executor stopped with errors: " + ex);
         }
+        executor.disconnect();
         try {
             String killScript = "timeout 30 bash -c \"while kill -0 " + executor.getPid() +
                     "; do sleep 1; done\" || kill -9 " + executor.getPid();
