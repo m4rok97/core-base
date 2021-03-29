@@ -5,7 +5,7 @@
         "name": "Console",
         "target": "SYSTEM_ERR",
         "PatternLayout": {
-          "pattern": "[%-5level] %d{MMM dd, yyyy hh:mm:ss}: %msg%n"
+          "pattern": "%d{MMMMM dd, yyyy hh:mm:ss aa} <%level> [%l]: %msg%n"
         }
       }
     },
