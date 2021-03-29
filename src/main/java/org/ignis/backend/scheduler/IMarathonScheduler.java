@@ -101,9 +101,9 @@ public class IMarathonScheduler implements IScheduler {
 
         name = fixMarathonId(name);
         if (group != null) {
-            app.setId(group + "/" + name + "-" + UUID.randomUUID().toString());
+            app.setId("/" + group + "/" + name + "-" + UUID.randomUUID().toString());
         } else {
-            app.setId(name + "-" + UUID.randomUUID().toString());
+            app.setId("/" + name + "-" + UUID.randomUUID().toString());
         }
         app.getContainer().getDocker().setImage(container.getImage());
         app.getContainer().getDocker().setNetwork("BRIDGE");
@@ -310,7 +310,7 @@ public class IMarathonScheduler implements IScheduler {
         try {
             App app = createApp(group, name, container, props);
             app.setInstances(1);
-            return "/" + marathon.createApp(app).getId();
+            return marathon.createApp(app).getId();
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
