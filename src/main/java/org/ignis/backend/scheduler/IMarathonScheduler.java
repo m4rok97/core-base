@@ -310,12 +310,10 @@ public class IMarathonScheduler implements IScheduler {
         try {
             App app = createApp(group, name, container, props);
             app.setInstances(1);
-            marathon.createApp(app).getId();
+            return "/" + marathon.createApp(app).getId();
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
-
-        return appId(createContainerIntances(group, name, container, props, 1).get(0));
     }
 
     @Override
