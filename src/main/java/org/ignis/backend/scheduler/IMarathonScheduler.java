@@ -331,7 +331,7 @@ public class IMarathonScheduler implements IScheduler {
                 LOGGER.info("Waiting cluster deployment..." + app.getTasks().size() + " of " + instances);
                 Thread.sleep(time * 1000);
 
-                if (first || taks > app.getTasks().size()) {
+                if (first || taks > app.getTasks().size() || taks == instances) {
                     taks = app.getTasks().size();
                     continue;
                 }

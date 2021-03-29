@@ -111,7 +111,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 executor.connect();
                 executor.getExecutorServerModule().test();
                 break;
-            } catch (TException ex) {
+            } catch (Exception ex) {
                 if (i == 9) {
                     kill();
                     executor.disconnect();
