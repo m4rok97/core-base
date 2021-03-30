@@ -102,11 +102,15 @@ public final class IExecutorCreateTask extends IExecutorTask {
             startScript.append("& \n");
             startScript.append("printf $!");/*get PID*/
 
+            if (Boolean.getBoolean(IKeys.DEBUG)) {
+                String procs = executor.getContainer().getTunnel().execute("ps aux", true);
+                LOGGER.info("Debug:" + log() + " Running Processes{\n" + procs + '}');
+            }
             String output = executor.getContainer().getTunnel().execute(startScript.toString(), false);
             executor.setPid(Integer.parseInt(output));
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             try {
                 executor.connect();
                 executor.getExecutorServerModule().test();
@@ -118,7 +122,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
                     throw new IgnisException(ex.getMessage(), ex);
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException ex1) {
                     throw new IgnisException(ex.getMessage(), ex);
                 }
