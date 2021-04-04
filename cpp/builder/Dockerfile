@@ -12,7 +12,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 		libssl-dev \
 		libtool 
 
-ENV BOOST_VERSION=1.74.0
+ENV BOOST_VERSION=1.75.0
 RUN mkdir /tmp/boost && \
 	cd /tmp/boost && \
 	wget https://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_$(echo ${BOOST_VERSION} | tr . _).tar.gz -O src.tar.gz && \
@@ -20,8 +20,6 @@ RUN mkdir /tmp/boost && \
 	cd boost_$(echo ${BOOST_VERSION} | tr . _) && \
 	./bootstrap.sh && \
 	./b2 headers && \
-	./b2 tools/bcp && \ 
-	mv ./dist/bin/bcp /usr/bin/ && \
 	mv boost /usr/include/ && \
 	rm -fR /tmp/boost
 
@@ -35,7 +33,7 @@ RUN mv /root/thrift /root/thrift-src && \
 	rm -fR /root/thrift-src && \
 	rm -f /root/thrift/lib/*.a
 
-ENV SPDLOG_VERSION=1.7.0
+ENV SPDLOG_VERSION=1.8.5
 RUN cd /tmp && \
 	git clone https://github.com/gabime/spdlog --branch v${SPDLOG_VERSION} --single-branch spdlog && \
 	cd spdlog && \
@@ -45,7 +43,7 @@ RUN cd /tmp && \
 	cd .. && \
 	rm -fR spdlog
 
-ENV GHC_FILESYSTEM_VERSION=1.3.8
+ENV GHC_FILESYSTEM_VERSION=1.5.4
 RUN cd /usr/include && \
 	mkdir ghc && \
 	cd ghc && \
@@ -53,7 +51,6 @@ RUN cd /usr/include && \
 
 RUN cd ${IGNIS_HOME} && \
 	mkdir -p core/cpp/include && \
-	bcp --boost=/usr/include noncopyable tokenizer endian scoped_array cast core/cpp/include && \ 
 	cp -R /root/thrift/include/* core/cpp/include && \
 	cp -R /usr/include/rapidjson core/cpp/include/ && \
 	cp -R /root/mpi/include/* core/cpp/include/ && \
