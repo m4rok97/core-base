@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.stream.Collectors;
+
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
@@ -34,7 +35,6 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public abstract class IDriverTask extends IExecutorContextTask {
@@ -59,7 +59,6 @@ public abstract class IDriverTask extends IExecutorContextTask {
 
     protected final Shared shared;
     protected final boolean driver;
-    protected final String id;
     private final long dataId;
     private final ISource src;
     private Integer attempt;
@@ -70,7 +69,6 @@ public abstract class IDriverTask extends IExecutorContextTask {
         this.driver = driver;
         this.dataId = dataId;
         this.src = src;
-        this.id = executor.getContainer().getCluster() + "-" + executor.getWorker();
         this.attempt = -1;
     }
 
@@ -119,30 +117,38 @@ public abstract class IDriverTask extends IExecutorContextTask {
         }
     }
 
-    private void mpiDriverGroup(ITaskContext context) throws IgnisException, BrokenBarrierException {
+    private String mpiDriverGroup(ITaskContext context) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Testing mpi driver group");
+        String id;
         try {
             if (driver) {
                 driverConnection(context);
                 shared.flag = true;
             }
+            if (!driver && executor.getId() == 0) {
+                shared.group = executor.getContainer().getCluster() + "." + executor.getWorker();
+            }
             shared.barrier.await();
+            id = shared.group;
             if (!executor.getCommModule().hasGroup(id) || executor.getResets() != attempt) {
                 shared.flag = false;
             }
             shared.barrier.await();
             if (!shared.flag) {
-                if(attempt != -1){
+                if (attempt != -1) {
                     executor.getCommModule().destroyGroup(id);
                 }
                 attempt = executor.getResets();
                 if (!driver && executor.getId() == 0) {
                     LOGGER.info(log() + "Mpi driver group not found, creating a new one");
-                    shared.group = executor.getCommModule().createGroup();
+                    shared.group = executor.getCommModule().openGroup();
                 }
                 shared.barrier.await();
-                executor.getCommModule().joinToGroup(shared.group, id);
+                executor.getCommModule().joinToGroupName(shared.group, !driver, id);
                 shared.barrier.await();
+                if (!driver && executor.getId() == 0) {
+                    executor.getCommModule().closeGroup();
+                }
             }
         } catch (IExecutorException ex) {
             shared.barrier.fails();
@@ -154,11 +160,12 @@ public abstract class IDriverTask extends IExecutorContextTask {
             throw new IgnisException(ex.getMessage(), ex);
         }
         LOGGER.info(log() + "Mpi driver group ready");
+        return id;
     }
 
     protected void mpiGather(ITaskContext context, boolean zero) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Executing mpiGather");
-        mpiDriverGroup(context);
+        String id = mpiDriverGroup(context);
         try {
             if (zero && executor.getId() == 0) { //Only Driver and executor 0 has id==0
                 executor.getCommModule().driverGather0(id, src);
@@ -177,7 +184,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
 
     protected void mpiScatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Executing mpiScatter");
-        mpiDriverGroup(context);
+        String id = mpiDriverGroup(context);
         try {
             if (driver) {
                 executor.getCacheContextModule().loadCache(dataId);

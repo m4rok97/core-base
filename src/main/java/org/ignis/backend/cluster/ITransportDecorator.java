@@ -16,11 +16,11 @@
  */
 package org.ignis.backend.cluster;
 
+import org.apache.thrift.TConfiguration;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
 /**
- *
  * @author César Pomar
  */
 public class ITransportDecorator extends TTransport {
@@ -105,6 +105,21 @@ public class ITransportDecorator extends TTransport {
     @Override
     public void consumeBuffer(int len) {
         concreteTransport.consumeBuffer(len);
+    }
+
+    @Override
+    public TConfiguration getConfiguration() {
+        return concreteTransport.getConfiguration();
+    }
+
+    @Override
+    public void updateKnownMessageSize(long size) throws TTransportException {
+        concreteTransport.updateKnownMessageSize(size);
+    }
+
+    @Override
+    public void checkReadBytesAvailable(long numBytes) throws TTransportException {
+        concreteTransport.checkReadBytesAvailable(numBytes);
     }
 
 }

@@ -62,7 +62,11 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
                     .transportFactory(new TTransportFactory() {
                         @Override
                         public TTransport getTransport(TTransport base) {
-                            return new TZlibTransport(base, compression);
+                            try {
+                                return new TZlibTransport(base, compression);
+                            } catch (TTransportException ex) {
+                                return null;//never happens
+                            }
                         }
                     })
                     .processor(processor));

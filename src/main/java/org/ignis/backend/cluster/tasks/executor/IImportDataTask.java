@@ -105,18 +105,19 @@ public final class IImportDataTask extends IExecutorContextTask {
             if (source) {
                 for (int i = 0; i < shared.sends.size(); i++) {
                     if (shared.sends.get(i)[id] != null) {
-                        executor.getCommModule().send(shared.commId, i, shared.sends.get(i)[id], id);
+                        executor.getCommModule().send(shared.commId, i, shared.sends.get(i)[id], 0);//TODO threading
                     }
                     shared.barrier.await();
                 }
             } else {
+                if (src == null) {
+                    executor.getCommModule().newEmptyPartitions(shared.rcvs.size());
+                } else {
+                    executor.getCommModule().newEmptyPartitions2(shared.rcvs.size(), src);
+                }
                 for (int i = 0; i < shared.rcvs.size(); i++) {
                     if (shared.rcvs.get(i)[id] != null) {
-                        if (src == null) {
-                            executor.getCommModule().recv(shared.commId, i, shared.rcvs.get(i)[id], id);
-                        } else {
-                            executor.getCommModule().recv5(shared.commId, i, shared.rcvs.get(i)[id], id, src);
-                        }
+                        executor.getCommModule().recv(shared.commId, i, shared.rcvs.get(i)[id], 0);//TODO threading
                     }
                     shared.barrier.await();
                 }
@@ -190,12 +191,15 @@ public final class IImportDataTask extends IExecutorContextTask {
                 executor.getCommModule().destroyGroup(shared.commId);
             }
             attempt = executor.getResets();
-            if (executor.getId() == 0) {
+            if (source && executor.getId() == 0) {
                 LOGGER.info(log() + "mpi group " + shared.commId + " not found, creating a new one");
-                shared.group = executor.getCommModule().createGroup();
+                shared.group = executor.getCommModule().openGroup();
             }
             shared.barrier.await();
-            executor.getCommModule().joinGroupMembers(shared.group, executor.getId(), shared.sources + shared.targets);
+            executor.getCommModule().joinToGroupName(shared.group, source, shared.commId);
+            if (source && executor.getId() == 0) {
+                executor.getCommModule().closeGroup();
+            }
         }
         LOGGER.info(log() + "mpi group " + shared.commId + " ready");
         shared.barrier.await();

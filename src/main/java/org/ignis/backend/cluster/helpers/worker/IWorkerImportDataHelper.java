@@ -119,7 +119,7 @@ public final class IWorkerImportDataHelper extends IWorkerHelper {
             w1 = w2;
             w2 = aux;
         }
-        return w1.getCluster().getId() + "-" + w1.getId() + ";" + w2.getCluster().getId() + "-" + w2.getId();
+        return w1.getCluster().getId() + "." + w1.getId() + "." + w2.getCluster().getId() + "." + w2.getId();
     }
 
 }

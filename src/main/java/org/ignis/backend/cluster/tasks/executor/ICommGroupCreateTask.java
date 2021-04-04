@@ -74,11 +74,22 @@ public final class ICommGroupCreateTask extends IExecutorTask {
                 }
                 if (executor.getId() == 0) {
                     LOGGER.info(log() + "worker mpi group not found, creating a new one");
-                    shared.group = executor.getCommModule().createGroup();
+                    shared.group = executor.getCommModule().openGroup();
                 }
                 shared.barrier.await();
-                executor.getCommModule().joinGroupMembers(shared.group, executor.getId(), shared.executors);
+                for (int i = 1; i < shared.executors; i++) {
+                    if (executor.getId() <= i) {
+                        executor.getCommModule().joinToGroup(shared.group, executor.getId() != i);
+                        if (executor.getId() == 0) {
+                            LOGGER.info(log() + "executor " + i + " added to the mpi group");
+                        }
+                    }
+                    shared.barrier.await();
+                }
                 attempt = executor.getResets();
+                if (executor.getId() == 0) {
+                    executor.getCommModule().closeGroup();
+                }
             }
             LOGGER.info(log() + "worker mpi group ready");
             shared.barrier.await();
