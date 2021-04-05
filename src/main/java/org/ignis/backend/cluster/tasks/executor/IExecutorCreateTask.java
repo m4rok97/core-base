@@ -110,19 +110,19 @@ public final class IExecutorCreateTask extends IExecutorTask {
             executor.setPid(Integer.parseInt(output));
         }
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 40; i++) {
             try {
                 executor.connect();
                 executor.getExecutorServerModule().test();
                 break;
             } catch (Exception ex) {
-                if (i == 9) {
+                if (i == 39) {
                     kill();
                     executor.disconnect();
                     throw new IgnisException(ex.getMessage(), ex);
                 }
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException ex1) {
                     throw new IgnisException(ex.getMessage(), ex);
                 }
