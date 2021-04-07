@@ -3,7 +3,7 @@
 ldconfig
 export DEBIAN_FRONTEND=noninteractive
 apt update 
-apt install -y --no-install-recommends openssh-server curl 
+apt install -y --no-install-recommends openssh-server curl tzdata 
 mkdir /var/run/sshd
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
