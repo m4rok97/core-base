@@ -170,6 +170,9 @@ public class IMarathonScheduler implements IScheduler {
         app.setEnv(new HashMap<>());
         app.getEnv().put("IGNIS_JOB_NAME", app.getId());
         app.getEnv().put("IGNIS_JOB_GROUP", group);
+        if (System.getenv("TZ") != null) { //Copy timezone
+            app.getEnv().put("TZ", System.getenv("TZ"));
+        }
         if (container.getEnvironmentVariables() != null) {
             app.getEnv().putAll(container.getEnvironmentVariables());
         }
