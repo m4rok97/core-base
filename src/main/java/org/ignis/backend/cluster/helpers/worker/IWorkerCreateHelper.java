@@ -74,7 +74,7 @@ public final class IWorkerCreateHelper extends IWorkerHelper {
         LOGGER.info(log() + "Registering worker with " + instances + " executors");
         for (IContainer container : worker.getCluster().getContainers()) {
             for (int i = 0; i < cores; i++) {
-                IExecutor executor = container.createExecutor(container.getId() * cores + i, worker.getId());
+                IExecutor executor = container.createExecutor(container.getId() * cores + i, worker.getId(), true);
                 builder.newTask(new IExecutorCreateTask(getName(), executor, worker.getType(), 1));
                 commBuilder.newTask(new ICommGroupCreateTask(getName(), executor, commShared));
                 worker.getExecutors().add(executor);

@@ -79,6 +79,10 @@ public final class IContainer {
     }
 
     public IExecutor createExecutor(long id, long worker) throws IgnisException {
-        return new IExecutor(id, worker, this, tunnel.registerPort());
+        return new IExecutor(id, worker, this, tunnel.registerPort(), false);
+    }
+
+    public IExecutor createExecutor(long id, long worker, boolean singleCore) throws IgnisException {
+        return new IExecutor(id, worker, this, tunnel.registerPort(), singleCore);
     }
 }

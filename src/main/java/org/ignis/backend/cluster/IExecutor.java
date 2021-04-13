@@ -43,6 +43,7 @@ public final class IExecutor {
     private final long id;
     private final long worker;
     private final int port;
+    private final boolean singleCore;
     private final IContainer container;
     private final ITransportDecorator transport;
     private final TProtocol protocol;
@@ -56,11 +57,12 @@ public final class IExecutor {
     private int pid;
     private int resets;
 
-    public IExecutor(long id, long worker, IContainer container, int port) {
+    public IExecutor(long id, long worker, IContainer container, int port, boolean singleCore) {
         this.id = id;
         this.worker = worker;
         this.container = container;
         this.port = port;
+        this.singleCore = singleCore;
         this.resets = -1;
         this.transport = new ITransportDecorator();
         this.protocol = new TCompactProtocol(transport);
@@ -87,6 +89,10 @@ public final class IExecutor {
 
     public int getPort() {
         return port;
+    }
+
+    public boolean isSingleCore() {
+        return singleCore;
     }
 
     public IProperties getProperties() {
