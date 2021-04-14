@@ -6,6 +6,9 @@ comm_headers=$(cat << EOF
 EOF
 )
 
+######## MPICH VCI ########
+cat "$dir/ignis_ch4_vci.h" > "src/mpid/ch4/src/ch4_vci.h"
+
 ######## MPICH SERVICE PATH ########
 file_path="src/mpid/ch4/netmod/ofi/ofi_init.c"
 position='NULL, NULL, 0ULL, hints, \&prov_list'

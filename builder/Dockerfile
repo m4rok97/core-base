@@ -17,6 +17,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 
 
 COPY mpi_patches /tmp/mpi_patches
+ENV MPICH_THREADS=64
 ENV MPICH_VERSION=3.4.1
 RUN mkdir /tmp/mpi && \
 	cd /tmp/mpi && \
@@ -25,7 +26,8 @@ RUN mkdir /tmp/mpi && \
 	cd mpich-${MPICH_VERSION} && \
 	bash /tmp/mpi_patches/mpi_path.sh && \
 	rm -fR /tmp/mpi_patches && \
-	./configure --prefix /root/mpi --with-device=ch4:ofi --with-libfabric=embedded --enable-fast=O3,ndebug --disable-error-checking --without-timing --without-mpit-pvars && \
+	./configure --prefix /root/mpi --with-device=ch4:ofi --with-libfabric=embedded --enable-fast=O3,ndebug --disable-error-checking --without-timing --without-mpit-pvars \
+			--enable-thread-cs=per-vci --with-ch4-max-vcis=${MPICH_THREADS} && \
 	make -j && \
 	make install && \
 	rm -f /root/mpi/lib/*.a && \
