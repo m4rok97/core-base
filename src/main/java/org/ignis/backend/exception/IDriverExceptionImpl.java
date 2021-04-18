@@ -16,19 +16,19 @@
  */
 package org.ignis.backend.exception;
 
+import org.ignis.rpc.driver.IDriverException;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
-import org.ignis.rpc.driver.IDriverException;
 
 /**
- *
  * @author César Pomar
  */
 public class IDriverExceptionImpl extends IDriverException {
 
     public IDriverExceptionImpl(Exception ex) {
-        this(ex.getMessage() != null ? ex.getMessage() : ex.getClass().getName() , ex);
+        this(ex.getMessage() != null ? ex.getMessage() : ex.getClass().getName(), ex);
     }
 
     public IDriverExceptionImpl(String msg) {
@@ -38,7 +38,7 @@ public class IDriverExceptionImpl extends IDriverException {
     public IDriverExceptionImpl(String msg, Throwable cause) {
         this(msg, exceptionToString(cause));
     }
-    
+
     public IDriverExceptionImpl(String msg, String cause) {
         super(msg != null ? msg : "", stackToString() + "\nCaused by: " + cause);
     }

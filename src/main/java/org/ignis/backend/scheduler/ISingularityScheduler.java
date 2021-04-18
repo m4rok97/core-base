@@ -19,7 +19,6 @@ package org.ignis.backend.scheduler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.google.gson.Gson;
 import com.hubspot.horizon.HttpClient;
 import com.hubspot.horizon.HttpConfig;
 import com.hubspot.horizon.ning.NingHttpClient;
@@ -27,7 +26,6 @@ import com.hubspot.mesos.*;
 import com.hubspot.singularity.*;
 import com.hubspot.singularity.client.SingularityClient;
 import com.hubspot.singularity.client.SingularityClientException;
-
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
@@ -241,7 +239,7 @@ public class ISingularityScheduler implements IScheduler {
 
             SingularityRequestParent parent = client.createDeployForSingularityRequest(id, deployBuilder.build(), Optional.of(true), Optional.empty());
 
-            parent = client.updateIncrementalDeployInstanceCount(new SingularityUpdatePendingDeployRequest(id,"0",4));
+            parent = client.updateIncrementalDeployInstanceCount(new SingularityUpdatePendingDeployRequest(id, "0", 4));
 
             tasksId.addAll(parent.getTaskIds().get().getHealthy());
             tasksId.addAll(parent.getTaskIds().get().getNotYetHealthy());

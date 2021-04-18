@@ -218,6 +218,21 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         };
     }
 
+    public ILazy<Void> foreachExecutor(ISource src) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IForEachExecutorTask(getName(), executor, src));
+        }
+        LOGGER.info(log() + "foreachExecutor(" +
+                "src=" + srcToString(src) +
+                ") registered");
+        return () -> {
+            ITaskContext context = builder.build().start(data.getPool());
+            return null;
+        };
+    }
+
     public ILazy<Long> top(IDriver driver, long num, ISource tp) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());

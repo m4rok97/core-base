@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@
  */
 package org.ignis.backend.cluster.tasks;
 
+import org.ignis.backend.cluster.ITaskContext;
+
 import java.util.concurrent.Future;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import org.ignis.backend.cluster.ITaskContext;
 
 /**
- *
  * @author César Pomar
  */
 public final class IThreadPool {

@@ -20,13 +20,12 @@ import org.ignis.backend.exception.ISchedulerException;
 
 
 /**
- *
  * @author César Pomar
  */
 public class ISchedulerBuilder {
 
     public static IScheduler create(String type, String url) {
-         type = type.toLowerCase();
+        type = type.toLowerCase();
         switch (type) {
             case "ancoris":
                 return new IAncorisScheduler(url);

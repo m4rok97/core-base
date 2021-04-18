@@ -34,8 +34,8 @@ public final class IWorkerCreateHelper extends IWorkerHelper {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IWorkerCreateHelper.class);
 
-    public IWorkerCreateHelper(IWorker job, IProperties properties) {
-        super(job, properties);
+    public IWorkerCreateHelper(IWorker worker, IProperties properties) {
+        super(worker, properties);
     }
 
     public ITaskGroup create() throws IgnisException {

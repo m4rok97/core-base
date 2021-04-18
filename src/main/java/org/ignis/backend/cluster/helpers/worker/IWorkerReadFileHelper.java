@@ -36,8 +36,8 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IWorkerReadFileHelper.class);
 
-    public IWorkerReadFileHelper(IWorker job, IProperties properties) {
-        super(job, properties);
+    public IWorkerReadFileHelper(IWorker worker, IProperties properties) {
+        super(worker, properties);
     }
 
     public IDataFrame textFile(String path) throws IgnisException {

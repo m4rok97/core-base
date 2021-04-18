@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public class IParallelizeTask extends IDriverTask {

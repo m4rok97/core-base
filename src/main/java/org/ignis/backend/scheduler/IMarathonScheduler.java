@@ -17,10 +17,6 @@
 package org.ignis.backend.scheduler;
 
 import com.google.gson.Gson;
-
-import java.lang.reflect.Field;
-import java.util.*;
-
 import mesosphere.marathon.client.Marathon;
 import mesosphere.marathon.client.MarathonClient;
 import mesosphere.marathon.client.MarathonException;
@@ -33,6 +29,9 @@ import org.ignis.backend.scheduler.model.IContainerDetails;
 import org.ignis.backend.scheduler.model.IPort;
 import org.ignis.backend.scheduler.model.IVolume;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * @author César Pomar

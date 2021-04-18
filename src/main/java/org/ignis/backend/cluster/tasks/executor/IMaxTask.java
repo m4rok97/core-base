@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,15 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.concurrent.BrokenBarrierException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.BrokenBarrierException;
+
 /**
- *
  * @author César Pomar
  */
 public class IMaxTask extends IDriverTask {
@@ -47,9 +47,9 @@ public class IMaxTask extends IDriverTask {
         LOGGER.info(log() + "max started");
         try {
             if (!driver) {
-                if(cmp != null){
+                if (cmp != null) {
                     executor.getMathModule().max1(cmp);
-                }else{
+                } else {
                     executor.getMathModule().max();
                 }
             }

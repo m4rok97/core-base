@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
@@ -26,8 +25,6 @@ import org.ignis.rpc.IExecutorException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
-import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.atomic.AtomicLong;
 

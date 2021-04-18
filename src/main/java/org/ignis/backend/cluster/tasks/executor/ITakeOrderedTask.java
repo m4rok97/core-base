@@ -75,7 +75,7 @@ public class ITakeOrderedTask extends IDriverTask {
                     throw new IgnisException("There are not enough elements");
                 }
                 shared.useSort = elems * elems > n;
-                if(shared.useSort){
+                if (shared.useSort) {
                     long remainder = n;
                     for (int i = 0; i < shared.executors; i++) {
                         long localN = shared.count.get((int) executor.getId());

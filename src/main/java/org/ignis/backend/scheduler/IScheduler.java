@@ -16,19 +16,18 @@
  */
 package org.ignis.backend.scheduler;
 
-import java.util.List;
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 
+import java.util.List;
+
 /**
- *
  * @author César Pomar
  */
 public interface IScheduler {
 
     /**
-     *
      * @param name
      * @return
      * @throws ISchedulerException
@@ -36,14 +35,12 @@ public interface IScheduler {
     public String createGroup(String name) throws ISchedulerException;
 
     /**
-     *
      * @param group
      * @throws ISchedulerException
      */
     public void destroyGroup(String group) throws ISchedulerException;
 
     /**
-     *
      * @param group
      * @param name
      * @param container
@@ -55,7 +52,6 @@ public interface IScheduler {
             throws ISchedulerException;
 
     /**
-     *
      * @param group
      * @param name
      * @param container
@@ -65,10 +61,9 @@ public interface IScheduler {
      * @throws ISchedulerException
      */
     public List<String> createContainerIntances(String group, String name, IContainerDetails container,
-            IProperties props, int instances) throws ISchedulerException;
+                                                IProperties props, int instances) throws ISchedulerException;
 
     /**
-     *
      * @param id
      * @return
      * @throws ISchedulerException
@@ -76,7 +71,6 @@ public interface IScheduler {
     public IContainerDetails.ContainerStatus getStatus(String id) throws ISchedulerException;
 
     /**
-     *
      * @param id
      * @return
      * @throws ISchedulerException
@@ -84,7 +78,6 @@ public interface IScheduler {
     public IContainerDetails getContainer(String id) throws ISchedulerException;
 
     /**
-     *
      * @param ids
      * @return
      * @throws ISchedulerException
@@ -92,28 +85,24 @@ public interface IScheduler {
     public List<IContainerDetails> getContainerInstances(List<String> ids) throws ISchedulerException;
 
     /**
-     *
      * @param id
      * @throws ISchedulerException
      */
     public IContainerDetails restartContainer(String id) throws ISchedulerException;
 
     /**
-     *
      * @param id
      * @throws ISchedulerException
      */
     public void destroyContainer(String id) throws ISchedulerException;
-    
-        /**
-     *
+
+    /**
      * @param ids
      * @throws ISchedulerException
      */
     public void destroyContainerInstaces(List<String> ids) throws ISchedulerException;
 
     /**
-     *
      * @throws ISchedulerException
      */
     public void healthCheck() throws ISchedulerException;

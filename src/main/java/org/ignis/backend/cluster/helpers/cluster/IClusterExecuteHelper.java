@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,10 @@
  */
 package org.ignis.backend.cluster.helpers.cluster;
 
-import java.util.List;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.tasks.ICondicionalTaskGroup;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.container.IExecuteCmdTask;
 import org.ignis.backend.cluster.tasks.container.IExecuteScriptTask;
@@ -26,8 +27,9 @@ import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
- *
  * @author César Pomar
  */
 public final class IClusterExecuteHelper extends IClusterHelper {
@@ -38,24 +40,34 @@ public final class IClusterExecuteHelper extends IClusterHelper {
         super(cluster, properties);
     }
 
-    public void execute(List<String> cmd) throws IgnisException {
+    public ILazy<Void> execute(List<String> cmd) throws IgnisException {
         LOGGER.info(log() + "Registering a cmd in cluster init");
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
-        builder.newDependency(cluster.getTasks());
+        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(cluster.getLock(), () -> cluster.isRunning());
         for (IContainer container : cluster.getContainers()) {
             builder.newTask(new IExecuteCmdTask(getName(), container, cmd));
         }
-        cluster.getTasks().getSubTasksGroup().add(builder.build());
+        ITaskGroup group = builder.build();
+        cluster.getTasks().getSubTasksGroup().add(group);
+
+        return () -> {
+            group.start(cluster.getPool());
+            return null;
+        };
     }
 
-    public void executeScript(String script) throws IgnisException {
+    public ILazy<Void> executeScript(String script) throws IgnisException {
         LOGGER.info(log() + "Registering script in cluster init");
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
-        builder.newDependency(cluster.getTasks());
+        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(cluster.getLock(), () -> cluster.isRunning());
         for (IContainer container : cluster.getContainers()) {
             builder.newTask(new IExecuteScriptTask(script, container, script));
         }
-        cluster.getTasks().getSubTasksGroup().add(builder.build());
+        ITaskGroup group = builder.build();
+        cluster.getTasks().getSubTasksGroup().add(group);
+
+        return () -> {
+            group.start(cluster.getPool());
+            return null;
+        };
     }
 
 }

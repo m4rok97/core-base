@@ -16,13 +16,13 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.concurrent.BrokenBarrierException;
-
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.BrokenBarrierException;
 
 /**
  * @author César Pomar

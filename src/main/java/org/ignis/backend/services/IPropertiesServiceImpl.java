@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,15 @@
  */
 package org.ignis.backend.services;
 
-import java.util.Map;
 import org.apache.thrift.TException;
 import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.driver.IPropertiesService;
 
+import java.util.Map;
+
 /**
- *
  * @author César Pomar
  */
 public final class IPropertiesServiceImpl extends IService implements IPropertiesService.Iface {

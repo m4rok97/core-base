@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author César Pomar

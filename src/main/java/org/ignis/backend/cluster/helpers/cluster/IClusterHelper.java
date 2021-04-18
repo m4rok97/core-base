@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.properties.IProperties;
 
 /**
- *
  * @author César Pomar
  */
 public abstract class IClusterHelper extends IHelper {

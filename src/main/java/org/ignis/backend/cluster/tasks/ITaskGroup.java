@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,16 @@
  */
 package org.ignis.backend.cluster.tasks;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
 import org.slf4j.LoggerFactory;
 
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 /**
- *
  * @author César Pomar
  */
 public class ITaskGroup {
@@ -98,7 +94,7 @@ public class ITaskGroup {
     }
 
     protected void start(IThreadPool pool, ITaskContext context, int retries) throws IgnisException {
-        for (int attempt = 0;; attempt++) {
+        for (int attempt = 0; ; attempt++) {
             List<Future<ITaskGroup>> depFutures = new ArrayList<>();
             for (ITaskGroup dependency : depencencies) {
                 depFutures.add(pool.submit(dependency, context));
@@ -134,10 +130,10 @@ public class ITaskGroup {
         }
     }
 
-    private void start(IThreadPool pool, List<ILock> locks, ITaskContext context) throws IgnisException {
+    protected void start(IThreadPool pool, List<ILock> locks, ITaskContext context) throws IgnisException {
         if (locks.isEmpty()) {
             List<Future<ITask>> futures = new ArrayList<>(tasks.size());
-            if(Boolean.getBoolean(IKeys.DEBUG) && !tasks.isEmpty()){
+            if (Boolean.getBoolean(IKeys.DEBUG) && !tasks.isEmpty()) {
                 LOGGER.info("Debug: Executing task " + tasks.get(0).getClass().getName());
             }
             for (ITask task : tasks) {

@@ -16,9 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.io.File;
-import java.util.concurrent.BrokenBarrierException;
-
 import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
@@ -29,6 +26,9 @@ import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IExecutorException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.concurrent.BrokenBarrierException;
 
 /**
  * @author César Pomar

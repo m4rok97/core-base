@@ -19,7 +19,6 @@ package org.ignis.backend.exception;
 import org.ignis.rpc.IExecutorException;
 
 /**
- *
  * @author César Pomar
  */
 public class IExecutorExceptionWrapper extends IgnisException {

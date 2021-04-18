@@ -18,10 +18,8 @@ package org.ignis.backend.cluster.helpers.worker;
 
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IWorker;
-import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.executor.IExecutorDestroyTask;
-import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
 

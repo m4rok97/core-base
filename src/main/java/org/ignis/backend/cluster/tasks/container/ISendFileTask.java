@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class ISendFileTask extends IContainerTask {
@@ -41,10 +40,10 @@ public final class ISendFileTask extends IContainerTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        if(attempt == container.getResets()){
+        if (attempt == container.getResets()) {
             return;
         }
-        
+
         LOGGER.info(log() + "Sending file" + source + " to " + target);
         container.getTunnel().sendFile(source, target);
         LOGGER.info(log() + "File sent");

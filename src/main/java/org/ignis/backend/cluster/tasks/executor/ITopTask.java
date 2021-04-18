@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,18 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+
 /**
- *
  * @author César Pomar
  */
 public class ITopTask extends IDriverTask {
@@ -75,7 +75,7 @@ public class ITopTask extends IDriverTask {
                     throw new IgnisException("There are not enough elements");
                 }
                 shared.useSort = elems * elems > n;
-                if(shared.useSort){
+                if (shared.useSort) {
                     long remainder = n;
                     for (int i = 0; i < shared.executors; i++) {
                         long localN = shared.count.get((int) executor.getId());
@@ -90,14 +90,14 @@ public class ITopTask extends IDriverTask {
             }
             shared.barrier.await();
             if (!driver) {
-                if(shared.useSort){
+                if (shared.useSort) {
                     if (src != null) {
-                        executor.getGeneralModule().sortBy(src,false);
-                    }else{
+                        executor.getGeneralModule().sortBy(src, false);
+                    } else {
                         executor.getGeneralModule().sort(false);
                     }
                     executor.getGeneralActionModule().take(shared.count.get((int) executor.getId()));
-                }else{
+                } else {
                     if (src != null) {
                         executor.getGeneralActionModule().top2(n, src);
                     } else {

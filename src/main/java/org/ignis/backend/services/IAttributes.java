@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,6 @@
  */
 package org.ignis.backend.services;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IDriver;
 import org.ignis.backend.cluster.ISSH;
@@ -26,8 +23,11 @@ import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
- *
  * @author César Pomar
  */
 public final class IAttributes {

@@ -16,9 +16,6 @@
  */
 package org.ignis.backend.cluster;
 
-import java.net.SocketException;
-import java.util.Map;
-
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
@@ -27,13 +24,9 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TZlibTransport;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.executor.ICacheContextModule;
-import org.ignis.rpc.executor.ICommModule;
-import org.ignis.rpc.executor.IExecutorServerModule;
-import org.ignis.rpc.executor.IGeneralActionModule;
-import org.ignis.rpc.executor.IGeneralModule;
-import org.ignis.rpc.executor.IIOModule;
-import org.ignis.rpc.executor.IMathModule;
+import org.ignis.rpc.executor.*;
+
+import java.util.Map;
 
 /**
  * @author César Pomar

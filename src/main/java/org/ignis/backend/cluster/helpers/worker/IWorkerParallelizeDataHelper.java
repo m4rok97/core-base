@@ -34,8 +34,8 @@ public final class IWorkerParallelizeDataHelper extends IWorkerHelper {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IWorkerParallelizeDataHelper.class);
 
-    public IWorkerParallelizeDataHelper(IWorker job, IProperties properties) {
-        super(job, properties);
+    public IWorkerParallelizeDataHelper(IWorker worker, IProperties properties) {
+        super(worker, properties);
     }
 
     public IDataFrame parallelize(IDriver driver, long dataId, long partitions) throws IgnisException {

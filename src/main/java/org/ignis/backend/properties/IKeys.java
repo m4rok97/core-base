@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 package org.ignis.backend.properties;
 
 /**
- *
  * @author César Pomar
  */
 public final class IKeys {
@@ -55,7 +54,7 @@ public final class IKeys {
     public static final String DRIVER_VOLUME = "ignis.driver.volume";
     public static final String DRIVER_HOSTS = "ignis.driver.hosts";
     public static final String DRIVER_ENV = "ignis.driver.env";
-    public static final String DRIVER_PUBLIC_KEY= "ignis.driver.public.key";
+    public static final String DRIVER_PUBLIC_KEY = "ignis.driver.public.key";
     public static final String DRIVER_PRIVATE_KEY = "ignis.driver.private.key";
     public static final String DRIVER_HEALTHCHECK_PORT = "ignis.driver.healthcheck.port";
     public static final String DRIVER_HEALTHCHECK_URL = "ignis.driver.healthcheck.url";

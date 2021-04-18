@@ -17,7 +17,6 @@
 package org.ignis.backend.exception;
 
 /**
- *
  * @author César Pomar
  */
 public class IgnisCacheException extends IgnisException {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.services;
 
-import java.util.List;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.helpers.cluster.IClusterExecuteHelper;
@@ -28,11 +27,12 @@ import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.IScheduler;
-import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.driver.IClusterService;
+import org.ignis.rpc.driver.IDriverException;
+
+import java.util.List;
 
 /**
- *
  * @author César Pomar
  */
 public final class IClusterServiceImpl extends IService implements IClusterService.Iface {
@@ -130,9 +130,11 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     public void execute(long id, List<String> cmd) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id);
+            ILazy<Void> result;
             synchronized (cluster.getLock()) {
-                new IClusterExecuteHelper(cluster, cluster.getProperties()).execute(cmd);
+                result = new IClusterExecuteHelper(cluster, cluster.getProperties()).execute(cmd);
             }
+            result.execute();
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }
@@ -142,9 +144,11 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     public void executeScript(long id, String script) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id);
+            ILazy<Void> result;
             synchronized (cluster.getLock()) {
-                new IClusterExecuteHelper(cluster, cluster.getProperties()).executeScript(script);
+                result = new IClusterExecuteHelper(cluster, cluster.getProperties()).executeScript(script);
             }
+            result.execute();
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }
@@ -154,9 +158,11 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     public void sendFile(long id, String source, String target) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id);
+            ILazy<Void> result;
             synchronized (cluster.getLock()) {
-                new IClusterFileHelper(cluster, cluster.getProperties()).sendFile(source, target);
+                result = new IClusterFileHelper(cluster, cluster.getProperties()).sendFile(source, target);
             }
+            result.execute();
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }
@@ -166,9 +172,11 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     public void sendCompressedFile(long id, String source, String target) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id);
+            ILazy<Void> result;
             synchronized (cluster.getLock()) {
-                new IClusterFileHelper(cluster, cluster.getProperties()).sendCompressedFile(source, target);
+                result = new IClusterFileHelper(cluster, cluster.getProperties()).sendCompressedFile(source, target);
             }
+            result.execute();
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }

@@ -16,10 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.executor.ICacheTask;
@@ -28,8 +24,12 @@ import org.ignis.backend.exception.IgnisCacheException;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
 /**
- *
  * @author César Pomar
  */
 public final class ITaskGroupCache extends ITaskGroup {
@@ -73,7 +73,7 @@ public final class ITaskGroupCache extends ITaskGroup {
     private final ITaskGroup updateCache;
 
     private ITaskGroupCache(Set<ILock> locks, List<ITaskGroup> noCache, ICache cache,
-            List<ITask> loadTasks, List<ITask> saveTasks, List<ITaskGroup> dependencies) {
+                            List<ITask> loadTasks, List<ITask> saveTasks, List<ITaskGroup> dependencies) {
         super(saveTasks, locks, noCache);
         this.loadCache = new ITaskGroup(loadTasks, locks, dependencies);
         this.updateCache = new ITaskGroup(saveTasks, locks, dependencies);

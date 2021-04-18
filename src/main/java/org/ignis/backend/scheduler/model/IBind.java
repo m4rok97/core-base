@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- *
  * @author César Pomar
  */
 @Getter

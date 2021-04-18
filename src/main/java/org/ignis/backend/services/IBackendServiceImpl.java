@@ -16,20 +16,13 @@
  */
 package org.ignis.backend.services;
 
-import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 import org.apache.thrift.TException;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
-import org.apache.thrift.transport.TServerSocket;
-import org.apache.thrift.transport.TServerTransport;
-import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
-import org.apache.thrift.transport.TTransportFactory;
-import org.apache.thrift.transport.TZlibTransport;
-import org.ignis.backend.exception.IDriverExceptionImpl;
+import org.apache.thrift.transport.*;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.rpc.driver.IBackendService;
 import org.slf4j.LoggerFactory;

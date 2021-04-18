@@ -16,10 +16,6 @@
  */
 package org.ignis.backend;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.exception.ISchedulerException;
@@ -27,18 +23,13 @@ import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.IScheduler;
 import org.ignis.backend.scheduler.ISchedulerBuilder;
-import org.ignis.backend.services.IAttributes;
-import org.ignis.backend.services.IBackendServiceImpl;
-import org.ignis.backend.services.IClusterServiceImpl;
-import org.ignis.backend.services.IDataFrameServiceImpl;
-import org.ignis.backend.services.IPropertiesServiceImpl;
-import org.ignis.backend.services.IWorkerServiceImpl;
-import org.ignis.rpc.driver.IBackendService;
-import org.ignis.rpc.driver.IClusterService;
-import org.ignis.rpc.driver.IDataFrameService;
-import org.ignis.rpc.driver.IPropertiesService;
-import org.ignis.rpc.driver.IWorkerService;
+import org.ignis.backend.services.*;
+import org.ignis.rpc.driver.*;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author César Pomar

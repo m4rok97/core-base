@@ -19,11 +19,11 @@ package org.ignis.backend.cluster;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
+
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- *
  * @author César Pomar
  */
 public class ISSH {

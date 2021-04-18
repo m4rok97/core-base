@@ -16,10 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
@@ -29,6 +25,10 @@ import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.scheduler.model.IPort;
 import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author César Pomar
@@ -79,7 +79,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
             StringBuilder startScript = new StringBuilder();
             if (executor.getProperties().getDouble(IKeys.TRANSPORT_CORES) > 0) {
                 startScript.append("export MPI_THREAD_MULTIPLE=1\n");
-                if(!executor.isSingleCore()){
+                if (!executor.isSingleCore()) {
                     startScript.append("export MPIR_CVAR_CH4_NUM_VCIS=");
                     startScript.append(executor.getContainer().getInfo().getCpus());
                     startScript.append("\n");

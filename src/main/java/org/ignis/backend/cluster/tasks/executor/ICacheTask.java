@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public class ICacheTask extends IExecutorTask {
@@ -44,7 +43,7 @@ public class ICacheTask extends IExecutorTask {
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "updating cache from " + cache.getActualLevel() + " to " + cache.getNextLevel());
         try {
-            executor.getCacheContextModule().cache(cache.getId(), (byte)cache.getNextLevel().getInt());
+            executor.getCacheContextModule().cache(cache.getId(), (byte) cache.getNextLevel().getInt());
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {

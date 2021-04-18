@@ -19,7 +19,6 @@ package org.ignis.backend.cluster.helpers.dataframe;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.helpers.IHelper;
 import org.ignis.backend.properties.IProperties;
-import org.ignis.rpc.ISource;
 
 /**
  * @author César Pomar

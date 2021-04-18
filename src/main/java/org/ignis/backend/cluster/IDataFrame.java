@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.cluster;
 
-import java.util.List;
 import org.ignis.backend.cluster.helpers.dataframe.IDataCacheHelper;
 import org.ignis.backend.cluster.tasks.ICache;
 import org.ignis.backend.cluster.tasks.ILock;
@@ -25,8 +24,9 @@ import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IProperties;
 
+import java.util.List;
+
 /**
- *
  * @author César Pomar
  */
 public final class IDataFrame {
@@ -76,7 +76,7 @@ public final class IDataFrame {
     }
 
     public IThreadPool getPool() {
-        return worker.getThreadPool();
+        return worker.getPool();
     }
 
     public long getId() {
@@ -94,11 +94,11 @@ public final class IDataFrame {
         this.name = name;
     }
 
-    public IDataFrame createDataFrame(String name, ITaskGroup tasks) throws IgnisException{
+    public IDataFrame createDataFrame(String name, ITaskGroup tasks) throws IgnisException {
         return worker.createDataFrame(name, executors, tasks);
     }
 
-    public IDataFrame createDataFrame(ITaskGroup tasks) throws IgnisException{
+    public IDataFrame createDataFrame(ITaskGroup tasks) throws IgnisException {
         return worker.createDataFrame("", executors, tasks);
     }
 

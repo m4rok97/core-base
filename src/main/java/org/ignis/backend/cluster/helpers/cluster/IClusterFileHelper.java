@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@ package org.ignis.backend.cluster.helpers.cluster;
 
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IContainer;
+import org.ignis.backend.cluster.tasks.ICondicionalTaskGroup;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.container.ISendCompressedFileTask;
 import org.ignis.backend.cluster.tasks.container.ISendFileTask;
@@ -26,7 +28,6 @@ import org.ignis.backend.properties.IProperties;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author César Pomar
  */
 public final class IClusterFileHelper extends IClusterHelper {
@@ -37,24 +38,35 @@ public final class IClusterFileHelper extends IClusterHelper {
         super(cluster, properties);
     }
 
-    public void sendFile(String source, String target) throws IgnisException {
+    public ILazy<Void> sendFile(String source, String target) throws IgnisException {
         LOGGER.info(log() + "Registering sendfile from " + source + " to " + target);
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
+        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(cluster.getLock(), () -> cluster.isRunning());
         builder.newDependency(cluster.getTasks());
         for (IContainer container : cluster.getContainers()) {
             builder.newTask(new ISendFileTask(getName(), container, source, target));
         }
-        cluster.getTasks().getSubTasksGroup().add(builder.build());
+        ITaskGroup group = builder.build();
+        cluster.getTasks().getSubTasksGroup().add(group);
+
+        return () -> {
+            group.start(cluster.getPool());
+            return null;
+        };
     }
 
-    public void sendCompressedFile(String source, String target) throws IgnisException {
+    public ILazy<Void> sendCompressedFile(String source, String target) throws IgnisException {
         LOGGER.info(log() + "Registering sendCompressedFile file from " + source + " to " + target);
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
-        builder.newDependency(cluster.getTasks());
+        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(cluster.getLock(), () -> cluster.isRunning());
         for (IContainer container : cluster.getContainers()) {
             builder.newTask(new ISendCompressedFileTask(getName(), container, source, target));
         }
-        cluster.getTasks().getSubTasksGroup().add(builder.build());
+        ITaskGroup group = builder.build();
+        cluster.getTasks().getSubTasksGroup().add(group);
+
+        return () -> {
+            group.start(cluster.getPool());
+            return null;
+        };
     }
 
 }

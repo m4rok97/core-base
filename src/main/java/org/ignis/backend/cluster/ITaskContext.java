@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,18 @@
  */
 package org.ignis.backend.cluster;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.thrift.TException;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IExecutorException;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
- *
  * @author César Pomar
  */
 public class ITaskContext {
@@ -79,11 +79,11 @@ public class ITaskContext {
             throw new IgnisException(ex.getMessage(), ex);
         }
     }
-    
+
     public void clearContext(IExecutor e) throws IgnisException {
         try {
-             e.getCacheContextModule().clearContext();
-         } catch (IExecutorException ex) {
+            e.getCacheContextModule().clearContext();
+        } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);

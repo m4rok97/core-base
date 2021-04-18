@@ -20,17 +20,13 @@ import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IWorker;
-import org.ignis.backend.cluster.helpers.dataframe.IDataCacheHelper;
-import org.ignis.backend.cluster.helpers.dataframe.IDataGeneralActionHelper;
-import org.ignis.backend.cluster.helpers.dataframe.IDataGeneralHelper;
-import org.ignis.backend.cluster.helpers.dataframe.IDataIOHelper;
-import org.ignis.backend.cluster.helpers.dataframe.IDataMathHelper;
+import org.ignis.backend.cluster.helpers.dataframe.*;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.exception.IDriverExceptionImpl;
-import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.ISource;
 import org.ignis.rpc.driver.IDataFrameId;
 import org.ignis.rpc.driver.IDataFrameService;
+import org.ignis.rpc.driver.IDriverException;
 
 /**
  * @author César Pomar
@@ -559,6 +555,22 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             ILazy<Void> result;
             synchronized (worker.getLock()) {
                 result = new IDataGeneralActionHelper(data, worker.getProperties()).foreachPartition(src);
+            }
+            result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void foreachExecutor(IDataFrameId id, ISource src) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            ILazy<Void> result;
+            synchronized (worker.getLock()) {
+                result = new IDataGeneralActionHelper(data, worker.getProperties()).foreachExecutor(src);
             }
             result.execute();
         } catch (Exception ex) {

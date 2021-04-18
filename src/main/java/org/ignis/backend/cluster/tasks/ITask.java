@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 
 /**
- *
  * @author César Pomar
  */
 public abstract class ITask {
@@ -34,12 +33,14 @@ public abstract class ITask {
     public String getName() {
         return name;
     }
-    
-    protected void before(ITaskContext context) throws IgnisException {}
+
+    protected void before(ITaskContext context) throws IgnisException {
+    }
 
     protected abstract void run(ITaskContext context) throws IgnisException;
 
-    protected void after(ITaskContext context) throws IgnisException {}
+    protected void after(ITaskContext context) throws IgnisException {
+    }
 
     public void start(ITaskContext context) throws IgnisException {
         before(context);

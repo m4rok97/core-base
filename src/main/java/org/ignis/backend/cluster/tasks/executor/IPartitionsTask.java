@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.atomic.AtomicLong;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
@@ -26,8 +24,10 @@ import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
- *
  * @author César Pomar
  */
 public class IPartitionsTask extends IExecutorContextTask {

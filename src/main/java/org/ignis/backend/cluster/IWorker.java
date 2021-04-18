@@ -16,9 +16,6 @@
  */
 package org.ignis.backend.cluster;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.ignis.backend.cluster.helpers.worker.IWorkerCreateHelper;
 import org.ignis.backend.cluster.helpers.worker.IWorkerDestroyHelper;
 import org.ignis.backend.cluster.tasks.ILazy;
@@ -28,6 +25,9 @@ import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author César Pomar
@@ -68,12 +68,16 @@ public final class IWorker {
         return lock;
     }
 
-    public IThreadPool getThreadPool() {
+    public IThreadPool getPool() {
         return cluster.getPool();
     }
 
     public String getName() {
         return name;
+    }
+
+    public boolean isRunning() {
+        return !executors.isEmpty() && executors.get(0).getPid() > 0;
     }
 
     public void setName(String name) {
@@ -126,14 +130,14 @@ public final class IWorker {
         throw new IgnisException("IDataFrame doesn't exist");
     }
 
-    public ILazy<Void> start(){
+    public ILazy<Void> start() {
         return () -> {
             tasks.start(cluster.getPool());
             return null;
         };
     }
 
-    public ILazy<Void> destroy(){
+    public ILazy<Void> destroy() {
         return () -> {
             new IWorkerDestroyHelper(this, cluster.getProperties()).destroy().start(cluster.getPool());
             return null;

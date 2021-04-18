@@ -16,9 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.ISchedulerException;
@@ -26,6 +23,9 @@ import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.scheduler.IScheduler;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author César Pomar
@@ -91,6 +91,10 @@ public final class IContainerDestroyTask extends IContainerTask {
             LOGGER.info(log() + "Container destroyed");
         } catch (ISchedulerException ex) {
             LOGGER.warn(log() + "Containers destroyed with errors: " + ex);
+        }
+
+        for (int i = 0; i < containers.size(); i++) {
+            containers.get(i).setInfo(null);
         }
     }
 

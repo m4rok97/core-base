@@ -16,12 +16,6 @@
  */
 package org.ignis.backend.scheduler;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
@@ -29,8 +23,9 @@ import org.ignis.backend.scheduler.model.IBind;
 import org.ignis.backend.scheduler.model.IPort;
 import org.ignis.backend.scheduler.model.IVolume;
 
+import java.util.*;
+
 /**
- *
  * @author César Pomar
  */
 public class ISchedulerParser {

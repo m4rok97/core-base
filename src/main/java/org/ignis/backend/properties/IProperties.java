@@ -16,19 +16,12 @@
  */
 package org.ignis.backend.properties;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.ignis.backend.exception.IPropertyException;
+
+import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.ignis.backend.exception.IPropertyException;
 
 /**
  * @author César Pomar

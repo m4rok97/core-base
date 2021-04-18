@@ -16,9 +16,6 @@
  */
 package org.ignis.backend.cluster;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.ignis.backend.cluster.helpers.cluster.IClusterCreateHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterDestroyHelper;
 import org.ignis.backend.cluster.tasks.ILazy;
@@ -30,6 +27,9 @@ import org.ignis.backend.properties.IKeys;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.IScheduler;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author César Pomar
@@ -78,6 +78,10 @@ public final class ICluster {
         return name;
     }
 
+    public boolean isRunning() {
+        return !containers.isEmpty() && containers.get(0).getInfo() != null;
+    }
+
     public void setName(String name) {
         if (name.isEmpty()) {
             name = "Cluster(" + id + ")";
@@ -112,7 +116,7 @@ public final class ICluster {
         throw new IgnisException("Worker doesn't exist");
     }
 
-    public int workers(){
+    public int workers() {
         return workers.size();
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 
 /**
- *
  * @author César Pomar
  */
 public abstract class IExecutorContextTask extends IExecutorTask {
@@ -41,7 +40,7 @@ public abstract class IExecutorContextTask extends IExecutorTask {
     protected final void before(ITaskContext context) throws IgnisException {
         if (mode == Mode.LOAD || mode == Mode.LOAD_AND_SAVE) {
             context.loadContext(executor);
-        }else{
+        } else {
             context.clearContext(executor);
         }
     }
@@ -50,7 +49,7 @@ public abstract class IExecutorContextTask extends IExecutorTask {
     protected final void after(ITaskContext context) throws IgnisException {
         if (mode == Mode.SAVE || mode == Mode.LOAD_AND_SAVE) {
             context.saveContext(executor);
-        }else{
+        } else {
             context.clearContext(executor);
         }
     }

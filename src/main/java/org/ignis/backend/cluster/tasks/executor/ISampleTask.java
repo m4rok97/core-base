@@ -16,15 +16,16 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import java.util.*;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.stream.Collectors;
-
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.BrokenBarrierException;
 
 /**
  * @author César Pomar

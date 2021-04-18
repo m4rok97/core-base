@@ -16,11 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
@@ -31,6 +26,11 @@ import org.ignis.backend.scheduler.ISchedulerParser;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 import org.ignis.backend.scheduler.model.IPort;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author César Pomar

@@ -19,7 +19,6 @@ package org.ignis.backend.cluster.tasks;
 import org.ignis.backend.exception.IgnisException;
 
 /**
- *
  * @author César Pomar
  */
 public class ICache {
@@ -30,25 +29,31 @@ public class ICache {
         MEMORY(2),
         RAW_MEMORY(3),
         DISK(4);
-        
+
         private int level;
-        
-        private Level(int level){
-            this.level=level;
+
+        private Level(int level) {
+            this.level = level;
         }
-        
-        public int getInt(){
+
+        public int getInt() {
             return level;
         }
-        
-        public static Level fromInt(int level) throws IgnisException{
-            switch(level){
-                    case 0: return NO_CACHE;
-                    case 1: return PRESERVE;
-                    case 2: return MEMORY;
-                    case 3: return RAW_MEMORY;
-                    case 4: return DISK;
-                    default: throw new IgnisException("Level "+level+" not found");
+
+        public static Level fromInt(int level) throws IgnisException {
+            switch (level) {
+                case 0:
+                    return NO_CACHE;
+                case 1:
+                    return PRESERVE;
+                case 2:
+                    return MEMORY;
+                case 3:
+                    return RAW_MEMORY;
+                case 4:
+                    return DISK;
+                default:
+                    throw new IgnisException("Level " + level + " not found");
             }
         }
     }
@@ -58,7 +63,7 @@ public class ICache {
     private Level nextLevel;
 
     public ICache(long id) {
-        this. id = id;
+        this.id = id;
         actualLevel = Level.NO_CACHE;
         nextLevel = Level.NO_CACHE;
     }
@@ -66,13 +71,13 @@ public class ICache {
     public long getId() {
         return id;
     }
-    
+
     public Level getActualLevel() {
         return actualLevel;
     }
 
     public void setActualLevel(Level actualLevel) {
-        if(actualLevel != null){
+        if (actualLevel != null) {
             this.actualLevel = actualLevel;
         }
     }
@@ -82,12 +87,12 @@ public class ICache {
     }
 
     public void setNextLevel(Level nextLevel) {
-        if(nextLevel != null){
+        if (nextLevel != null) {
             this.nextLevel = nextLevel;
         }
     }
-    
-    public boolean isCached(){
+
+    public boolean isCached() {
         return actualLevel != Level.NO_CACHE;
     }
 

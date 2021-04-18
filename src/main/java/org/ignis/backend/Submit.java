@@ -16,15 +16,6 @@
  */
 package org.ignis.backend;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.concurrent.Callable;
-
 import org.ignis.backend.exception.IPropertyException;
 import org.ignis.backend.exception.ISchedulerException;
 import org.ignis.backend.properties.IKeys;
@@ -41,6 +32,15 @@ import picocli.CommandLine.Model.ArgSpec;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.Callable;
 
 /**
  * @author César Pomar
@@ -119,7 +119,7 @@ public class Submit implements Callable<Integer> {
             }
             builder.cpus(props.getInteger(IKeys.DRIVER_CORES));
             builder.memory((long) Math.ceil(props.getSILong(IKeys.DRIVER_MEMORY) / 1024 / 1024));
-            builder.swappiness(props.contains(IKeys.DRIVER_SWAPPINESS) ? props.getInteger(IKeys.DRIVER_SWAPPINESS): null);
+            builder.swappiness(props.contains(IKeys.DRIVER_SWAPPINESS) ? props.getInteger(IKeys.DRIVER_SWAPPINESS) : null);
             List<IPort> ports;
             builder.ports(ports = ISchedulerParser.parsePorts(props, IKeys.DRIVER_PORT));
             ports.add(new IPort(props.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT), 0, "tcp"));

@@ -20,17 +20,15 @@ import org.apache.thrift.TException;
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IWorker;
-import org.ignis.backend.cluster.helpers.worker.IWorkerImportDataHelper;
-import org.ignis.backend.cluster.helpers.worker.IWorkerParallelizeDataHelper;
-import org.ignis.backend.cluster.helpers.worker.IWorkerReadFileHelper;
+import org.ignis.backend.cluster.helpers.worker.*;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
-import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.ISource;
 import org.ignis.rpc.driver.IDataFrameId;
+import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.driver.IWorkerId;
 import org.ignis.rpc.driver.IWorkerService;
 
@@ -154,7 +152,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
             ICluster clusterSource = attributes.getCluster(data.getCluster());
             ICluster clusterTarget = attributes.getCluster(id.getCluster());
             IWorker workerSource = clusterSource.getWorker(data.getWorker());
-            IWorker workerTarget = clusterSource.getWorker(id.getWorker());
+            IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
 
             ILock lock1 = workerSource.getLock();
             ILock lock2 = workerTarget.getLock();
@@ -181,7 +179,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
             ICluster clusterSource = attributes.getCluster(data.getCluster());
             ICluster clusterTarget = attributes.getCluster(id.getCluster());
             IWorker workerSource = clusterSource.getWorker(data.getWorker());
-            IWorker workerTarget = clusterSource.getWorker(id.getWorker());
+            IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
 
             ILock lock1 = workerSource.getLock();
             ILock lock2 = workerTarget.getLock();
@@ -208,7 +206,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
             ICluster clusterSource = attributes.getCluster(data.getCluster());
             ICluster clusterTarget = attributes.getCluster(id.getCluster());
             IWorker workerSource = clusterSource.getWorker(data.getWorker());
-            IWorker workerTarget = clusterSource.getWorker(id.getWorker());
+            IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
 
             ILock lock1 = workerSource.getLock();
             ILock lock2 = workerTarget.getLock();
@@ -235,7 +233,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
             ICluster clusterSource = attributes.getCluster(data.getCluster());
             ICluster clusterTarget = attributes.getCluster(id.getCluster());
             IWorker workerSource = clusterSource.getWorker(data.getWorker());
-            IWorker workerTarget = clusterSource.getWorker(id.getWorker());
+            IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
 
             ILock lock1 = workerSource.getLock();
             ILock lock2 = workerTarget.getLock();
@@ -348,6 +346,134 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionJsonFile(path, src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void loadLibrary(IWorkerId id, String path) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            ILazy<Void> result;
+            synchronized (worker.getLock()) {
+                result = new IWorkerLoadLibraryHelper(worker, worker.getProperties()).loadLibrary(path);
+            }
+            result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void execute(IWorkerId id, ISource src) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            ILazy<Void> result;
+            synchronized (worker.getLock()) {
+                result = new IWorkerExecuteHelper(worker, worker.getProperties()).execute(src);
+            }
+            result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId executeTo(IWorkerId id, ISource src) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            synchronized (worker.getLock()) {
+                IDataFrame data = new IWorkerExecuteHelper(worker, worker.getProperties()).executeTo(src);
+                return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void voidCall(IWorkerId id, ISource src) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            ILazy<Void> result;
+            synchronized (worker.getLock()) {
+                result = new IWorkerExecuteHelper(worker, worker.getProperties()).execute(src);
+            }
+            result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public void voidCall3(IWorkerId id, IDataFrameId data, ISource src) throws IDriverException, TException {
+        try {
+            ICluster clusterSource = attributes.getCluster(data.getCluster());
+            ICluster clusterTarget = attributes.getCluster(id.getCluster());
+            IWorker workerSource = clusterSource.getWorker(data.getWorker());
+            IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
+
+            ILock lock1 = workerSource.getLock();
+            ILock lock2 = workerTarget.getLock();
+            if (lock1.compareTo(lock2) < 0) {
+                ILock tmp = lock1;
+                lock1 = lock2;
+                lock2 = tmp;
+            }
+            ILazy<Void> result;
+            synchronized (lock1) {
+                synchronized (lock2) {
+                    IDataFrame source = workerSource.getDataFrame(data.getDataFrame());
+                    result = new IWorkerCallHelper(workerTarget, workerTarget.getProperties()).voidCall(source, src);
+                }
+            }
+            result.execute();
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId call(IWorkerId id, ISource src) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            synchronized (worker.getLock()) {
+                IDataFrame data = new IWorkerCallHelper(worker, worker.getProperties()).call(src);
+                return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId call3(IWorkerId id, IDataFrameId data, ISource src) throws IDriverException, TException {
+        try {
+            ICluster clusterSource = attributes.getCluster(data.getCluster());
+            ICluster clusterTarget = attributes.getCluster(id.getCluster());
+            IWorker workerSource = clusterSource.getWorker(data.getWorker());
+            IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
+
+            ILock lock1 = workerSource.getLock();
+            ILock lock2 = workerTarget.getLock();
+            if (lock1.compareTo(lock2) < 0) {
+                ILock tmp = lock1;
+                lock1 = lock2;
+                lock2 = tmp;
+            }
+            synchronized (lock1) {
+                synchronized (lock2) {
+                    IDataFrame source = workerSource.getDataFrame(data.getDataFrame());
+                    IDataFrame target = new IWorkerCallHelper(workerTarget, workerTarget.getProperties()).call(source, src);
+                    return new IDataFrameId(clusterTarget.getId(), workerTarget.getId(), target.getId());
+                }
             }
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);

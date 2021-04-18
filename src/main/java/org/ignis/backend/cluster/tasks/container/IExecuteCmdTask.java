@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 
+ * Copyright (C) 2018
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@
  */
 package org.ignis.backend.cluster.tasks.container;
 
-import java.util.List;
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
- *
  * @author César Pomar
  */
 public final class IExecuteCmdTask extends IContainerTask {
