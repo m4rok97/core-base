@@ -71,6 +71,9 @@ public class Submit implements Callable<Integer> {
     @Option(names = {"--direct"}, description = "Execute cmd directly without ignis-run")
     boolean direct = false;
 
+    @Option(names = {"--attach"}, description = "Attach to the ignis task")
+    boolean attach = false;
+
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "display a help message")
     private boolean helpRequested = false;
 
@@ -151,16 +154,37 @@ public class Submit implements Callable<Integer> {
             }
 
             String group = null;
+            String app;
             try {
                 group = scheduler.createGroup(name != null ? name : "ignis");
                 props.setProperty(IKeys.JOB_GROUP, group);
-                scheduler.createSingleContainer(group, "driver", builder.build(), props);
+                app = scheduler.createSingleContainer(group, "driver", builder.build(), props);
             } catch (ISchedulerException ex) {
                 if (group != null) {
                     scheduler.destroyGroup(group);
                 }
                 throw ex;
             }
+
+            if (attach) {
+                while (true) {
+                    IContainerDetails.ContainerStatus status = scheduler.getStatus(app);
+                    if (status != IContainerDetails.ContainerStatus.ACCEPTED &&
+                            status != IContainerDetails.ContainerStatus.RUNNING) {
+                        if (status == IContainerDetails.ContainerStatus.FINISHED) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    }
+                    LOGGER.info("Task status is " + status.name());
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                    }
+                }
+            }
+
         } catch (Exception ex) {
             LOGGER.error(ex.getLocalizedMessage(), ex);
             return -1;
