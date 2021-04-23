@@ -167,8 +167,10 @@ public class Submit implements Callable<Integer> {
             }
 
             if (attach) {
+                scheduler.getContainer(app);
                 while (true) {
                     IContainerDetails.ContainerStatus status = scheduler.getStatus(app);
+                    LOGGER.info("Task status is " + status.name());
                     if (status != IContainerDetails.ContainerStatus.ACCEPTED &&
                             status != IContainerDetails.ContainerStatus.RUNNING) {
                         if (status == IContainerDetails.ContainerStatus.FINISHED) {
@@ -177,7 +179,6 @@ public class Submit implements Callable<Integer> {
                             return -1;
                         }
                     }
-                    LOGGER.info("Task status is " + status.name());
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException ex) {

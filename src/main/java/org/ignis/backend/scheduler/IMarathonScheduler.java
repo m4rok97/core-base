@@ -390,7 +390,7 @@ public class IMarathonScheduler implements IScheduler {
             try {
                 return TASK_STATUS.get(getTask(tasks, id).getState());
             } catch (ISchedulerException ex) {
-                return IContainerDetails.ContainerStatus.DESTROYED;
+                return IContainerDetails.ContainerStatus.UNKNOWN;
             }
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
