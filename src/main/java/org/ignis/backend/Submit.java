@@ -27,7 +27,6 @@ import org.ignis.backend.scheduler.model.IContainerDetails;
 import org.ignis.backend.scheduler.model.IPort;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
-import picocli.CommandLine.IParameterConsumer;
 import picocli.CommandLine.Model.ArgSpec;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -52,11 +51,10 @@ public class Submit implements Callable<Integer> {
     @Parameters(index = "0", paramLabel = "image", description = "Driver container image")
     private String image;
 
-    @Parameters(index = "1", paramLabel = "cmd", description = "Driver executable")
+    @Parameters(index = "1", paramLabel = "cmd", description = "Driver executable", preprocessor = ConsumeArgs.class)
     private String cmd;
 
-    @Parameters(index = "2", paramLabel = "args", description = "Driver executable arguments",
-            parameterConsumer = ConsumeRemainder.class)
+    @Parameters(index = "2", paramLabel = "args", arity = "*", description = "Driver executable arguments")
     private List<String> args;
 
     @Option(names = {"--name"}, paramLabel = "NAME", description = "Job name")
@@ -204,17 +202,27 @@ public class Submit implements Callable<Integer> {
         System.exit(exitCode);
     }
 
-
-    static class ConsumeRemainder implements IParameterConsumer {
-
-        @Override
-        public void consumeParameters(Stack<String> args, ArgSpec argSpec, CommandSpec commandSpec) {
-            List<String> list = new ArrayList<>();
-            while (!args.isEmpty()) {
-                String arg = args.pop();
-                list.add(arg);
+    static class ConsumeArgs implements CommandLine.IParameterPreprocessor {
+        public boolean preprocess(Stack<String> args,
+                                  CommandSpec commandSpec,
+                                  ArgSpec argSpec,
+                                  Map<String, Object> info) {
+            String cmd = args.pop();
+            if (!args.isEmpty()) {
+                for (ArgSpec opt : commandSpec.positionalParameters()) {
+                    if (opt.paramLabel().equals("args")) {
+                        List<String> list = new ArrayList<>();
+                        while (!args.isEmpty()) {
+                            String arg = args.pop();
+                            list.add(arg);
+                        }
+                        opt.setValue(list);
+                        break;
+                    }
+                }
             }
-            argSpec.setValue(list);
+            args.push(cmd);
+            return false;
         }
     }
 

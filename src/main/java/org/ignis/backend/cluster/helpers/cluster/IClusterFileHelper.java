@@ -41,7 +41,6 @@ public final class IClusterFileHelper extends IClusterHelper {
     public ILazy<Void> sendFile(String source, String target) throws IgnisException {
         LOGGER.info(log() + "Registering sendfile from " + source + " to " + target);
         ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(cluster.getLock(), () -> cluster.isRunning());
-        builder.newDependency(cluster.getTasks());
         for (IContainer container : cluster.getContainers()) {
             builder.newTask(new ISendFileTask(getName(), container, source, target));
         }

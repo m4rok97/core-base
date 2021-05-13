@@ -37,7 +37,6 @@ public class IWorkerLoadLibraryHelper extends IWorkerHelper {
     public ILazy<Void> loadLibrary(String path) throws IgnisException {
         LOGGER.info(log() + "Registering loadLibrary " + path);
         ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(worker.getLock(), () -> worker.isRunning());
-        builder.newDependency(worker.getTasks());
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new ILoadLibraryTask(getName(), executor, path));
         }
