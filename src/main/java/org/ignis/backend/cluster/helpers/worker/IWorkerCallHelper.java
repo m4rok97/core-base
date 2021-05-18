@@ -53,7 +53,7 @@ public class IWorkerCallHelper extends IWorkerHelper {
     }
 
     public ILazy<Void> voidCall(IDataFrame source, ISource src) throws IgnisException {
-        if (!worker.equals(source)) {
+        if (!worker.equals(source.getWorker())) {
             source = new IWorkerImportDataHelper(worker, properties).importDataFrame(source, src);
         }
         ITaskGroup.Builder builder = new ITaskGroup.Builder(source.getLock());
@@ -90,7 +90,7 @@ public class IWorkerCallHelper extends IWorkerHelper {
     }
 
     public IDataFrame call(IDataFrame source, ISource src) throws IgnisException {
-        if (!worker.equals(source)) {
+        if (!worker.equals(source.getWorker())) {
             source = new IWorkerImportDataHelper(worker, properties).importDataFrame(source, src);
         }
         ITaskGroup.Builder builder = new ITaskGroup.Builder(source.getLock());
