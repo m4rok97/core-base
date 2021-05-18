@@ -15,7 +15,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 ENV BOOST_VERSION=1.75.0
 RUN mkdir /tmp/boost && \
 	cd /tmp/boost && \
-	wget https://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_$(echo ${BOOST_VERSION} | tr . _).tar.gz -O src.tar.gz && \
+	wget https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/boost_$(echo ${BOOST_VERSION} | tr . _).tar.gz -O src.tar.gz && \
 	tar xvf src.tar.gz && \
 	cd boost_$(echo ${BOOST_VERSION} | tr . _) && \
 	./bootstrap.sh && \
