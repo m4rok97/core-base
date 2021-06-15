@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -37,6 +38,7 @@ public final class ITunnel {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ITunnel.class);
 
     private final JSch jsch;
+    private final Semaphore sem;
     private final AtomicInteger localPort;
     private final Map<Integer, Integer> ports;
     private final String privateKey;
@@ -51,6 +53,7 @@ public final class ITunnel {
         this.publicKey = publicKey;
         this.jsch = new JSch();
         this.ports = new HashMap<>();
+        this.sem = new Semaphore(10);//Maximum channels at the same time in a single session
     }
 
     public String getPublicKey() {
@@ -137,6 +140,7 @@ public final class ITunnel {
 
     public String execute(String script, boolean stderr) throws IgnisException {
         try {
+            this.sem.acquire();
             Channel channel = session.openChannel("exec");
             channel.setInputStream(null);
             if (stderr) {
@@ -144,7 +148,7 @@ public final class ITunnel {
             }
             ((ChannelExec) channel).setCommand(script);
 
-            channel.connect();
+            channel.connect(60000);
 
             InputStream in = channel.getInputStream();
             StringBuilder out = new StringBuilder();
@@ -187,8 +191,10 @@ public final class ITunnel {
                 throw new IgnisException("Script exits with non zero exit status (" + channel.getExitStatus() + ")");
             }
 
-        } catch (IOException | JSchException ex) {
+        } catch (IOException | JSchException | InterruptedException ex) {
             throw new IgnisException("Script execution fails", ex);
+        }finally {
+            this.sem.release();
         }
     }
 
