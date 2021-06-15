@@ -35,6 +35,7 @@ int MPL_listen_anyport(int sock_fd, unsigned short *p_port)
             } else if (errno == EADDRINUSE) {
                 continue;
             } else {
+                fprintf(stderr,"failed to bind on port %d: %s\n", i, strerror(errno));
                 return -1;
             }
         }
