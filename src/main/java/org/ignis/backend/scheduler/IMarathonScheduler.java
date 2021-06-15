@@ -328,7 +328,7 @@ public class IMarathonScheduler implements IScheduler {
 
             app = marathon.createApp(app);
             int time = 1;
-            while (!app.getDeployments().isEmpty()) {
+            while (!app.getDeployments().isEmpty() || app.getTasks().size() < instances) {
                 app = marathon.getApp(app.getId()).getApp();
                 LOGGER.info("Waiting cluster deployment..." + app.getTasks().size() + " of " + instances);
                 Thread.sleep(time * 1000);
@@ -359,7 +359,7 @@ public class IMarathonScheduler implements IScheduler {
                 Thread.sleep(10000);
                 time = 1;
                 app = null;
-                while (app != null) {
+                do {
                     try {
                         app = marathon.createApp(app);
                     } catch (MarathonException response) {
@@ -368,7 +368,7 @@ public class IMarathonScheduler implements IScheduler {
                         }
                         Thread.sleep(10000);
                     }
-                }
+                } while (app != null);
             }
             List<String> ids = new ArrayList<>();
             for (Task t : app.getTasks()) {
@@ -383,10 +383,31 @@ public class IMarathonScheduler implements IScheduler {
         }
     }
 
+    class Cache {
+        String id;
+        GetAppTasksResponse response;
+        long time;
+    }
+
+    Cache cache;
+
     @Override
     public IContainerDetails.ContainerStatus getStatus(String id) throws ISchedulerException {
         try {
-            List<Task> tasks = marathon.getAppTasks(appId(id)).getTasks();
+            String appId = appId(id);
+            Cache local = cache;
+            List<Task> tasks;
+            if (local != null && local.id.equals(appId) && System.currentTimeMillis() - local.time < 500) {
+                tasks = local.response.getTasks();
+            } else {
+                local = new Cache();
+                local.id = appId;
+                local.response = marathon.getAppTasks(appId);
+                local.time = System.currentTimeMillis();
+                cache = local;
+                tasks = local.response.getTasks();
+            }
+
             try {
                 return TASK_STATUS.get(getTask(tasks, id).getState());
             } catch (ISchedulerException ex) {
@@ -421,7 +442,8 @@ public class IMarathonScheduler implements IScheduler {
         try {
             App app;
 
-            while ((app = marathon.getApp(appId).getApp()) != null && !app.getDeployments().isEmpty()) {
+            while ((app = marathon.getApp(appId).getApp()) != null && !app.getDeployments().isEmpty() &&
+                    app.getTasks().size() < ids.size()) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
