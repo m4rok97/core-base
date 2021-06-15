@@ -324,17 +324,17 @@ public class IMarathonScheduler implements IScheduler {
             App app = createApp(group, name, container, props);
             app.setInstances(instances);
             boolean first = false;
-            int taks = 0;
+            int tasks = 0;
 
             app = marathon.createApp(app);
             int time = 1;
-            while (!app.getDeployments().isEmpty() || app.getTasks().size() < instances) {
+            while (!app.getDeployments().isEmpty() || app.getTasks().size() != instances) {
                 app = marathon.getApp(app.getId()).getApp();
-                LOGGER.info("Waiting cluster deployment..." + app.getTasks().size() + " of " + instances);
+                LOGGER.info("Waiting cluster deployment..." + Math.min(app.getTasks().size(), instances) + " of " + instances);
                 Thread.sleep(time * 1000);
 
-                if (first || taks > app.getTasks().size() || taks == instances) {
-                    taks = app.getTasks().size();
+                if (first || tasks > app.getTasks().size() || tasks == instances) {
+                    tasks = app.getTasks().size();
                     continue;
                 }
 
@@ -397,7 +397,7 @@ public class IMarathonScheduler implements IScheduler {
             String appId = appId(id);
             Cache local = cache;
             List<Task> tasks;
-            if (local != null && local.id.equals(appId) && System.currentTimeMillis() - local.time < 500) {
+            if (local != null && System.currentTimeMillis() - local.time < 1000 && local.id.equals(appId)) {
                 tasks = local.response.getTasks();
             } else {
                 local = new Cache();

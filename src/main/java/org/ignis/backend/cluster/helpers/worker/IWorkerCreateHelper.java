@@ -38,44 +38,27 @@ public final class IWorkerCreateHelper extends IWorkerHelper {
         super(worker, properties);
     }
 
-    public ITaskGroup create() throws IgnisException {
-        if (worker.getProperties().getStringList(IKeys.EXECUTOR_CORES_SINGLE).contains(worker.getType())) {
-            return createSingle();
-        }
-
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
-        ITaskGroup.Builder commBuilder = new ITaskGroup.Builder();
-        int instances = worker.getCluster().getContainers().size();
-        ICommGroupCreateTask.Shared commShared = new ICommGroupCreateTask.Shared(instances);
-
-        builder.newDependency(worker.getCluster().getTasks());
-        LOGGER.info(log() + "Registering worker with " + instances + " executors");
-        for (IContainer container : worker.getCluster().getContainers()) {
-            IExecutor executor = container.createExecutor(container.getId(), worker.getId());
-            builder.newTask(new IExecutorCreateTask(getName(), executor, worker.getType(), worker.getCores()));
-            commBuilder.newTask(new ICommGroupCreateTask(getName(), executor, commShared));
-            worker.getExecutors().add(executor);
-        }
-
-        ITaskGroup taskGroup = builder.build();
-        taskGroup.getSubTasksGroup().add(commBuilder.build());
-
-        return taskGroup;
-    }
-
-    public ITaskGroup createSingle() throws IgnisException {
+    public ITaskGroup create(int instances) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         ITaskGroup.Builder commBuilder = new ITaskGroup.Builder();
         int cores = worker.getCores();
-        int instances = worker.getCluster().getContainers().size() * cores;
-        ICommGroupCreateTask.Shared commShared = new ICommGroupCreateTask.Shared(instances);
+        if (instances < 1) {
+            if (worker.getProperties().getStringList(IKeys.EXECUTOR_CORES_SINGLE).contains(worker.getType())) {
+                instances = cores;
+            } else {
+                instances = 1;
+            }
+        }
+        int executors = worker.getCluster().getContainers().size() * instances;
+        LOGGER.info(log() + "Registering worker with " + executors + " executors");
+
+        ICommGroupCreateTask.Shared commShared = new ICommGroupCreateTask.Shared(executors);
 
         builder.newDependency(worker.getCluster().getTasks());
-        LOGGER.info(log() + "Registering worker with " + instances + " executors");
         for (IContainer container : worker.getCluster().getContainers()) {
-            for (int i = 0; i < cores; i++) {
-                IExecutor executor = container.createExecutor(container.getId() * cores + i, worker.getId(), true);
-                builder.newTask(new IExecutorCreateTask(getName(), executor, worker.getType(), 1));
+            for (int i = 0; i < instances; i++) {
+                IExecutor executor = container.createExecutor(container.getId() * instances + i, worker.getId(), cores);
+                builder.newTask(new IExecutorCreateTask(getName(), executor, worker.getType()));
                 commBuilder.newTask(new ICommGroupCreateTask(getName(), executor, commShared));
                 worker.getExecutors().add(executor);
             }

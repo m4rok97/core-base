@@ -44,7 +44,7 @@ public final class IWorker {
     private final List<IExecutor> executors;
     private final List<IDataFrame> dataFrames;
 
-    public IWorker(String name, long id, ICluster cluster, String type, int cores) throws IgnisException {
+    public IWorker(String name, long id, ICluster cluster, String type, int cores, int instances) throws IgnisException {
         this.id = id;
         this.cluster = cluster;
         this.type = type;
@@ -57,7 +57,7 @@ public final class IWorker {
         } else {
             this.lock = cluster.getLock();
         }
-        this.tasks = new IWorkerCreateHelper(this, cluster.getProperties()).create();//Must be the last
+        this.tasks = new IWorkerCreateHelper(this, cluster.getProperties()).create(instances);//Must be the last
     }
 
     public long getId() {

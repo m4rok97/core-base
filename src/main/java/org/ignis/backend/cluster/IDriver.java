@@ -32,7 +32,7 @@ public final class IDriver {
     public IDriver(int port, IProperties properties) {
         this.lock = new ILock(-1);
         IContainer dummy = new IContainer(-1, -1, null, properties);
-        this.executor = new IExecutor(-1, -1, dummy, port, true);
+        this.executor = new IExecutor(-1, -1, dummy, port, 1);
     }
 
     public void initInfo(IContainerDetails info) {

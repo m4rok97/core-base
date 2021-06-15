@@ -78,11 +78,7 @@ public final class IContainer {
         tunnel.open(info.getHost(), info.searchHostPort(properties.getInteger(IKeys.EXECUTOR_RPC_PORT)));
     }
 
-    public IExecutor createExecutor(long id, long worker) throws IgnisException {
-        return new IExecutor(id, worker, this, tunnel.registerPort(), false);
-    }
-
-    public IExecutor createExecutor(long id, long worker, boolean singleCore) throws IgnisException {
-        return new IExecutor(id, worker, this, tunnel.registerPort(), singleCore);
+    public IExecutor createExecutor(long id, long worker, int cores) throws IgnisException {
+        return new IExecutor(id, worker, this, tunnel.registerPort(), cores);
     }
 }

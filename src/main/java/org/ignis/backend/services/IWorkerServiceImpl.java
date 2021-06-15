@@ -43,7 +43,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
 
     @Override
     public IWorkerId newInstance(long id, String type) throws IDriverException, TException {
-        return newInstance3a(id, "", type);
+        return newInstance3(id, "", type);
     }
 
     @Override
@@ -77,26 +77,26 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IWorkerId newInstance3a(long id, String name, String type) throws IDriverException, TException {
+    public IWorkerId newInstance3(long id, String name, String type) throws IDriverException, TException {
         try {
             int cores = attributes.getCluster(id).getProperties().getInteger(IKeys.EXECUTOR_CORES);
-            return newInstance4(id, name, type, cores);
+            return newInstance5(id, name, type, cores, 0);
         } catch (IgnisException ex) {
             throw new IDriverExceptionImpl(ex);
         }
     }
 
     @Override
-    public IWorkerId newInstance3b(long id, String type, int cores) throws IDriverException, TException {
-        return newInstance4(id, "", type, cores);
+    public IWorkerId newInstance4(long id, String type, int cores, int instances) throws IDriverException, TException {
+        return newInstance5(id, "", type, cores, instances);
     }
 
     @Override
-    public IWorkerId newInstance4(long id, String name, String type, int cores) throws IDriverException, TException {
+    public IWorkerId newInstance5(long id, String name, String type, int cores, int instances) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id);
             synchronized (cluster.getLock()) {
-                IWorker worker = cluster.createWorker(name, type, cores);
+                IWorker worker = cluster.createWorker(name, type, cores, instances);
                 return new IWorkerId(id, worker.getId());
             }
         } catch (Exception ex) {

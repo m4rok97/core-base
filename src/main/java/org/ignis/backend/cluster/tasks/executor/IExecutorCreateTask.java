@@ -38,12 +38,10 @@ public final class IExecutorCreateTask extends IExecutorTask {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IExecutorCreateTask.class);
 
     private final String type;
-    private final int cores;
 
-    public IExecutorCreateTask(String name, IExecutor executor, String type, int cores) {
+    public IExecutorCreateTask(String name, IExecutor executor, String type) {
         super(name, executor);
         this.type = type;
-        this.cores = cores;
     }
 
     private void kill() {
@@ -77,13 +75,11 @@ public final class IExecutorCreateTask extends IExecutorTask {
         if (!running) {
             LOGGER.info(log() + "Starting new executor");
             StringBuilder startScript = new StringBuilder();
-            if (executor.getProperties().getDouble(IKeys.TRANSPORT_CORES) > 0) {
+            if (executor.getProperties().getDouble(IKeys.TRANSPORT_CORES) > 0 && executor.getCores() > 1) {
                 startScript.append("export MPI_THREAD_MULTIPLE=1\n");
-                if (!executor.isSingleCore()) {
-                    startScript.append("export MPIR_CVAR_CH4_NUM_VCIS=");
-                    startScript.append(executor.getContainer().getInfo().getCpus());
-                    startScript.append("\n");
-                }
+                startScript.append("export MPIR_CVAR_CH4_NUM_VCIS=");
+                startScript.append(executor.getContainer().getInfo().getCpus());
+                startScript.append("\n");
             }
             startScript.append("export MPICH_SERVICE=").append(executor.getContainer().getInfo().getHost()).append('\n');
             startScript.append("export MPICH_LIST_PORTS='");

@@ -101,8 +101,8 @@ public final class ICluster {
         return containers;
     }
 
-    public IWorker createWorker(String name, String type, int cores) throws IgnisException {
-        IWorker worker = new IWorker(name, workers.size(), this, type, cores);
+    public IWorker createWorker(String name, String type, int cores, int instances) throws IgnisException {
+        IWorker worker = new IWorker(name, workers.size(), this, type, cores, instances);
         workers.add(worker);
         return worker;
     }

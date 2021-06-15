@@ -36,7 +36,7 @@ public final class IExecutor {
     private final long id;
     private final long worker;
     private final int port;
-    private final boolean singleCore;
+    private final int cores;
     private final IContainer container;
     private final ITransportDecorator transport;
     private final TProtocol protocol;
@@ -50,12 +50,12 @@ public final class IExecutor {
     private int pid;
     private int resets;
 
-    public IExecutor(long id, long worker, IContainer container, int port, boolean singleCore) {
+    public IExecutor(long id, long worker, IContainer container, int port, int cores) {
         this.id = id;
         this.worker = worker;
         this.container = container;
         this.port = port;
-        this.singleCore = singleCore;
+        this.cores = cores;
         this.resets = -1;
         this.transport = new ITransportDecorator();
         this.protocol = new TCompactProtocol(transport);
@@ -84,8 +84,8 @@ public final class IExecutor {
         return port;
     }
 
-    public boolean isSingleCore() {
-        return singleCore;
+    public int getCores() {
+        return cores;
     }
 
     public IProperties getProperties() {
@@ -95,6 +95,7 @@ public final class IExecutor {
     public Map<String, String> getExecutorProperties() {
         Map<String, String> map = getProperties().toMap(true);
         /*Executor dynamic properties*/
+        map.put(IKeys.EXECUTOR_CORES, String.valueOf(cores));
         map.put(IKeys.JOB_DIRECTORY, map.get(IKeys.DFS_HOME) + "/" + map.get(IKeys.JOB_GROUP));
         map.put(IKeys.JOB_WORKER, String.valueOf(worker));
         map.put(IKeys.EXECUTOR_DIRECTORY, map.get(IKeys.JOB_DIRECTORY) + "/" + map.get(IKeys.JOB_WORKER) + "/" + id);
