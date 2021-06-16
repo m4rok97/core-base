@@ -60,6 +60,7 @@ public abstract class IHelper {
                 result.append(", ");
             }
             result.delete(result.length() - 2, result.length());
+            result.append("]");
         }
 
         result.append(')');

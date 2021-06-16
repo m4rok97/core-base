@@ -91,12 +91,12 @@ public abstract class IDriverTask extends IExecutorContextTask {
         }
         LOGGER.warn(log() + "connecting to the driver");
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 300; i++) {
             try {
                 executor.connect();
                 break;
             } catch (TException ex) {
-                if (i == 9) {
+                if (i == 299) {
                     throw new IgnisException(ex.getMessage(), ex);
                 }
                 try {

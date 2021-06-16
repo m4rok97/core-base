@@ -61,7 +61,7 @@ public final class ITunnel {
     }
 
     public void open(String host, int port) throws IgnisException {
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 300; i++) {
             try {
                 if (session != null) {
                     try {
@@ -78,7 +78,7 @@ public final class ITunnel {
                 session.connect();
                 break;
             } catch (JSchException ex) {
-                if (i == 59) {
+                if (i == 299) {
                     throw new IgnisException("Could not connect to " + host + ":" + port, ex);
                 }
                 try {

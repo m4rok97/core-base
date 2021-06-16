@@ -75,7 +75,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     public void stop() throws TException {
         new Thread(() -> {
             try {
-                Thread.sleep(5000);//wait driver disconnection
+                Thread.sleep(20000);//wait driver disconnection
             } catch (InterruptedException ex) {
             }
             stopAll();

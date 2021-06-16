@@ -108,22 +108,26 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 LOGGER.info("Debug:" + log() + " Running Processes{\n" + procs + '}');
             }
             String output = executor.getContainer().getTunnel().execute(startScript.toString(), false);
-            executor.setPid(Integer.parseInt(output));
+            try {
+                executor.setPid(Integer.parseInt(output));
+            } catch (NumberFormatException ex) {
+                throw new IgnisException("Executor process died", ex);
+            }
         }
 
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < 300; i++) {
             try {
                 executor.connect();
                 executor.getExecutorServerModule().test();
                 break;
             } catch (Exception ex) {
-                if (i == 39) {
+                if (i == 299) {
                     kill();
                     executor.disconnect();
                     throw new IgnisException(ex.getMessage(), ex);
                 }
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex1) {
                     throw new IgnisException(ex.getMessage(), ex);
                 }
