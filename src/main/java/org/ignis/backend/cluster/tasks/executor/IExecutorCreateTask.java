@@ -100,7 +100,9 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 /*Redirect to docker log */
                 startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2 ");
             }
-            startScript.append("&");
+            startScript.append("&\n");
+            startScript.append("sleep 1\n");
+            startScript.append("jobs -p 1\n");
             String output = executor.getContainer().getTunnel().execute(startScript.toString(), true);
 
             if (Boolean.getBoolean(IKeys.DEBUG)) {
@@ -108,7 +110,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 LOGGER.info("Debug:" + log() + " Running Processes{\n" + procs + '}');
             }
             try {
-                executor.setPid(Integer.parseInt(output.substring(output.indexOf(']') + 1))); //[x] PID
+                executor.setPid(Integer.parseInt(output));
             } catch (Exception ex) {
                 throw new IgnisException("Executor process died", ex);
             }
