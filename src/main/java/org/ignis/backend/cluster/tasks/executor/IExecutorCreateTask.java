@@ -110,7 +110,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
                 LOGGER.info("Debug:" + log() + " Running Processes{\n" + procs + '}');
             }
             try {
-                executor.setPid(Integer.parseInt(output));
+                executor.setPid(Integer.parseInt(output.replaceAll("\n", "")));
             } catch (Exception ex) {
                 throw new IgnisException("Executor process died", ex);
             }
