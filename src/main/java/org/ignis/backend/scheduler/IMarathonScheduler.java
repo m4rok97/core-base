@@ -111,6 +111,12 @@ public class IMarathonScheduler implements IScheduler {
         app.setMem((double) container.getMemory());
         app.getArgs().add(container.getCommand());
 
+        if (container.getShm() != null) {
+            long shm = container.getShm() / 1024 / 1024 * 1000 * 1000;
+            app.getContainer().getDocker().getParameters().add(new Parameter("shm-size", "" + shm + "m"));
+            app.addLabel("shm", "" + container.getShm());
+        }
+
         if (container.getSwappiness() != null) {
             app.getContainer().getDocker().getParameters().add(new Parameter("memory-swappiness", "" + container.getSwappiness()));
             app.addLabel("memory-swappiness", "" + container.getSwappiness());
