@@ -97,7 +97,7 @@ public class ITaskGroup {
         for (int attempt = 0; ; attempt++) {
             List<Future<ITaskGroup>> depFutures = new ArrayList<>();
             for (ITaskGroup dependency : depencencies) {
-                depFutures.add(pool.submit(dependency, context));
+                depFutures.add(pool.submit(dependency, context.newSubContext()));
             }
             IgnisException error = null;
             for (int i = 0; i < depFutures.size(); i++) {
@@ -111,6 +111,7 @@ public class ITaskGroup {
                     }
                 }
             }
+            context.mergeSubContexts();
             if (error != null) {
                 throw error;
             }
@@ -156,6 +157,15 @@ public class ITaskGroup {
                 throw error;
             }
             for (ITaskGroup subtask : subTasksGroup) {
+                if (!subtask.subTasksGroup.isEmpty() || !subtask.depencencies.isEmpty() || !subtask.locks.isEmpty()) {
+                    String name;
+                    if (tasks.isEmpty()) {
+                        name = "Subtasks";
+                    } else {
+                        name = tasks.get(0).getClass().getName() + " subtasks";
+                    }
+                    throw new IgnisException("Implementation error: " + name + " can not have locks, subtasks or depencencies");
+                }
                 subtask.start(pool, context, 0);
             }
         } else {

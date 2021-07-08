@@ -45,7 +45,7 @@ public final class IGroupByKeyTask extends IExecutorContextTask {
 
         private final IBarrier barrier;
         private final int executors;
-        AtomicLong partitions;
+        private AtomicLong partitions;
 
     }
 

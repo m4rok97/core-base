@@ -26,58 +26,68 @@ import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author César Pomar
  */
-public final class IReduceByKeyTask extends IExecutorContextTask {
+public final class IUnionTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IReduceByKeyTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IUnionTask.class);
 
     public static class Shared {
 
         public Shared(int executors) {
             this.executors = executors;
             barrier = new IBarrier(executors);
-            partitions = new AtomicLong(0);
         }
 
         private final IBarrier barrier;
         private final int executors;
-        private AtomicLong partitions;
 
     }
 
-    private final ISource function;
+    private final ISource src;
     private final Long numPartitions;
     private final Shared shared;
-    private final boolean localReduce;
+    private final boolean preserveOrder;
 
-    public IReduceByKeyTask(String name, IExecutor executor, Shared shared, ISource function, boolean localReduce) {
-        this(name, executor, shared, function, null, localReduce);
+    public IUnionTask(String name, IExecutor executor, Shared shared, boolean preserveOrder, ISource src) {
+        this(name, executor, shared, preserveOrder, null, src);
     }
 
-    public IReduceByKeyTask(String name, IExecutor executor, Shared shared, ISource function, Long numPartitions, boolean localReduce) {
+    public IUnionTask(String name, IExecutor executor, Shared shared, boolean preserveOrder) {
+        this(name, executor, shared, preserveOrder, null, null);
+    }
+
+    public IUnionTask(String name, IExecutor executor, Shared shared, boolean preserveOrder, Long numPartitions) {
+        this(name, executor, shared, preserveOrder, numPartitions, null);
+    }
+
+
+    public IUnionTask(String name, IExecutor executor, Shared shared, boolean preserveOrder, Long numPartitions, ISource src) {
         super(name, executor, Mode.LOAD_AND_SAVE);
         this.shared = shared;
-        this.function = function;
+        this.preserveOrder = preserveOrder;
+        this.src = src;
         this.numPartitions = numPartitions;
-        this.localReduce = localReduce;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "reduceByKey started");
+        LOGGER.info(log() + "union started");
         try {
-            if (numPartitions == null) {
-                shared.partitions.set(0);
+            if (preserveOrder) {
                 shared.barrier.await();
-                shared.partitions.addAndGet(executor.getIoModule().partitionCount());
-                shared.barrier.await();
-                executor.getGeneralModule().reduceByKey(function, shared.partitions.get(), localReduce);
+                throw new UnsupportedOperationException("Not implemented yet"); //TODO
+            }
+            context.loadContextAsVariable(executor, "other");
+            if (src == null) {
+                executor.getGeneralModule().union_("other");
             } else {
-                executor.getGeneralModule().reduceByKey(function, numPartitions, localReduce);
+                executor.getGeneralModule().union2("other", src);
+            }
+            if (numPartitions != null) {
+                throw new UnsupportedOperationException("Not implemented yet"); //TODO
             }
         } catch (IExecutorException ex) {
             shared.barrier.fails();
@@ -88,7 +98,7 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "reduceByKey finished");
+        LOGGER.info(log() + "union finished");
     }
 
 }

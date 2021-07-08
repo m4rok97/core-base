@@ -31,9 +31,9 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author César Pomar
  */
-public final class IReduceByKeyTask extends IExecutorContextTask {
+public final class IJoinTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IReduceByKeyTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IJoinTask.class);
 
     public static class Shared {
 
@@ -49,35 +49,49 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
 
     }
 
-    private final ISource function;
+    private final ISource src;
     private final Long numPartitions;
     private final Shared shared;
-    private final boolean localReduce;
 
-    public IReduceByKeyTask(String name, IExecutor executor, Shared shared, ISource function, boolean localReduce) {
-        this(name, executor, shared, function, null, localReduce);
+    public IJoinTask(String name, IExecutor executor, Shared shared, ISource src) {
+        this(name, executor, shared, null, src);
     }
 
-    public IReduceByKeyTask(String name, IExecutor executor, Shared shared, ISource function, Long numPartitions, boolean localReduce) {
+    public IJoinTask(String name, IExecutor executor, Shared shared) {
+        this(name, executor, shared, null, null);
+    }
+
+    public IJoinTask(String name, IExecutor executor, Shared shared, Long numPartitions) {
+        this(name, executor, shared, numPartitions, null);
+    }
+
+
+    public IJoinTask(String name, IExecutor executor, Shared shared, Long numPartitions, ISource src) {
         super(name, executor, Mode.LOAD_AND_SAVE);
         this.shared = shared;
-        this.function = function;
+        this.src = src;
         this.numPartitions = numPartitions;
-        this.localReduce = localReduce;
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "reduceByKey started");
+        LOGGER.info(log() + "join started");
         try {
+            long np;
             if (numPartitions == null) {
                 shared.partitions.set(0);
                 shared.barrier.await();
                 shared.partitions.addAndGet(executor.getIoModule().partitionCount());
                 shared.barrier.await();
-                executor.getGeneralModule().reduceByKey(function, shared.partitions.get(), localReduce);
+                np = shared.partitions.get();
+            }else{
+                np = numPartitions;
+            }
+            context.loadContextAsVariable(executor, "other");
+            if (src != null) {
+                executor.getGeneralModule().join3("other", np, src);
             } else {
-                executor.getGeneralModule().reduceByKey(function, numPartitions, localReduce);
+                executor.getGeneralModule().join("other", np);
             }
         } catch (IExecutorException ex) {
             shared.barrier.fails();
@@ -88,7 +102,7 @@ public final class IReduceByKeyTask extends IExecutorContextTask {
             shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "reduceByKey finished");
+        LOGGER.info(log() + "join finished");
     }
 
 }

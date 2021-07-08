@@ -16,8 +16,10 @@
  */
 package org.ignis.backend.cluster.helpers.dataframe;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IExecutor;
+import org.ignis.backend.cluster.helpers.worker.IWorkerImportDataHelper;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.executor.*;
 import org.ignis.backend.exception.IgnisException;
@@ -213,6 +215,239 @@ public final class IDataGeneralHelper extends IDataHelper {
         );
         return target;
     }
+
+    public IDataFrame union(IDataFrame other, boolean preserveOrder) throws IgnisException {
+        String otherName = other.getName();
+        if (!data.getWorker().equals(other.getWorker())) {
+            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
+        }
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IUnionTask.Shared shared = new IUnionTask.Shared(data.getExecutors().size());
+        builder.newDependency(other.getTasks());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IUnionTask(getName(), executor, shared, preserveOrder));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "union(" +
+                "other=" + otherName +
+                "preserveOrder=" + preserveOrder +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame union(IDataFrame other, boolean preserveOrder, long numPartitions) throws IgnisException {
+        String otherName = other.getName();
+        if (!data.getWorker().equals(other.getWorker())) {
+            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
+        }
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IUnionTask.Shared shared = new IUnionTask.Shared(data.getExecutors().size());
+        builder.newDependency(other.getTasks());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IUnionTask(getName(), executor, shared, preserveOrder, numPartitions));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "union(" +
+                "other=" + otherName +
+                "preserveOrder=" + preserveOrder +
+                "numPartitions=" + numPartitions +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame union(IDataFrame other, boolean preserveOrder, ISource src) throws IgnisException {
+        String otherName = other.getName();
+        if (!data.getWorker().equals(other.getWorker())) {
+            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
+        }
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IUnionTask.Shared shared = new IUnionTask.Shared(data.getExecutors().size());
+        builder.newDependency(other.getTasks());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IUnionTask(getName(), executor, shared, preserveOrder, src));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "union(" +
+                "other=" + otherName +
+                "preserveOrder=" + preserveOrder +
+                "src=" + srcToString(src) +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame union(IDataFrame other, boolean preserveOrder, long numPartitions, ISource src) throws IgnisException {
+        String otherName = other.getName();
+        if (!data.getWorker().equals(other.getWorker())) {
+            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
+        }
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IUnionTask.Shared shared = new IUnionTask.Shared(data.getExecutors().size());
+        builder.newDependency(other.getTasks());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IUnionTask(getName(), executor, shared, preserveOrder, numPartitions, src));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "union(" +
+                "other=" + otherName +
+                "preserveOrder=" + preserveOrder +
+                "numPartitions=" + numPartitions +
+                "src=" + srcToString(src) +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame join(IDataFrame other) throws IgnisException {
+        String otherName = other.getName();
+        if (!data.getWorker().equals(other.getWorker())) {
+            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
+        }
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IJoinTask.Shared shared = new IJoinTask.Shared(data.getExecutors().size());
+        builder.newDependency(other.getTasks());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IJoinTask(getName(), executor, shared));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "join(" +
+                "other=" + otherName +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame join(IDataFrame other, long numPartitions) throws IgnisException {
+        String otherName = other.getName();
+        if (!data.getWorker().equals(other.getWorker())) {
+            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
+        }
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IJoinTask.Shared shared = new IJoinTask.Shared(data.getExecutors().size());
+        builder.newDependency(other.getTasks());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IJoinTask(getName(), executor, shared, numPartitions));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "join(" +
+                "other=" + otherName +
+                "numPartitions=" + numPartitions +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame join(IDataFrame other, ISource src) throws IgnisException {
+        String otherName = other.getName();
+        if (!data.getWorker().equals(other.getWorker())) {
+            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
+        }
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IJoinTask.Shared shared = new IJoinTask.Shared(data.getExecutors().size());
+        builder.newDependency(other.getTasks());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IJoinTask(getName(), executor, shared, src));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "join(" +
+                "other=" + otherName +
+                "src=" + srcToString(src) +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame join(IDataFrame other, long numPartitions, ISource src) throws IgnisException {
+        String otherName = other.getName();
+        if (!data.getWorker().equals(other.getWorker())) {
+            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
+        }
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IJoinTask.Shared shared = new IJoinTask.Shared(data.getExecutors().size());
+        builder.newDependency(other.getTasks());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IJoinTask(getName(), executor, shared, numPartitions, src));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "join(" +
+                "other=" + otherName +
+                "numPartitions=" + numPartitions +
+                "src=" + srcToString(src) +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame distinct() throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IDistinctTask.Shared shared = new IDistinctTask.Shared(data.getExecutors().size());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IDistinctTask(getName(), executor, shared));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "distinct(" +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame distinct(long numPartitions) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IDistinctTask.Shared shared = new IDistinctTask.Shared(data.getExecutors().size());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IDistinctTask(getName(), executor, shared, numPartitions));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "distinct(" +
+                "numPartitions=" + numPartitions +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame distinct(ISource src) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IDistinctTask.Shared shared = new IDistinctTask.Shared(data.getExecutors().size());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IDistinctTask(getName(), executor, shared, src));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "distinct(" +
+                "src=" + srcToString(src) +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
+    public IDataFrame distinct(long numPartitions, ISource src) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        IDistinctTask.Shared shared = new IDistinctTask.Shared(data.getExecutors().size());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IDistinctTask(getName(), executor, shared, numPartitions, src));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "distinct(" +
+                "numPartitions=" + numPartitions +
+                "src=" + srcToString(src) +
+                ") registered -> " + target.getName()
+        );
+        return target;
+    }
+
 
     public IDataFrame sortBy(ISource src, boolean ascending, long numPartitions) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());

@@ -34,10 +34,12 @@ public class ITaskContext {
 
     private final Map<IExecutor, List<Long>> contexts;
     private final Map<String, Object> vars;
+    private final List<ITaskContext> subContexts;
 
     public ITaskContext() {
         contexts = new ConcurrentHashMap<>();
         vars = new ConcurrentHashMap<>();
+        subContexts = new ArrayList<>();
     }
 
     public void saveContext(IExecutor e) throws IgnisException {
@@ -63,16 +65,31 @@ public class ITaskContext {
         return null;
     }
 
-    public void loadContext(IExecutor e) throws IgnisException {
+    public long popContext(IExecutor e) throws IgnisException {
         List<Long> executorContext = contexts.get(e);
 
         if (executorContext == null || executorContext.isEmpty()) {
             throw new IgnisException("Executor context error");
         }
 
+        long id = executorContext.get(executorContext.size() - 1);
+        executorContext.remove(executorContext.size() - 1);
+        return id;
+    }
+
+    public void loadContext(IExecutor e) throws IgnisException {
         try {
-            e.getCacheContextModule().loadContext(executorContext.get(executorContext.size() - 1));
-            executorContext.remove(executorContext.size() - 1);
+            e.getCacheContextModule().loadContext(popContext(e));
+        } catch (IExecutorException ex) {
+            throw new IExecutorExceptionWrapper(ex);
+        } catch (TException ex) {
+            throw new IgnisException(ex.getMessage(), ex);
+        }
+    }
+
+    public void loadContextAsVariable(IExecutor e, String name) throws IgnisException {
+        try {
+            e.getCacheContextModule().loadContextAsVariable(popContext(e), name);
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
@@ -97,6 +114,26 @@ public class ITaskContext {
     @SuppressWarnings("unchecked")
     public <V> V get(String key) {
         return (V) vars.get(key);
+    }
+
+    public ITaskContext newSubContext() {
+        ITaskContext sc = new ITaskContext();
+        sc.vars.putAll(this.vars);
+        subContexts.add(sc);
+        return sc;
+    }
+
+    public void mergeSubContexts() {
+        for (ITaskContext sc : subContexts) {
+            this.vars.putAll(sc.vars);
+            for (var entry : sc.contexts.entrySet()) {
+                if (this.contexts.containsKey(entry.getKey())) {
+                    this.contexts.get(entry.getKey()).addAll(entry.getValue());
+                } else {
+                    this.contexts.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
     }
 
 }

@@ -45,7 +45,7 @@ public final class IAggregateByKeyTask extends IExecutorContextTask {
 
         private final IBarrier barrier;
         private final int executors;
-        AtomicLong partitions;
+        private AtomicLong partitions;
 
     }
 

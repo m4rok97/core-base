@@ -59,12 +59,12 @@ public abstract class IDriverTask extends IExecutorContextTask {
 
     protected final Shared shared;
     protected final boolean driver;
-    private final long dataId;
+    private final Long dataId;
     private final ISource src;
     private Integer attempt;
 
-    protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId, ISource src) {
-        super(name, executor, !driver ? Mode.LOAD : Mode.NONE);
+    protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, Long dataId, ISource src) {
+        super(name, executor, dataId != null ? Mode.SAVE : Mode.LOAD);
         this.shared = shared;
         this.driver = driver;
         this.dataId = dataId;
@@ -73,7 +73,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src) {
-        this(name, executor, shared, driver, 0, src);
+        this(name, executor, shared, driver, null, src);
     }
 
     protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId) {
@@ -195,6 +195,12 @@ public abstract class IDriverTask extends IExecutorContextTask {
             } else {
                 executor.getCommModule().driverScatter(id, partitions);
             }
+            shared.barrier.await();
+            if (driver) {
+                context.saveContext(executor);
+                context.set("result", context.popContext(executor));
+            }
+            shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);
@@ -222,7 +228,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
                 List<ByteBuffer> group = shared.buffer.stream().flatMap(x -> x.stream()).collect(Collectors.toList());
                 executor.getCommModule().setPartitions2(group, src);
                 context.saveContext(executor);
-                context.set("result", context.contextStack(executor).remove(0));
+                context.set("result", context.popContext(executor));
             }
             shared.barrier.await();
         } catch (IExecutorException ex) {
