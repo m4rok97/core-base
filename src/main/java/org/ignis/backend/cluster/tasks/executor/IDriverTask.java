@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +47,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         public Shared(int executors) {
             this.executors = executors;
             barrier = new IBarrier(executors + 1);//executors + driver
+            value = new AtomicLong();
         }
 
         protected final IBarrier barrier;
@@ -53,6 +55,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         private String group;
         private byte protocol;
         private boolean flag;
+        private final AtomicLong value;
         private List<List<ByteBuffer>> buffer;
 
     }
@@ -291,13 +294,19 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "RpcScatter executed");
     }
 
-    protected boolean isTransportMinimal(ITaskContext context) throws IgnisException, BrokenBarrierException {
+    protected boolean isTransportMinimal(ITaskContext context, boolean toDriver) throws IgnisException, BrokenBarrierException {
         try {
-            if (!driver && executor.getIoModule().partitionApproxSize() > executor.getProperties().getLong(IKeys.TRANSPORT_MINIMAL)) {
-                shared.flag = false;
+            if (driver) {
+                shared.value.set(0);
             }
             shared.barrier.await();
-            return shared.flag;
+            if (toDriver && !driver) {
+                shared.value.addAndGet(executor.getIoModule().partitionApproxSize());
+            } else if (!toDriver && driver) {
+                shared.value.addAndGet(executor.getIoModule().partitionApproxSize());
+            }
+            shared.barrier.await();
+            return shared.value.get() < executor.getProperties().getLong(IKeys.TRANSPORT_MINIMAL);
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);
@@ -310,15 +319,11 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     protected void gather(ITaskContext context) throws IgnisException, BrokenBarrierException {
-        if (isTransportMinimal(context)) {
-            rpcGather(context);
-        } else {
-            mpiGather(context, false);
-        }
+        gather(context, false);
     }
 
     protected void gather(ITaskContext context, boolean zero) throws IgnisException, BrokenBarrierException {
-        if (isTransportMinimal(context)) {
+        if (isTransportMinimal(context, true)) {
             rpcGather(context);
         } else {
             mpiGather(context, zero);
@@ -326,7 +331,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     protected void scatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
-        if (isTransportMinimal(context)) {
+        if (isTransportMinimal(context, false)) {
             rpcScatter(context, partitions);
         } else {
             mpiScatter(context, partitions);
