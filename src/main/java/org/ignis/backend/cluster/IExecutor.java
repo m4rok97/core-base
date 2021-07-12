@@ -98,7 +98,7 @@ public final class IExecutor {
         map.put(IKeys.EXECUTOR_CORES, String.valueOf(cores));
         map.put(IKeys.JOB_DIRECTORY, map.get(IKeys.DFS_HOME) + "/" + map.get(IKeys.JOB_GROUP));
         map.put(IKeys.JOB_WORKER, String.valueOf(worker));
-        map.put(IKeys.EXECUTOR_DIRECTORY, map.get(IKeys.JOB_DIRECTORY) + "/" + map.get(IKeys.JOB_WORKER) + "/" + id);
+        map.put(IKeys.EXECUTOR_DIRECTORY, map.get(IKeys.JOB_DIRECTORY) + "/" + container.getCluster() + "/" + worker + "/" + id);
         return map;
     }
 

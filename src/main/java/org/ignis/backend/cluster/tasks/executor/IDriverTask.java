@@ -67,7 +67,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
     private Integer attempt;
 
     protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, Long dataId, ISource src) {
-        super(name, executor, dataId != null ? Mode.SAVE : Mode.LOAD);
+        super(name, executor, driver ? Mode.NONE : (dataId != null ? Mode.SAVE : Mode.LOAD));
         this.shared = shared;
         this.driver = driver;
         this.dataId = dataId;
@@ -296,6 +296,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
 
     protected boolean isTransportMinimal(ITaskContext context, boolean toDriver) throws IgnisException, BrokenBarrierException {
         try {
+            LOGGER.info(log() + "Selecting transfer  mode");
             if (driver) {
                 shared.value.set(0);
             }
@@ -306,7 +307,13 @@ public abstract class IDriverTask extends IExecutorContextTask {
                 shared.value.addAndGet(executor.getIoModule().partitionApproxSize());
             }
             shared.barrier.await();
-            return shared.value.get() < executor.getProperties().getLong(IKeys.TRANSPORT_MINIMAL);
+            boolean flag = shared.value.get() < executor.getProperties().getLong(IKeys.TRANSPORT_MINIMAL);
+            if(flag){
+                LOGGER.info(log() + "Rpc mode selected");
+            }else{
+                LOGGER.info(log() + "Mpi mode selected");
+            }
+            return flag;
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);
