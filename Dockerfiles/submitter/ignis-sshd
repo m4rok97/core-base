@@ -1,0 +1,5 @@
+#!/bin/bash
+export -p >> /etc/profile
+export -p | sed "s/^declare -x //" > /etc/environment
+mkdir -p ~/.ssh
+/usr/sbin/sshd -D

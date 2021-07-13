@@ -1,0 +1,2 @@
+#!/bin/bash
+exec java -cp "${IGNIS_HOME}/lib/java/*" org.ignis.backend.Submit "$@"
