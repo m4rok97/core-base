@@ -64,7 +64,7 @@ public final class IDataMathHelper extends IDataHelper {
         }
 
         builder.newLock(driver.getLock());
-        builder.newTask(new ITakeSampleTask(getName(), driver.getExecutor(), shared, true, withReplacement, num, seed, tp));
+        builder.newTask(new ITakeSampleTask(driver.getName(), driver.getExecutor(), shared, true, withReplacement, num, seed, tp));
         LOGGER.info(log() + "takeSample(" +
                 "withReplacement=" + withReplacement +
                 "num=" + num +

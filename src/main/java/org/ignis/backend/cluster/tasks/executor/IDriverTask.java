@@ -125,7 +125,6 @@ public abstract class IDriverTask extends IExecutorContextTask {
         String id;
         try {
             if (driver) {
-                driverConnection(context);
                 shared.flag = true;
             }
             if (!driver && executor.getId() == 0) {
@@ -166,7 +165,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         return id;
     }
 
-    protected void mpiGather(ITaskContext context, boolean zero) throws IgnisException, BrokenBarrierException {
+    private void mpiGather(ITaskContext context, boolean zero) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Executing mpiGather");
         String id = mpiDriverGroup(context);
         try {
@@ -185,7 +184,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "MpiGather executed");
     }
 
-    protected void mpiScatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
+    private void mpiScatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Executing mpiScatter");
         String id = mpiDriverGroup(context);
         try {
@@ -214,11 +213,10 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "MpiScatter executed");
     }
 
-    protected void rpcGather(ITaskContext context) throws IgnisException, BrokenBarrierException {
+    private void rpcGather(ITaskContext context) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Executing rpcGather");
         try {
             if (driver) {
-                driverConnection(context);
                 shared.protocol = executor.getCommModule().getProtocol();
                 shared.buffer = new ArrayList<>(Collections.nCopies(shared.executors, null));
             }
@@ -248,11 +246,10 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "RpcGather executed");
     }
 
-    protected void rpcScatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
+    private void rpcScatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
         LOGGER.info(log() + "Executing rpcScatter");
         try {
             if (driver) {
-                driverConnection(context);
                 executor.getCacheContextModule().loadCache(dataId);
                 shared.buffer = new ArrayList<>();
             } else if (executor.getId() == 0) {
@@ -294,7 +291,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "RpcScatter executed");
     }
 
-    protected boolean isTransportMinimal(ITaskContext context, boolean toDriver) throws IgnisException, BrokenBarrierException {
+    private boolean isTransportMinimal(ITaskContext context, boolean toDriver) throws IgnisException, BrokenBarrierException {
         try {
             LOGGER.info(log() + "Selecting transfer  mode");
             if (driver) {
@@ -330,6 +327,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     protected void gather(ITaskContext context, boolean zero) throws IgnisException, BrokenBarrierException {
+        driverConnection(context);
         if (isTransportMinimal(context, true)) {
             rpcGather(context);
         } else {
@@ -338,6 +336,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     protected void scatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
+        driverConnection(context);
         if (isTransportMinimal(context, false)) {
             rpcScatter(context, partitions);
         } else {
