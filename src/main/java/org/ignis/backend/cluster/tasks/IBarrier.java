@@ -16,8 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks;
 
-import org.ignis.backend.properties.IKeys;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
@@ -27,8 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author César Pomar
  */
 public final class IBarrier extends CyclicBarrier {
-
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IBarrier.class);
 
     private final AtomicBoolean fails;
 
@@ -46,15 +42,10 @@ public final class IBarrier extends CyclicBarrier {
 
     @Override
     public int await() throws InterruptedException, BrokenBarrierException {
-        if (Boolean.getBoolean(IKeys.DEBUG)) {
-            LOGGER.info("Debug: Await start");
-        }
         int r = super.await();
-        if (Boolean.getBoolean(IKeys.DEBUG)) {
-            LOGGER.info("Debug: Await end");
-        }
         if (fails.get()) {
-            throw new BrokenBarrierException();
+            super.await();
+            throw new BrokenBarrierException("Other Task fails");
         }
         return r;
     }
@@ -65,15 +56,21 @@ public final class IBarrier extends CyclicBarrier {
         super.reset();
     }
 
-    public int fails() {
+    public void fails() {
         fails.set(true);
-        int r = 0;
         try {
-            r = await();
+            super.await();
         } catch (InterruptedException | BrokenBarrierException ex) {
+            fails.set(false);
+            return;
+        }
+        try {
+            super.await();
+        } catch (InterruptedException | BrokenBarrierException ex) {
+            fails.set(false);
+            return;
         }
         fails.set(false);
-        return r;
     }
 
 }
