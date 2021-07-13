@@ -1,0 +1,38 @@
+#!/bin/bash
+export -p >> /etc/profile
+export -p | sed 's/^declare -x //' > /etc/environment
+mkdir -p ~/.ssh
+echo ${IGNIS_DRIVER_PUBLIC_KEY} >> ~/.ssh/authorized_keys
+/usr/sbin/sshd -p $1
+
+if [ $2 -eq 1 ]; then
+	while [ "$(last -10 | grep -c "still logged")" -eq 0 ]; do
+		echo "waiting client conection"
+		sleep 10
+	done
+	while [ "$(last -10 | grep -c "still logged")" -ge 0 ]; do
+		sleep ${IGNIS_DRIVER_HEALTHCHECK_INTERVAL}
+	done
+	echo "Client disconected"
+	exit 0
+else
+	interval=${IGNIS_DRIVER_HEALTHCHECK_INTERVAL}
+	timeout=${IGNIS_DRIVER_HEALTHCHECK_TIMEOUT}
+	retries=${IGNIS_DRIVER_HEALTHCHECK_RETRIES}
+	url=${IGNIS_DRIVER_HEALTHCHECK_URL}
+	attempt=0
+	trap "exit 0" TERM 
+	while true; do
+		if $(curl --output /dev/null --silent --head --fail --connect-timeout ${timeout} ${url}); then
+			attempt=0
+		else
+			if [ ${attempt} -eq ${retries} ];then
+				echo "Driver lost, exiting" 1>&2
+				exit 1
+			fi
+			attempt=$(($attempt+1))
+		fi
+		sleep ${interval} &
+		wait $!
+	done
+fi
