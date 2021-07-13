@@ -135,7 +135,7 @@ public class ITaskGroup {
         if (locks.isEmpty()) {
             List<Future<ITask>> futures = new ArrayList<>(tasks.size());
             if (Boolean.getBoolean(IKeys.DEBUG) && !tasks.isEmpty()) {
-                LOGGER.info("Debug: Executing task " + tasks.get(0).getClass().getName());
+                LOGGER.info("Debug: Executing tasks(" + tasks.size() + ")" + tasks.get(0).getClass().getName());
             }
             for (ITask task : tasks) {
                 futures.add(pool.submit(task, context));
