@@ -67,6 +67,12 @@ public abstract class IPartitionFileTask extends IExecutorContextTask {
     }
 
     @Override
+    public void contextError(IgnisException ex) throws IgnisException {
+        shared.barrier.fails();
+        throw ex;
+    }
+
+    @Override
     public final void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + function + " started");
         try {

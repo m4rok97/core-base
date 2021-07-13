@@ -74,6 +74,12 @@ public final class IGroupByKeyTask extends IExecutorContextTask {
     }
 
     @Override
+    public void contextError(IgnisException ex) throws IgnisException {
+        shared.barrier.fails();
+        throw ex;
+    }
+
+    @Override
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "groupByKey started");
         try {
@@ -94,6 +100,7 @@ public final class IGroupByKeyTask extends IExecutorContextTask {
                     executor.getGeneralModule().groupByKey(numPartitions);
                 }
             }
+            shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);

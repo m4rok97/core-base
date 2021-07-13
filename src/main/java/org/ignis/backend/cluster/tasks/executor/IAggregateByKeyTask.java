@@ -78,6 +78,12 @@ public final class IAggregateByKeyTask extends IExecutorContextTask {
     }
 
     @Override
+    public void contextError(IgnisException ex) throws IgnisException {
+        shared.barrier.fails();
+        throw ex;
+    }
+
+    @Override
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "aggregateByKey started");
         try {
@@ -98,6 +104,7 @@ public final class IAggregateByKeyTask extends IExecutorContextTask {
                     executor.getGeneralModule().aggregateByKey(zero, seqOp, numPartitions);
                 }
             }
+            shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);

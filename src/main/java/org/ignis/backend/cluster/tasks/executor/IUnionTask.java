@@ -73,6 +73,12 @@ public final class IUnionTask extends IExecutorContextTask {
     }
 
     @Override
+    public void contextError(IgnisException ex) throws IgnisException {
+        shared.barrier.fails();
+        throw ex;
+    }
+
+    @Override
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "union started");
         try {
@@ -89,6 +95,7 @@ public final class IUnionTask extends IExecutorContextTask {
             if (numPartitions != null) {
                 throw new UnsupportedOperationException("Not implemented yet"); //TODO
             }
+            shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);

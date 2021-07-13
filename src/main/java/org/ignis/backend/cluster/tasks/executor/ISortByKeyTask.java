@@ -56,6 +56,11 @@ public final class ISortByKeyTask extends IExecutorContextTask {
     }
 
     @Override
+    public void contextError(IgnisException ex) throws IgnisException {
+        throw ex;
+    }
+
+    @Override
     public void run(ITaskContext context) throws IgnisException {
         try {
             LOGGER.info(log() + "sortByKey started");

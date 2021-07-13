@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (C) 2021 César Pomar
+ *  * Copyright (C) 2019 César Pomar
  *  *
  *  * This program is free software: you can redistribute it and/or modify
  *  * it under the terms of the GNU General Public License as published by
@@ -25,41 +25,55 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IExecutorException;
-import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
-public class ICallTask extends IExecutorContextTask {
+/**
+ * @author César Pomar
+ */
+public class IDriverConectionTask extends IExecutorTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICallTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IDriverConectionTask.class);
 
-    private final ISource function;
-    private final boolean hasArgument;
-
-    public ICallTask(String name, IExecutor executor, ISource function, boolean hasArgument) {
-        super(name, executor, hasArgument ? Mode.LOAD_AND_SAVE : Mode.SAVE);
-        this.function = function;
-        this.hasArgument = hasArgument;
-    }
-
-    @Override
-    public void contextError(IgnisException ex) throws IgnisException {
-        throw ex;
+    public IDriverConectionTask(String name, IExecutor executor) {
+        super(name, executor);
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "voidCall started");
-        try {
-            if (hasArgument) {
-                executor.getGeneralModule().mapExecutorTo(function);
-            } else {
-                executor.getGeneralModule().executeTo(function);
+        if (executor.isConnected()) {
+            try {
+                executor.getExecutorServerModule().test();
+                return;
+            } catch (Exception ex) {
+                LOGGER.warn(log() + "driver conection lost");
             }
+        }
+        LOGGER.warn(log() + "connecting to the driver");
+
+        for (int i = 0; i < 300; i++) {
+            try {
+                executor.connect();
+                break;
+            } catch (TException ex) {
+                if (i == 299) {
+                    throw new IgnisException(ex.getMessage(), ex);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    throw new IgnisException(ex.getMessage(), ex);
+                }
+            }
+        }
+
+        try {
+            executor.getExecutorServerModule().test();
+            executor.getExecutorServerModule().start(executor.getExecutorProperties());
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "voidCall finished");
     }
+
 }

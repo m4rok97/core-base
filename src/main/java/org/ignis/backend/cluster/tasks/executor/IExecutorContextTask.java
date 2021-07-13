@@ -38,20 +38,35 @@ public abstract class IExecutorContextTask extends IExecutorTask {
 
     @Override
     protected final void before(ITaskContext context) throws IgnisException {
-        if (mode == Mode.LOAD || mode == Mode.LOAD_AND_SAVE) {
-            context.loadContext(executor);
-        } else {
-            context.clearContext(executor);
+        try {
+            if (mode == Mode.LOAD || mode == Mode.LOAD_AND_SAVE) {
+                context.loadContext(executor);
+            } else {
+                context.clearContext(executor);
+            }
+        } catch (IgnisException ex) {
+            contextError(ex);
+        } catch (Exception ex) {
+            contextError(new IgnisException(ex));
         }
     }
 
     @Override
     protected final void after(ITaskContext context) throws IgnisException {
-        if (mode == Mode.SAVE || mode == Mode.LOAD_AND_SAVE) {
-            context.saveContext(executor);
-        } else {
-            context.clearContext(executor);
+        try {
+            if (mode == Mode.SAVE || mode == Mode.LOAD_AND_SAVE) {
+                context.saveContext(executor);
+            } else {
+                context.clearContext(executor);
+            }
+        } catch (IgnisException ex) {
+            contextError(ex);
+        } catch (Exception ex) {
+            contextError(new IgnisException(ex));
         }
+
     }
+
+    public abstract void contextError(IgnisException ex) throws IgnisException;
 
 }

@@ -40,6 +40,11 @@ public final class IFilterTask extends IExecutorContextTask {
     }
 
     @Override
+    public void contextError(IgnisException ex) throws IgnisException {
+        throw ex;
+    }
+
+    @Override
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "filter started");
         try {

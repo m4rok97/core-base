@@ -40,6 +40,11 @@ public final class IKeyByTask extends IExecutorContextTask {
     }
 
     @Override
+    public void contextError(IgnisException ex) throws IgnisException {
+        throw ex;
+    }
+
+    @Override
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "keyBy started");
         try {

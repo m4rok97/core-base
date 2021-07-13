@@ -83,41 +83,10 @@ public abstract class IDriverTask extends IExecutorContextTask {
         this(name, executor, shared, driver, dataId, null);
     }
 
-    private void driverConnection(ITaskContext context) throws IgnisException {
-        if (executor.isConnected()) {
-            try {
-                executor.getExecutorServerModule().test();
-                return;
-            } catch (Exception ex) {
-                LOGGER.warn(log() + "driver conection lost");
-            }
-        }
-        LOGGER.warn(log() + "connecting to the driver");
-
-        for (int i = 0; i < 300; i++) {
-            try {
-                executor.connect();
-                break;
-            } catch (TException ex) {
-                if (i == 299) {
-                    throw new IgnisException(ex.getMessage(), ex);
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex1) {
-                    throw new IgnisException(ex.getMessage(), ex);
-                }
-            }
-        }
-
-        try {
-            executor.getExecutorServerModule().test();
-            executor.getExecutorServerModule().start(executor.getExecutorProperties());
-        } catch (IExecutorException ex) {
-            throw new IExecutorExceptionWrapper(ex);
-        } catch (TException ex) {
-            throw new IgnisException(ex.getMessage(), ex);
-        }
+    @Override
+    public void contextError(IgnisException ex) throws IgnisException {
+        shared.barrier.fails();
+        throw ex;
     }
 
     private String mpiDriverGroup(ITaskContext context) throws IgnisException, BrokenBarrierException {
@@ -152,6 +121,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
                     executor.getCommModule().closeGroup();
                 }
             }
+            shared.barrier.await();
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);
@@ -175,10 +145,8 @@ public abstract class IDriverTask extends IExecutorContextTask {
                 executor.getCommModule().driverGather(id, src);
             }
         } catch (IExecutorException ex) {
-            shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);
         } catch (Exception ex) {
-            shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
         LOGGER.info(log() + "MpiGather executed");
@@ -327,7 +295,6 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     protected void gather(ITaskContext context, boolean zero) throws IgnisException, BrokenBarrierException {
-        driverConnection(context);
         if (isTransportMinimal(context, true)) {
             rpcGather(context);
         } else {
@@ -336,7 +303,6 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     protected void scatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
-        driverConnection(context);
         if (isTransportMinimal(context, false)) {
             rpcScatter(context, partitions);
         } else {

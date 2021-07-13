@@ -17,6 +17,8 @@
 package org.ignis.backend.cluster;
 
 import org.ignis.backend.cluster.tasks.ILock;
+import org.ignis.backend.cluster.tasks.ITaskGroup;
+import org.ignis.backend.cluster.tasks.executor.IDriverConectionTask;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 
@@ -27,12 +29,17 @@ public final class IDriver {
 
     private final ILock lock;
     private final IExecutor executor;
+    private final ITaskGroup connection;
     private IContainerDetails info;
 
     public IDriver(int port, IProperties properties) {
         this.lock = new ILock(-1);
         IContainer dummy = new IContainer(0, -1, null, properties);
         this.executor = new IExecutor(0, 0, dummy, port, 1);
+        this.connection = new ITaskGroup.Builder().
+                newTask(new IDriverConectionTask(getName(), executor)).
+                newLock(lock).
+                build();
     }
 
     public void initInfo(IContainerDetails info) {
@@ -47,6 +54,10 @@ public final class IDriver {
 
     public IContainerDetails getInfo() {
         return info;
+    }
+
+    public ITaskGroup driverContection() {
+        return connection;
     }
 
     public ILock getLock() {
