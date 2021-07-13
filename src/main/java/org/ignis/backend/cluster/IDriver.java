@@ -19,6 +19,7 @@ package org.ignis.backend.cluster;
 import org.ignis.backend.cluster.tasks.ILock;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.executor.IDriverConectionTask;
+import org.ignis.backend.cluster.tasks.executor.IDriverDataTask;
 import org.ignis.backend.properties.IProperties;
 import org.ignis.backend.scheduler.model.IContainerDetails;
 
@@ -58,6 +59,14 @@ public final class IDriver {
 
     public ITaskGroup driverContection() {
         return connection;
+    }
+
+    public ITaskGroup driverContectionWithData(long id) {
+        return new ITaskGroup.Builder().
+                newLock(lock).
+                newTask(new IDriverDataTask(getName(), executor, id)).
+                newDependency(connection).
+                build();
     }
 
     public ILock getLock() {

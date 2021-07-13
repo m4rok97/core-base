@@ -34,7 +34,7 @@ public class IMaxTask extends IDriverTask {
     private final ISource cmp;
 
     public IMaxTask(String name, IExecutor executor, Shared shared, boolean driver, ISource cmp, ISource tp) {
-        super(name, executor, shared, driver, tp);
+        super(name, executor, driver ? Mode.SAVE : Mode.LOAD, shared, driver, tp);
         this.cmp = cmp;
     }
 

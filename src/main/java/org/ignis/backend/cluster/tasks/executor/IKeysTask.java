@@ -32,7 +32,7 @@ public class IKeysTask extends IDriverTask {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IKeysTask.class);
 
     public IKeysTask(String name, IExecutor executor, Shared shared, boolean driver, ISource tp) {
-        super(name, executor, shared, driver, tp);
+        super(name, executor, driver ? Mode.SAVE : Mode.LOAD, shared, driver, tp);
     }
 
     @Override

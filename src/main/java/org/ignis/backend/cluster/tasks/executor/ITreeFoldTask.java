@@ -35,7 +35,7 @@ public class ITreeFoldTask extends IDriverTask {
     private final ISource src;
 
     public ITreeFoldTask(String name, IExecutor executor, Shared shared, boolean driver, ISource zero, ISource src, ISource tp) {
-        super(name, executor, shared, driver, tp);
+        super(name, executor, driver ? Mode.SAVE : Mode.LOAD, shared, driver, tp);
         this.zero = zero;
         this.src = src;
     }

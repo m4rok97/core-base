@@ -73,7 +73,7 @@ public final class IDataMathHelper extends IDataHelper {
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
-            return context.<Long>get("result");
+            return context.popContext(driver.getExecutor());
         };
     }
 
@@ -107,7 +107,7 @@ public final class IDataMathHelper extends IDataHelper {
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
-            return context.<Long>get("result");
+            return context.popContext(driver.getExecutor());
         };
     }
 
@@ -127,7 +127,7 @@ public final class IDataMathHelper extends IDataHelper {
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
-            return context.<Long>get("result");
+            return context.popContext(driver.getExecutor());
         };
     }
 
@@ -146,7 +146,7 @@ public final class IDataMathHelper extends IDataHelper {
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
-            return context.<Long>get("result");
+            return context.popContext(driver.getExecutor());
         };
     }
 
@@ -166,7 +166,7 @@ public final class IDataMathHelper extends IDataHelper {
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
-            return context.<Long>get("result");
+            return context.popContext(driver.getExecutor());
         };
     }
 
@@ -189,7 +189,7 @@ public final class IDataMathHelper extends IDataHelper {
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
-            return context.<Long>get("result");
+            return context.popContext(driver.getExecutor());
         };
     }
 
@@ -208,7 +208,7 @@ public final class IDataMathHelper extends IDataHelper {
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
-            return context.<Long>get("result");
+            return context.popContext(driver.getExecutor());
         };
     }
 

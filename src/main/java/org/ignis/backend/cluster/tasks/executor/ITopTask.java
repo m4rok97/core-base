@@ -55,7 +55,7 @@ public class ITopTask extends IDriverTask {
     }
 
     public ITopTask(String name, IExecutor executor, Shared shared, boolean driver, long n, ISource src, ISource tp) {
-        super(name, executor, shared, driver, tp);
+        super(name, executor, driver ? Mode.SAVE : Mode.LOAD, shared, driver, tp);
         this.n = n;
         this.shared = shared;
         this.src = src;

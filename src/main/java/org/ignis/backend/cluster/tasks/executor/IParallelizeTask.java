@@ -30,13 +30,13 @@ public class IParallelizeTask extends IDriverTask {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IParallelizeTask.class);
     private final long partitions;
 
-    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId, long partitions) {
-        super(name, executor, shared, driver, dataId);
+    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long partitions) {
+        super(name, executor, driver ? Mode.LOAD : Mode.SAVE, shared, driver);
         this.partitions = partitions;
     }
 
-    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId, long partitions, ISource src) {
-        super(name, executor, shared, driver, dataId, src);
+    public IParallelizeTask(String name, IExecutor executor, Shared shared, boolean driver, long partitions, ISource src) {
+        super(name, executor, driver ? Mode.LOAD : Mode.SAVE, shared, driver, src);
         this.partitions = partitions;
     }
 

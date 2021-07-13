@@ -49,7 +49,7 @@ public class ITakeTask extends IDriverTask {
     private final long n;
 
     public ITakeTask(String name, IExecutor executor, Shared shared, boolean driver, long n, ISource tp) {
-        super(name, executor, shared, driver, tp);
+        super(name, executor, driver ? Mode.SAVE : Mode.LOAD, shared, driver, tp);
         this.n = n;
         this.shared = shared;
     }

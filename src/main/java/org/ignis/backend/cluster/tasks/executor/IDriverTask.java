@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
-import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
@@ -62,25 +61,19 @@ public abstract class IDriverTask extends IExecutorContextTask {
 
     protected final Shared shared;
     protected final boolean driver;
-    private final Long dataId;
     private final ISource src;
     private Integer attempt;
 
-    protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, Long dataId, ISource src) {
-        super(name, executor, driver ? Mode.NONE : (dataId != null ? Mode.SAVE : Mode.LOAD));
+    protected IDriverTask(String name, IExecutor executor, Mode mode, Shared shared, boolean driver, ISource src) {
+        super(name, executor, mode);
         this.shared = shared;
         this.driver = driver;
-        this.dataId = dataId;
         this.src = src;
         this.attempt = -1;
     }
 
-    protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src) {
-        this(name, executor, shared, driver, null, src);
-    }
-
-    protected IDriverTask(String name, IExecutor executor, Shared shared, boolean driver, long dataId) {
-        this(name, executor, shared, driver, dataId, null);
+    protected IDriverTask(String name, IExecutor executor, Mode mode, Shared shared, boolean driver) {
+        this(name, executor, mode, shared, driver, null);
     }
 
     @Override
@@ -144,9 +137,12 @@ public abstract class IDriverTask extends IExecutorContextTask {
             } else {
                 executor.getCommModule().driverGather(id, src);
             }
+            shared.barrier.await();
         } catch (IExecutorException ex) {
+            shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);
         } catch (Exception ex) {
+            shared.barrier.fails();
             throw new IgnisException(ex.getMessage(), ex);
         }
         LOGGER.info(log() + "MpiGather executed");
@@ -156,19 +152,10 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "Executing mpiScatter");
         String id = mpiDriverGroup(context);
         try {
-            if (driver) {
-                executor.getCacheContextModule().loadCache(dataId);
-            }
-            shared.barrier.await();
             if (src != null) {
                 executor.getCommModule().driverScatter3(id, partitions, src);
             } else {
                 executor.getCommModule().driverScatter(id, partitions);
-            }
-            shared.barrier.await();
-            if (driver) {
-                context.saveContext(executor);
-                context.set("result", context.popContext(executor));
             }
             shared.barrier.await();
         } catch (IExecutorException ex) {
@@ -196,8 +183,6 @@ public abstract class IDriverTask extends IExecutorContextTask {
             if (driver) {
                 List<ByteBuffer> group = shared.buffer.stream().flatMap(x -> x.stream()).collect(Collectors.toList());
                 executor.getCommModule().setPartitions2(group, src);
-                context.saveContext(executor);
-                context.set("result", context.popContext(executor));
             }
             shared.barrier.await();
         } catch (IExecutorException ex) {
@@ -218,7 +203,6 @@ public abstract class IDriverTask extends IExecutorContextTask {
         LOGGER.info(log() + "Executing rpcScatter");
         try {
             if (driver) {
-                executor.getCacheContextModule().loadCache(dataId);
                 shared.buffer = new ArrayList<>();
             } else if (executor.getId() == 0) {
                 shared.protocol = executor.getCommModule().getProtocol();
@@ -273,9 +257,9 @@ public abstract class IDriverTask extends IExecutorContextTask {
             }
             shared.barrier.await();
             boolean flag = shared.value.get() < executor.getProperties().getLong(IKeys.TRANSPORT_MINIMAL);
-            if(flag){
+            if (flag) {
                 LOGGER.info(log() + "Rpc mode selected");
-            }else{
+            } else {
                 LOGGER.info(log() + "Mpi mode selected");
             }
             return flag;

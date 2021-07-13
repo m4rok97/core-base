@@ -50,7 +50,7 @@ public class ITakeSampleTask extends IDriverTask {
     private final int seed;
 
     public ITakeSampleTask(String name, IExecutor executor, Shared shared, boolean driver, boolean withReplacement, long num, int seed, ISource tp) {
-        super(name, executor, shared, driver, tp);
+        super(name, executor, driver ? Mode.SAVE : Mode.LOAD, shared, driver, tp);
         this.shared = shared;
         this.withReplacement = withReplacement;
         this.num = num;

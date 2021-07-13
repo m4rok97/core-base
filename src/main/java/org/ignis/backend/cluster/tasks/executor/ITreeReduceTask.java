@@ -34,7 +34,7 @@ public class ITreeReduceTask extends IDriverTask {
     private final ISource src;
 
     public ITreeReduceTask(String name, IExecutor executor, Shared shared, boolean driver, ISource src, ISource tp) {
-        super(name, executor, shared, driver, tp);
+        super(name, executor, driver ? Mode.SAVE : Mode.LOAD, shared, driver, tp);
         this.src = src;
     }
 
