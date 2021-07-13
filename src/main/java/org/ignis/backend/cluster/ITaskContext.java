@@ -136,4 +136,18 @@ public class ITaskContext {
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ITaskContext{");
+        for (var entry : contexts.entrySet()) {
+            sb.append(entry.getKey()).append(", [");
+            for (Long v : entry.getValue()) {
+                sb.append(v).append(", ");
+            }
+            sb.append("])");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 }

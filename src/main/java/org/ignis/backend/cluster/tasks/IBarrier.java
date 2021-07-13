@@ -16,6 +16,9 @@
  */
 package org.ignis.backend.cluster.tasks;
 
+import org.ignis.backend.properties.IKeys;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,6 +27,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author César Pomar
  */
 public final class IBarrier extends CyclicBarrier {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IBarrier.class);
 
     private final AtomicBoolean fails;
 
@@ -41,7 +46,13 @@ public final class IBarrier extends CyclicBarrier {
 
     @Override
     public int await() throws InterruptedException, BrokenBarrierException {
+        if (Boolean.getBoolean(IKeys.DEBUG)) {
+            LOGGER.info("Debug: Await start");
+        }
         int r = super.await();
+        if (Boolean.getBoolean(IKeys.DEBUG)) {
+            LOGGER.info("Debug: Await end");
+        }
         if (fails.get()) {
             throw new BrokenBarrierException();
         }
