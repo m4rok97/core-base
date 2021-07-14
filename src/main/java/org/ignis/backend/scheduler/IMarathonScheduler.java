@@ -93,6 +93,7 @@ public class IMarathonScheduler implements IScheduler {
         App app = new App();
         app.setArgs(new ArrayList<>());
         app.setContainer(new Container());
+        app.getContainer().setType("docker");
         app.getContainer().setDocker(new Docker());
         app.setConstraints(new ArrayList<>());
         app.getContainer().setVolumes(new ArrayList<>());
@@ -142,10 +143,6 @@ public class IMarathonScheduler implements IScheduler {
             for (String hostname : hostnames) {
                 app.getContainer().getDocker().getParameters().add(new Parameter("add-host", hostname));
             }
-        }
-
-        if (props.contains(IKeys.SCHEDULER_CONTAINER)) {
-            app.getContainer().setType(props.getString(IKeys.SCHEDULER_CONTAINER));
         }
 
         if (container.getBinds() != null) {
