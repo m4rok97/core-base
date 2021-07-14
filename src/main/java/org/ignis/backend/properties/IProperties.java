@@ -99,7 +99,7 @@ public final class IProperties {
         try {
             return Integer.parseInt(getProperty(key));
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.getMessage());
+            throw new IPropertyException(noNull(key), ex.toString());
         }
     }
 
@@ -114,7 +114,7 @@ public final class IProperties {
         try {
             return getStringList(key).stream().map((String value) -> Integer.parseInt(value)).collect(Collectors.toList());
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.getMessage());
+            throw new IPropertyException(noNull(key), ex.toString());
         }
     }
 
@@ -122,7 +122,7 @@ public final class IProperties {
         try {
             return Long.parseLong(getProperty(key));
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.getMessage());
+            throw new IPropertyException(noNull(key), ex.toString());
         }
     }
 
@@ -137,7 +137,7 @@ public final class IProperties {
         try {
             return getStringList(key).stream().map((String value) -> Long.parseLong(value)).collect(Collectors.toList());
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.getMessage());
+            throw new IPropertyException(noNull(key), ex.toString());
         }
     }
 
@@ -145,7 +145,7 @@ public final class IProperties {
         try {
             return Float.parseFloat(getProperty(key));
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.getMessage());
+            throw new IPropertyException(noNull(key), ex.toString());
         }
     }
 
@@ -160,7 +160,7 @@ public final class IProperties {
         try {
             return getStringList(key).stream().map((String value) -> Float.parseFloat(value)).collect(Collectors.toList());
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.getMessage());
+            throw new IPropertyException(noNull(key), ex.toString());
         }
     }
 
@@ -168,7 +168,7 @@ public final class IProperties {
         try {
             return Double.parseDouble(getProperty(key));
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.getMessage());
+            throw new IPropertyException(noNull(key), ex.toString());
         }
     }
 
@@ -183,7 +183,7 @@ public final class IProperties {
         try {
             return getStringList(key).stream().map((String value) -> Double.parseDouble(value)).collect(Collectors.toList());
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.getMessage());
+            throw new IPropertyException(noNull(key), ex.toString());
         }
     }
 

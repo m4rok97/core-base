@@ -22,6 +22,6 @@ package org.ignis.backend.exception;
 public class IPropertyException extends RuntimeException {
 
     public IPropertyException(String key, String msg) {
-        super("'" + key + "'" + msg);
+        super("Key '" + key + "' value error, " + msg);
     }
 }

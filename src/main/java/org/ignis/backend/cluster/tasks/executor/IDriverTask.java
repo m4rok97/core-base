@@ -256,7 +256,7 @@ public abstract class IDriverTask extends IExecutorContextTask {
                 shared.value.addAndGet(executor.getIoModule().partitionApproxSize());
             }
             shared.barrier.await();
-            boolean flag = shared.value.get() < executor.getProperties().getLong(IKeys.TRANSPORT_MINIMAL);
+            boolean flag = shared.value.get() < executor.getProperties().getSILong(IKeys.TRANSPORT_MINIMAL);
             if (flag) {
                 LOGGER.info(log() + "Rpc mode selected");
             } else {
