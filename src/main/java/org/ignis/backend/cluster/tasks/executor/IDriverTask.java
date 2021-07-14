@@ -103,14 +103,14 @@ public abstract class IDriverTask extends IExecutorContextTask {
                     executor.getCommModule().destroyGroup(id);
                 }
                 attempt = executor.getResets();
-                if (!driver && executor.getId() == 0) {
+                if (driver) {
                     LOGGER.info(log() + "Mpi driver group not found, creating a new one");
                     shared.group = executor.getCommModule().openGroup();
                 }
                 shared.barrier.await();
-                executor.getCommModule().joinToGroupName(shared.group, !driver, id);
+                executor.getCommModule().joinToGroupName(shared.group, driver, id);
                 shared.barrier.await();
-                if (!driver && executor.getId() == 0) {
+                if (driver) {
                     executor.getCommModule().closeGroup();
                 }
             }
