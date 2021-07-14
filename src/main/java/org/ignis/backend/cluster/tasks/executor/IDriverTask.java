@@ -129,8 +129,8 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     private void mpiGather(ITaskContext context, boolean zero) throws IgnisException, BrokenBarrierException {
-        LOGGER.info(log() + "Executing mpiGather");
         String id = mpiDriverGroup(context);
+        LOGGER.info(log() + "Executing mpiGather");
         try {
             if (zero && executor.getId() == 0) { //Only Driver and executor 0 has id==0
                 executor.getCommModule().driverGather0(id, src);
@@ -149,8 +149,8 @@ public abstract class IDriverTask extends IExecutorContextTask {
     }
 
     private void mpiScatter(ITaskContext context, long partitions) throws IgnisException, BrokenBarrierException {
-        LOGGER.info(log() + "Executing mpiScatter");
         String id = mpiDriverGroup(context);
+        LOGGER.info(log() + "Executing mpiScatter");
         try {
             if (src != null) {
                 executor.getCommModule().driverScatter3(id, partitions, src);
