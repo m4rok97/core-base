@@ -22,13 +22,11 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.backend.properties.IKeys;
-import org.ignis.backend.scheduler.model.IPort;
+import org.ignis.backend.cluster.tasks.IMpiConfig;
 import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author César Pomar
@@ -75,18 +73,6 @@ public final class IExecutorCreateTask extends IExecutorTask {
         if (!running) {
             LOGGER.info(log() + "Starting new executor");
             StringBuilder startScript = new StringBuilder();
-            if (executor.getProperties().getDouble(IKeys.TRANSPORT_CORES) > 0 && executor.getCores() > 1) {
-                startScript.append("export MPI_THREAD_MULTIPLE=1\n");
-                startScript.append("export MPIR_CVAR_CH4_NUM_VCIS=");
-                startScript.append(executor.getContainer().getInfo().getCpus());
-                startScript.append("\n");
-            }
-            startScript.append("export MPICH_SERVICE=").append(executor.getContainer().getInfo().getHost()).append('\n');
-            startScript.append("export MPICH_LIST_PORTS='");
-            int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
-            List<IPort> mpiPorts = executor.getContainer().getInfo().getPorts().subList(0, mpiMaxPorts);
-            startScript.append(mpiPorts.stream().map((IPort p) -> String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
-            startScript.append("'\n");
 
             startScript.append("export IGNIS_WORKING_DIRECTORY='");
             startScript.append(executor.getProperties().getString(IKeys.WORKING_DIRECTORY));
@@ -96,10 +82,8 @@ public final class IExecutorCreateTask extends IExecutorTask {
             startScript.append("ignis-").append(type).append(' ');
             startScript.append(executor.getContainer().getTunnel().getRemotePort(executor.getPort())).append(' ');
             startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
-            if (executor.getProperties().getString(IKeys.SCHEDULER_CONTAINER).equals("docker")) {
-                /*Redirect to docker log */
-                startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2 ");
-            }
+            /*Redirect to docker log */
+            startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2 ");
             startScript.append("&\n");
             startScript.append("sleep 1\n");
             startScript.append("jobs -p 1\n");
@@ -143,9 +127,9 @@ public final class IExecutorCreateTask extends IExecutorTask {
                     for (Map.Entry<String, String> entry : executorProperties.entrySet()) {
                         writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
                     }
-                    LOGGER.info("Debug:" + log() + " ExecutorProperties{\n" + writer.toString() + '}');
+                    LOGGER.info("Debug:" + log() + " ExecutorProperties{\n" + writer + '}');
                 }
-                executor.getExecutorServerModule().start(executorProperties);
+                executor.getExecutorServerModule().start(executorProperties, IMpiConfig.get(executor));
             }
         } catch (IExecutorException ex) {
             kill();

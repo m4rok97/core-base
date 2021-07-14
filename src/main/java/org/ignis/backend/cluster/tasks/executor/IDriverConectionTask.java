@@ -22,6 +22,7 @@ package org.ignis.backend.cluster.tasks.executor;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
+import org.ignis.backend.cluster.tasks.IMpiConfig;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IExecutorException;
@@ -68,7 +69,7 @@ public class IDriverConectionTask extends IExecutorTask {
 
         try {
             executor.getExecutorServerModule().test();
-            executor.getExecutorServerModule().start(executor.getExecutorProperties());
+            executor.getExecutorServerModule().start(executor.getExecutorProperties(), IMpiConfig.get(executor));
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {

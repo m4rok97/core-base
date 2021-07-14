@@ -29,13 +29,13 @@ import org.ignis.backend.scheduler.model.IContainerDetails;
 public final class IDriver {
 
     private final ILock lock;
+    private final IContainer dummy;
     private final IExecutor executor;
     private final ITaskGroup connection;
-    private IContainerDetails info;
 
     public IDriver(int port, IProperties properties) {
         this.lock = new ILock(-1);
-        IContainer dummy = new IContainer(0, -1, null, properties);
+        dummy = new IContainer(0, -1, null, properties);
         this.executor = new IExecutor(0, 0, dummy, port, 1);
         this.connection = new ITaskGroup.Builder().
                 newTask(new IDriverConectionTask(getName(), executor)).
@@ -44,9 +44,7 @@ public final class IDriver {
     }
 
     public void initInfo(IContainerDetails info) {
-        if (this.info == null) {
-            this.info = info;
-        }
+        dummy.setInfo(info);
     }
 
     public IProperties getProperties() {
@@ -54,7 +52,7 @@ public final class IDriver {
     }
 
     public IContainerDetails getInfo() {
-        return info;
+        return dummy.getInfo();
     }
 
     public ITaskGroup driverContection() {

@@ -38,7 +38,6 @@ public final class IKeys {
     /*SCHEDULER*/
     public static final String SCHEDULER_URL = "ignis.scheduler.url";
     public static final String SCHEDULER_TYPE = "ignis.scheduler.type";
-    public static final String SCHEDULER_CONTAINER = "ignis.scheduler.container";
     public static final String SCHEDULER_DNS = "ignis.scheduler.dns";
     /*DRIVER*/
     public static final String DRIVER_IMAGE = "ignis.driver.image";
@@ -50,7 +49,7 @@ public final class IKeys {
     public static final String DRIVER_SWAPPINESS = "ignis.driver.swappiness";
     public static final String DRIVER_RPC_POOL = "ignis.driver.pool";
     public static final String DRIVER_PORT = "ignis.driver.port";
-    public static final String DRIVER_PORTS = "ignis.driver.ports";//TODO
+    public static final String DRIVER_PORTS = "ignis.driver.ports";
     public static final String DRIVER_BIND = "ignis.driver.bind";
     public static final String DRIVER_VOLUME = "ignis.driver.volume";
     public static final String DRIVER_HOSTS = "ignis.driver.hosts";
@@ -76,7 +75,7 @@ public final class IKeys {
     public static final String EXECUTOR_ISOLATION = "ignis.executor.isolation";
     public static final String EXECUTOR_DIRECTORY = "ignis.executor.directory";
     public static final String EXECUTOR_PORT = "ignis.executor.port";
-    public static final String EXECUTOR_PORTS = "ignis.executor.ports";//TODO
+    public static final String EXECUTOR_PORTS = "ignis.executor.ports";
     public static final String EXECUTOR_BIND = "ignis.executor.bind";
     public static final String EXECUTOR_VOLUME = "ignis.executor.volume";
     public static final String EXECUTOR_HOSTS = "ignis.executor.hosts";

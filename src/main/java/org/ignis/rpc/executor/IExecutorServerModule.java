@@ -11,7 +11,7 @@ public class IExecutorServerModule {
 
   public interface Iface {
 
-    public void start(java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void start(java.util.Map<java.lang.String,java.lang.String> properties, java.util.Map<java.lang.String,java.lang.String> env) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
     public void stop() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
@@ -21,7 +21,7 @@ public class IExecutorServerModule {
 
   public interface AsyncIface {
 
-    public void start(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void start(java.util.Map<java.lang.String,java.lang.String> properties, java.util.Map<java.lang.String,java.lang.String> env, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void stop(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -49,16 +49,17 @@ public class IExecutorServerModule {
       super(iprot, oprot);
     }
 
-    public void start(java.util.Map<java.lang.String,java.lang.String> properties) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void start(java.util.Map<java.lang.String,java.lang.String> properties, java.util.Map<java.lang.String,java.lang.String> env) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
-      send_start(properties);
+      send_start(properties, env);
       recv_start();
     }
 
-    public void send_start(java.util.Map<java.lang.String,java.lang.String> properties) throws org.apache.thrift.TException
+    public void send_start(java.util.Map<java.lang.String,java.lang.String> properties, java.util.Map<java.lang.String,java.lang.String> env) throws org.apache.thrift.TException
     {
       start_args args = new start_args();
       args.setProperties(properties);
+      args.setEnv(env);
       sendBase("start", args);
     }
 
@@ -137,24 +138,27 @@ public class IExecutorServerModule {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void start(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void start(java.util.Map<java.lang.String,java.lang.String> properties, java.util.Map<java.lang.String,java.lang.String> env, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      start_call method_call = new start_call(properties, resultHandler, this, ___protocolFactory, ___transport);
+      start_call method_call = new start_call(properties, env, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class start_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private java.util.Map<java.lang.String,java.lang.String> properties;
-      public start_call(java.util.Map<java.lang.String,java.lang.String> properties, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private java.util.Map<java.lang.String,java.lang.String> env;
+      public start_call(java.util.Map<java.lang.String,java.lang.String> properties, java.util.Map<java.lang.String,java.lang.String> env, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.properties = properties;
+        this.env = env;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("start", org.apache.thrift.protocol.TMessageType.CALL, 0));
         start_args args = new start_args();
         args.setProperties(properties);
+        args.setEnv(env);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -267,7 +271,7 @@ public class IExecutorServerModule {
       public start_result getResult(I iface, start_args args) throws org.apache.thrift.TException {
         start_result result = new start_result();
         try {
-          iface.start(args.properties);
+          iface.start(args.properties, args.env);
         } catch (org.ignis.rpc.IExecutorException ex) {
           result.ex = ex;
         }
@@ -413,7 +417,7 @@ public class IExecutorServerModule {
       }
 
       public void start(I iface, start_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.start(args.properties,resultHandler);
+        iface.start(args.properties, args.env,resultHandler);
       }
     }
 
@@ -553,15 +557,18 @@ public class IExecutorServerModule {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("start_args");
 
     private static final org.apache.thrift.protocol.TField PROPERTIES_FIELD_DESC = new org.apache.thrift.protocol.TField("properties", org.apache.thrift.protocol.TType.MAP, (short)1);
+    private static final org.apache.thrift.protocol.TField ENV_FIELD_DESC = new org.apache.thrift.protocol.TField("env", org.apache.thrift.protocol.TType.MAP, (short)2);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new start_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new start_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> properties; // required
+    private @org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> env; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      PROPERTIES((short)1, "properties");
+      PROPERTIES((short)1, "properties"),
+      ENV((short)2, "env");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -579,6 +586,8 @@ public class IExecutorServerModule {
         switch(fieldId) {
           case 1: // PROPERTIES
             return PROPERTIES;
+          case 2: // ENV
+            return ENV;
           default:
             return null;
         }
@@ -627,6 +636,10 @@ public class IExecutorServerModule {
           new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING), 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING))));
+      tmpMap.put(_Fields.ENV, new org.apache.thrift.meta_data.FieldMetaData("env", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
+              new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING), 
+              new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING))));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(start_args.class, metaDataMap);
     }
@@ -635,10 +648,12 @@ public class IExecutorServerModule {
     }
 
     public start_args(
-      java.util.Map<java.lang.String,java.lang.String> properties)
+      java.util.Map<java.lang.String,java.lang.String> properties,
+      java.util.Map<java.lang.String,java.lang.String> env)
     {
       this();
       this.properties = properties;
+      this.env = env;
     }
 
     /**
@@ -649,6 +664,10 @@ public class IExecutorServerModule {
         java.util.Map<java.lang.String,java.lang.String> __this__properties = new java.util.HashMap<java.lang.String,java.lang.String>(other.properties);
         this.properties = __this__properties;
       }
+      if (other.isSetEnv()) {
+        java.util.Map<java.lang.String,java.lang.String> __this__env = new java.util.HashMap<java.lang.String,java.lang.String>(other.env);
+        this.env = __this__env;
+      }
     }
 
     public start_args deepCopy() {
@@ -658,6 +677,7 @@ public class IExecutorServerModule {
     @Override
     public void clear() {
       this.properties = null;
+      this.env = null;
     }
 
     public int getPropertiesSize() {
@@ -696,6 +716,42 @@ public class IExecutorServerModule {
       }
     }
 
+    public int getEnvSize() {
+      return (this.env == null) ? 0 : this.env.size();
+    }
+
+    public void putToEnv(java.lang.String key, java.lang.String val) {
+      if (this.env == null) {
+        this.env = new java.util.HashMap<java.lang.String,java.lang.String>();
+      }
+      this.env.put(key, val);
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.util.Map<java.lang.String,java.lang.String> getEnv() {
+      return this.env;
+    }
+
+    public start_args setEnv(@org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> env) {
+      this.env = env;
+      return this;
+    }
+
+    public void unsetEnv() {
+      this.env = null;
+    }
+
+    /** Returns true if field env is set (has been assigned a value) and false otherwise */
+    public boolean isSetEnv() {
+      return this.env != null;
+    }
+
+    public void setEnvIsSet(boolean value) {
+      if (!value) {
+        this.env = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case PROPERTIES:
@@ -703,6 +759,14 @@ public class IExecutorServerModule {
           unsetProperties();
         } else {
           setProperties((java.util.Map<java.lang.String,java.lang.String>)value);
+        }
+        break;
+
+      case ENV:
+        if (value == null) {
+          unsetEnv();
+        } else {
+          setEnv((java.util.Map<java.lang.String,java.lang.String>)value);
         }
         break;
 
@@ -714,6 +778,9 @@ public class IExecutorServerModule {
       switch (field) {
       case PROPERTIES:
         return getProperties();
+
+      case ENV:
+        return getEnv();
 
       }
       throw new java.lang.IllegalStateException();
@@ -728,6 +795,8 @@ public class IExecutorServerModule {
       switch (field) {
       case PROPERTIES:
         return isSetProperties();
+      case ENV:
+        return isSetEnv();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -754,6 +823,15 @@ public class IExecutorServerModule {
           return false;
       }
 
+      boolean this_present_env = true && this.isSetEnv();
+      boolean that_present_env = true && that.isSetEnv();
+      if (this_present_env || that_present_env) {
+        if (!(this_present_env && that_present_env))
+          return false;
+        if (!this.env.equals(that.env))
+          return false;
+      }
+
       return true;
     }
 
@@ -764,6 +842,10 @@ public class IExecutorServerModule {
       hashCode = hashCode * 8191 + ((isSetProperties()) ? 131071 : 524287);
       if (isSetProperties())
         hashCode = hashCode * 8191 + properties.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetEnv()) ? 131071 : 524287);
+      if (isSetEnv())
+        hashCode = hashCode * 8191 + env.hashCode();
 
       return hashCode;
     }
@@ -782,6 +864,16 @@ public class IExecutorServerModule {
       }
       if (isSetProperties()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.properties, other.properties);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.compare(isSetEnv(), other.isSetEnv());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEnv()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.env, other.env);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -812,6 +904,14 @@ public class IExecutorServerModule {
         sb.append("null");
       } else {
         sb.append(this.properties);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("env:");
+      if (this.env == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.env);
       }
       first = false;
       sb.append(")");
@@ -877,6 +977,26 @@ public class IExecutorServerModule {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 2: // ENV
+              if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
+                {
+                  org.apache.thrift.protocol.TMap _map4 = iprot.readMapBegin();
+                  struct.env = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map4.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _key5;
+                  @org.apache.thrift.annotation.Nullable java.lang.String _val6;
+                  for (int _i7 = 0; _i7 < _map4.size; ++_i7)
+                  {
+                    _key5 = iprot.readString();
+                    _val6 = iprot.readString();
+                    struct.env.put(_key5, _val6);
+                  }
+                  iprot.readMapEnd();
+                }
+                struct.setEnvIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -896,10 +1016,23 @@ public class IExecutorServerModule {
           oprot.writeFieldBegin(PROPERTIES_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct.properties.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter4 : struct.properties.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter8 : struct.properties.entrySet())
             {
-              oprot.writeString(_iter4.getKey());
-              oprot.writeString(_iter4.getValue());
+              oprot.writeString(_iter8.getKey());
+              oprot.writeString(_iter8.getValue());
+            }
+            oprot.writeMapEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+        if (struct.env != null) {
+          oprot.writeFieldBegin(ENV_FIELD_DESC);
+          {
+            oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct.env.size()));
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter9 : struct.env.entrySet())
+            {
+              oprot.writeString(_iter9.getKey());
+              oprot.writeString(_iter9.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -926,14 +1059,27 @@ public class IExecutorServerModule {
         if (struct.isSetProperties()) {
           optionals.set(0);
         }
-        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetEnv()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
         if (struct.isSetProperties()) {
           {
             oprot.writeI32(struct.properties.size());
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter5 : struct.properties.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter10 : struct.properties.entrySet())
             {
-              oprot.writeString(_iter5.getKey());
-              oprot.writeString(_iter5.getValue());
+              oprot.writeString(_iter10.getKey());
+              oprot.writeString(_iter10.getValue());
+            }
+          }
+        }
+        if (struct.isSetEnv()) {
+          {
+            oprot.writeI32(struct.env.size());
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter11 : struct.env.entrySet())
+            {
+              oprot.writeString(_iter11.getKey());
+              oprot.writeString(_iter11.getValue());
             }
           }
         }
@@ -942,21 +1088,36 @@ public class IExecutorServerModule {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, start_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
+        java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TMap _map6 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
-            struct.properties = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map6.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _key7;
-            @org.apache.thrift.annotation.Nullable java.lang.String _val8;
-            for (int _i9 = 0; _i9 < _map6.size; ++_i9)
+            org.apache.thrift.protocol.TMap _map12 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
+            struct.properties = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map12.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _key13;
+            @org.apache.thrift.annotation.Nullable java.lang.String _val14;
+            for (int _i15 = 0; _i15 < _map12.size; ++_i15)
             {
-              _key7 = iprot.readString();
-              _val8 = iprot.readString();
-              struct.properties.put(_key7, _val8);
+              _key13 = iprot.readString();
+              _val14 = iprot.readString();
+              struct.properties.put(_key13, _val14);
             }
           }
           struct.setPropertiesIsSet(true);
+        }
+        if (incoming.get(1)) {
+          {
+            org.apache.thrift.protocol.TMap _map16 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
+            struct.env = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map16.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _key17;
+            @org.apache.thrift.annotation.Nullable java.lang.String _val18;
+            for (int _i19 = 0; _i19 < _map16.size; ++_i19)
+            {
+              _key17 = iprot.readString();
+              _val18 = iprot.readString();
+              struct.env.put(_key17, _val18);
+            }
+          }
+          struct.setEnvIsSet(true);
         }
       }
     }
