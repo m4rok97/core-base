@@ -36,7 +36,7 @@ public class IWorkerLoadLibraryHelper extends IWorkerHelper {
 
     public ILazy<Void> loadLibrary(String path) throws IgnisException {
         LOGGER.info(log() + "Registering loadLibrary " + path);
-        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(worker.getLock(), () -> worker.isRunning());
+        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(() -> worker.isRunning());
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new ILoadLibraryTask(getName(), executor, path));
         }
@@ -44,7 +44,8 @@ public class IWorkerLoadLibraryHelper extends IWorkerHelper {
         worker.getTasks().getSubTasksGroup().add(group);
 
         return () -> {
-            group.start(worker.getPool());
+            ITaskGroup dummy = new ITaskGroup.Builder(worker.getLock()).newDependency(group).build();
+            dummy.start(worker.getPool());
             return null;
         };
     }

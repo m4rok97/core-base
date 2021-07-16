@@ -42,7 +42,7 @@ public final class IClusterExecuteHelper extends IClusterHelper {
 
     public ILazy<Void> execute(List<String> cmd) throws IgnisException {
         LOGGER.info(log() + "Registering a cmd in cluster init");
-        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(cluster.getLock(), () -> cluster.isRunning());
+        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(() -> cluster.isRunning());
         for (IContainer container : cluster.getContainers()) {
             builder.newTask(new IExecuteCmdTask(getName(), container, cmd));
         }
@@ -50,14 +50,15 @@ public final class IClusterExecuteHelper extends IClusterHelper {
         cluster.getTasks().getSubTasksGroup().add(group);
 
         return () -> {
-            group.start(cluster.getPool());
+            ITaskGroup dummy = new ITaskGroup.Builder(cluster.getLock()).newDependency(group).build();
+            dummy.start(cluster.getPool());
             return null;
         };
     }
 
     public ILazy<Void> executeScript(String script) throws IgnisException {
         LOGGER.info(log() + "Registering script in cluster init");
-        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(cluster.getLock(), () -> cluster.isRunning());
+        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(() -> cluster.isRunning());
         for (IContainer container : cluster.getContainers()) {
             builder.newTask(new IExecuteScriptTask(script, container, script));
         }
@@ -65,7 +66,8 @@ public final class IClusterExecuteHelper extends IClusterHelper {
         cluster.getTasks().getSubTasksGroup().add(group);
 
         return () -> {
-            group.start(cluster.getPool());
+            ITaskGroup dummy = new ITaskGroup.Builder(cluster.getLock()).newDependency(group).build();
+            dummy.start(cluster.getPool());
             return null;
         };
     }

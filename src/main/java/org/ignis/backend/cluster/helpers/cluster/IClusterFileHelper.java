@@ -40,7 +40,7 @@ public final class IClusterFileHelper extends IClusterHelper {
 
     public ILazy<Void> sendFile(String source, String target) throws IgnisException {
         LOGGER.info(log() + "Registering sendfile from " + source + " to " + target);
-        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(cluster.getLock(), () -> cluster.isRunning());
+        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(() -> cluster.isRunning());
         for (IContainer container : cluster.getContainers()) {
             builder.newTask(new ISendFileTask(getName(), container, source, target));
         }
@@ -48,14 +48,15 @@ public final class IClusterFileHelper extends IClusterHelper {
         cluster.getTasks().getSubTasksGroup().add(group);
 
         return () -> {
-            group.start(cluster.getPool());
+            ITaskGroup dummy = new ITaskGroup.Builder(cluster.getLock()).newDependency(group).build();
+            dummy.start(cluster.getPool());
             return null;
         };
     }
 
     public ILazy<Void> sendCompressedFile(String source, String target) throws IgnisException {
         LOGGER.info(log() + "Registering sendCompressedFile file from " + source + " to " + target);
-        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(cluster.getLock(), () -> cluster.isRunning());
+        ITaskGroup.Builder builder = new ICondicionalTaskGroup.Builder(() -> cluster.isRunning());
         for (IContainer container : cluster.getContainers()) {
             builder.newTask(new ISendCompressedFileTask(getName(), container, source, target));
         }
@@ -63,7 +64,8 @@ public final class IClusterFileHelper extends IClusterHelper {
         cluster.getTasks().getSubTasksGroup().add(group);
 
         return () -> {
-            group.start(cluster.getPool());
+            ITaskGroup dummy = new ITaskGroup.Builder(cluster.getLock()).newDependency(group).build();
+            dummy.start(cluster.getPool());
             return null;
         };
     }
