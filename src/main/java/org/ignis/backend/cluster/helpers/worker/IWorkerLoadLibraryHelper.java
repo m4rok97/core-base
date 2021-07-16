@@ -44,7 +44,8 @@ public class IWorkerLoadLibraryHelper extends IWorkerHelper {
         worker.getTasks().getSubTasksGroup().add(group);
 
         return () -> {
-            ITaskGroup dummy = new ITaskGroup.Builder(worker.getLock()).newDependency(group).build();
+            ITaskGroup dummy = new ITaskGroup.Builder(worker.getLock()).build();
+            dummy.getSubTasksGroup().add(group);
             dummy.start(worker.getPool());
             return null;
         };

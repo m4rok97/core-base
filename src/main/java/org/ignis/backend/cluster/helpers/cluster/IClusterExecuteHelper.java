@@ -50,7 +50,8 @@ public final class IClusterExecuteHelper extends IClusterHelper {
         cluster.getTasks().getSubTasksGroup().add(group);
 
         return () -> {
-            ITaskGroup dummy = new ITaskGroup.Builder(cluster.getLock()).newDependency(group).build();
+            ITaskGroup dummy = new ITaskGroup.Builder(cluster.getLock()).build();
+            dummy.getSubTasksGroup().add(group);
             dummy.start(cluster.getPool());
             return null;
         };
@@ -66,7 +67,8 @@ public final class IClusterExecuteHelper extends IClusterHelper {
         cluster.getTasks().getSubTasksGroup().add(group);
 
         return () -> {
-            ITaskGroup dummy = new ITaskGroup.Builder(cluster.getLock()).newDependency(group).build();
+            ITaskGroup dummy = new ITaskGroup.Builder(cluster.getLock()).build();
+            dummy.getSubTasksGroup().add(group);
             dummy.start(cluster.getPool());
             return null;
         };
