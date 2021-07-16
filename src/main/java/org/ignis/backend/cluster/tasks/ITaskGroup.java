@@ -158,14 +158,16 @@ public class ITaskGroup {
                 throw error;
             }
             for (ITaskGroup subtask : subTasksGroup) {
-                if (!subtask.subTasksGroup.isEmpty() || !subtask.depencencies.isEmpty() || !subtask.locks.isEmpty()) {
-                    String name;
-                    if (tasks.isEmpty()) {
-                        name = "Subtasks";
-                    } else {
-                        name = tasks.get(0).getClass().getName() + " subtasks";
+                HashSet<ILock> uniques = new HashSet<>(locks);
+                uniques.addAll(subtask.locks);
+
+                if (!subtask.subTasksGroup.isEmpty() || !subtask.depencencies.isEmpty() || uniques.size() != locks.size()) {
+                    String details = "";
+                    if (!tasks.isEmpty()) {
+                        details = " in " + tasks.get(0).getClass().getName();
                     }
-                    throw new IgnisException("Implementation error: " + name + " can not have locks, subtasks or depencencies");
+                    String name = subtask.getClass().getName();
+                    throw new IgnisException("Implementation error: " + name + " can not have subtasks, depencencies or new locks" + details);
                 }
                 subtask.start(pool, context, 0);
             }
