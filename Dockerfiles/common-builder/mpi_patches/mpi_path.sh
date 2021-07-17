@@ -47,4 +47,11 @@ position="ofi_getsockname"
 source="mpich_service != NULL ? 0 : ofi_getsockname"
 sed  "s/$position/$source/g" -i $file_path
 
+############# mpich3.4.2-patch https://github.com/pmodels/mpich/pull/5440 #########TODO Remove in future versions
+file_path="src/mpid/ch4/src/ch4r_proc.c"
+position='int MPIDIU_get_node_id(MPIR_Comm \* comm, int rank, int \*id_p)'
+source="MPIDIU_get_node_id.c"
+
+sed -e "/$position/ {" -e "r $dir/$source" -e "d" -e "}" -i $file_path
+
 

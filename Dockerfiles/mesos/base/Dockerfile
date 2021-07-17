@@ -39,9 +39,10 @@ FROM ubuntu:20.04
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
 	apt update && \
-	apt install -y \
+	apt install -y --no-install-recommends \
 		tar wget git zip \
 		openjdk-13-jre-headless \
+		python3 \
 		libcurl4-nss-dev \
 		libevent-dev \
 		libsvn1 \
@@ -59,7 +60,9 @@ RUN ldconfig && { \
 		echo 'if [ ! -z "$MESOS_QUORUM" ];then'; \
 		echo '  mesos master --work_dir=/var/lib/mesos/master --port=${PORT_MASTER} --zk=${ZOOKEEPER}/mesos &'; \
 		echo 'fi'; \
+		echo 'if [ ! -z "$PORT_AGENT" ];then'; \
 		echo 'mesos agent --work_dir=/var/lib/mesos/agent --port=${PORT_AGENT} --no-switch_user \'; \
 		echo '   --master=${ZOOKEEPER}/mesos --containerizers=docker,mesos --isolation=cgroups/all'; \
+		echo 'fi'; \
 	} > /bin/start-mesos.sh  && chmod +x /bin/start-mesos.sh
 
