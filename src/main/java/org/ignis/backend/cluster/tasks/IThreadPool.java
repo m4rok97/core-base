@@ -47,10 +47,18 @@ public final class IThreadPool {
         });
     }
 
-    Future<ITask> submit(ITask task, ITaskContext context) {
+    Future<ITask> submit(ITask task, ITaskContext context, IWaitObject waitObject) {
         return pool.submit(() -> {
-            task.start(context);
-            return task;
+            try{
+                task.start(context);
+                return task;
+            }catch (Exception ex){
+                throw ex;
+            }finally {
+                synchronized (waitObject){
+                    waitObject.notify();
+                }
+            }
         });
     }
 

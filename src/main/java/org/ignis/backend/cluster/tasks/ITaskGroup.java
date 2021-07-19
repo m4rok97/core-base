@@ -138,13 +138,28 @@ public class ITaskGroup {
                 LOGGER.info("Debug: Executing tasks(" + tasks.size() + ")" + tasks.get(0).getClass().getName() + " " +
                         context.toString());
             }
+            IWaitObject waitObject = new IWaitObject();
             for (ITask task : tasks) {
-                futures.add(pool.submit(task, context));
+                futures.add(pool.submit(task, context, waitObject));
             }
             IgnisException error = null;
-            for (int i = 0; i < futures.size(); i++) {
+            while (!futures.isEmpty()) {
                 try {
-                    futures.get(i).get();
+                    synchronized (waitObject) {
+                        waitObject.wait();
+                    }
+                    for (int i = 0; i < futures.size(); i++) {
+                        if (futures.get(i).isDone()) {
+                            Future<ITask> done = futures.get(i);
+                            futures.remove(i);
+                            done.get();
+                            break;
+                        }
+                        if (i == futures.size() - 1) {
+                            Thread.sleep(500);
+                            i = 0;
+                        }
+                    }
                 } catch (InterruptedException | ExecutionException ex) {
                     if (ex.getCause() instanceof IgnisException) {
                         error = (IgnisException) ex.getCause();
