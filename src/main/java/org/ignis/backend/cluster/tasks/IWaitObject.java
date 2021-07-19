@@ -20,4 +20,25 @@
 package org.ignis.backend.cluster.tasks;
 
 public class IWaitObject {
+    private int finished;
+
+    public IWaitObject() {
+        finished = 0;
+    }
+
+    public synchronized void addFinishedTask() {
+        if (finished == 0) {
+            this.notify();
+        }
+        finished++;
+    }
+
+    public synchronized void waitFinishedTask() throws InterruptedException {
+        if (finished == 0) {
+            this.wait();
+        }
+        finished--;
+    }
+
+
 }

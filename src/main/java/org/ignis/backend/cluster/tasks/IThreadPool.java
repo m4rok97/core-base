@@ -55,9 +55,7 @@ public final class IThreadPool {
             }catch (Exception ex){
                 throw ex;
             }finally {
-                synchronized (waitObject){
-                    waitObject.notify();
-                }
+                waitObject.addFinishedTask();
             }
         });
     }

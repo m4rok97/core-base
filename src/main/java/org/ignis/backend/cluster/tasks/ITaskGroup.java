@@ -145,9 +145,7 @@ public class ITaskGroup {
             IgnisException error = null;
             while (!futures.isEmpty()) {
                 try {
-                    synchronized (waitObject) {
-                        waitObject.wait();
-                    }
+                    waitObject.waitFinishedTask();
                     for (int i = 0; i < futures.size(); i++) {
                         if (futures.get(i).isDone()) {
                             Future<ITask> done = futures.get(i);
@@ -156,6 +154,7 @@ public class ITaskGroup {
                             break;
                         }
                         if (i == futures.size() - 1) {
+                            // Future not updated yet
                             Thread.sleep(500);
                             i = 0;
                         }
