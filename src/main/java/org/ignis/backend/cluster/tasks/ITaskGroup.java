@@ -155,8 +155,8 @@ public class ITaskGroup {
                         }
                         if (i == futures.size() - 1) {
                             // Future not updated yet
-                            Thread.sleep(500);
-                            i = 0;
+                            Thread.sleep(100);
+                            i = -1;
                         }
                     }
                 } catch (InterruptedException | ExecutionException ex) {
