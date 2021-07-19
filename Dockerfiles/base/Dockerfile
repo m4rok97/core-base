@@ -1,4 +1,6 @@
 
+ARG REGISTRY=""
+ARG TAG=""
 FROM ubuntu:20.04
 ARG RELPATH=""
 
