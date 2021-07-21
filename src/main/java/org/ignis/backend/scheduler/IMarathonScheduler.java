@@ -98,7 +98,7 @@ public class IMarathonScheduler implements IScheduler {
         if (taskId.startsWith("/")) {
             return taskId;
         }
-        return "/" + taskId.split("\\.")[0].replace('_', '/');
+        return "/" + taskId.split("\\.")[1].replace('_', '/');
     }
 
     @SuppressWarnings("unchecked")
@@ -389,7 +389,7 @@ public class IMarathonScheduler implements IScheduler {
             List<String> ids = new ArrayList<>();
             for (Task t : app.getTasks()) {
                 String[] fields = t.getId().split("\\.");
-                ids.add(fields[0] + "." + fields[1] + ".");
+                ids.add(fields[1] + "." + fields[2] + ".");
             }
             return ids;
         } catch (MarathonException ex) {

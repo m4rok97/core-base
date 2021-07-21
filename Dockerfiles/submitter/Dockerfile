@@ -24,4 +24,6 @@ COPY ${RELPATH}ignis-sshd ${IGNIS_HOME}/bin
 COPY ${RELPATH}ignis-submit ${IGNIS_HOME}/bin
 
 RUN chmod +x ${IGNIS_HOME}/bin/ignis-sshd && \
-	chmod +x ${IGNIS_HOME}/bin/ignis-submit
+	chmod +x ${IGNIS_HOME}/bin/ignis-submit && \
+	rm -f ${IGNIS_HOME}/bin/ignis-backend
+
