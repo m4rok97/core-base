@@ -25,11 +25,11 @@ import java.util.List;
 /**
  * @author César Pomar
  */
-public class IAncorisScheduler implements IScheduler {
+public class IDockerScheduler implements IScheduler {
 
-    public static final String NAME = "ancoris";
+    public static final String NAME = "docker";
 
-    public IAncorisScheduler(String url) {
+    public IDockerScheduler(String url) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

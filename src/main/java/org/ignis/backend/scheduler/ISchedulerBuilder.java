@@ -27,11 +27,13 @@ public class ISchedulerBuilder {
     public static IScheduler create(String type, String url) {
         type = type.toLowerCase();
         switch (type) {
-            case "ancoris":
+            case IDockerScheduler.NAME:
+                return new IDockerScheduler(url);
+            case IAncorisScheduler.NAME:
                 return new IAncorisScheduler(url);
-            case "marathon":
+            case IMarathonScheduler.NAME:
                 return new IMarathonScheduler(url);
-            case "singularity":
+            case ISingularityScheduler.NAME:
                 return new ISingularityScheduler(url);
             default:
                 throw new ISchedulerException("Scheduler " + type + " not found");

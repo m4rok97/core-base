@@ -31,12 +31,16 @@ import org.ignis.backend.scheduler.model.IVolume;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.*;
 
 /**
  * @author César Pomar
  */
 public class IMarathonScheduler implements IScheduler {
+
+    public static final String NAME = "marathon";
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMarathonScheduler.class);
 
@@ -81,6 +85,15 @@ public class IMarathonScheduler implements IScheduler {
         return id.toLowerCase().replaceAll("[^\\w-]", "");
     }
 
+    private String newId() {
+        UUID id = UUID.randomUUID();
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 2 + 1);
+        buffer.put((byte) 0);
+        buffer.putLong(id.getMostSignificantBits());
+        buffer.putLong(id.getLeastSignificantBits());
+        return new BigInteger(buffer.array()).toString(36);
+    }
+
     private String appId(String taskId) {
         if (taskId.startsWith("/")) {
             return taskId;
@@ -101,9 +114,9 @@ public class IMarathonScheduler implements IScheduler {
 
         name = fixMarathonId(name);
         if (group != null) {
-            app.setId("/" + group + "/" + name + "-" + UUID.randomUUID().toString());
+            app.setId("/" + group + "/" + name);
         } else {
-            app.setId("/" + name + "-" + UUID.randomUUID().toString());
+            app.setId("/" + name + "." + newId());
         }
         app.getContainer().getDocker().setImage(container.getImage());
         app.getContainer().getDocker().setNetwork("BRIDGE");
@@ -293,7 +306,7 @@ public class IMarathonScheduler implements IScheduler {
     @Override
     public String createGroup(String name) throws ISchedulerException {
         try {
-            String id = fixMarathonId(name) + "-" + UUID.randomUUID().toString();
+            String id = fixMarathonId(name) + "." + newId();
             marathon.createGroup(new Group(id));
             return id;
         } catch (MarathonException ex) {

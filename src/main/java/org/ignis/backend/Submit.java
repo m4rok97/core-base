@@ -69,8 +69,14 @@ public class Submit implements Callable<Integer> {
     @Option(names = {"--direct"}, description = "Execute cmd directly without ignis-run")
     boolean direct = false;
 
-    @Option(names = {"--attach"}, description = "Attach to the ignis task")
+    @Option(names = {"--attach"}, description = "Attach to the Ignis HPC task")
     boolean attach = false;
+
+    @Option(names = {"--print-id"}, description = "Print Ignis HPC task id")
+    boolean print_id = false;
+
+    @Option(names = {"--wait"}, description = "Wait until Ignis HPC task finalization")
+    boolean wait = false;
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "display a help message")
     private boolean helpRequested = false;
@@ -165,7 +171,13 @@ public class Submit implements Callable<Integer> {
                 throw ex;
             }
 
+            if(print_id){
+                System.out.println(props.getProperty(IKeys.SCHEDULER_TYPE) + ":" + app);
+            }
+
             if (attach) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            } else if (wait) {
                 scheduler.getContainer(app);
                 while (true) {
                     IContainerDetails.ContainerStatus status = scheduler.getStatus(app);

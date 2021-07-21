@@ -39,6 +39,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ISingularityScheduler implements IScheduler {
+    public static final String NAME = "singularity";
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ISingularityScheduler.class);
 
