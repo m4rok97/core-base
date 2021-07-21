@@ -98,7 +98,7 @@ public class IMarathonScheduler implements IScheduler {
         if (taskId.startsWith("/")) {
             return taskId;
         }
-        return "/" + taskId.split("\\.")[1].replace('_', '/');
+        return "/" + taskId.split("\\.")[0].replace('_', '/');
     }
 
     @SuppressWarnings("unchecked")
@@ -116,7 +116,7 @@ public class IMarathonScheduler implements IScheduler {
         if (group != null) {
             app.setId("/" + group + "/" + name);
         } else {
-            app.setId("/" + name + "." + newId());
+            app.setId("/" + name + "-" + newId());
         }
         app.getContainer().getDocker().setImage(container.getImage());
         app.getContainer().getDocker().setNetwork("BRIDGE");
@@ -306,7 +306,7 @@ public class IMarathonScheduler implements IScheduler {
     @Override
     public String createGroup(String name) throws ISchedulerException {
         try {
-            String id = fixMarathonId(name) + "." + newId();
+            String id = fixMarathonId(name) + "-" + newId();
             marathon.createGroup(new Group(id));
             return id;
         } catch (MarathonException ex) {
@@ -389,7 +389,7 @@ public class IMarathonScheduler implements IScheduler {
             List<String> ids = new ArrayList<>();
             for (Task t : app.getTasks()) {
                 String[] fields = t.getId().split("\\.");
-                ids.add(fields[1] + "." + fields[2] + ".");
+                ids.add(fields[0] + "." + fields[1] + ".");
             }
             return ids;
         } catch (MarathonException ex) {
