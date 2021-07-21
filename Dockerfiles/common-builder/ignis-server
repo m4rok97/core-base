@@ -5,7 +5,7 @@ mkdir -p ~/.ssh
 echo ${IGNIS_DRIVER_PUBLIC_KEY} >> ~/.ssh/authorized_keys
 /usr/sbin/sshd -p $1
 
-if [ $2 -eq 1 ]; then
+if [ "$2" == "1" ]; then
 	while [ "$(last -10 | grep -c "still logged")" -eq 0 ]; do
 		echo "waiting client conection"
 		sleep 10

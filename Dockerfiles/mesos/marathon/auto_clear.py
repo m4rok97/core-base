@@ -14,7 +14,7 @@ def clear(port):
         parsed = json.loads(your_json)
         for entry in parsed['queue']:
             app = entry['app']
-            if "/driver-" in app["id"] and entry['delay']['timeLeftSeconds'] > 0:
+            if "/driver" in app["id"] and entry['delay']['timeLeftSeconds'] > 0:
                 delayed.append(app["id"])
 
     for app in delayed:
