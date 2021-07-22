@@ -256,13 +256,16 @@ public abstract class IDriverTask extends IExecutorContextTask {
                 shared.value.addAndGet(executor.getIoModule().partitionApproxSize());
             }
             shared.barrier.await();
-            boolean flag = shared.value.get() < executor.getProperties().getSILong(IKeys.TRANSPORT_MINIMAL);
-            if (flag) {
+            if(driver){
+                shared.flag = shared.value.get() < executor.getProperties().getSILong(IKeys.TRANSPORT_MINIMAL);
+            }
+            shared.barrier.await();
+            if (shared.flag) {
                 LOGGER.info(log() + "Rpc mode selected");
             } else {
                 LOGGER.info(log() + "Mpi mode selected");
             }
-            return flag;
+            return shared.flag;
         } catch (IExecutorException ex) {
             shared.barrier.fails();
             throw new IExecutorExceptionWrapper(ex);
