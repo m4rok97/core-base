@@ -10,4 +10,4 @@ rm -rf /var/lib/apt/lists/*
 	echo '#!/bin/bash'; \
 	echo 'exec java -cp "${IGNIS_HOME}/lib/java/*" org.ignis.backend.Main "$@"'; \
 } > ${IGNIS_HOME}/bin/ignis-backend
-chmod +x bin/ignis-backend
+chmod +x ${IGNIS_HOME}/bin/ignis-backend
