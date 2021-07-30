@@ -1,9 +1,0 @@
-
-ARG REGISTRY=""
-ARG TAG=""
-FROM ${REGISTRY}ignishpc/cpp-builder${TAG} as cpp-builder
-FROM ${REGISTRY}ignishpc/base-executor${TAG}
-
-COPY --from=cpp-builder ${IGNIS_HOME} ${IGNIS_HOME}
-RUN ${IGNIS_HOME}/bin/cpp-core-install.sh && \
-	rm -f ${IGNIS_HOME}/bin/cpp-core-install.sh

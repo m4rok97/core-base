@@ -1,4 +1,6 @@
 
+ARG REGISTRY=""
+ARG TAG=""
 FROM ubuntu:18.04 as builder
 ARG RELPATH=""
 
