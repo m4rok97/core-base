@@ -27,7 +27,7 @@ RUN mkdir ${IGNIS_HOME}/lib/java && \
 	cd /tmp/backend && \
 	gradle jarAndLibs && \
 	rm -rf ~/.gradle && \
-	mv build/libs/* ${IGNIS_HOME}/lib/java && \
+	mv libs/* ${IGNIS_HOME}/lib/java && \
 	cd ${IGNIS_HOME} && \
 	mv /tmp/backend/etc/* ./etc/ && \
 	rm -fr /tmp/backend
