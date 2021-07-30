@@ -7,7 +7,7 @@ if [ $# -ne 1 ] || [ ! -d "$1"/ignis/rpc/ ] || [ ! -f $(find "$1"/ignis/rpc/ -na
 fi
 
 
-out="src/main/java/"
+out="backend/src/main/java/"
 rm -fr "$out/org/ignis/rpc"
 for file in `find $1/ignis -name "*thrift"`; do
     thrift --gen java:private-members,generated_annotations=suppress -out $out $file &

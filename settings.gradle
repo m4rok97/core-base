@@ -1,0 +1,11 @@
+rootProject.name = 'backend-project'
+include 'scheduler-api'
+include 'properties'
+include 'backend'
+include 'submitter'
+include 'scheduler-marathon'
+include 'scheduler-singularity'
+include 'scheduler-docker'
+include 'scheduler-ancoris'
+include 'scheduler-nomad'
+
