@@ -40,52 +40,35 @@ public final class IImportDataTask extends IExecutorContextTask {
 
     public static class Shared {
 
-        public Shared(int sources, int targets, String commId) {
-            this.sources = sources;
-            this.targets = targets;
+        public Shared(int sources, int targets, String commId, int threads) {
             this.commId = commId;
+            this.threads= threads;
             barrier = new IBarrier(sources + targets);
-            count = new ArrayList<>(Collections.nCopies(sources, 0l));
-            sends = new ArrayList<>();
-            rcvs = new ArrayList<>();
         }
 
-        private final int sources;
-        private final int targets;
         private final IBarrier barrier;
         private final String commId;
-        private final List<Long> count;
-        private final List<Integer[]> sends;
-        private final List<Integer[]> rcvs;
+        private final int threads;
         private String group;
         private boolean test;
     }
 
     private final Shared shared;
     private final boolean source;
-    private final Long partitions;
     private final ISource src;
+
     private Integer attempt;
 
-    public IImportDataTask(String name, IExecutor executor, Shared shared, boolean source, Long partitions, ISource src) {
+    public IImportDataTask(String name, IExecutor executor, Shared shared, boolean source, ISource src) {
         super(name, executor, source ? Mode.LOAD : Mode.SAVE);
         this.shared = shared;
         this.source = source;
-        this.partitions = partitions;
         this.src = src;
         this.attempt = -1;
     }
 
-    public IImportDataTask(String name, IExecutor executor, Shared shared, boolean source, ISource src) {
-        this(name, executor, shared, source, null, src);
-    }
-
-    public IImportDataTask(String name, IExecutor executor, Shared shared, boolean source, Long partitions) {
-        this(name, executor, shared, source, partitions, null);
-    }
-
     public IImportDataTask(String name, IExecutor executor, Shared shared, boolean source) {
-        this(name, executor, shared, source, null, null);
+        this(name, executor, shared, source, null);
     }
 
     @Override
@@ -97,35 +80,12 @@ public final class IImportDataTask extends IExecutorContextTask {
     @Override
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "importData started");
-        int id = (int) executor.getId();
         try {
-            if (source) {
-                shared.count.set(id, executor.getIoModule().partitionCount());
-            }
             prepareGroup();
-            if (shared.barrier.await() == 0) {
-                prepareMessages();
-            }
-
-            if (source) {
-                for (int i = 0; i < shared.sends.size(); i++) {
-                    if (shared.sends.get(i)[id] != null) {
-                        executor.getCommModule().send(shared.commId, i, shared.sends.get(i)[id], 0);//TODO threading
-                    }
-                    shared.barrier.await();
-                }
-            } else {
-                if (src == null) {
-                    executor.getCommModule().newEmptyPartitions(shared.rcvs.size());
-                } else {
-                    executor.getCommModule().newEmptyPartitions2(shared.rcvs.size(), src);
-                }
-                for (int i = 0; i < shared.rcvs.size(); i++) {
-                    if (shared.rcvs.get(i)[id] != null) {
-                        executor.getCommModule().recv(shared.commId, i, shared.rcvs.get(i)[id], 0);//TODO threading
-                    }
-                    shared.barrier.await();
-                }
+            if(source || src == null){
+                executor.getCommModule().importData(shared.commId, source, shared.threads);
+            }else{
+                executor.getCommModule().importData4(shared.commId, source, shared.threads, src);
             }
             shared.barrier.await();
         } catch (IExecutorException ex) {
@@ -138,50 +98,6 @@ public final class IImportDataTask extends IExecutorContextTask {
             throw new IgnisException(ex.getMessage(), ex);
         }
         LOGGER.info(log() + "importData finished");
-    }
-
-    private void prepareMessages() {
-        long totalCount = shared.count.stream().reduce(0l, Long::sum);
-        int maxIt = shared.count.stream().max(Long::compareTo).get().intValue();
-        ArrayList<Long> targetCount = new ArrayList<>();
-        targetCount.addAll(Collections.nCopies((int) (totalCount % shared.targets), totalCount / shared.targets + 1));
-        targetCount.addAll(Collections.nCopies(shared.targets - targetCount.size(), totalCount / shared.targets));
-        if (maxIt < targetCount.get(0)) {
-            maxIt = targetCount.get(0).intValue();
-        }
-        shared.sends.clear();
-        shared.rcvs.clear();
-        for (int i = 0; i < maxIt; i++) {
-            shared.sends.add(new Integer[shared.sources]);
-            shared.rcvs.add(new Integer[shared.targets]);
-        }
-
-        int it = 0;
-        int s_index = 0;
-        int t_index = 0;
-        long s_count = 0;
-        long t_count = 0;
-
-        for (long i = 0; i < totalCount; i++) {
-            while (t_count == targetCount.get(t_index)) {
-                t_index++;
-                t_count = 0;
-            }
-            while (s_count == shared.count.get(s_index)) {
-                s_index++;
-                s_count = 0;
-            }
-
-            while (shared.sends.get(it)[s_index] == null && shared.rcvs.get(it)[t_index] == null) {
-                it++;
-                if (it == maxIt) {
-                    it = 0;
-                }
-            }
-
-            shared.sends.get(it)[s_index] = t_index;
-            shared.rcvs.get(it)[t_index] = s_index;
-        }
     }
 
     private void prepareGroup() throws BrokenBarrierException, InterruptedException, TException {

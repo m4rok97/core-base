@@ -31,11 +31,7 @@ public class IWorkerService {
 
     public org.ignis.rpc.driver.IDataFrameId importDataFrame(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public org.ignis.rpc.driver.IDataFrameId importDataFrame3a(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
-
-    public org.ignis.rpc.driver.IDataFrameId importDataFrame3b(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
-
-    public org.ignis.rpc.driver.IDataFrameId importDataFrame4(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
+    public org.ignis.rpc.driver.IDataFrameId importDataFrame3(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
     public org.ignis.rpc.driver.IDataFrameId textFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
@@ -89,11 +85,7 @@ public class IWorkerService {
 
     public void importDataFrame(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
-    public void importDataFrame3a(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
-
-    public void importDataFrame3b(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
-
-    public void importDataFrame4(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
+    public void importDataFrame3(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
     public void textFile(IWorkerId id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException;
 
@@ -407,89 +399,32 @@ public class IWorkerService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "importDataFrame failed: unknown result");
     }
 
-    public org.ignis.rpc.driver.IDataFrameId importDataFrame3a(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId importDataFrame3(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_importDataFrame3a(id, data, partitions);
-      return recv_importDataFrame3a();
+      send_importDataFrame3(id, data, src);
+      return recv_importDataFrame3();
     }
 
-    public void send_importDataFrame3a(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions) throws org.apache.thrift.TException
+    public void send_importDataFrame3(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
     {
-      importDataFrame3a_args args = new importDataFrame3a_args();
-      args.setId(id);
-      args.setData(data);
-      args.setPartitions(partitions);
-      sendBase("importDataFrame3a", args);
-    }
-
-    public org.ignis.rpc.driver.IDataFrameId recv_importDataFrame3a() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
-    {
-      importDataFrame3a_result result = new importDataFrame3a_result();
-      receiveBase(result, "importDataFrame3a");
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      if (result.ex != null) {
-        throw result.ex;
-      }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "importDataFrame3a failed: unknown result");
-    }
-
-    public org.ignis.rpc.driver.IDataFrameId importDataFrame3b(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
-    {
-      send_importDataFrame3b(id, data, src);
-      return recv_importDataFrame3b();
-    }
-
-    public void send_importDataFrame3b(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
-    {
-      importDataFrame3b_args args = new importDataFrame3b_args();
+      importDataFrame3_args args = new importDataFrame3_args();
       args.setId(id);
       args.setData(data);
       args.setSrc(src);
-      sendBase("importDataFrame3b", args);
+      sendBase("importDataFrame3", args);
     }
 
-    public org.ignis.rpc.driver.IDataFrameId recv_importDataFrame3b() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public org.ignis.rpc.driver.IDataFrameId recv_importDataFrame3() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      importDataFrame3b_result result = new importDataFrame3b_result();
-      receiveBase(result, "importDataFrame3b");
+      importDataFrame3_result result = new importDataFrame3_result();
+      receiveBase(result, "importDataFrame3");
       if (result.isSetSuccess()) {
         return result.success;
       }
       if (result.ex != null) {
         throw result.ex;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "importDataFrame3b failed: unknown result");
-    }
-
-    public org.ignis.rpc.driver.IDataFrameId importDataFrame4(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions, org.ignis.rpc.ISource src) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
-    {
-      send_importDataFrame4(id, data, partitions, src);
-      return recv_importDataFrame4();
-    }
-
-    public void send_importDataFrame4(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions, org.ignis.rpc.ISource src) throws org.apache.thrift.TException
-    {
-      importDataFrame4_args args = new importDataFrame4_args();
-      args.setId(id);
-      args.setData(data);
-      args.setPartitions(partitions);
-      args.setSrc(src);
-      sendBase("importDataFrame4", args);
-    }
-
-    public org.ignis.rpc.driver.IDataFrameId recv_importDataFrame4() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
-    {
-      importDataFrame4_result result = new importDataFrame4_result();
-      receiveBase(result, "importDataFrame4");
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      if (result.ex != null) {
-        throw result.ex;
-      }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "importDataFrame4 failed: unknown result");
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "importDataFrame3 failed: unknown result");
     }
 
     public org.ignis.rpc.driver.IDataFrameId textFile(IWorkerId id, java.lang.String path) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
@@ -1253,56 +1188,18 @@ public class IWorkerService {
       }
     }
 
-    public void importDataFrame3a(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+    public void importDataFrame3(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      importDataFrame3a_call method_call = new importDataFrame3a_call(id, data, partitions, resultHandler, this, ___protocolFactory, ___transport);
+      importDataFrame3_call method_call = new importDataFrame3_call(id, data, src, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class importDataFrame3a_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
-      private IWorkerId id;
-      private org.ignis.rpc.driver.IDataFrameId data;
-      private long partitions;
-      public importDataFrame3a_call(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-        this.id = id;
-        this.data = data;
-        this.partitions = partitions;
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("importDataFrame3a", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        importDataFrame3a_args args = new importDataFrame3a_args();
-        args.setId(id);
-        args.setData(data);
-        args.setPartitions(partitions);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public org.ignis.rpc.driver.IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new java.lang.IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_importDataFrame3a();
-      }
-    }
-
-    public void importDataFrame3b(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      importDataFrame3b_call method_call = new importDataFrame3b_call(id, data, src, resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class importDataFrame3b_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
+    public static class importDataFrame3_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
       private IWorkerId id;
       private org.ignis.rpc.driver.IDataFrameId data;
       private org.ignis.rpc.ISource src;
-      public importDataFrame3b_call(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public importDataFrame3_call(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
         this.data = data;
@@ -1310,8 +1207,8 @@ public class IWorkerService {
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("importDataFrame3b", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        importDataFrame3b_args args = new importDataFrame3b_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("importDataFrame3", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        importDataFrame3_args args = new importDataFrame3_args();
         args.setId(id);
         args.setData(data);
         args.setSrc(src);
@@ -1325,48 +1222,7 @@ public class IWorkerService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_importDataFrame3b();
-      }
-    }
-
-    public void importDataFrame4(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      importDataFrame4_call method_call = new importDataFrame4_call(id, data, partitions, src, resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class importDataFrame4_call extends org.apache.thrift.async.TAsyncMethodCall<org.ignis.rpc.driver.IDataFrameId> {
-      private IWorkerId id;
-      private org.ignis.rpc.driver.IDataFrameId data;
-      private long partitions;
-      private org.ignis.rpc.ISource src;
-      public importDataFrame4_call(IWorkerId id, org.ignis.rpc.driver.IDataFrameId data, long partitions, org.ignis.rpc.ISource src, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-        this.id = id;
-        this.data = data;
-        this.partitions = partitions;
-        this.src = src;
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("importDataFrame4", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        importDataFrame4_args args = new importDataFrame4_args();
-        args.setId(id);
-        args.setData(data);
-        args.setPartitions(partitions);
-        args.setSrc(src);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public org.ignis.rpc.driver.IDataFrameId getResult() throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new java.lang.IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_importDataFrame4();
+        return (new Client(prot)).recv_importDataFrame3();
       }
     }
 
@@ -1901,9 +1757,7 @@ public class IWorkerService {
       processMap.put("parallelize", new parallelize());
       processMap.put("parallelize4", new parallelize4());
       processMap.put("importDataFrame", new importDataFrame());
-      processMap.put("importDataFrame3a", new importDataFrame3a());
-      processMap.put("importDataFrame3b", new importDataFrame3b());
-      processMap.put("importDataFrame4", new importDataFrame4());
+      processMap.put("importDataFrame3", new importDataFrame3());
       processMap.put("textFile", new textFile());
       processMap.put("textFile3", new textFile3());
       processMap.put("partitionObjectFile", new partitionObjectFile());
@@ -2203,42 +2057,13 @@ public class IWorkerService {
       }
     }
 
-    public static class importDataFrame3a<I extends Iface> extends org.apache.thrift.ProcessFunction<I, importDataFrame3a_args> {
-      public importDataFrame3a() {
-        super("importDataFrame3a");
+    public static class importDataFrame3<I extends Iface> extends org.apache.thrift.ProcessFunction<I, importDataFrame3_args> {
+      public importDataFrame3() {
+        super("importDataFrame3");
       }
 
-      public importDataFrame3a_args getEmptyArgsInstance() {
-        return new importDataFrame3a_args();
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      @Override
-      protected boolean rethrowUnhandledExceptions() {
-        return false;
-      }
-
-      public importDataFrame3a_result getResult(I iface, importDataFrame3a_args args) throws org.apache.thrift.TException {
-        importDataFrame3a_result result = new importDataFrame3a_result();
-        try {
-          result.success = iface.importDataFrame3a(args.id, args.data, args.partitions);
-        } catch (org.ignis.rpc.driver.IDriverException ex) {
-          result.ex = ex;
-        }
-        return result;
-      }
-    }
-
-    public static class importDataFrame3b<I extends Iface> extends org.apache.thrift.ProcessFunction<I, importDataFrame3b_args> {
-      public importDataFrame3b() {
-        super("importDataFrame3b");
-      }
-
-      public importDataFrame3b_args getEmptyArgsInstance() {
-        return new importDataFrame3b_args();
+      public importDataFrame3_args getEmptyArgsInstance() {
+        return new importDataFrame3_args();
       }
 
       protected boolean isOneway() {
@@ -2250,39 +2075,10 @@ public class IWorkerService {
         return false;
       }
 
-      public importDataFrame3b_result getResult(I iface, importDataFrame3b_args args) throws org.apache.thrift.TException {
-        importDataFrame3b_result result = new importDataFrame3b_result();
+      public importDataFrame3_result getResult(I iface, importDataFrame3_args args) throws org.apache.thrift.TException {
+        importDataFrame3_result result = new importDataFrame3_result();
         try {
-          result.success = iface.importDataFrame3b(args.id, args.data, args.src);
-        } catch (org.ignis.rpc.driver.IDriverException ex) {
-          result.ex = ex;
-        }
-        return result;
-      }
-    }
-
-    public static class importDataFrame4<I extends Iface> extends org.apache.thrift.ProcessFunction<I, importDataFrame4_args> {
-      public importDataFrame4() {
-        super("importDataFrame4");
-      }
-
-      public importDataFrame4_args getEmptyArgsInstance() {
-        return new importDataFrame4_args();
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      @Override
-      protected boolean rethrowUnhandledExceptions() {
-        return false;
-      }
-
-      public importDataFrame4_result getResult(I iface, importDataFrame4_args args) throws org.apache.thrift.TException {
-        importDataFrame4_result result = new importDataFrame4_result();
-        try {
-          result.success = iface.importDataFrame4(args.id, args.data, args.partitions, args.src);
+          result.success = iface.importDataFrame3(args.id, args.data, args.src);
         } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
@@ -2719,9 +2515,7 @@ public class IWorkerService {
       processMap.put("parallelize", new parallelize());
       processMap.put("parallelize4", new parallelize4());
       processMap.put("importDataFrame", new importDataFrame());
-      processMap.put("importDataFrame3a", new importDataFrame3a());
-      processMap.put("importDataFrame3b", new importDataFrame3b());
-      processMap.put("importDataFrame4", new importDataFrame4());
+      processMap.put("importDataFrame3", new importDataFrame3());
       processMap.put("textFile", new textFile());
       processMap.put("textFile3", new textFile3());
       processMap.put("partitionObjectFile", new partitionObjectFile());
@@ -3378,20 +3172,20 @@ public class IWorkerService {
       }
     }
 
-    public static class importDataFrame3a<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, importDataFrame3a_args, org.ignis.rpc.driver.IDataFrameId> {
-      public importDataFrame3a() {
-        super("importDataFrame3a");
+    public static class importDataFrame3<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, importDataFrame3_args, org.ignis.rpc.driver.IDataFrameId> {
+      public importDataFrame3() {
+        super("importDataFrame3");
       }
 
-      public importDataFrame3a_args getEmptyArgsInstance() {
-        return new importDataFrame3a_args();
+      public importDataFrame3_args getEmptyArgsInstance() {
+        return new importDataFrame3_args();
       }
 
       public org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId>() { 
           public void onComplete(org.ignis.rpc.driver.IDataFrameId o) {
-            importDataFrame3a_result result = new importDataFrame3a_result();
+            importDataFrame3_result result = new importDataFrame3_result();
             result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
@@ -3406,7 +3200,7 @@ public class IWorkerService {
           public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
-            importDataFrame3a_result result = new importDataFrame3a_result();
+            importDataFrame3_result result = new importDataFrame3_result();
             if (e instanceof org.ignis.rpc.driver.IDriverException) {
               result.ex = (org.ignis.rpc.driver.IDriverException) e;
               result.setExIsSet(true);
@@ -3438,138 +3232,8 @@ public class IWorkerService {
         return false;
       }
 
-      public void start(I iface, importDataFrame3a_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-        iface.importDataFrame3a(args.id, args.data, args.partitions,resultHandler);
-      }
-    }
-
-    public static class importDataFrame3b<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, importDataFrame3b_args, org.ignis.rpc.driver.IDataFrameId> {
-      public importDataFrame3b() {
-        super("importDataFrame3b");
-      }
-
-      public importDataFrame3b_args getEmptyArgsInstance() {
-        return new importDataFrame3b_args();
-      }
-
-      public org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
-        final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId>() { 
-          public void onComplete(org.ignis.rpc.driver.IDataFrameId o) {
-            importDataFrame3b_result result = new importDataFrame3b_result();
-            result.success = o;
-            try {
-              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-            } catch (org.apache.thrift.transport.TTransportException e) {
-              _LOGGER.error("TTransportException writing to internal frame buffer", e);
-              fb.close();
-            } catch (java.lang.Exception e) {
-              _LOGGER.error("Exception writing to internal frame buffer", e);
-              onError(e);
-            }
-          }
-          public void onError(java.lang.Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TSerializable msg;
-            importDataFrame3b_result result = new importDataFrame3b_result();
-            if (e instanceof org.ignis.rpc.driver.IDriverException) {
-              result.ex = (org.ignis.rpc.driver.IDriverException) e;
-              result.setExIsSet(true);
-              msg = result;
-            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
-              _LOGGER.error("TTransportException inside handler", e);
-              fb.close();
-              return;
-            } else if (e instanceof org.apache.thrift.TApplicationException) {
-              _LOGGER.error("TApplicationException inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TApplicationException)e;
-            } else {
-              _LOGGER.error("Exception inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (java.lang.Exception ex) {
-              _LOGGER.error("Exception writing to internal frame buffer", ex);
-              fb.close();
-            }
-          }
-        };
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      public void start(I iface, importDataFrame3b_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-        iface.importDataFrame3b(args.id, args.data, args.src,resultHandler);
-      }
-    }
-
-    public static class importDataFrame4<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, importDataFrame4_args, org.ignis.rpc.driver.IDataFrameId> {
-      public importDataFrame4() {
-        super("importDataFrame4");
-      }
-
-      public importDataFrame4_args getEmptyArgsInstance() {
-        return new importDataFrame4_args();
-      }
-
-      public org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
-        final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId>() { 
-          public void onComplete(org.ignis.rpc.driver.IDataFrameId o) {
-            importDataFrame4_result result = new importDataFrame4_result();
-            result.success = o;
-            try {
-              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-            } catch (org.apache.thrift.transport.TTransportException e) {
-              _LOGGER.error("TTransportException writing to internal frame buffer", e);
-              fb.close();
-            } catch (java.lang.Exception e) {
-              _LOGGER.error("Exception writing to internal frame buffer", e);
-              onError(e);
-            }
-          }
-          public void onError(java.lang.Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TSerializable msg;
-            importDataFrame4_result result = new importDataFrame4_result();
-            if (e instanceof org.ignis.rpc.driver.IDriverException) {
-              result.ex = (org.ignis.rpc.driver.IDriverException) e;
-              result.setExIsSet(true);
-              msg = result;
-            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
-              _LOGGER.error("TTransportException inside handler", e);
-              fb.close();
-              return;
-            } else if (e instanceof org.apache.thrift.TApplicationException) {
-              _LOGGER.error("TApplicationException inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TApplicationException)e;
-            } else {
-              _LOGGER.error("Exception inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (java.lang.Exception ex) {
-              _LOGGER.error("Exception writing to internal frame buffer", ex);
-              fb.close();
-            }
-          }
-        };
-      }
-
-      protected boolean isOneway() {
-        return false;
-      }
-
-      public void start(I iface, importDataFrame4_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
-        iface.importDataFrame4(args.id, args.data, args.partitions, args.src,resultHandler);
+      public void start(I iface, importDataFrame3_args args, org.apache.thrift.async.AsyncMethodCallback<org.ignis.rpc.driver.IDataFrameId> resultHandler) throws org.apache.thrift.TException {
+        iface.importDataFrame3(args.id, args.data, args.src,resultHandler);
       }
     }
 
@@ -14082,1072 +13746,15 @@ public class IWorkerService {
     }
   }
 
-  public static class importDataFrame3a_args implements org.apache.thrift.TBase<importDataFrame3a_args, importDataFrame3a_args._Fields>, java.io.Serializable, Cloneable, Comparable<importDataFrame3a_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("importDataFrame3a_args");
-
-    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-    private static final org.apache.thrift.protocol.TField DATA_FIELD_DESC = new org.apache.thrift.protocol.TField("data", org.apache.thrift.protocol.TType.STRUCT, (short)2);
-    private static final org.apache.thrift.protocol.TField PARTITIONS_FIELD_DESC = new org.apache.thrift.protocol.TField("partitions", org.apache.thrift.protocol.TType.I64, (short)3);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new importDataFrame3a_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new importDataFrame3a_argsTupleSchemeFactory();
-
-    private @org.apache.thrift.annotation.Nullable IWorkerId id; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId data; // required
-    private long partitions; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      ID((short)1, "id"),
-      DATA((short)2, "data"),
-      PARTITIONS((short)3, "partitions");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // ID
-            return ID;
-          case 2: // DATA
-            return DATA;
-          case 3: // PARTITIONS
-            return PARTITIONS;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    private static final int __PARTITIONS_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IWorkerId.class)));
-      tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDataFrameId.class)));
-      tmpMap.put(_Fields.PARTITIONS, new org.apache.thrift.meta_data.FieldMetaData("partitions", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(importDataFrame3a_args.class, metaDataMap);
-    }
-
-    public importDataFrame3a_args() {
-    }
-
-    public importDataFrame3a_args(
-      IWorkerId id,
-      org.ignis.rpc.driver.IDataFrameId data,
-      long partitions)
-    {
-      this();
-      this.id = id;
-      this.data = data;
-      this.partitions = partitions;
-      setPartitionsIsSet(true);
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public importDataFrame3a_args(importDataFrame3a_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      if (other.isSetId()) {
-        this.id = new IWorkerId(other.id);
-      }
-      if (other.isSetData()) {
-        this.data = new org.ignis.rpc.driver.IDataFrameId(other.data);
-      }
-      this.partitions = other.partitions;
-    }
-
-    public importDataFrame3a_args deepCopy() {
-      return new importDataFrame3a_args(this);
-    }
-
-    @Override
-    public void clear() {
-      this.id = null;
-      this.data = null;
-      setPartitionsIsSet(false);
-      this.partitions = 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public IWorkerId getId() {
-      return this.id;
-    }
-
-    public importDataFrame3a_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
-      this.id = id;
-      return this;
-    }
-
-    public void unsetId() {
-      this.id = null;
-    }
-
-    /** Returns true if field id is set (has been assigned a value) and false otherwise */
-    public boolean isSetId() {
-      return this.id != null;
-    }
-
-    public void setIdIsSet(boolean value) {
-      if (!value) {
-        this.id = null;
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.driver.IDataFrameId getData() {
-      return this.data;
-    }
-
-    public importDataFrame3a_args setData(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId data) {
-      this.data = data;
-      return this;
-    }
-
-    public void unsetData() {
-      this.data = null;
-    }
-
-    /** Returns true if field data is set (has been assigned a value) and false otherwise */
-    public boolean isSetData() {
-      return this.data != null;
-    }
-
-    public void setDataIsSet(boolean value) {
-      if (!value) {
-        this.data = null;
-      }
-    }
-
-    public long getPartitions() {
-      return this.partitions;
-    }
-
-    public importDataFrame3a_args setPartitions(long partitions) {
-      this.partitions = partitions;
-      setPartitionsIsSet(true);
-      return this;
-    }
-
-    public void unsetPartitions() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
-    }
-
-    /** Returns true if field partitions is set (has been assigned a value) and false otherwise */
-    public boolean isSetPartitions() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
-    }
-
-    public void setPartitionsIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PARTITIONS_ISSET_ID, value);
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case ID:
-        if (value == null) {
-          unsetId();
-        } else {
-          setId((IWorkerId)value);
-        }
-        break;
-
-      case DATA:
-        if (value == null) {
-          unsetData();
-        } else {
-          setData((org.ignis.rpc.driver.IDataFrameId)value);
-        }
-        break;
-
-      case PARTITIONS:
-        if (value == null) {
-          unsetPartitions();
-        } else {
-          setPartitions((java.lang.Long)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case ID:
-        return getId();
-
-      case DATA:
-        return getData();
-
-      case PARTITIONS:
-        return getPartitions();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case ID:
-        return isSetId();
-      case DATA:
-        return isSetData();
-      case PARTITIONS:
-        return isSetPartitions();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that instanceof importDataFrame3a_args)
-        return this.equals((importDataFrame3a_args)that);
-      return false;
-    }
-
-    public boolean equals(importDataFrame3a_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_id = true && this.isSetId();
-      boolean that_present_id = true && that.isSetId();
-      if (this_present_id || that_present_id) {
-        if (!(this_present_id && that_present_id))
-          return false;
-        if (!this.id.equals(that.id))
-          return false;
-      }
-
-      boolean this_present_data = true && this.isSetData();
-      boolean that_present_data = true && that.isSetData();
-      if (this_present_data || that_present_data) {
-        if (!(this_present_data && that_present_data))
-          return false;
-        if (!this.data.equals(that.data))
-          return false;
-      }
-
-      boolean this_present_partitions = true;
-      boolean that_present_partitions = true;
-      if (this_present_partitions || that_present_partitions) {
-        if (!(this_present_partitions && that_present_partitions))
-          return false;
-        if (this.partitions != that.partitions)
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
-      if (isSetId())
-        hashCode = hashCode * 8191 + id.hashCode();
-
-      hashCode = hashCode * 8191 + ((isSetData()) ? 131071 : 524287);
-      if (isSetData())
-        hashCode = hashCode * 8191 + data.hashCode();
-
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(partitions);
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(importDataFrame3a_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.compare(isSetId(), other.isSetId());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetId()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.compare(isSetData(), other.isSetData());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetData()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.data, other.data);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.compare(isSetPartitions(), other.isSetPartitions());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetPartitions()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.partitions, other.partitions);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-    }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("importDataFrame3a_args(");
-      boolean first = true;
-
-      sb.append("id:");
-      if (this.id == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.id);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("data:");
-      if (this.data == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.data);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("partitions:");
-      sb.append(this.partitions);
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-      if (id != null) {
-        id.validate();
-      }
-      if (data != null) {
-        data.validate();
-      }
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class importDataFrame3a_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame3a_argsStandardScheme getScheme() {
-        return new importDataFrame3a_argsStandardScheme();
-      }
-    }
-
-    private static class importDataFrame3a_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<importDataFrame3a_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, importDataFrame3a_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.id = new IWorkerId();
-                struct.id.read(iprot);
-                struct.setIdIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 2: // DATA
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.data = new org.ignis.rpc.driver.IDataFrameId();
-                struct.data.read(iprot);
-                struct.setDataIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 3: // PARTITIONS
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.partitions = iprot.readI64();
-                struct.setPartitionsIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, importDataFrame3a_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.id != null) {
-          oprot.writeFieldBegin(ID_FIELD_DESC);
-          struct.id.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        if (struct.data != null) {
-          oprot.writeFieldBegin(DATA_FIELD_DESC);
-          struct.data.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldBegin(PARTITIONS_FIELD_DESC);
-        oprot.writeI64(struct.partitions);
-        oprot.writeFieldEnd();
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class importDataFrame3a_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame3a_argsTupleScheme getScheme() {
-        return new importDataFrame3a_argsTupleScheme();
-      }
-    }
-
-    private static class importDataFrame3a_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<importDataFrame3a_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, importDataFrame3a_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetId()) {
-          optionals.set(0);
-        }
-        if (struct.isSetData()) {
-          optionals.set(1);
-        }
-        if (struct.isSetPartitions()) {
-          optionals.set(2);
-        }
-        oprot.writeBitSet(optionals, 3);
-        if (struct.isSetId()) {
-          struct.id.write(oprot);
-        }
-        if (struct.isSetData()) {
-          struct.data.write(oprot);
-        }
-        if (struct.isSetPartitions()) {
-          oprot.writeI64(struct.partitions);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, importDataFrame3a_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(3);
-        if (incoming.get(0)) {
-          struct.id = new IWorkerId();
-          struct.id.read(iprot);
-          struct.setIdIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.data = new org.ignis.rpc.driver.IDataFrameId();
-          struct.data.read(iprot);
-          struct.setDataIsSet(true);
-        }
-        if (incoming.get(2)) {
-          struct.partitions = iprot.readI64();
-          struct.setPartitionsIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class importDataFrame3a_result implements org.apache.thrift.TBase<importDataFrame3a_result, importDataFrame3a_result._Fields>, java.io.Serializable, Cloneable, Comparable<importDataFrame3a_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("importDataFrame3a_result");
-
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
-    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new importDataFrame3a_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new importDataFrame3a_resultTupleSchemeFactory();
-
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success"),
-      EX((short)1, "ex");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 0: // SUCCESS
-            return SUCCESS;
-          case 1: // EX
-            return EX;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDataFrameId.class)));
-      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(importDataFrame3a_result.class, metaDataMap);
-    }
-
-    public importDataFrame3a_result() {
-    }
-
-    public importDataFrame3a_result(
-      org.ignis.rpc.driver.IDataFrameId success,
-      org.ignis.rpc.driver.IDriverException ex)
-    {
-      this();
-      this.success = success;
-      this.ex = ex;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public importDataFrame3a_result(importDataFrame3a_result other) {
-      if (other.isSetSuccess()) {
-        this.success = new org.ignis.rpc.driver.IDataFrameId(other.success);
-      }
-      if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
-      }
-    }
-
-    public importDataFrame3a_result deepCopy() {
-      return new importDataFrame3a_result(this);
-    }
-
-    @Override
-    public void clear() {
-      this.success = null;
-      this.ex = null;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.driver.IDataFrameId getSuccess() {
-      return this.success;
-    }
-
-    public importDataFrame3a_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
-      this.success = success;
-      return this;
-    }
-
-    public void unsetSuccess() {
-      this.success = null;
-    }
-
-    /** Returns true if field success is set (has been assigned a value) and false otherwise */
-    public boolean isSetSuccess() {
-      return this.success != null;
-    }
-
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
-        this.success = null;
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.driver.IDriverException getEx() {
-      return this.ex;
-    }
-
-    public importDataFrame3a_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
-      this.ex = ex;
-      return this;
-    }
-
-    public void unsetEx() {
-      this.ex = null;
-    }
-
-    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
-    public boolean isSetEx() {
-      return this.ex != null;
-    }
-
-    public void setExIsSet(boolean value) {
-      if (!value) {
-        this.ex = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case SUCCESS:
-        if (value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((org.ignis.rpc.driver.IDataFrameId)value);
-        }
-        break;
-
-      case EX:
-        if (value == null) {
-          unsetEx();
-        } else {
-          setEx((org.ignis.rpc.driver.IDriverException)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case SUCCESS:
-        return getSuccess();
-
-      case EX:
-        return getEx();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case SUCCESS:
-        return isSetSuccess();
-      case EX:
-        return isSetEx();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that instanceof importDataFrame3a_result)
-        return this.equals((importDataFrame3a_result)that);
-      return false;
-    }
-
-    public boolean equals(importDataFrame3a_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!this.success.equals(that.success))
-          return false;
-      }
-
-      boolean this_present_ex = true && this.isSetEx();
-      boolean that_present_ex = true && that.isSetEx();
-      if (this_present_ex || that_present_ex) {
-        if (!(this_present_ex && that_present_ex))
-          return false;
-        if (!this.ex.equals(that.ex))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
-      if (isSetSuccess())
-        hashCode = hashCode * 8191 + success.hashCode();
-
-      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
-      if (isSetEx())
-        hashCode = hashCode * 8191 + ex.hashCode();
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(importDataFrame3a_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.compare(isSetSuccess(), other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSuccess()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.compare(isSetEx(), other.isSetEx());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetEx()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-      }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("importDataFrame3a_result(");
-      boolean first = true;
-
-      sb.append("success:");
-      if (this.success == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.success);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("ex:");
-      if (this.ex == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.ex);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-      if (success != null) {
-        success.validate();
-      }
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class importDataFrame3a_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame3a_resultStandardScheme getScheme() {
-        return new importDataFrame3a_resultStandardScheme();
-      }
-    }
-
-    private static class importDataFrame3a_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<importDataFrame3a_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, importDataFrame3a_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.success = new org.ignis.rpc.driver.IDataFrameId();
-                struct.success.read(iprot);
-                struct.setSuccessIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 1: // EX
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.driver.IDriverException();
-                struct.ex.read(iprot);
-                struct.setExIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, importDataFrame3a_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.success != null) {
-          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          struct.success.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        if (struct.ex != null) {
-          oprot.writeFieldBegin(EX_FIELD_DESC);
-          struct.ex.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class importDataFrame3a_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame3a_resultTupleScheme getScheme() {
-        return new importDataFrame3a_resultTupleScheme();
-      }
-    }
-
-    private static class importDataFrame3a_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<importDataFrame3a_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, importDataFrame3a_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetSuccess()) {
-          optionals.set(0);
-        }
-        if (struct.isSetEx()) {
-          optionals.set(1);
-        }
-        oprot.writeBitSet(optionals, 2);
-        if (struct.isSetSuccess()) {
-          struct.success.write(oprot);
-        }
-        if (struct.isSetEx()) {
-          struct.ex.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, importDataFrame3a_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
-        if (incoming.get(0)) {
-          struct.success = new org.ignis.rpc.driver.IDataFrameId();
-          struct.success.read(iprot);
-          struct.setSuccessIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.driver.IDriverException();
-          struct.ex.read(iprot);
-          struct.setExIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class importDataFrame3b_args implements org.apache.thrift.TBase<importDataFrame3b_args, importDataFrame3b_args._Fields>, java.io.Serializable, Cloneable, Comparable<importDataFrame3b_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("importDataFrame3b_args");
+  public static class importDataFrame3_args implements org.apache.thrift.TBase<importDataFrame3_args, importDataFrame3_args._Fields>, java.io.Serializable, Cloneable, Comparable<importDataFrame3_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("importDataFrame3_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField DATA_FIELD_DESC = new org.apache.thrift.protocol.TField("data", org.apache.thrift.protocol.TType.STRUCT, (short)2);
     private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new importDataFrame3b_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new importDataFrame3b_argsTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new importDataFrame3_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new importDataFrame3_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable IWorkerId id; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId data; // required
@@ -15230,13 +13837,13 @@ public class IWorkerService {
       tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(importDataFrame3b_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(importDataFrame3_args.class, metaDataMap);
     }
 
-    public importDataFrame3b_args() {
+    public importDataFrame3_args() {
     }
 
-    public importDataFrame3b_args(
+    public importDataFrame3_args(
       IWorkerId id,
       org.ignis.rpc.driver.IDataFrameId data,
       org.ignis.rpc.ISource src)
@@ -15250,7 +13857,7 @@ public class IWorkerService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public importDataFrame3b_args(importDataFrame3b_args other) {
+    public importDataFrame3_args(importDataFrame3_args other) {
       if (other.isSetId()) {
         this.id = new IWorkerId(other.id);
       }
@@ -15262,8 +13869,8 @@ public class IWorkerService {
       }
     }
 
-    public importDataFrame3b_args deepCopy() {
-      return new importDataFrame3b_args(this);
+    public importDataFrame3_args deepCopy() {
+      return new importDataFrame3_args(this);
     }
 
     @Override
@@ -15278,7 +13885,7 @@ public class IWorkerService {
       return this.id;
     }
 
-    public importDataFrame3b_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
+    public importDataFrame3_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
       this.id = id;
       return this;
     }
@@ -15303,7 +13910,7 @@ public class IWorkerService {
       return this.data;
     }
 
-    public importDataFrame3b_args setData(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId data) {
+    public importDataFrame3_args setData(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId data) {
       this.data = data;
       return this;
     }
@@ -15328,7 +13935,7 @@ public class IWorkerService {
       return this.src;
     }
 
-    public importDataFrame3b_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
+    public importDataFrame3_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
       this.src = src;
       return this;
     }
@@ -15412,12 +14019,12 @@ public class IWorkerService {
 
     @Override
     public boolean equals(java.lang.Object that) {
-      if (that instanceof importDataFrame3b_args)
-        return this.equals((importDataFrame3b_args)that);
+      if (that instanceof importDataFrame3_args)
+        return this.equals((importDataFrame3_args)that);
       return false;
     }
 
-    public boolean equals(importDataFrame3b_args that) {
+    public boolean equals(importDataFrame3_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -15473,7 +14080,7 @@ public class IWorkerService {
     }
 
     @Override
-    public int compareTo(importDataFrame3b_args other) {
+    public int compareTo(importDataFrame3_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -15528,7 +14135,7 @@ public class IWorkerService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("importDataFrame3b_args(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("importDataFrame3_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -15588,15 +14195,15 @@ public class IWorkerService {
       }
     }
 
-    private static class importDataFrame3b_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame3b_argsStandardScheme getScheme() {
-        return new importDataFrame3b_argsStandardScheme();
+    private static class importDataFrame3_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public importDataFrame3_argsStandardScheme getScheme() {
+        return new importDataFrame3_argsStandardScheme();
       }
     }
 
-    private static class importDataFrame3b_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<importDataFrame3b_args> {
+    private static class importDataFrame3_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<importDataFrame3_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, importDataFrame3b_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, importDataFrame3_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -15644,7 +14251,7 @@ public class IWorkerService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, importDataFrame3b_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, importDataFrame3_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -15669,16 +14276,16 @@ public class IWorkerService {
 
     }
 
-    private static class importDataFrame3b_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame3b_argsTupleScheme getScheme() {
-        return new importDataFrame3b_argsTupleScheme();
+    private static class importDataFrame3_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public importDataFrame3_argsTupleScheme getScheme() {
+        return new importDataFrame3_argsTupleScheme();
       }
     }
 
-    private static class importDataFrame3b_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<importDataFrame3b_args> {
+    private static class importDataFrame3_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<importDataFrame3_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, importDataFrame3b_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, importDataFrame3_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetId()) {
@@ -15703,7 +14310,7 @@ public class IWorkerService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, importDataFrame3b_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, importDataFrame3_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
@@ -15729,14 +14336,14 @@ public class IWorkerService {
     }
   }
 
-  public static class importDataFrame3b_result implements org.apache.thrift.TBase<importDataFrame3b_result, importDataFrame3b_result._Fields>, java.io.Serializable, Cloneable, Comparable<importDataFrame3b_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("importDataFrame3b_result");
+  public static class importDataFrame3_result implements org.apache.thrift.TBase<importDataFrame3_result, importDataFrame3_result._Fields>, java.io.Serializable, Cloneable, Comparable<importDataFrame3_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("importDataFrame3_result");
 
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new importDataFrame3b_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new importDataFrame3b_resultTupleSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new importDataFrame3_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new importDataFrame3_resultTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success; // required
     private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
@@ -15813,13 +14420,13 @@ public class IWorkerService {
       tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(importDataFrame3b_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(importDataFrame3_result.class, metaDataMap);
     }
 
-    public importDataFrame3b_result() {
+    public importDataFrame3_result() {
     }
 
-    public importDataFrame3b_result(
+    public importDataFrame3_result(
       org.ignis.rpc.driver.IDataFrameId success,
       org.ignis.rpc.driver.IDriverException ex)
     {
@@ -15831,7 +14438,7 @@ public class IWorkerService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public importDataFrame3b_result(importDataFrame3b_result other) {
+    public importDataFrame3_result(importDataFrame3_result other) {
       if (other.isSetSuccess()) {
         this.success = new org.ignis.rpc.driver.IDataFrameId(other.success);
       }
@@ -15840,8 +14447,8 @@ public class IWorkerService {
       }
     }
 
-    public importDataFrame3b_result deepCopy() {
-      return new importDataFrame3b_result(this);
+    public importDataFrame3_result deepCopy() {
+      return new importDataFrame3_result(this);
     }
 
     @Override
@@ -15855,7 +14462,7 @@ public class IWorkerService {
       return this.success;
     }
 
-    public importDataFrame3b_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
+    public importDataFrame3_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
       this.success = success;
       return this;
     }
@@ -15880,7 +14487,7 @@ public class IWorkerService {
       return this.ex;
     }
 
-    public importDataFrame3b_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
+    public importDataFrame3_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
       this.ex = ex;
       return this;
     }
@@ -15951,12 +14558,12 @@ public class IWorkerService {
 
     @Override
     public boolean equals(java.lang.Object that) {
-      if (that instanceof importDataFrame3b_result)
-        return this.equals((importDataFrame3b_result)that);
+      if (that instanceof importDataFrame3_result)
+        return this.equals((importDataFrame3_result)that);
       return false;
     }
 
-    public boolean equals(importDataFrame3b_result that) {
+    public boolean equals(importDataFrame3_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -15999,7 +14606,7 @@ public class IWorkerService {
     }
 
     @Override
-    public int compareTo(importDataFrame3b_result other) {
+    public int compareTo(importDataFrame3_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -16044,7 +14651,7 @@ public class IWorkerService {
 
     @Override
     public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("importDataFrame3b_result(");
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("importDataFrame3_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -16090,15 +14697,15 @@ public class IWorkerService {
       }
     }
 
-    private static class importDataFrame3b_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame3b_resultStandardScheme getScheme() {
-        return new importDataFrame3b_resultStandardScheme();
+    private static class importDataFrame3_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public importDataFrame3_resultStandardScheme getScheme() {
+        return new importDataFrame3_resultStandardScheme();
       }
     }
 
-    private static class importDataFrame3b_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<importDataFrame3b_result> {
+    private static class importDataFrame3_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<importDataFrame3_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, importDataFrame3b_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, importDataFrame3_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -16137,7 +14744,7 @@ public class IWorkerService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, importDataFrame3b_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, importDataFrame3_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -16157,16 +14764,16 @@ public class IWorkerService {
 
     }
 
-    private static class importDataFrame3b_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame3b_resultTupleScheme getScheme() {
-        return new importDataFrame3b_resultTupleScheme();
+    private static class importDataFrame3_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public importDataFrame3_resultTupleScheme getScheme() {
+        return new importDataFrame3_resultTupleScheme();
       }
     }
 
-    private static class importDataFrame3b_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<importDataFrame3b_result> {
+    private static class importDataFrame3_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<importDataFrame3_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, importDataFrame3b_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, importDataFrame3_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
         if (struct.isSetSuccess()) {
@@ -16185,1174 +14792,7 @@ public class IWorkerService {
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, importDataFrame3b_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(2);
-        if (incoming.get(0)) {
-          struct.success = new org.ignis.rpc.driver.IDataFrameId();
-          struct.success.read(iprot);
-          struct.setSuccessIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.ex = new org.ignis.rpc.driver.IDriverException();
-          struct.ex.read(iprot);
-          struct.setExIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class importDataFrame4_args implements org.apache.thrift.TBase<importDataFrame4_args, importDataFrame4_args._Fields>, java.io.Serializable, Cloneable, Comparable<importDataFrame4_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("importDataFrame4_args");
-
-    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-    private static final org.apache.thrift.protocol.TField DATA_FIELD_DESC = new org.apache.thrift.protocol.TField("data", org.apache.thrift.protocol.TType.STRUCT, (short)2);
-    private static final org.apache.thrift.protocol.TField PARTITIONS_FIELD_DESC = new org.apache.thrift.protocol.TField("partitions", org.apache.thrift.protocol.TType.I64, (short)3);
-    private static final org.apache.thrift.protocol.TField SRC_FIELD_DESC = new org.apache.thrift.protocol.TField("src", org.apache.thrift.protocol.TType.STRUCT, (short)4);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new importDataFrame4_argsStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new importDataFrame4_argsTupleSchemeFactory();
-
-    private @org.apache.thrift.annotation.Nullable IWorkerId id; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId data; // required
-    private long partitions; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      ID((short)1, "id"),
-      DATA((short)2, "data"),
-      PARTITIONS((short)3, "partitions"),
-      SRC((short)4, "src");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // ID
-            return ID;
-          case 2: // DATA
-            return DATA;
-          case 3: // PARTITIONS
-            return PARTITIONS;
-          case 4: // SRC
-            return SRC;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    private static final int __PARTITIONS_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, IWorkerId.class)));
-      tmpMap.put(_Fields.DATA, new org.apache.thrift.meta_data.FieldMetaData("data", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDataFrameId.class)));
-      tmpMap.put(_Fields.PARTITIONS, new org.apache.thrift.meta_data.FieldMetaData("partitions", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      tmpMap.put(_Fields.SRC, new org.apache.thrift.meta_data.FieldMetaData("src", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.ISource.class)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(importDataFrame4_args.class, metaDataMap);
-    }
-
-    public importDataFrame4_args() {
-    }
-
-    public importDataFrame4_args(
-      IWorkerId id,
-      org.ignis.rpc.driver.IDataFrameId data,
-      long partitions,
-      org.ignis.rpc.ISource src)
-    {
-      this();
-      this.id = id;
-      this.data = data;
-      this.partitions = partitions;
-      setPartitionsIsSet(true);
-      this.src = src;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public importDataFrame4_args(importDataFrame4_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      if (other.isSetId()) {
-        this.id = new IWorkerId(other.id);
-      }
-      if (other.isSetData()) {
-        this.data = new org.ignis.rpc.driver.IDataFrameId(other.data);
-      }
-      this.partitions = other.partitions;
-      if (other.isSetSrc()) {
-        this.src = new org.ignis.rpc.ISource(other.src);
-      }
-    }
-
-    public importDataFrame4_args deepCopy() {
-      return new importDataFrame4_args(this);
-    }
-
-    @Override
-    public void clear() {
-      this.id = null;
-      this.data = null;
-      setPartitionsIsSet(false);
-      this.partitions = 0;
-      this.src = null;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public IWorkerId getId() {
-      return this.id;
-    }
-
-    public importDataFrame4_args setId(@org.apache.thrift.annotation.Nullable IWorkerId id) {
-      this.id = id;
-      return this;
-    }
-
-    public void unsetId() {
-      this.id = null;
-    }
-
-    /** Returns true if field id is set (has been assigned a value) and false otherwise */
-    public boolean isSetId() {
-      return this.id != null;
-    }
-
-    public void setIdIsSet(boolean value) {
-      if (!value) {
-        this.id = null;
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.driver.IDataFrameId getData() {
-      return this.data;
-    }
-
-    public importDataFrame4_args setData(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId data) {
-      this.data = data;
-      return this;
-    }
-
-    public void unsetData() {
-      this.data = null;
-    }
-
-    /** Returns true if field data is set (has been assigned a value) and false otherwise */
-    public boolean isSetData() {
-      return this.data != null;
-    }
-
-    public void setDataIsSet(boolean value) {
-      if (!value) {
-        this.data = null;
-      }
-    }
-
-    public long getPartitions() {
-      return this.partitions;
-    }
-
-    public importDataFrame4_args setPartitions(long partitions) {
-      this.partitions = partitions;
-      setPartitionsIsSet(true);
-      return this;
-    }
-
-    public void unsetPartitions() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
-    }
-
-    /** Returns true if field partitions is set (has been assigned a value) and false otherwise */
-    public boolean isSetPartitions() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PARTITIONS_ISSET_ID);
-    }
-
-    public void setPartitionsIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PARTITIONS_ISSET_ID, value);
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.ISource getSrc() {
-      return this.src;
-    }
-
-    public importDataFrame4_args setSrc(@org.apache.thrift.annotation.Nullable org.ignis.rpc.ISource src) {
-      this.src = src;
-      return this;
-    }
-
-    public void unsetSrc() {
-      this.src = null;
-    }
-
-    /** Returns true if field src is set (has been assigned a value) and false otherwise */
-    public boolean isSetSrc() {
-      return this.src != null;
-    }
-
-    public void setSrcIsSet(boolean value) {
-      if (!value) {
-        this.src = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case ID:
-        if (value == null) {
-          unsetId();
-        } else {
-          setId((IWorkerId)value);
-        }
-        break;
-
-      case DATA:
-        if (value == null) {
-          unsetData();
-        } else {
-          setData((org.ignis.rpc.driver.IDataFrameId)value);
-        }
-        break;
-
-      case PARTITIONS:
-        if (value == null) {
-          unsetPartitions();
-        } else {
-          setPartitions((java.lang.Long)value);
-        }
-        break;
-
-      case SRC:
-        if (value == null) {
-          unsetSrc();
-        } else {
-          setSrc((org.ignis.rpc.ISource)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case ID:
-        return getId();
-
-      case DATA:
-        return getData();
-
-      case PARTITIONS:
-        return getPartitions();
-
-      case SRC:
-        return getSrc();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case ID:
-        return isSetId();
-      case DATA:
-        return isSetData();
-      case PARTITIONS:
-        return isSetPartitions();
-      case SRC:
-        return isSetSrc();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that instanceof importDataFrame4_args)
-        return this.equals((importDataFrame4_args)that);
-      return false;
-    }
-
-    public boolean equals(importDataFrame4_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_id = true && this.isSetId();
-      boolean that_present_id = true && that.isSetId();
-      if (this_present_id || that_present_id) {
-        if (!(this_present_id && that_present_id))
-          return false;
-        if (!this.id.equals(that.id))
-          return false;
-      }
-
-      boolean this_present_data = true && this.isSetData();
-      boolean that_present_data = true && that.isSetData();
-      if (this_present_data || that_present_data) {
-        if (!(this_present_data && that_present_data))
-          return false;
-        if (!this.data.equals(that.data))
-          return false;
-      }
-
-      boolean this_present_partitions = true;
-      boolean that_present_partitions = true;
-      if (this_present_partitions || that_present_partitions) {
-        if (!(this_present_partitions && that_present_partitions))
-          return false;
-        if (this.partitions != that.partitions)
-          return false;
-      }
-
-      boolean this_present_src = true && this.isSetSrc();
-      boolean that_present_src = true && that.isSetSrc();
-      if (this_present_src || that_present_src) {
-        if (!(this_present_src && that_present_src))
-          return false;
-        if (!this.src.equals(that.src))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetId()) ? 131071 : 524287);
-      if (isSetId())
-        hashCode = hashCode * 8191 + id.hashCode();
-
-      hashCode = hashCode * 8191 + ((isSetData()) ? 131071 : 524287);
-      if (isSetData())
-        hashCode = hashCode * 8191 + data.hashCode();
-
-      hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(partitions);
-
-      hashCode = hashCode * 8191 + ((isSetSrc()) ? 131071 : 524287);
-      if (isSetSrc())
-        hashCode = hashCode * 8191 + src.hashCode();
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(importDataFrame4_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.compare(isSetId(), other.isSetId());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetId()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, other.id);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.compare(isSetData(), other.isSetData());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetData()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.data, other.data);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.compare(isSetPartitions(), other.isSetPartitions());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetPartitions()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.partitions, other.partitions);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.compare(isSetSrc(), other.isSetSrc());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSrc()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.src, other.src);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-    }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("importDataFrame4_args(");
-      boolean first = true;
-
-      sb.append("id:");
-      if (this.id == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.id);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("data:");
-      if (this.data == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.data);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("partitions:");
-      sb.append(this.partitions);
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("src:");
-      if (this.src == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.src);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-      if (id != null) {
-        id.validate();
-      }
-      if (data != null) {
-        data.validate();
-      }
-      if (src != null) {
-        src.validate();
-      }
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class importDataFrame4_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame4_argsStandardScheme getScheme() {
-        return new importDataFrame4_argsStandardScheme();
-      }
-    }
-
-    private static class importDataFrame4_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<importDataFrame4_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, importDataFrame4_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.id = new IWorkerId();
-                struct.id.read(iprot);
-                struct.setIdIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 2: // DATA
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.data = new org.ignis.rpc.driver.IDataFrameId();
-                struct.data.read(iprot);
-                struct.setDataIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 3: // PARTITIONS
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.partitions = iprot.readI64();
-                struct.setPartitionsIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 4: // SRC
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.src = new org.ignis.rpc.ISource();
-                struct.src.read(iprot);
-                struct.setSrcIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, importDataFrame4_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.id != null) {
-          oprot.writeFieldBegin(ID_FIELD_DESC);
-          struct.id.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        if (struct.data != null) {
-          oprot.writeFieldBegin(DATA_FIELD_DESC);
-          struct.data.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldBegin(PARTITIONS_FIELD_DESC);
-        oprot.writeI64(struct.partitions);
-        oprot.writeFieldEnd();
-        if (struct.src != null) {
-          oprot.writeFieldBegin(SRC_FIELD_DESC);
-          struct.src.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class importDataFrame4_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame4_argsTupleScheme getScheme() {
-        return new importDataFrame4_argsTupleScheme();
-      }
-    }
-
-    private static class importDataFrame4_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<importDataFrame4_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, importDataFrame4_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetId()) {
-          optionals.set(0);
-        }
-        if (struct.isSetData()) {
-          optionals.set(1);
-        }
-        if (struct.isSetPartitions()) {
-          optionals.set(2);
-        }
-        if (struct.isSetSrc()) {
-          optionals.set(3);
-        }
-        oprot.writeBitSet(optionals, 4);
-        if (struct.isSetId()) {
-          struct.id.write(oprot);
-        }
-        if (struct.isSetData()) {
-          struct.data.write(oprot);
-        }
-        if (struct.isSetPartitions()) {
-          oprot.writeI64(struct.partitions);
-        }
-        if (struct.isSetSrc()) {
-          struct.src.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, importDataFrame4_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(4);
-        if (incoming.get(0)) {
-          struct.id = new IWorkerId();
-          struct.id.read(iprot);
-          struct.setIdIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.data = new org.ignis.rpc.driver.IDataFrameId();
-          struct.data.read(iprot);
-          struct.setDataIsSet(true);
-        }
-        if (incoming.get(2)) {
-          struct.partitions = iprot.readI64();
-          struct.setPartitionsIsSet(true);
-        }
-        if (incoming.get(3)) {
-          struct.src = new org.ignis.rpc.ISource();
-          struct.src.read(iprot);
-          struct.setSrcIsSet(true);
-        }
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class importDataFrame4_result implements org.apache.thrift.TBase<importDataFrame4_result, importDataFrame4_result._Fields>, java.io.Serializable, Cloneable, Comparable<importDataFrame4_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("importDataFrame4_result");
-
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
-    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new importDataFrame4_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new importDataFrame4_resultTupleSchemeFactory();
-
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success; // required
-    private @org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success"),
-      EX((short)1, "ex");
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 0: // SUCCESS
-            return SUCCESS;
-          case 1: // EX
-            return EX;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDataFrameId.class)));
-      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, org.ignis.rpc.driver.IDriverException.class)));
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(importDataFrame4_result.class, metaDataMap);
-    }
-
-    public importDataFrame4_result() {
-    }
-
-    public importDataFrame4_result(
-      org.ignis.rpc.driver.IDataFrameId success,
-      org.ignis.rpc.driver.IDriverException ex)
-    {
-      this();
-      this.success = success;
-      this.ex = ex;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public importDataFrame4_result(importDataFrame4_result other) {
-      if (other.isSetSuccess()) {
-        this.success = new org.ignis.rpc.driver.IDataFrameId(other.success);
-      }
-      if (other.isSetEx()) {
-        this.ex = new org.ignis.rpc.driver.IDriverException(other.ex);
-      }
-    }
-
-    public importDataFrame4_result deepCopy() {
-      return new importDataFrame4_result(this);
-    }
-
-    @Override
-    public void clear() {
-      this.success = null;
-      this.ex = null;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.driver.IDataFrameId getSuccess() {
-      return this.success;
-    }
-
-    public importDataFrame4_result setSuccess(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDataFrameId success) {
-      this.success = success;
-      return this;
-    }
-
-    public void unsetSuccess() {
-      this.success = null;
-    }
-
-    /** Returns true if field success is set (has been assigned a value) and false otherwise */
-    public boolean isSetSuccess() {
-      return this.success != null;
-    }
-
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
-        this.success = null;
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public org.ignis.rpc.driver.IDriverException getEx() {
-      return this.ex;
-    }
-
-    public importDataFrame4_result setEx(@org.apache.thrift.annotation.Nullable org.ignis.rpc.driver.IDriverException ex) {
-      this.ex = ex;
-      return this;
-    }
-
-    public void unsetEx() {
-      this.ex = null;
-    }
-
-    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
-    public boolean isSetEx() {
-      return this.ex != null;
-    }
-
-    public void setExIsSet(boolean value) {
-      if (!value) {
-        this.ex = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
-      switch (field) {
-      case SUCCESS:
-        if (value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((org.ignis.rpc.driver.IDataFrameId)value);
-        }
-        break;
-
-      case EX:
-        if (value == null) {
-          unsetEx();
-        } else {
-          setEx((org.ignis.rpc.driver.IDriverException)value);
-        }
-        break;
-
-      }
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      case SUCCESS:
-        return getSuccess();
-
-      case EX:
-        return getEx();
-
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      case SUCCESS:
-        return isSetSuccess();
-      case EX:
-        return isSetEx();
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that instanceof importDataFrame4_result)
-        return this.equals((importDataFrame4_result)that);
-      return false;
-    }
-
-    public boolean equals(importDataFrame4_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!this.success.equals(that.success))
-          return false;
-      }
-
-      boolean this_present_ex = true && this.isSetEx();
-      boolean that_present_ex = true && that.isSetEx();
-      if (this_present_ex || that_present_ex) {
-        if (!(this_present_ex && that_present_ex))
-          return false;
-        if (!this.ex.equals(that.ex))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
-      if (isSetSuccess())
-        hashCode = hashCode * 8191 + success.hashCode();
-
-      hashCode = hashCode * 8191 + ((isSetEx()) ? 131071 : 524287);
-      if (isSetEx())
-        hashCode = hashCode * 8191 + ex.hashCode();
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(importDataFrame4_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      lastComparison = java.lang.Boolean.compare(isSetSuccess(), other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSuccess()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = java.lang.Boolean.compare(isSetEx(), other.isSetEx());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetEx()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, other.ex);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    @org.apache.thrift.annotation.Nullable
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-      }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("importDataFrame4_result(");
-      boolean first = true;
-
-      sb.append("success:");
-      if (this.success == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.success);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("ex:");
-      if (this.ex == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.ex);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-      if (success != null) {
-        success.validate();
-      }
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class importDataFrame4_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame4_resultStandardScheme getScheme() {
-        return new importDataFrame4_resultStandardScheme();
-      }
-    }
-
-    private static class importDataFrame4_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<importDataFrame4_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, importDataFrame4_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.success = new org.ignis.rpc.driver.IDataFrameId();
-                struct.success.read(iprot);
-                struct.setSuccessIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 1: // EX
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.ex = new org.ignis.rpc.driver.IDriverException();
-                struct.ex.read(iprot);
-                struct.setExIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, importDataFrame4_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.success != null) {
-          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          struct.success.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        if (struct.ex != null) {
-          oprot.writeFieldBegin(EX_FIELD_DESC);
-          struct.ex.write(oprot);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class importDataFrame4_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public importDataFrame4_resultTupleScheme getScheme() {
-        return new importDataFrame4_resultTupleScheme();
-      }
-    }
-
-    private static class importDataFrame4_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<importDataFrame4_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, importDataFrame4_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetSuccess()) {
-          optionals.set(0);
-        }
-        if (struct.isSetEx()) {
-          optionals.set(1);
-        }
-        oprot.writeBitSet(optionals, 2);
-        if (struct.isSetSuccess()) {
-          struct.success.write(oprot);
-        }
-        if (struct.isSetEx()) {
-          struct.ex.write(oprot);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, importDataFrame4_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, importDataFrame3_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {

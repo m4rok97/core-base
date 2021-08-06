@@ -174,34 +174,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId importDataFrame3a(IWorkerId id, IDataFrameId data, long partitions) throws IDriverException, TException {
-        try {
-            ICluster clusterSource = attributes.getCluster(data.getCluster());
-            ICluster clusterTarget = attributes.getCluster(id.getCluster());
-            IWorker workerSource = clusterSource.getWorker(data.getWorker());
-            IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
-
-            ILock lock1 = workerSource.getLock();
-            ILock lock2 = workerTarget.getLock();
-            if (lock1.compareTo(lock2) < 0) {
-                ILock tmp = lock1;
-                lock1 = lock2;
-                lock2 = tmp;
-            }
-            synchronized (lock1) {
-                synchronized (lock2) {
-                    IDataFrame source = workerSource.getDataFrame(data.getDataFrame());
-                    IDataFrame target = new IWorkerImportDataHelper(workerTarget, clusterTarget.getProperties()).importDataFrame(source, partitions);
-                    return new IDataFrameId(clusterTarget.getId(), workerTarget.getId(), target.getId());
-                }
-            }
-        } catch (Exception ex) {
-            throw new IDriverExceptionImpl(ex);
-        }
-    }
-
-    @Override
-    public IDataFrameId importDataFrame3b(IWorkerId id, IDataFrameId data, ISource src) throws IDriverException, TException {
+    public IDataFrameId importDataFrame3(IWorkerId id, IDataFrameId data, ISource src) throws IDriverException, TException {
         try {
             ICluster clusterSource = attributes.getCluster(data.getCluster());
             ICluster clusterTarget = attributes.getCluster(id.getCluster());
@@ -219,33 +192,6 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
                 synchronized (lock2) {
                     IDataFrame source = workerSource.getDataFrame(data.getDataFrame());
                     IDataFrame target = new IWorkerImportDataHelper(workerTarget, clusterTarget.getProperties()).importDataFrame(source, src);
-                    return new IDataFrameId(clusterTarget.getId(), workerTarget.getId(), target.getId());
-                }
-            }
-        } catch (Exception ex) {
-            throw new IDriverExceptionImpl(ex);
-        }
-    }
-
-    @Override
-    public IDataFrameId importDataFrame4(IWorkerId id, IDataFrameId data, long partitions, ISource src) throws IDriverException, TException {
-        try {
-            ICluster clusterSource = attributes.getCluster(data.getCluster());
-            ICluster clusterTarget = attributes.getCluster(id.getCluster());
-            IWorker workerSource = clusterSource.getWorker(data.getWorker());
-            IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
-
-            ILock lock1 = workerSource.getLock();
-            ILock lock2 = workerTarget.getLock();
-            if (lock1.compareTo(lock2) < 0) {
-                ILock tmp = lock1;
-                lock1 = lock2;
-                lock2 = tmp;
-            }
-            synchronized (lock1) {
-                synchronized (lock2) {
-                    IDataFrame source = workerSource.getDataFrame(data.getDataFrame());
-                    IDataFrame target = new IWorkerImportDataHelper(workerTarget, clusterTarget.getProperties()).importDataFrame(source, partitions, src);
                     return new IDataFrameId(clusterTarget.getId(), workerTarget.getId(), target.getId());
                 }
             }

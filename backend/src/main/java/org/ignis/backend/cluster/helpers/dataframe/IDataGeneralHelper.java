@@ -16,6 +16,7 @@
  */
 package org.ignis.backend.cluster.helpers.dataframe;
 
+import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.worker.IWorkerImportDataHelper;
@@ -24,6 +25,8 @@ import org.ignis.backend.cluster.tasks.executor.*;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.ISource;
+import org.ignis.rpc.driver.IDataFrameId;
+import org.ignis.rpc.driver.IDriverException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -236,28 +239,6 @@ public final class IDataGeneralHelper extends IDataHelper {
         return target;
     }
 
-    public IDataFrame union(IDataFrame other, boolean preserveOrder, long numPartitions) throws IgnisException {
-        String otherName = other.getName();
-        if (!data.getWorker().equals(other.getWorker())) {
-            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
-        }
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        IUnionTask.Shared shared = new IUnionTask.Shared(data.getExecutors().size());
-        builder.newDependency(other.getTasks());
-        builder.newDependency(data.getTasks());
-        for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IUnionTask(getName(), executor, shared, preserveOrder, numPartitions));
-        }
-        IDataFrame target = data.createDataFrame(builder.build());
-        LOGGER.info(log() + "union(" +
-                "other=" + otherName +
-                "preserveOrder=" + preserveOrder +
-                "numPartitions=" + numPartitions +
-                ") registered -> " + target.getName()
-        );
-        return target;
-    }
-
     public IDataFrame union(IDataFrame other, boolean preserveOrder, ISource src) throws IgnisException {
         String otherName = other.getName();
         if (!data.getWorker().equals(other.getWorker())) {
@@ -274,29 +255,6 @@ public final class IDataGeneralHelper extends IDataHelper {
         LOGGER.info(log() + "union(" +
                 "other=" + otherName +
                 "preserveOrder=" + preserveOrder +
-                "src=" + srcToString(src) +
-                ") registered -> " + target.getName()
-        );
-        return target;
-    }
-
-    public IDataFrame union(IDataFrame other, boolean preserveOrder, long numPartitions, ISource src) throws IgnisException {
-        String otherName = other.getName();
-        if (!data.getWorker().equals(other.getWorker())) {
-            other = new IWorkerImportDataHelper(data.getWorker(), properties).importDataFrame(other);
-        }
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
-        IUnionTask.Shared shared = new IUnionTask.Shared(data.getExecutors().size());
-        builder.newDependency(other.getTasks());
-        builder.newDependency(data.getTasks());
-        for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IUnionTask(getName(), executor, shared, preserveOrder, numPartitions, src));
-        }
-        IDataFrame target = data.createDataFrame(builder.build());
-        LOGGER.info(log() + "union(" +
-                "other=" + otherName +
-                "preserveOrder=" + preserveOrder +
-                "numPartitions=" + numPartitions +
                 "src=" + srcToString(src) +
                 ") registered -> " + target.getName()
         );
@@ -486,6 +444,61 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "mapValues(" +
                 "src=" + srcToString(src) +
+                ") registered -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame repartition(long numPartitions, boolean preserveOrdering, boolean global) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IRepartitionTask(getName(), executor, numPartitions, preserveOrdering, global));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "repartition(" +
+                "numPartitions=" + numPartitions +
+                "preserveOrdering=" + preserveOrdering +
+                "global=" + global +
+                ") registered -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame partitionByRandom(long numPartitions) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IPartitionByRandomTask(getName(), executor, numPartitions));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "partitionByRandom(" +
+                "numPartitions=" + numPartitions +
+                ") registered -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame partitionByHash(long numPartitions) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IPartitionByHashTask(getName(), executor, numPartitions));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "partitionByHash(" +
+                "numPartitions=" + numPartitions +
+                ") registered -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame partitionBy(ISource src, long numPartitions) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IPartitionByTask(getName(), executor, src, numPartitions));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "partitionBy(" +
+                "src=" + srcToString(src) +
+                "numPartitions=" + numPartitions +
                 ") registered -> " + target.getName());
         return target;
     }

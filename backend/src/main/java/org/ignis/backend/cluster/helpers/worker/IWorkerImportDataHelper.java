@@ -41,7 +41,7 @@ public final class IWorkerImportDataHelper extends IWorkerHelper {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newLock(source.getLock());
         IImportDataTask.Shared shared = new IImportDataTask.Shared(source.getPartitions(), worker.getExecutors().size(),
-                commId(source.getWorker(), worker));
+                commId(source.getWorker(), worker), Math.min(source.getWorker().getCores(), worker.getCores()));
         for (IExecutor executor : source.getExecutors()) {
             builder.newTask(new IImportDataTask(getName(), executor, shared, true));
         }
@@ -59,7 +59,7 @@ public final class IWorkerImportDataHelper extends IWorkerHelper {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newLock(source.getLock());
         IImportDataTask.Shared shared = new IImportDataTask.Shared(source.getPartitions(), worker.getExecutors().size(),
-                commId(source.getWorker(), worker));
+                commId(source.getWorker(), worker), Math.min(source.getWorker().getCores(), worker.getCores()));
         for (IExecutor executor : source.getExecutors()) {
             builder.newTask(new IImportDataTask(getName(), executor, shared, true, src));
         }
@@ -69,45 +69,6 @@ public final class IWorkerImportDataHelper extends IWorkerHelper {
         IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
         LOGGER.info(log() + "importDataFrame(" +
                 "source=" + source.getName() +
-                "src=" + srcToString(src) +
-                ") registered -> " + target.getName());
-        return target;
-    }
-
-    public IDataFrame importDataFrame(IDataFrame source, long partitions) throws IgnisException {
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
-        builder.newLock(source.getLock());
-        IImportDataTask.Shared shared = new IImportDataTask.Shared(source.getPartitions(), worker.getExecutors().size(),
-                commId(source.getWorker(), worker));
-        for (IExecutor executor : source.getExecutors()) {
-            builder.newTask(new IImportDataTask(getName(), executor, shared, true, partitions));
-        }
-        for (IExecutor executor : worker.getExecutors()) {
-            builder.newTask(new IImportDataTask(getName(), executor, shared, false, partitions));
-        }
-        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "importDataFrame(" +
-                "source=" + source.getName() +
-                "partitions=" + partitions +
-                ") registered -> " + target.getName());
-        return target;
-    }
-
-    public IDataFrame importDataFrame(IDataFrame source, long partitions, ISource src) throws IgnisException {
-        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
-        builder.newLock(source.getLock());
-        IImportDataTask.Shared shared = new IImportDataTask.Shared(source.getPartitions(), worker.getExecutors().size(),
-                commId(source.getWorker(), worker));
-        for (IExecutor executor : source.getExecutors()) {
-            builder.newTask(new IImportDataTask(getName(), executor, shared, true, partitions, src));
-        }
-        for (IExecutor executor : worker.getExecutors()) {
-            builder.newTask(new IImportDataTask(getName(), executor, shared, false, partitions, src));
-        }
-        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
-        LOGGER.info(log() + "importDataFrame(" +
-                "source=" + source.getName() +
-                "partitions=" + partitions +
                 "src=" + srcToString(src) +
                 ") registered -> " + target.getName());
         return target;

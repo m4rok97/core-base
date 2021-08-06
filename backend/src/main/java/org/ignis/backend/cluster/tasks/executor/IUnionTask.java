@@ -47,29 +47,20 @@ public final class IUnionTask extends IExecutorContextTask {
     }
 
     private final ISource src;
-    private final Long numPartitions;
     private final Shared shared;
     private final boolean preserveOrder;
 
-    public IUnionTask(String name, IExecutor executor, Shared shared, boolean preserveOrder, ISource src) {
-        this(name, executor, shared, preserveOrder, null, src);
-    }
 
     public IUnionTask(String name, IExecutor executor, Shared shared, boolean preserveOrder) {
-        this(name, executor, shared, preserveOrder, null, null);
-    }
-
-    public IUnionTask(String name, IExecutor executor, Shared shared, boolean preserveOrder, Long numPartitions) {
-        this(name, executor, shared, preserveOrder, numPartitions, null);
+        this(name, executor, shared, preserveOrder,  null);
     }
 
 
-    public IUnionTask(String name, IExecutor executor, Shared shared, boolean preserveOrder, Long numPartitions, ISource src) {
+    public IUnionTask(String name, IExecutor executor, Shared shared, boolean preserveOrder, ISource src) {
         super(name, executor, Mode.LOAD_AND_SAVE);
         this.shared = shared;
         this.preserveOrder = preserveOrder;
         this.src = src;
-        this.numPartitions = numPartitions;
     }
 
     @Override
@@ -82,18 +73,11 @@ public final class IUnionTask extends IExecutorContextTask {
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "union started");
         try {
-            if (preserveOrder) {
-                shared.barrier.await();
-                throw new UnsupportedOperationException("Not implemented yet"); //TODO
-            }
             context.loadContextAsVariable(executor, "other");
             if (src == null) {
-                executor.getGeneralModule().union_("other");
+                executor.getGeneralModule().union_("other", preserveOrder);
             } else {
-                executor.getGeneralModule().union2("other", src);
-            }
-            if (numPartitions != null) {
-                throw new UnsupportedOperationException("Not implemented yet"); //TODO
+                executor.getGeneralModule().union2("other", preserveOrder, src);
             }
             shared.barrier.await();
         } catch (IExecutorException ex) {

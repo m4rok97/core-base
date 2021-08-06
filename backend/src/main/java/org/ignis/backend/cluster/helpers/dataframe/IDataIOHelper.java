@@ -40,14 +40,6 @@ public final class IDataIOHelper extends IDataHelper {
         super(data, properties);
     }
 
-    public IDataFrame repartition(long numPartitions) {
-        throw new UnsupportedOperationException("Not supported on this version."); //TODO next version
-    }
-
-    public IDataFrame coalesce(long numPartitions, boolean shuffle) {
-        throw new UnsupportedOperationException("Not supported on this version."); //TODO next version
-    }
-
     public ILazy<Long> partitions() {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
