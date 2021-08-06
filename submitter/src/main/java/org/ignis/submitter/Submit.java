@@ -16,13 +16,14 @@
  */
 package org.ignis.submitter;
 
-import org.ignis.properties.IPropertyException;
-import org.ignis.scheduler.ISchedulerException;
+import com.jcraft.jsch.*;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
+import org.ignis.properties.IPropertyException;
+import org.ignis.properties.IPropetiesParser;
 import org.ignis.scheduler.IScheduler;
 import org.ignis.scheduler.ISchedulerBuilder;
-import org.ignis.properties.IPropetiesParser;
+import org.ignis.scheduler.ISchedulerException;
 import org.ignis.scheduler.model.IContainerInfo;
 import org.ignis.scheduler.model.IContainerStatus;
 import org.ignis.scheduler.model.IPort;
@@ -36,10 +37,7 @@ import picocli.CommandLine.Parameters;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -146,7 +144,25 @@ public class Submit implements Callable<Integer> {
                 props.setProperty(IKeys.WORKING_DIRECTORY, props.getProperty(IKeys.DFS_HOME));
             }
 
-            if (direct) {
+            String privateKey = "";
+            String publicKey = "";
+            if (attach) {
+                ByteArrayOutputStream privateKeyBuff = new ByteArrayOutputStream(2048);
+                ByteArrayOutputStream publicKeyBuff = new ByteArrayOutputStream(2048);
+                try {
+                    KeyPair keyPair = KeyPair.genKeyPair(new JSch(), KeyPair.RSA, 2048);
+                    keyPair.writePrivateKey(privateKeyBuff);
+                    keyPair.writePublicKey(publicKeyBuff, "");
+                } catch (JSchException ex) {
+                }
+                privateKey = privateKeyBuff.toString();
+                publicKey = publicKeyBuff.toString();
+
+                builder.command("ignis-server");
+                builder.arguments(Arrays.asList("22", "1"));
+                env.put("IGNIS_DRIVER_PUBLIC_KEY", publicKey);
+                ports.add(new IPort(22, 0, "tpc"));
+            } else if (direct) {
                 builder.command(cmd);
                 builder.arguments(args);
             } else {
@@ -173,24 +189,74 @@ public class Submit implements Callable<Integer> {
                 throw ex;
             }
 
-            if(print_id){
+            if (print_id) {
                 System.out.println(props.getProperty(IKeys.SCHEDULER_TYPE) + ":" + app);
             }
 
             if (attach) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            } else if (wait) {
-                scheduler.getContainer(app);
+                List<String> arguments = new ArrayList<>();
+                arguments.add(cmd);
+                if (args != null) {
+                    arguments.addAll(args);
+                }
+                StringBuilder command = new StringBuilder();
+                command.append("ignis-run ");
+                for (String arg : arguments) {
+                    command.append('"');
+                    command.append(arg.replace("\"", "\\\""));
+                    command.append('"').append(' ');
+                }
+
                 while (true) {
                     IContainerStatus status = scheduler.getStatus(app);
                     LOGGER.info("Task status is " + status.name());
-                    if (status != IContainerStatus.ACCEPTED &&
-                            status != IContainerStatus.RUNNING) {
-                        if (status == IContainerStatus.FINISHED) {
-                            return 0;
-                        } else {
-                            return -1;
+                    if (status == IContainerStatus.RUNNING) {
+                        break;
+                    } else if (status != IContainerStatus.ACCEPTED) {
+                        return status == IContainerStatus.FINISHED ? 0 : 1;
+                    }
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                    }
+                }
+                LOGGER.info("Conecting...");
+                IContainerInfo info = scheduler.getContainer(app);
+                int server = info.searchHostPort(22);
+                JSch jsch = new JSch();
+                Session session;
+                ChannelExec channel;
+                try {
+                    session = jsch.getSession("root", info.getHost(), server);
+                    session.setConfig("StrictHostKeyChecking", "no");
+                    jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
+                    session.connect(60000);
+                    LOGGER.info("Accepted");
+                    channel = (ChannelExec) session.openChannel("exec");
+                    channel.setOutputStream(System.out, true);
+                    channel.setErrStream(System.err, true);
+                    channel.setCommand(command.toString());
+                    LOGGER.info("Launching Driver");
+                    channel.connect(60000);
+                    while (!channel.isClosed()) {
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException ex) {
                         }
+                    }
+                    channel.disconnect();
+                    session.disconnect();
+                    return channel.getExitStatus();
+                } catch (JSchException ex) {
+                    LOGGER.error("Connection Lost");
+                    return -1;
+                }
+            } else if (wait || attach) {
+                while (true) {
+                    IContainerStatus status = scheduler.getStatus(app);
+                    LOGGER.info("Task status is " + status.name());
+                    if (status != IContainerStatus.ACCEPTED && status != IContainerStatus.RUNNING) {
+                        return status == IContainerStatus.FINISHED ? 0 : 1;
                     }
                     try {
                         Thread.sleep(2000);
