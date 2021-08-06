@@ -6,9 +6,15 @@ echo ${IGNIS_DRIVER_PUBLIC_KEY} >> ~/.ssh/authorized_keys
 /usr/sbin/sshd -p $1
 
 if [ "$2" == "1" ]; then
+	attempt=0
 	while [ "$(last -10 | grep -c "still logged")" -eq 0 ]; do
 		echo "waiting client conection"
 		sleep 10
+		if [ ${attempt} -eq 30 ];then
+			echo "Client timeout, exiting" 1>&2
+			exit 1
+		fi
+		attempt=$(($attempt+1))
 	done
 	while [ "$(last -10 | grep -c "still logged")" -ge 0 ]; do
 		sleep ${IGNIS_DRIVER_HEALTHCHECK_INTERVAL}
