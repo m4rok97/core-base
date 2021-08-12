@@ -4,7 +4,7 @@ ARG TAG=""
 FROM ${REGISTRY}ignishpc/mesos-base${TAG}
 ARG RELPATH=""
 
-ENV _SINGULARITY_VERSION=1.3.0
+ENV _SINGULARITY_VERSION=1.4.0
 RUN mkdir /opt/singularity && \
 	cd /opt/singularity && \
 	wget https://repo1.maven.org/maven2/com/hubspot/SingularityService/${_SINGULARITY_VERSION}/SingularityService-${_SINGULARITY_VERSION}-shaded.jar && \
