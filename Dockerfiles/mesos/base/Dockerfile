@@ -60,10 +60,10 @@ COPY --from=builder /tmp/root /
 RUN ldconfig && { \
 		echo '#!/bin/bash'; \
 		echo 'if [ ! -z "$MESOS_QUORUM" ];then'; \
-		echo '  mesos master --work_dir=/var/lib/mesos/master --port=${PORT_MASTER} --zk=${ZOOKEEPER}/mesos &'; \
+		echo '  mesos master --work_dir=${MESOS_WD}/master --port=${PORT_MASTER} --zk=${ZOOKEEPER}/mesos &'; \
 		echo 'fi'; \
 		echo 'if [ ! -z "$PORT_AGENT" ];then'; \
-		echo 'mesos agent --work_dir=/var/lib/mesos/agent --port=${PORT_AGENT} --no-switch_user \'; \
+		echo 'mesos agent --work_dir=${MESOS_WD}/agent --port=${PORT_AGENT} --no-switch_user \'; \
 		echo '   --master=${ZOOKEEPER}/mesos --containerizers=docker,mesos --isolation=cgroups/all'; \
 		echo 'fi'; \
 	} > /bin/start-mesos.sh  && chmod +x /bin/start-mesos.sh
