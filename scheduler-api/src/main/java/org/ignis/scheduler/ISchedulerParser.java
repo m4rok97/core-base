@@ -16,22 +16,42 @@
  *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.ignis.properties;
+package org.ignis.scheduler;
 
+import org.ignis.properties.IKeys;
+import org.ignis.properties.IProperties;
+import org.ignis.properties.IPropertyException;
 import org.ignis.scheduler.model.IBind;
 import org.ignis.scheduler.model.IPort;
 import org.ignis.scheduler.model.IVolume;
 
 import java.util.*;
 
+
 /**
  * @author César Pomar
  */
-public class IPropetiesParser {
+public class ISchedulerParser {
 
-    public static List<IPort> parsePorts(IProperties props, String prefix) {
+    private final IProperties props;
+
+    public ISchedulerParser(IProperties props) {
+        this.props = props;
+    }
+
+    public Map<String, String> schedulerParams() {
+        Map<String, String> params = new HashMap<>();
+        int plen = IKeys.SCHEDULER_PARAMS.length() + 1;
+        for (String key : props.getPrefixKeys(IKeys.SCHEDULER_PARAMS)) {
+            params.put(key.substring(plen), props.getProperty(key));
+        }
+        return params;
+    }
+
+
+    public List<IPort> ports(String prefix) {
         List<IPort> ports = new ArrayList<>();
-        Collection<String> propsPorts = props.getKeysPrefix(prefix + ".");
+        Collection<String> propsPorts = props.getPrefixKeys(prefix);
 
         int transportPorts = props.getInteger(IKeys.TRANSPORT_PORTS);
         ports.addAll(Collections.nCopies(transportPorts, new IPort(0, 0, "tcp")));
@@ -68,25 +88,46 @@ public class IPropetiesParser {
         return ports;
     }
 
-    public static List<IBind> parseBinds(IProperties props, String prefix) {//TODO User volumes
+    public List<IBind> binds(String prefix) {
         List<IBind> binds = new ArrayList<>();
         binds.add(IBind.builder()
                 .hostPath(props.getString(IKeys.DFS_ID))
                 .containerPath(props.getString(IKeys.DFS_HOME))
                 .readOnly(false).build());
+
+        for (String key : props.getPrefixKeys(prefix)) {
+            String hostpath = props.getString(key);
+            boolean ro = false;
+            if (hostpath.endsWith(":ro")) {
+                ro = true;
+                hostpath = hostpath.substring(0, hostpath.length() - 3);
+            }
+
+            binds.add(IBind.builder()
+                    .hostPath(hostpath)
+                    .containerPath(key.substring(prefix.length() + 1))
+                    .readOnly(ro).build());
+        }
+
         return binds;
     }
 
-    public static List<IVolume> parseVolumes(IProperties props, String prefix) {//TODO User binds
-        return new ArrayList<>();
+    public List<IVolume> volumes(String prefix) {
+        List<IVolume> volumes = new ArrayList<>();
+
+        for (String key : props.getPrefixKeys(prefix)) {
+            volumes.add(IVolume.builder()
+                    .containerPath(key.substring(prefix.length() + 1))
+                    .size(props.getSILong(key)).build());
+        }
+        return volumes;
     }
 
-    public static Map<String, String> parseEnv(IProperties props, String prefix) {
-        Collection<String> keys = props.getKeysPrefix(prefix + ".");
-        Map<String, String> env = new HashMap<>(keys.size());
-        for (String key : keys) {
-            String subkey = key.substring((prefix + ".").length());
-            env.put(subkey, props.getString(key));
+    public Map<String, String> env(String prefix) {
+        Map<String, String> env = new HashMap<>();
+        int plen = prefix.length() + 1;
+        for (String key : props.getPrefixKeys(prefix)) {
+            env.put(key.substring(plen), props.getString(key));
         }
         return env;
     }

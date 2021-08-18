@@ -26,11 +26,16 @@ import org.ignis.properties.IProperties;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author César Pomar
  */
 public final class IAttributes {
+
+    private static final Pattern DEFAULT_CLUSTER_NAMES = Pattern.compile("Cluster\\([0-9]+\\)");
 
     public final IProperties defaultProperties;
     public final ISSH ssh;
@@ -70,6 +75,20 @@ public final class IAttributes {
             }
         }
         throw new IgnisException("Cluster doesn't exist");
+    }
+
+    public void changeClusterName(long id, String name) throws IgnisException {
+        Set<String> names;
+        synchronized (clusterList) {
+            names = clusterList.stream().map(c -> c.getName()).collect(Collectors.toSet());
+        }
+        if (names.contains(name) || DEFAULT_CLUSTER_NAMES.matcher(name).matches()) {
+            throw new IgnisException("Cluster must be unique");
+        }
+        ICluster cluster = getCluster(id);
+        synchronized (cluster.getLock()) {
+            cluster.setName(name);
+        }
     }
 
     public long newCluster() {

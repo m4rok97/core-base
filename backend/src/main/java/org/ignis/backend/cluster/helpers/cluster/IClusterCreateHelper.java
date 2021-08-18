@@ -48,9 +48,9 @@ public final class IClusterCreateHelper extends IClusterHelper {
             cluster.getContainers().add(container);
         }
 
-        if (instances > 0) {// All containers are created in single task, faster in some schedulers
-            builder.newTask(new IContainerCreateTask(getName(), cluster.getContainers().get(0),
-                    scheduler, cluster.getContainers()));
+        IContainerCreateTask.Shared shared = new IContainerCreateTask.Shared(cluster.getContainers());
+        for (int i = 0; i < instances; i++) {
+            builder.newTask(new IContainerCreateTask(getName(), cluster.getContainers().get(i), scheduler, shared));
         }
 
         return builder.build();

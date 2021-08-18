@@ -20,10 +20,10 @@ import com.jcraft.jsch.*;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.properties.IPropertyException;
-import org.ignis.properties.IPropetiesParser;
 import org.ignis.scheduler.IScheduler;
 import org.ignis.scheduler.ISchedulerBuilder;
 import org.ignis.scheduler.ISchedulerException;
+import org.ignis.scheduler.ISchedulerParser;
 import org.ignis.scheduler.model.IContainerInfo;
 import org.ignis.scheduler.model.IContainerStatus;
 import org.ignis.scheduler.model.IPort;
@@ -124,16 +124,17 @@ public class Submit implements Callable<Integer> {
                 builder.image(props.getProperty(IKeys.DRIVER_IMAGE));
             }
             builder.cpus(props.getInteger(IKeys.DRIVER_CORES));
-            builder.memory((long) Math.ceil(props.getSILong(IKeys.DRIVER_MEMORY) / 1024 / 1024));
-            builder.shm(props.contains(IKeys.DRIVER_SHM) ? (long) Math.ceil(props.getSILong(IKeys.DRIVER_SHM) / 1024 / 1024) : null);
+            builder.memory(props.getSILong(IKeys.DRIVER_MEMORY));
             builder.swappiness(props.contains(IKeys.DRIVER_SWAPPINESS) ? props.getInteger(IKeys.DRIVER_SWAPPINESS) : null);
+            ISchedulerParser parser = new ISchedulerParser(props);
+            builder.schedulerParams(parser.schedulerParams());
             List<IPort> ports;
-            builder.ports(ports = IPropetiesParser.parsePorts(props, IKeys.DRIVER_PORT));
+            builder.ports(ports = parser.ports(IKeys.DRIVER_PORT));
             ports.add(new IPort(props.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT), 0, "tcp"));
-            builder.binds(IPropetiesParser.parseBinds(props, IKeys.DRIVER_BIND));
-            builder.volumes(IPropetiesParser.parseVolumes(props, IKeys.DRIVER_VOLUME));
+            builder.binds(parser.binds(IKeys.DRIVER_BIND));
+            builder.volumes(parser.volumes(IKeys.DRIVER_VOLUME));
             builder.hostnames(props.getStringList(IKeys.SCHEDULER_DNS));
-            Map<String, String> env = IPropetiesParser.parseEnv(props, IKeys.DRIVER_ENV);
+            Map<String, String> env = parser.env(IKeys.DRIVER_ENV);
             env.put("IGNIS_OPTIONS", options.toString());//Send submit options to driver            
             builder.environmentVariables(env);
             if (props.contains(IKeys.DRIVER_HOSTS)) {
@@ -221,7 +222,7 @@ public class Submit implements Callable<Integer> {
                     }
                 }
                 LOGGER.info("Conecting...");
-                IContainerInfo info = scheduler.getContainer(app);
+                IContainerInfo info = scheduler.getDriverContainer(app);
                 int server = info.searchHostPort(22);
                 JSch jsch = new JSch();
                 Session session;

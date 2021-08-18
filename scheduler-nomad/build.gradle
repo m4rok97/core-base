@@ -47,7 +47,8 @@ repositories {
 
 dependencies {
     implementation project(":scheduler-api")
-
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    implementation group: 'com.hashicorp.nomad', name: 'nomad-sdk', version: '0.11.3.0'
 }
 
 task copyToLib(type: Copy, description: 'Copy project dependencies.') {

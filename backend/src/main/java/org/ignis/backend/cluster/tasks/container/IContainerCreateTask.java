@@ -18,19 +18,20 @@ package org.ignis.backend.cluster.tasks.container;
 
 import org.ignis.backend.cluster.IContainer;
 import org.ignis.backend.cluster.ITaskContext;
+import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.scheduler.IScheduler;
-import org.ignis.properties.IPropetiesParser;
+import org.ignis.scheduler.ISchedulerException;
+import org.ignis.scheduler.ISchedulerParser;
 import org.ignis.scheduler.model.IContainerInfo;
+import org.ignis.scheduler.model.IContainerStatus;
 import org.ignis.scheduler.model.IPort;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.BrokenBarrierException;
 
 /**
  * @author César Pomar
@@ -39,12 +40,26 @@ public final class IContainerCreateTask extends IContainerTask {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IContainerCreateTask.class);
 
-    private final List<IContainer> containers;
+    public static class Shared {
+
+        public Shared(List<IContainer> containers) {
+            this.containers = containers;
+            this.barrier = new IBarrier(containers.size());
+            this.status = new IContainerStatus[containers.size()];
+        }
+
+        private final IBarrier barrier;
+        private final List<IContainer> containers;
+        private final IContainerStatus[] status;
+
+    }
+
+    private final Shared shared;
     private final IScheduler scheduler;
 
-    public IContainerCreateTask(String name, IContainer container, IScheduler scheduler, List<IContainer> containers) {
+    public IContainerCreateTask(String name, IContainer container, IScheduler scheduler, Shared shared) {
         super(name, container);
-        this.containers = containers;
+        this.shared = shared;
         this.scheduler = scheduler;
     }
 
@@ -62,17 +77,18 @@ public final class IContainerCreateTask extends IContainerTask {
             builder.image(props.getProperty(IKeys.EXECUTOR_IMAGE));
         }
         builder.cpus(props.getInteger(IKeys.EXECUTOR_CORES));
-        builder.memory((long) Math.ceil(props.getSILong(IKeys.EXECUTOR_MEMORY) / 1024 / 1024));
-        builder.shm(props.contains(IKeys.EXECUTOR_SHM) ? (long) Math.ceil(props.getSILong(IKeys.EXECUTOR_SHM) / 1024 / 1024) : null);
+        builder.memory(props.getSILong(IKeys.EXECUTOR_MEMORY));
         builder.swappiness(props.contains(IKeys.EXECUTOR_SWAPPINESS) ? props.getInteger(IKeys.EXECUTOR_SWAPPINESS) : null);
         builder.command("ignis-server");
         builder.arguments(Arrays.asList(props.getString(IKeys.EXECUTOR_RPC_PORT)));
+        ISchedulerParser parser = new ISchedulerParser(props);
+        builder.schedulerParams(parser.schedulerParams());
         List<IPort> ports;
-        builder.ports(ports = IPropetiesParser.parsePorts(props, IKeys.EXECUTOR_PORT));
-        builder.binds(IPropetiesParser.parseBinds(props, IKeys.EXECUTOR_BIND));
-        builder.volumes(IPropetiesParser.parseVolumes(props, IKeys.EXECUTOR_VOLUME));
+        builder.ports(ports = parser.ports(IKeys.EXECUTOR_PORT));
+        builder.binds(parser.binds(IKeys.EXECUTOR_BIND));
+        builder.volumes(parser.volumes(IKeys.EXECUTOR_VOLUME));
         builder.hostnames(props.getStringList(IKeys.SCHEDULER_DNS));
-        Map<String, String> env = IPropetiesParser.parseEnv(props, IKeys.EXECUTOR_ENV);
+        Map<String, String> env = parser.env(IKeys.EXECUTOR_ENV);
         env.put("IGNIS_DRIVER_PUBLIC_KEY", props.getString(IKeys.DRIVER_PUBLIC_KEY));
         env.put("IGNIS_DRIVER_HEALTHCHECK_INTERVAL", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_INTERVAL)));
         env.put("IGNIS_DRIVER_HEALTHCHECK_TIMEOUT", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_TIMEOUT)));
@@ -91,67 +107,114 @@ public final class IContainerCreateTask extends IContainerTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        List<IContainer> stopped = new ArrayList<>();
-        boolean news = false;
-        for (int i = 0; i < containers.size(); i++) {
-            if (containers.get(i).getInfo() == null) {
-                news = true;
-                break;
-            }
-            switch (scheduler.getStatus(containers.get(i).getInfo().getId())) {
-                case DESTROYED:
-                case FINISHED:
-                case ERROR:
-                    stopped.add(containers.get(i));
-                    break;
-                default:
-                    LOGGER.info(log() + "Container " + i + " already running");
-                    if (!containers.get(i).testConnection()) {
-                        LOGGER.info(log() + "Reconnecting to the container " + i);
-                        try {
-                            containers.get(i).connect();
-                        } catch (IgnisException ex) {
-                            LOGGER.warn(log() + "Container " + i + " dead");
-                            stopped.add(containers.get(i));
+        try {
+            int containerId = (int) container.getId();
+            boolean tested = false;
+            if (container.getInfo() != null) {
+                if (container.testConnection()) {
+                    shared.status[containerId] = IContainerStatus.RUNNING;
+                    tested = true;
+                } else {
+                    shared.status[containerId] = IContainerStatus.ERROR;
+                }
+                if (shared.barrier.await() == 0) {
+                    List<String> ids = new ArrayList<>();
+                    for (IContainer c : shared.containers) {
+                        if (shared.status[(int) c.getId()] == IContainerStatus.ERROR) {
+                            ids.add(c.getInfo().getId());
                         }
                     }
-            }
-        }
-
-        if (stopped.isEmpty() && !news) {
-            return;
-        }
-        LOGGER.info(log() + "Starting new containers");
-
-        if (news || stopped.size() == containers.size()) {
-            String group = container.getProperties().getString(IKeys.JOB_GROUP);
-            List<String> ids = scheduler.createExecutorContainers(group, name, parseContainer(), containers.size());
-            List<IContainerInfo> details = scheduler.getContainers(ids);
-            for (int i = 0; i < containers.size(); i++) {
-                if (Boolean.getBoolean(IKeys.DEBUG)) {
-                    LOGGER.info("Debug:" + log() + "[" + i + "]" + details.get(i));
+                    List<IContainerStatus> status = scheduler.getStatus(ids);
+                    Iterator<IContainerStatus> it = status.iterator();
+                    for (IContainer c : shared.containers) {
+                        if (shared.status[(int) c.getId()] == IContainerStatus.ERROR) {
+                            shared.status[(int) c.getId()] = it.next();
+                        }
+                    }
                 }
-                containers.get(i).setInfo(details.get(i));
+                shared.barrier.await();
+                if (!tested) {
+                    switch (shared.status[containerId]) {
+                        case DESTROYED:
+                        case FINISHED:
+                        case ERROR:
+                            shared.status[containerId] = IContainerStatus.ERROR;
+                            break;
+                        default:
+                            LOGGER.info(log() + "Container already running");
+                            if (!container.testConnection()) {
+                                LOGGER.info(log() + "Reconnecting to the container");
+                                try {
+                                    container.connect();
+                                } catch (IgnisException ex) {
+                                    LOGGER.warn(log() + "Container dead");
+                                    shared.status[containerId] = IContainerStatus.ERROR;
+                                }
+                            }
+                    }
+                }
+                if (shared.barrier.await() == 0) {
+                    List<String> stopped = new ArrayList<>();
+                    List<Integer> stoppedIndex = new ArrayList<>();
+                    for (int i = 0; i < shared.containers.size(); i++) {
+                        if (shared.status[i] == IContainerStatus.ERROR) {
+                            stopped.add(shared.containers.get(i).getInfo().getId());
+                            stoppedIndex.add(i);
+                            shared.containers.get(i).setInfo(null);
+                        }
+                    }
+                    if (stopped.size() == shared.containers.size()) {
+                        LOGGER.info(log() + "All containers dead");
+                        try {
+                            scheduler.destroyExecutorInstances(stopped);
+                        } catch (ISchedulerException ex) {
+                        }
+                    } else {
+                        for (int i = 0; i < stoppedIndex.size(); i++) {
+                            shared.containers.get(i).setInfo(scheduler.restartContainer(stopped.get(i)));
+                            if (Boolean.getBoolean(IKeys.DEBUG)) {
+                                LOGGER.info("Debug:" + log() + "[" + i + "]" + shared.containers.get(i).getInfo());
+                            }
+                        }
+                    }
+                }
+                shared.barrier.await();
             }
-        } else {
-            for (IContainer container : stopped) {
-                container.setInfo(scheduler.restartContainer(container.getInfo().getId()));
-                if (Boolean.getBoolean(IKeys.DEBUG)) {
-                    LOGGER.info("Debug:" + log() + "[" + container.getId() + "]" + container.getInfo());
+
+            if (container.getInfo() != null) {
+                return;
+            }
+
+            if (shared.barrier.await() == 0) {
+                String group = container.getProperties().getString(IKeys.JOB_GROUP);
+                List<String> ids = scheduler.createExecutorContainers(group, name, parseContainer(), shared.containers.size());
+                List<IContainerInfo> details = scheduler.getExecutorContainers(ids);
+                for (int i = 0; i < shared.containers.size(); i++) {
+                    if (Boolean.getBoolean(IKeys.DEBUG)) {
+                        LOGGER.info("Debug:" + log() + "[" + i + "]" + details.get(i));
+                    }
+                    shared.containers.get(i).setInfo(details.get(i));
                 }
             }
-        }
+            shared.barrier.await();
 
-        LOGGER.info(log() + "Connecting to the containers");
-        for (int i = 0; i < containers.size(); i++) {
-            containers.get(i).connect();
-        }
+            LOGGER.info(log() + "Connecting to the container");
+            container.connect();
 
-        if (Boolean.getBoolean(IKeys.DEBUG)) {
-            LOGGER.info("Debug:" + log() + " ExecutorEnvironment{\n" +
-                    containers.get(0).getTunnel().execute("env", false)
-                    + '}');
+            if (Boolean.getBoolean(IKeys.DEBUG) && containerId == 0) {
+                LOGGER.info("Debug:" + log() + " ExecutorEnvironment{\n" +
+                        container.getTunnel().execute("env", false)
+                        + '}');
+            }
+            LOGGER.info(log() + "Containers ready");
+        } catch (IgnisException ex) {
+            shared.barrier.fails();
+            throw ex;
+        } catch (BrokenBarrierException ex) {
+            //Other Task has failed
+        } catch (Exception ex) {
+            shared.barrier.fails();
+            throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "Containers ready");
     }
 }

@@ -194,7 +194,8 @@ public final class IProperties {
     }
 
     @SuppressWarnings("unchecked")
-    public Collection<String> getKeysPrefix(String prefix) {
+    public Collection<String> getPrefixKeys(String prefixKey) {
+        String prefix = prefixKey + ".";
         return inner.stringPropertyNames().stream().filter((String key) -> key.startsWith(prefix)).collect(Collectors.toList());
     }
 

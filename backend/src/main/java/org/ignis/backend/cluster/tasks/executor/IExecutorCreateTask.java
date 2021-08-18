@@ -36,6 +36,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IExecutorCreateTask.class);
 
     private final String type;
+    private int retry;
 
     public IExecutorCreateTask(String name, IExecutor executor, String type) {
         super(name, executor);
@@ -43,6 +44,9 @@ public final class IExecutorCreateTask extends IExecutorTask {
     }
 
     private void kill() {
+        if(executor.getContainer().getResets() != retry){
+            return;
+        }
         try {
             executor.disconnect();
             executor.getContainer().getTunnel().execute("kill -9 " + executor.getPid(), false);
@@ -53,7 +57,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
     @Override
     public void run(ITaskContext context) throws IgnisException {
         boolean running = false;
-        if (executor.isConnected()) {
+        if (executor.isConnected() && executor.getContainer().getResets() == retry) {
             try {
                 executor.getExecutorServerModule().test();
                 LOGGER.info(log() + "Executor already running");
@@ -95,6 +99,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
             }
             try {
                 executor.setPid(Integer.parseInt(output.replaceAll("\n", "")));
+                retry = executor.getContainer().getResets();
             } catch (Exception ex) {
                 throw new IgnisException("Executor process died", ex);
             }

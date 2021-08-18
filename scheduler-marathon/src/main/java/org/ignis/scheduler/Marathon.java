@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author César Pomar
@@ -115,14 +116,8 @@ public class Marathon implements IScheduler {
         app.getContainer().getDocker().setNetwork("BRIDGE");
         app.getContainer().getDocker().setParameters(new ArrayList<>());
         app.setCpus((double) container.getCpus());
-        app.setMem((double) container.getMemory());
+        app.setMem((double) container.getMemory() / (1000 * 1000));
         app.getArgs().add(container.getCommand());
-
-        if (container.getShm() != null) {
-            long shm = (container.getShm() * 1024 * 1024) / (1000 * 1000);
-            app.getContainer().getDocker().getParameters().add(new Parameter("shm-size", "" + shm + "m"));
-            app.addLabel("shm", "" + container.getShm());
-        }
 
         if (container.getSwappiness() != null) {
             app.getContainer().getDocker().getParameters().add(new Parameter("memory-swappiness", "" + container.getSwappiness()));
@@ -144,8 +139,10 @@ public class Marathon implements IScheduler {
             }
         }
 
-        for (String hostname : container.getHostnames()) {
-            app.getContainer().getDocker().getParameters().add(new Parameter("add-host", hostname));
+        if (container.getHostnames() != null) {
+            for (String hostname : container.getHostnames()) {
+                app.getContainer().getDocker().getParameters().add(new Parameter("add-host", hostname));
+            }
         }
 
         if (container.getBinds() != null) {
@@ -160,7 +157,7 @@ public class Marathon implements IScheduler {
 
         if (container.getVolumes() != null) {
             for (IVolume vol : container.getVolumes()) {
-                String json = "{persistent:{size: " + vol.getSize() + "}}";//Fix access bug
+                String json = "{persistent:{size: " + (vol.getSize() / (1000 * 1000)) + "}}";//Fix access bug
                 PersistentLocalVolume vol2 = new Gson().fromJson(json, PersistentLocalVolume.class);
                 vol2.setMode("RW");
                 vol2.setContainerPath(vol.getContainerPath());
@@ -169,6 +166,7 @@ public class Marathon implements IScheduler {
         }
 
         if (container.getPreferedHosts() != null) {
+            app.addLabel("prefered-hosts", container.getPreferedHosts().stream().collect(Collectors.joining(",")));
             app.getConstraints().add(Arrays.asList("hostname", "LIKE", String.join("|", container.getPreferedHosts())));
         }
 
@@ -187,7 +185,7 @@ public class Marathon implements IScheduler {
         app.setBackoffSeconds(app.getMaxLaunchDelaySeconds());
 
         if (Boolean.getBoolean("ignis.debug")) {
-            LOGGER.info("Debug: " + app.toString());
+            LOGGER.info("Debug: " + app);
         }
 
         return app;
@@ -212,7 +210,7 @@ public class Marathon implements IScheduler {
         builder.host(task.getHost());
         builder.image(app.getContainer().getDocker().getImage());
         builder.cpus(app.getCpus().intValue());
-        builder.memory(app.getMem().longValue());
+        builder.memory(app.getMem().longValue() * 1000 * 1000);
 
         if (app.getArgs() != null && !app.getArgs().isEmpty()) {
             builder.command(app.getArgs().get(0));
@@ -221,6 +219,14 @@ public class Marathon implements IScheduler {
 
         if (app.getLabels().containsKey("memory-swappiness")) {
             builder.swappiness(Integer.parseInt(app.getLabels().get("memory-swappiness")));
+        }
+
+        List<String> hostnames = new ArrayList<>();
+        builder.hostnames(hostnames);
+        for (Parameter param : app.getContainer().getDocker().getParameters()) {
+            if (param.getKey().equals("add-host")) {
+                hostnames.add(param.getValue());
+            }
         }
 
         if (app.getContainer() != null) {
@@ -263,7 +269,7 @@ public class Marathon implements IScheduler {
                         }
                         volumes.add(IVolume.builder()
                                 .containerPath(vol.getContainerPath())
-                                .size(sz)
+                                .size(sz * 1000 * 1000)
                                 .build());
                     }
                 }
@@ -277,13 +283,8 @@ public class Marathon implements IScheduler {
             }
         }
 
-        if (app.getConstraints() != null) {
-            for (List<String> constraint : app.getConstraints()) {
-                if (constraint.size() == 3 && constraint.get(0).equals("hostname") && constraint.get(1).equals("LIKE")) {
-                    builder.preferedHosts(Arrays.asList(constraint.get(2).split("|")));
-                    break;
-                }
-            }
+        if(app.getLabels().containsKey("prefered-hosts")){
+            builder.preferedHosts(Arrays.asList(app.getLabels().get("prefered-hosts").split(",")));
         }
 
         if (app.getEnv() != null) {
@@ -291,6 +292,19 @@ public class Marathon implements IScheduler {
         }
 
         return builder.build();
+    }
+
+    private String getAppFromInstances(List<String> ids) {
+        if (ids.isEmpty()) {
+            return null;
+        }
+        String appId = appId(ids.get(0));
+        for (String id : ids) {
+            if (!appId.equals(appId(id))) {
+                throw new ISchedulerException("Instances must belong to the same container");
+            }
+        }
+        return appId;
     }
 
     @Override
@@ -333,7 +347,7 @@ public class Marathon implements IScheduler {
             int tasks = 0;
 
             app = marathon.createApp(app);
-            int time = 1;
+            long time = 1;
             while (!app.getDeployments().isEmpty() || app.getTasks().size() != instances) {
                 app = marathon.getApp(app.getId()).getApp();
                 LOGGER.info("Waiting cluster deployment..." + Math.min(app.getTasks().size(), instances) + " of " + instances);
@@ -357,7 +371,7 @@ public class Marathon implements IScheduler {
                 }
 
                 String dpFirst = deployments.get(0).getId();
-                if (first = dpFirst.equals(dpId)) {
+                if (first == dpFirst.equals(dpId)) {
                     continue;
                 }
 
@@ -389,31 +403,11 @@ public class Marathon implements IScheduler {
         }
     }
 
-    class Cache {
-        String id;
-        GetAppTasksResponse response;
-        long time;
-    }
-
-    Cache cache;
-
     @Override
     public IContainerStatus getStatus(String id) throws ISchedulerException {
         try {
             String appId = appId(id);
-            Cache local = cache;
-            List<Task> tasks;
-            if (local != null && System.currentTimeMillis() - local.time < 1000 && local.id.equals(appId)) {
-                tasks = local.response.getTasks();
-            } else {
-                local = new Cache();
-                local.id = appId;
-                local.response = marathon.getAppTasks(appId);
-                local.time = System.currentTimeMillis();
-                cache = local;
-                tasks = local.response.getTasks();
-            }
-
+            List<Task> tasks = marathon.getAppTasks(appId).getTasks();
             try {
                 return TASK_STATUS.get(getTask(tasks, id).getState());
             } catch (ISchedulerException ex) {
@@ -425,8 +419,30 @@ public class Marathon implements IScheduler {
     }
 
     @Override
-    public IContainerInfo getContainer(String id) throws ISchedulerException {
-        return getContainers(Arrays.asList(id)).get(0);
+    public List<IContainerStatus> getStatus(List<String> ids) throws ISchedulerException {
+        String appId = getAppFromInstances(ids);
+        if (appId == null) {
+            return new ArrayList<>();
+        }
+        try {
+            List<Task> tasks = marathon.getAppTasks(appId).getTasks();
+            List<IContainerStatus> status = new ArrayList<>();
+            for (String id : ids) {
+                try {
+                    status.add(TASK_STATUS.get(getTask(tasks, id).getState()));
+                } catch (ISchedulerException ex) {
+                    status.add(IContainerStatus.UNKNOWN);
+                }
+            }
+            return status;
+        } catch (MarathonException ex) {
+            throw new ISchedulerException(ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public IContainerInfo getDriverContainer(String id) throws ISchedulerException {
+        return getExecutorContainers(Arrays.asList(id)).get(0);
     }
 
     /**
@@ -435,15 +451,10 @@ public class Marathon implements IScheduler {
      * @throws ISchedulerException
      */
     @Override
-    public List<IContainerInfo> getContainers(List<String> ids) throws ISchedulerException {
-        if (ids.isEmpty()) {
+    public List<IContainerInfo> getExecutorContainers(List<String> ids) throws ISchedulerException {
+        String appId = getAppFromInstances(ids);
+        if (appId == null) {
             return new ArrayList<>();
-        }
-        String appId = appId(ids.get(0));
-        for (String id : ids) {
-            if (!appId.equals(appId(id))) {
-                throw new ISchedulerException("Instances must belong to the same container");
-            }
         }
         try {
             App app;
@@ -487,7 +498,7 @@ public class Marathon implements IScheduler {
                 }
                 break;
             }
-            return getContainer(id);
+            return getDriverContainer(id);
         } catch (MarathonException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
@@ -495,11 +506,11 @@ public class Marathon implements IScheduler {
 
     @Override
     public void destroyDriverContainer(String id) throws ISchedulerException {
-        destroyContainerInstaces(Arrays.asList(id));
+        destroyExecutorInstances(Arrays.asList(id));
     }
 
     @Override
-    public void destroyContainerInstaces(List<String> ids) throws ISchedulerException {
+    public void destroyExecutorInstances(List<String> ids) throws ISchedulerException {
         try {
             if (ids.isEmpty()) {
                 return;

@@ -58,12 +58,17 @@ public class Ancoris implements IScheduler {
     }
 
     @Override
-    public IContainerInfo getContainer(String id) throws ISchedulerException {
+    public List<IContainerStatus> getStatus(List<String> ids) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<IContainerInfo> getContainers(List<String> ids) throws ISchedulerException {
+    public IContainerInfo getDriverContainer(String id) throws ISchedulerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<IContainerInfo> getExecutorContainers(List<String> ids) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -78,7 +83,7 @@ public class Ancoris implements IScheduler {
     }
 
     @Override
-    public void destroyContainerInstaces(List<String> ids) throws ISchedulerException {
+    public void destroyExecutorInstances(List<String> ids) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

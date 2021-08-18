@@ -39,8 +39,7 @@ public class IContainerInfo {
     private final String command;
     private final List<String> arguments;
     private final int cpus;
-    private final long memory;//MiB
-    private final Long shm;//MiB
+    private final long memory;//Bytes
     private final Integer swappiness;
     private final List<IPort> ports;
     private final List<IBind> binds;
@@ -48,6 +47,7 @@ public class IContainerInfo {
     private final List<String> preferedHosts;
     private final List<String> hostnames;
     private final Map<String, String> environmentVariables;
+    private final Map<String, String> schedulerParams;
 
     public Integer searchHostPort(Integer containerPort) {
         for (IPort port : ports) {

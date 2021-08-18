@@ -28,7 +28,7 @@ public interface IScheduler {
 
     /**
      * Creates a group, and return its id. Scheduler must identify all containers within a group by
-     * group Id. The param <code>name</code> is for display purposes and can be ignored by the scheduler.
+     * group id. The param <code>name</code> is for display purposes and can be ignored by the scheduler.
      *
      * @param name Group name
      * @return Group id
@@ -37,7 +37,7 @@ public interface IScheduler {
     public String createGroup(String name) throws ISchedulerException;
 
     /**
-     * Destroyes a group, all containers within a group must be destroyed before destroying the group.
+     * Destroys a group, all containers within a group must be destroyed before destroying the group.
      *
      * @param group Group id
      * @throws ISchedulerException Scheduler fails
@@ -70,7 +70,7 @@ public interface IScheduler {
     public List<String> createExecutorContainers(String group, String name, IContainerInfo container, int instances) throws ISchedulerException;
 
     /**
-     * Get the state of a container. The function works with driver container or a executor instance.
+     * Get the state of a container. The function works with driver container or an executor instance.
      *
      * @param id Container id
      * @return Container status.
@@ -79,14 +79,23 @@ public interface IScheduler {
     public IContainerStatus getStatus(String id) throws ISchedulerException;
 
     /**
-     * Get a container. Container info must contains at leat the same information that was used to request the container.
-     * The function works with driver container or a executor instance.
+     * Get the state of multiple containers. The function works with driver container or a subgroup of
+     * executor instance. It can be implemented as multiple calls to <code>getStatus(String id)</code>.
+     * @param ids List of container IDs
+     * @return List of Container status.
+     * @throws ISchedulerException Scheduler fails
+     */
+    public List<IContainerStatus> getStatus(List<String> ids) throws ISchedulerException;
+
+    /**
+     * Get a container. Container info must contain at leat the same information that was used to request the container.
+     * The function works with driver container or an executor instance.
      *
      * @param id Container id
      * @return Container info
      * @throws ISchedulerException Scheduler fails
      */
-    public IContainerInfo getContainer(String id) throws ISchedulerException;
+    public IContainerInfo getDriverContainer(String id) throws ISchedulerException;
 
     /**
      * Gets multiple executors instances.
@@ -96,7 +105,7 @@ public interface IScheduler {
      * @return List of container IDs with size <code>ids.size()</code>
      * @throws ISchedulerException Scheduler fails
      */
-    public List<IContainerInfo> getContainers(List<String> ids) throws ISchedulerException;
+    public List<IContainerInfo> getExecutorContainers(List<String> ids) throws ISchedulerException;
 
     /**
      * Restarts a container.
@@ -121,7 +130,7 @@ public interface IScheduler {
      * @param ids List of container IDs
      * @throws ISchedulerException Scheduler fails
      */
-    public void destroyContainerInstaces(List<String> ids) throws ISchedulerException;
+    public void destroyExecutorInstances(List<String> ids) throws ISchedulerException;
 
     /**
      * Tests the scheduler connection

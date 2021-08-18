@@ -82,12 +82,13 @@ public final class IContainerDestroyTask extends IContainerTask {
             String killScript = "kill -SIGTERM 1";
             container.getTunnel().execute(killScript, true);
             Thread.sleep(2000);
+            container.getTunnel().close();
         } catch (IgnisException | InterruptedException ex) {
             LOGGER.warn(log() + ex.toString());
         }
 
         try {
-            scheduler.destroyContainerInstaces(ids);
+            scheduler.destroyExecutorInstances(ids);
             LOGGER.info(log() + "Container destroyed");
         } catch (ISchedulerException ex) {
             LOGGER.warn(log() + "Containers destroyed with errors: " + ex);

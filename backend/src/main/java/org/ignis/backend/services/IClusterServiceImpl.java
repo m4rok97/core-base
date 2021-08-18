@@ -26,9 +26,9 @@ import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler.IScheduler;
 import org.ignis.rpc.driver.IClusterService;
 import org.ignis.rpc.driver.IDriverException;
+import org.ignis.scheduler.IScheduler;
 
 import java.util.List;
 
@@ -117,10 +117,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     @Override
     public void setName(long cluster, String name) throws IDriverException, TException {
         try {
-            ICluster clusterObject = attributes.getCluster(cluster);
-            synchronized (clusterObject.getLock()) {
-                clusterObject.setName(name);
-            }
+            attributes.changeClusterName(cluster, name);
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }

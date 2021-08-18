@@ -47,7 +47,6 @@ repositories {
 }
 
 dependencies {
-    implementation project(":scheduler-api")
 }
 
 task copyToLib(type: Copy, description: 'Copy project dependencies.') {

@@ -39,17 +39,17 @@ public final class IKeys {
     public static final String SCHEDULER_URL = "ignis.scheduler.url";
     public static final String SCHEDULER_TYPE = "ignis.scheduler.type";
     public static final String SCHEDULER_DNS = "ignis.scheduler.dns";
+    public static final String SCHEDULER_PARAMS = "ignis.scheduler.param";
     /*DRIVER*/
     public static final String DRIVER_IMAGE = "ignis.driver.image";
     public static final String DRIVER_CORES = "ignis.driver.cores";
     public static final String DRIVER_MEMORY = "ignis.driver.memory";
-    public static final String DRIVER_SHM = "ignis.driver.shm";
     public static final String DRIVER_RPC_PORT = "ignis.driver.rpc.port";
     public static final String DRIVER_RPC_COMPRESSION = "ignis.driver.rpc.compression";
     public static final String DRIVER_SWAPPINESS = "ignis.driver.swappiness";
     public static final String DRIVER_RPC_POOL = "ignis.driver.pool";
     public static final String DRIVER_PORT = "ignis.driver.port";
-    public static final String DRIVER_PORTS = "ignis.driver.ports";
+    public static final String DRIVER_PORTS = DRIVER_PORT + "s";
     public static final String DRIVER_BIND = "ignis.driver.bind";
     public static final String DRIVER_VOLUME = "ignis.driver.volume";
     public static final String DRIVER_HOSTS = "ignis.driver.hosts";
@@ -68,14 +68,13 @@ public final class IKeys {
     public static final String EXECUTOR_CORES = "ignis.executor.cores";
     public static final String EXECUTOR_CORES_SINGLE = "ignis.executor.cores.single";
     public static final String EXECUTOR_MEMORY = "ignis.executor.memory";
-    public static final String EXECUTOR_SHM = "ignis.executor.shm";
     public static final String EXECUTOR_RPC_PORT = "ignis.executor.rpc.port";
     public static final String EXECUTOR_RPC_COMPRESSION = "ignis.executor.rpc.compression";
     public static final String EXECUTOR_SWAPPINESS = "ignis.executor.swappiness";
     public static final String EXECUTOR_ISOLATION = "ignis.executor.isolation";
     public static final String EXECUTOR_DIRECTORY = "ignis.executor.directory";
     public static final String EXECUTOR_PORT = "ignis.executor.port";
-    public static final String EXECUTOR_PORTS = "ignis.executor.ports";
+    public static final String EXECUTOR_PORTS = EXECUTOR_PORT + "s";
     public static final String EXECUTOR_BIND = "ignis.executor.bind";
     public static final String EXECUTOR_VOLUME = "ignis.executor.volume";
     public static final String EXECUTOR_HOSTS = "ignis.executor.hosts";
@@ -88,7 +87,6 @@ public final class IKeys {
     /*TRANSPORT*/
     public static final String TRANSPORT_CORES = "ignis.transport.cores";
     public static final String TRANSPORT_COMPRESSION = "ignis.transport.compression";
-    public static final String TRANSPORT_TYPE = "ignis.transport.type";
     public static final String TRANSPORT_PORT = "ignis.transport.port";
     public static final String TRANSPORT_PORTS = "ignis.transport.ports";
     public static final String TRANSPORT_ELEMENT_SIZE = "ignis.transport.element.size";
