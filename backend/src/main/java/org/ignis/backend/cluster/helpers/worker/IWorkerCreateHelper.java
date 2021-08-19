@@ -42,6 +42,9 @@ public final class IWorkerCreateHelper extends IWorkerHelper {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         ITaskGroup.Builder commBuilder = new ITaskGroup.Builder();
         int cores = worker.getCores();
+        if(cores < 1){
+            throw new  IgnisException("Executor cores must be greater than zero");
+        }
         if (instances < 1) {
             if (worker.getProperties().getStringList(IKeys.EXECUTOR_CORES_SINGLE).contains(worker.getType())) {
                 instances = cores;
@@ -50,7 +53,7 @@ public final class IWorkerCreateHelper extends IWorkerHelper {
             }
         }
         int executors = worker.getCluster().getContainers().size() * instances;
-        LOGGER.info(log() + "Registering worker with " + executors + " executors");
+        LOGGER.info(log() + "Registering worker with " + executors + " executors with " + cores + " cores");
 
         ICommGroupCreateTask.Shared commShared = new ICommGroupCreateTask.Shared(executors);
 

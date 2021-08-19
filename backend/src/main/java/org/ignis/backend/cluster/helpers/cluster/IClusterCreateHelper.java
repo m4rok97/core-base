@@ -40,6 +40,9 @@ public final class IClusterCreateHelper extends IClusterHelper {
 
     public ITaskGroup create(IScheduler scheduler, ISSH ssh) throws IgnisException {
         int instances = properties.getInteger(IKeys.EXECUTOR_INSTANCES);
+        if(instances < 1){
+            throw new  IgnisException("Executor instances must be greater than zero");
+        }
         ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
         LOGGER.info(log() + "Registering cluster with " + instances + " containers");
 
