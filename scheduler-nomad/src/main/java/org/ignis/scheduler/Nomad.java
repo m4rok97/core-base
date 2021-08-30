@@ -285,6 +285,7 @@ public class Nomad implements IScheduler {
         return taskGroup;
     }
 
+    @SuppressWarnings("unchecked")
     private IContainerInfo parseAllocation(Allocation alloc) {
         Resources res = alloc.getResources();
         NetworkResource netwotk = res.getNetworks().get(0);
