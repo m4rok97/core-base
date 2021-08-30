@@ -47,19 +47,14 @@ repositories {
 
 dependencies {
     implementation project(":properties")
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 
 }
 
-task copyToLib(type: Copy, description: 'Copy project dependencies.') {
-    delete("$buildDir/libs")
+task jarAndLibs(type: Copy, description: 'Copy project dependencies.') {
+    dependsOn "jar"
+    delete("$buildDir/jarAndLibs")
     from project.configurations.compileClasspath
-    into "$buildDir/libs"
-}
-build.dependsOn(copyToLib)
-
-task jarAndLibs {
-    dependsOn 'jar'
-    dependsOn 'copyToLib'
+    into "$buildDir/jarAndLibs"
 }

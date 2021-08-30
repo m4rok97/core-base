@@ -117,11 +117,11 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     }
 
     @Override
-    public void fromMap(long id, Map<String, String> _map) throws IDriverException, TException {
+    public void fromMap(long id, Map<String, String> map_) throws IDriverException, TException {
         try {
             IProperties properties = attributes.getProperties(id);
             synchronized (properties) {
-                properties.fromMap(_map);
+                properties.fromMap(map_);
             }
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);

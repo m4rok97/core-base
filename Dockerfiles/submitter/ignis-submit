@@ -1,2 +1,2 @@
 #!/bin/bash
-exec java -cp "${IGNIS_HOME}/lib/java/*" org.ignis.submitter.Submit "$@"
+exec ${IGNIS_HOME}/backend/jre/bin/java -cp "${IGNIS_HOME}/lib/java/*" org.ignis.submitter.Submit "$@"

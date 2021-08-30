@@ -56,14 +56,9 @@ dependencies {
     annotationProcessor group: 'info.picocli', name: 'picocli', version: '4.6.1'
 }
 
-task copyToLib(type: Copy, description: 'Copy project dependencies.') {
-    delete("$buildDir/libs")
+task jarAndLibs(type: Copy, description: 'Copy project dependencies.') {
+    dependsOn "jar"
+    delete("$buildDir/jarAndLibs")
     from project.configurations.compileClasspath
-    into "$buildDir/libs"
-}
-build.dependsOn(copyToLib)
-
-task jarAndLibs {
-    dependsOn 'jar'
-    dependsOn 'copyToLib'
+    into "$buildDir/jarAndLibs"
 }

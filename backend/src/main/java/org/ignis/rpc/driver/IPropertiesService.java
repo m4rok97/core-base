@@ -25,7 +25,7 @@ public class IPropertiesService {
 
     public java.util.Map<java.lang.String,java.lang.String> toMap(long id, boolean defaults) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
-    public void fromMap(long id, java.util.Map<java.lang.String,java.lang.String> _map) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
+    public void fromMap(long id, java.util.Map<java.lang.String,java.lang.String> map_) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
     public void load(long id, java.lang.String path) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException;
 
@@ -51,7 +51,7 @@ public class IPropertiesService {
 
     public void toMap(long id, boolean defaults, org.apache.thrift.async.AsyncMethodCallback<java.util.Map<java.lang.String,java.lang.String>> resultHandler) throws org.apache.thrift.TException;
 
-    public void fromMap(long id, java.util.Map<java.lang.String,java.lang.String> _map, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void fromMap(long id, java.util.Map<java.lang.String,java.lang.String> map_, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void load(long id, java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -268,17 +268,17 @@ public class IPropertiesService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "toMap failed: unknown result");
     }
 
-    public void fromMap(long id, java.util.Map<java.lang.String,java.lang.String> _map) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
+    public void fromMap(long id, java.util.Map<java.lang.String,java.lang.String> map_) throws org.ignis.rpc.driver.IDriverException, org.apache.thrift.TException
     {
-      send_fromMap(id, _map);
+      send_fromMap(id, map_);
       recv_fromMap();
     }
 
-    public void send_fromMap(long id, java.util.Map<java.lang.String,java.lang.String> _map) throws org.apache.thrift.TException
+    public void send_fromMap(long id, java.util.Map<java.lang.String,java.lang.String> map_) throws org.apache.thrift.TException
     {
       fromMap_args args = new fromMap_args();
       args.setId(id);
-      args.set_map(_map);
+      args.setMap_(map_);
       sendBase("fromMap", args);
     }
 
@@ -620,27 +620,27 @@ public class IPropertiesService {
       }
     }
 
-    public void fromMap(long id, java.util.Map<java.lang.String,java.lang.String> _map, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void fromMap(long id, java.util.Map<java.lang.String,java.lang.String> map_, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      fromMap_call method_call = new fromMap_call(id, _map, resultHandler, this, ___protocolFactory, ___transport);
+      fromMap_call method_call = new fromMap_call(id, map_, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class fromMap_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private long id;
-      private java.util.Map<java.lang.String,java.lang.String> _map;
-      public fromMap_call(long id, java.util.Map<java.lang.String,java.lang.String> _map, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private java.util.Map<java.lang.String,java.lang.String> map_;
+      public fromMap_call(long id, java.util.Map<java.lang.String,java.lang.String> map_, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.id = id;
-        this._map = _map;
+        this.map_ = map_;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("fromMap", org.apache.thrift.protocol.TMessageType.CALL, 0));
         fromMap_args args = new fromMap_args();
         args.setId(id);
-        args.set_map(_map);
+        args.setMap_(map_);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -1011,7 +1011,7 @@ public class IPropertiesService {
       public fromMap_result getResult(I iface, fromMap_args args) throws org.apache.thrift.TException {
         fromMap_result result = new fromMap_result();
         try {
-          iface.fromMap(args.id, args._map);
+          iface.fromMap(args.id, args.map_);
         } catch (org.ignis.rpc.driver.IDriverException ex) {
           result.ex = ex;
         }
@@ -1651,7 +1651,7 @@ public class IPropertiesService {
       }
 
       public void start(I iface, fromMap_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.fromMap(args.id, args._map,resultHandler);
+        iface.fromMap(args.id, args.map_,resultHandler);
       }
     }
 
@@ -8233,18 +8233,18 @@ public class IPropertiesService {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("fromMap_args");
 
     private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)1);
-    private static final org.apache.thrift.protocol.TField _MAP_FIELD_DESC = new org.apache.thrift.protocol.TField("_map", org.apache.thrift.protocol.TType.MAP, (short)2);
+    private static final org.apache.thrift.protocol.TField MAP__FIELD_DESC = new org.apache.thrift.protocol.TField("map_", org.apache.thrift.protocol.TType.MAP, (short)2);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new fromMap_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new fromMap_argsTupleSchemeFactory();
 
     private long id; // required
-    private @org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> _map; // required
+    private @org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> map_; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id"),
-      _MAP((short)2, "_map");
+      MAP_((short)2, "map_");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -8262,8 +8262,8 @@ public class IPropertiesService {
         switch(fieldId) {
           case 1: // ID
             return ID;
-          case 2: // _MAP
-            return _MAP;
+          case 2: // MAP_
+            return MAP_;
           default:
             return null;
         }
@@ -8312,7 +8312,7 @@ public class IPropertiesService {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      tmpMap.put(_Fields._MAP, new org.apache.thrift.meta_data.FieldMetaData("_map", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.MAP_, new org.apache.thrift.meta_data.FieldMetaData("map_", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING), 
               new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING))));
@@ -8325,12 +8325,12 @@ public class IPropertiesService {
 
     public fromMap_args(
       long id,
-      java.util.Map<java.lang.String,java.lang.String> _map)
+      java.util.Map<java.lang.String,java.lang.String> map_)
     {
       this();
       this.id = id;
       setIdIsSet(true);
-      this._map = _map;
+      this.map_ = map_;
     }
 
     /**
@@ -8339,9 +8339,9 @@ public class IPropertiesService {
     public fromMap_args(fromMap_args other) {
       __isset_bitfield = other.__isset_bitfield;
       this.id = other.id;
-      if (other.isSet_map()) {
-        java.util.Map<java.lang.String,java.lang.String> __this___map = new java.util.HashMap<java.lang.String,java.lang.String>(other._map);
-        this._map = __this___map;
+      if (other.isSetMap_()) {
+        java.util.Map<java.lang.String,java.lang.String> __this__map_ = new java.util.HashMap<java.lang.String,java.lang.String>(other.map_);
+        this.map_ = __this__map_;
       }
     }
 
@@ -8353,7 +8353,7 @@ public class IPropertiesService {
     public void clear() {
       setIdIsSet(false);
       this.id = 0;
-      this._map = null;
+      this.map_ = null;
     }
 
     public long getId() {
@@ -8379,39 +8379,39 @@ public class IPropertiesService {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
     }
 
-    public int get_mapSize() {
-      return (this._map == null) ? 0 : this._map.size();
+    public int getMap_Size() {
+      return (this.map_ == null) ? 0 : this.map_.size();
     }
 
-    public void putTo_map(java.lang.String key, java.lang.String val) {
-      if (this._map == null) {
-        this._map = new java.util.HashMap<java.lang.String,java.lang.String>();
+    public void putToMap_(java.lang.String key, java.lang.String val) {
+      if (this.map_ == null) {
+        this.map_ = new java.util.HashMap<java.lang.String,java.lang.String>();
       }
-      this._map.put(key, val);
+      this.map_.put(key, val);
     }
 
     @org.apache.thrift.annotation.Nullable
-    public java.util.Map<java.lang.String,java.lang.String> get_map() {
-      return this._map;
+    public java.util.Map<java.lang.String,java.lang.String> getMap_() {
+      return this.map_;
     }
 
-    public fromMap_args set_map(@org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> _map) {
-      this._map = _map;
+    public fromMap_args setMap_(@org.apache.thrift.annotation.Nullable java.util.Map<java.lang.String,java.lang.String> map_) {
+      this.map_ = map_;
       return this;
     }
 
-    public void unset_map() {
-      this._map = null;
+    public void unsetMap_() {
+      this.map_ = null;
     }
 
-    /** Returns true if field _map is set (has been assigned a value) and false otherwise */
-    public boolean isSet_map() {
-      return this._map != null;
+    /** Returns true if field map_ is set (has been assigned a value) and false otherwise */
+    public boolean isSetMap_() {
+      return this.map_ != null;
     }
 
-    public void set_mapIsSet(boolean value) {
+    public void setMap_IsSet(boolean value) {
       if (!value) {
-        this._map = null;
+        this.map_ = null;
       }
     }
 
@@ -8425,11 +8425,11 @@ public class IPropertiesService {
         }
         break;
 
-      case _MAP:
+      case MAP_:
         if (value == null) {
-          unset_map();
+          unsetMap_();
         } else {
-          set_map((java.util.Map<java.lang.String,java.lang.String>)value);
+          setMap_((java.util.Map<java.lang.String,java.lang.String>)value);
         }
         break;
 
@@ -8442,8 +8442,8 @@ public class IPropertiesService {
       case ID:
         return getId();
 
-      case _MAP:
-        return get_map();
+      case MAP_:
+        return getMap_();
 
       }
       throw new java.lang.IllegalStateException();
@@ -8458,8 +8458,8 @@ public class IPropertiesService {
       switch (field) {
       case ID:
         return isSetId();
-      case _MAP:
-        return isSet_map();
+      case MAP_:
+        return isSetMap_();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -8486,12 +8486,12 @@ public class IPropertiesService {
           return false;
       }
 
-      boolean this_present__map = true && this.isSet_map();
-      boolean that_present__map = true && that.isSet_map();
-      if (this_present__map || that_present__map) {
-        if (!(this_present__map && that_present__map))
+      boolean this_present_map_ = true && this.isSetMap_();
+      boolean that_present_map_ = true && that.isSetMap_();
+      if (this_present_map_ || that_present_map_) {
+        if (!(this_present_map_ && that_present_map_))
           return false;
-        if (!this._map.equals(that._map))
+        if (!this.map_.equals(that.map_))
           return false;
       }
 
@@ -8504,9 +8504,9 @@ public class IPropertiesService {
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(id);
 
-      hashCode = hashCode * 8191 + ((isSet_map()) ? 131071 : 524287);
-      if (isSet_map())
-        hashCode = hashCode * 8191 + _map.hashCode();
+      hashCode = hashCode * 8191 + ((isSetMap_()) ? 131071 : 524287);
+      if (isSetMap_())
+        hashCode = hashCode * 8191 + map_.hashCode();
 
       return hashCode;
     }
@@ -8529,12 +8529,12 @@ public class IPropertiesService {
           return lastComparison;
         }
       }
-      lastComparison = java.lang.Boolean.compare(isSet_map(), other.isSet_map());
+      lastComparison = java.lang.Boolean.compare(isSetMap_(), other.isSetMap_());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSet_map()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._map, other._map);
+      if (isSetMap_()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.map_, other.map_);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -8564,11 +8564,11 @@ public class IPropertiesService {
       sb.append(this.id);
       first = false;
       if (!first) sb.append(", ");
-      sb.append("_map:");
-      if (this._map == null) {
+      sb.append("map_:");
+      if (this.map_ == null) {
         sb.append("null");
       } else {
-        sb.append(this._map);
+        sb.append(this.map_);
       }
       first = false;
       sb.append(")");
@@ -8624,22 +8624,22 @@ public class IPropertiesService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // _MAP
+            case 2: // MAP_
               if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
                 {
                   org.apache.thrift.protocol.TMap _map10 = iprot.readMapBegin();
-                  struct._map = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map10.size);
+                  struct.map_ = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map10.size);
                   @org.apache.thrift.annotation.Nullable java.lang.String _key11;
                   @org.apache.thrift.annotation.Nullable java.lang.String _val12;
                   for (int _i13 = 0; _i13 < _map10.size; ++_i13)
                   {
                     _key11 = iprot.readString();
                     _val12 = iprot.readString();
-                    struct._map.put(_key11, _val12);
+                    struct.map_.put(_key11, _val12);
                   }
                   iprot.readMapEnd();
                 }
-                struct.set_mapIsSet(true);
+                struct.setMap_IsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -8662,11 +8662,11 @@ public class IPropertiesService {
         oprot.writeFieldBegin(ID_FIELD_DESC);
         oprot.writeI64(struct.id);
         oprot.writeFieldEnd();
-        if (struct._map != null) {
-          oprot.writeFieldBegin(_MAP_FIELD_DESC);
+        if (struct.map_ != null) {
+          oprot.writeFieldBegin(MAP__FIELD_DESC);
           {
-            oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct._map.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter14 : struct._map.entrySet())
+            oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct.map_.size()));
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter14 : struct.map_.entrySet())
             {
               oprot.writeString(_iter14.getKey());
               oprot.writeString(_iter14.getValue());
@@ -8696,17 +8696,17 @@ public class IPropertiesService {
         if (struct.isSetId()) {
           optionals.set(0);
         }
-        if (struct.isSet_map()) {
+        if (struct.isSetMap_()) {
           optionals.set(1);
         }
         oprot.writeBitSet(optionals, 2);
         if (struct.isSetId()) {
           oprot.writeI64(struct.id);
         }
-        if (struct.isSet_map()) {
+        if (struct.isSetMap_()) {
           {
-            oprot.writeI32(struct._map.size());
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter15 : struct._map.entrySet())
+            oprot.writeI32(struct.map_.size());
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter15 : struct.map_.entrySet())
             {
               oprot.writeString(_iter15.getKey());
               oprot.writeString(_iter15.getValue());
@@ -8726,17 +8726,17 @@ public class IPropertiesService {
         if (incoming.get(1)) {
           {
             org.apache.thrift.protocol.TMap _map16 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
-            struct._map = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map16.size);
+            struct.map_ = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map16.size);
             @org.apache.thrift.annotation.Nullable java.lang.String _key17;
             @org.apache.thrift.annotation.Nullable java.lang.String _val18;
             for (int _i19 = 0; _i19 < _map16.size; ++_i19)
             {
               _key17 = iprot.readString();
               _val18 = iprot.readString();
-              struct._map.put(_key17, _val18);
+              struct.map_.put(_key17, _val18);
             }
           }
-          struct.set_mapIsSet(true);
+          struct.setMap_IsSet(true);
         }
       }
     }

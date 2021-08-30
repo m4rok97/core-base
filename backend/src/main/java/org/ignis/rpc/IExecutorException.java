@@ -11,18 +11,18 @@ public class IExecutorException extends org.apache.thrift.TException implements 
   private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("IExecutorException");
 
   private static final org.apache.thrift.protocol.TField MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("message", org.apache.thrift.protocol.TType.STRING, (short)1);
-  private static final org.apache.thrift.protocol.TField _CAUSE_FIELD_DESC = new org.apache.thrift.protocol.TField("_cause", org.apache.thrift.protocol.TType.STRING, (short)2);
+  private static final org.apache.thrift.protocol.TField CAUSE__FIELD_DESC = new org.apache.thrift.protocol.TField("cause_", org.apache.thrift.protocol.TType.STRING, (short)2);
 
   private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new IExecutorExceptionStandardSchemeFactory();
   private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new IExecutorExceptionTupleSchemeFactory();
 
   private @org.apache.thrift.annotation.Nullable java.lang.String message; // required
-  private @org.apache.thrift.annotation.Nullable java.lang.String _cause; // required
+  private @org.apache.thrift.annotation.Nullable java.lang.String cause_; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
     MESSAGE((short)1, "message"),
-    _CAUSE((short)2, "_cause");
+    CAUSE_((short)2, "cause_");
 
     private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -40,8 +40,8 @@ public class IExecutorException extends org.apache.thrift.TException implements 
       switch(fieldId) {
         case 1: // MESSAGE
           return MESSAGE;
-        case 2: // _CAUSE
-          return _CAUSE;
+        case 2: // CAUSE_
+          return CAUSE_;
         default:
           return null;
       }
@@ -88,7 +88,7 @@ public class IExecutorException extends org.apache.thrift.TException implements 
     java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
     tmpMap.put(_Fields.MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("message", org.apache.thrift.TFieldRequirementType.REQUIRED, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-    tmpMap.put(_Fields._CAUSE, new org.apache.thrift.meta_data.FieldMetaData("_cause", org.apache.thrift.TFieldRequirementType.REQUIRED, 
+    tmpMap.put(_Fields.CAUSE_, new org.apache.thrift.meta_data.FieldMetaData("cause_", org.apache.thrift.TFieldRequirementType.REQUIRED, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
     org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(IExecutorException.class, metaDataMap);
@@ -99,11 +99,11 @@ public class IExecutorException extends org.apache.thrift.TException implements 
 
   public IExecutorException(
     java.lang.String message,
-    java.lang.String _cause)
+    java.lang.String cause_)
   {
     this();
     this.message = message;
-    this._cause = _cause;
+    this.cause_ = cause_;
   }
 
   /**
@@ -113,8 +113,8 @@ public class IExecutorException extends org.apache.thrift.TException implements 
     if (other.isSetMessage()) {
       this.message = other.message;
     }
-    if (other.isSet_cause()) {
-      this._cause = other._cause;
+    if (other.isSetCause_()) {
+      this.cause_ = other.cause_;
     }
   }
 
@@ -125,7 +125,7 @@ public class IExecutorException extends org.apache.thrift.TException implements 
   @Override
   public void clear() {
     this.message = null;
-    this._cause = null;
+    this.cause_ = null;
   }
 
   @org.apache.thrift.annotation.Nullable
@@ -154,27 +154,27 @@ public class IExecutorException extends org.apache.thrift.TException implements 
   }
 
   @org.apache.thrift.annotation.Nullable
-  public java.lang.String get_cause() {
-    return this._cause;
+  public java.lang.String getCause_() {
+    return this.cause_;
   }
 
-  public IExecutorException set_cause(@org.apache.thrift.annotation.Nullable java.lang.String _cause) {
-    this._cause = _cause;
+  public IExecutorException setCause_(@org.apache.thrift.annotation.Nullable java.lang.String cause_) {
+    this.cause_ = cause_;
     return this;
   }
 
-  public void unset_cause() {
-    this._cause = null;
+  public void unsetCause_() {
+    this.cause_ = null;
   }
 
-  /** Returns true if field _cause is set (has been assigned a value) and false otherwise */
-  public boolean isSet_cause() {
-    return this._cause != null;
+  /** Returns true if field cause_ is set (has been assigned a value) and false otherwise */
+  public boolean isSetCause_() {
+    return this.cause_ != null;
   }
 
-  public void set_causeIsSet(boolean value) {
+  public void setCause_IsSet(boolean value) {
     if (!value) {
-      this._cause = null;
+      this.cause_ = null;
     }
   }
 
@@ -188,11 +188,11 @@ public class IExecutorException extends org.apache.thrift.TException implements 
       }
       break;
 
-    case _CAUSE:
+    case CAUSE_:
       if (value == null) {
-        unset_cause();
+        unsetCause_();
       } else {
-        set_cause((java.lang.String)value);
+        setCause_((java.lang.String)value);
       }
       break;
 
@@ -205,8 +205,8 @@ public class IExecutorException extends org.apache.thrift.TException implements 
     case MESSAGE:
       return getMessage();
 
-    case _CAUSE:
-      return get_cause();
+    case CAUSE_:
+      return getCause_();
 
     }
     throw new java.lang.IllegalStateException();
@@ -221,8 +221,8 @@ public class IExecutorException extends org.apache.thrift.TException implements 
     switch (field) {
     case MESSAGE:
       return isSetMessage();
-    case _CAUSE:
-      return isSet_cause();
+    case CAUSE_:
+      return isSetCause_();
     }
     throw new java.lang.IllegalStateException();
   }
@@ -249,12 +249,12 @@ public class IExecutorException extends org.apache.thrift.TException implements 
         return false;
     }
 
-    boolean this_present__cause = true && this.isSet_cause();
-    boolean that_present__cause = true && that.isSet_cause();
-    if (this_present__cause || that_present__cause) {
-      if (!(this_present__cause && that_present__cause))
+    boolean this_present_cause_ = true && this.isSetCause_();
+    boolean that_present_cause_ = true && that.isSetCause_();
+    if (this_present_cause_ || that_present_cause_) {
+      if (!(this_present_cause_ && that_present_cause_))
         return false;
-      if (!this._cause.equals(that._cause))
+      if (!this.cause_.equals(that.cause_))
         return false;
     }
 
@@ -269,9 +269,9 @@ public class IExecutorException extends org.apache.thrift.TException implements 
     if (isSetMessage())
       hashCode = hashCode * 8191 + message.hashCode();
 
-    hashCode = hashCode * 8191 + ((isSet_cause()) ? 131071 : 524287);
-    if (isSet_cause())
-      hashCode = hashCode * 8191 + _cause.hashCode();
+    hashCode = hashCode * 8191 + ((isSetCause_()) ? 131071 : 524287);
+    if (isSetCause_())
+      hashCode = hashCode * 8191 + cause_.hashCode();
 
     return hashCode;
   }
@@ -294,12 +294,12 @@ public class IExecutorException extends org.apache.thrift.TException implements 
         return lastComparison;
       }
     }
-    lastComparison = java.lang.Boolean.compare(isSet_cause(), other.isSet_cause());
+    lastComparison = java.lang.Boolean.compare(isSetCause_(), other.isSetCause_());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    if (isSet_cause()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._cause, other._cause);
+    if (isSetCause_()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.cause_, other.cause_);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -333,11 +333,11 @@ public class IExecutorException extends org.apache.thrift.TException implements 
     }
     first = false;
     if (!first) sb.append(", ");
-    sb.append("_cause:");
-    if (this._cause == null) {
+    sb.append("cause_:");
+    if (this.cause_ == null) {
       sb.append("null");
     } else {
-      sb.append(this._cause);
+      sb.append(this.cause_);
     }
     first = false;
     sb.append(")");
@@ -349,8 +349,8 @@ public class IExecutorException extends org.apache.thrift.TException implements 
     if (message == null) {
       throw new org.apache.thrift.protocol.TProtocolException("Required field 'message' was not present! Struct: " + toString());
     }
-    if (_cause == null) {
-      throw new org.apache.thrift.protocol.TProtocolException("Required field '_cause' was not present! Struct: " + toString());
+    if (cause_ == null) {
+      throw new org.apache.thrift.protocol.TProtocolException("Required field 'cause_' was not present! Struct: " + toString());
     }
     // check for sub-struct validity
   }
@@ -397,10 +397,10 @@ public class IExecutorException extends org.apache.thrift.TException implements 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 2: // _CAUSE
+          case 2: // CAUSE_
             if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-              struct._cause = iprot.readString();
-              struct.set_causeIsSet(true);
+              struct.cause_ = iprot.readString();
+              struct.setCause_IsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -425,9 +425,9 @@ public class IExecutorException extends org.apache.thrift.TException implements 
         oprot.writeString(struct.message);
         oprot.writeFieldEnd();
       }
-      if (struct._cause != null) {
-        oprot.writeFieldBegin(_CAUSE_FIELD_DESC);
-        oprot.writeString(struct._cause);
+      if (struct.cause_ != null) {
+        oprot.writeFieldBegin(CAUSE__FIELD_DESC);
+        oprot.writeString(struct.cause_);
         oprot.writeFieldEnd();
       }
       oprot.writeFieldStop();
@@ -448,7 +448,7 @@ public class IExecutorException extends org.apache.thrift.TException implements 
     public void write(org.apache.thrift.protocol.TProtocol prot, IExecutorException struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
       oprot.writeString(struct.message);
-      oprot.writeString(struct._cause);
+      oprot.writeString(struct.cause_);
     }
 
     @Override
@@ -456,8 +456,8 @@ public class IExecutorException extends org.apache.thrift.TException implements 
       org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
       struct.message = iprot.readString();
       struct.setMessageIsSet(true);
-      struct._cause = iprot.readString();
-      struct.set_causeIsSet(true);
+      struct.cause_ = iprot.readString();
+      struct.setCause_IsSet(true);
     }
   }
 

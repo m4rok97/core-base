@@ -19,6 +19,7 @@ task jarAndLibs(type: Copy, description: 'Copy subprojects dependencies.') {
     delete("libs")
     def jars= []
     subprojects.each {
+        jars += new File(it.getBuildDir().getPath(), "jarAndLibs")
         jars += new File(it.getBuildDir().getPath(), "libs")
     }
     from jars ext

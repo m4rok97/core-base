@@ -51,14 +51,10 @@ dependencies {
     implementation group: 'com.github.docker-java', name: 'docker-java-transport-httpclient5', version: '3.2.11'
 }
 
-task copyToLib(type: Copy, description: 'Copy project dependencies.') {
-    delete("$buildDir/libs")
+task jarAndLibs(type: Copy, description: 'Copy project dependencies.') {
+    dependsOn "jar"
+    delete("$buildDir/jarAndLibs")
     from project.configurations.compileClasspath
-    into "$buildDir/libs"
+    into "$buildDir/jarAndLibs"
 }
-build.dependsOn(copyToLib)
 
-task jarAndLibs {
-    dependsOn 'jar'
-    dependsOn 'copyToLib'
-}

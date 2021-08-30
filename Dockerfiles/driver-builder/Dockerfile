@@ -7,11 +7,11 @@ ARG RELPATH=""
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
 	apt update && \
-	apt -y --no-install-recommends  install openjdk-14-jdk && \
+	apt -y --no-install-recommends  install openjdk-16-jdk && \
 	rm -rf /var/lib/apt/lists/*
 
 
-ENV GRADLE_VERSION=6.7
+ENV GRADLE_VERSION=7.2
 RUN \
 	mkdir -p /tmp/gradle && \ 
 	cd /tmp/gradle && \
@@ -21,6 +21,10 @@ RUN \
 	ln -s /opt/gradle/bin/gradle /usr/local/bin/gradle && \
 	cd / && \
 	rm -fr /tmp/gradle
+
+RUN mkdir ${IGNIS_HOME}/backend && \
+	MODULES=$(java --list-modules | sed -En "s/(.*)@.*/\1/p" | paste -sd "," -) && \
+	jlink --output ${IGNIS_HOME}/backend/jre --add-modules $MODULES --strip-debug --no-header-files --no-man-pages
 
 COPY / /tmp/backend/
 RUN mkdir ${IGNIS_HOME}/lib/java && \

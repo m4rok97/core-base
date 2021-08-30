@@ -68,14 +68,9 @@ test {
     }
 }*/
 
-task copyToLib(type: Copy, description: 'Copy project dependencies.') {
-    delete("$buildDir/libs")
+task jarAndLibs(type: Copy, description: 'Copy project dependencies.') {
+    dependsOn "jar"
+    delete("$buildDir/jarAndLibs")
     from project.configurations.runtimeClasspath
-    into "$buildDir/libs"
-}
-build.dependsOn(copyToLib)
-
-task jarAndLibs {
-    dependsOn 'jar'
-    dependsOn 'copyToLib'
+    into "$buildDir/jarAndLibs"
 }

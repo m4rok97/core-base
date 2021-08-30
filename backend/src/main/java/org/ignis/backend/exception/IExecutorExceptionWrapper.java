@@ -24,6 +24,6 @@ import org.ignis.rpc.IExecutorException;
 public class IExecutorExceptionWrapper extends IgnisException {
 
     public IExecutorExceptionWrapper(IExecutorException ex) {
-        super(ex.getMessage() + "\nCaused by: " + ex.get_cause());
+        super(ex.getMessage() + "\nCaused by: " + ex.getCause_());
     }
 }
