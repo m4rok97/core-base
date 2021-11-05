@@ -7,7 +7,7 @@ ARG RELPATH=""
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
 	apt update && \
-	apt -y --no-install-recommends  install openjdk-16-jdk && \
+	apt -y --no-install-recommends  install openjdk-17-jdk && \
 	rm -rf /var/lib/apt/lists/*
 
 
