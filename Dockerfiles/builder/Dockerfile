@@ -19,5 +19,5 @@ RUN rm -fR /usr2 && \
 		pkg-config && \
 	rm -rf /var/lib/apt/lists/*
 
-ENV THRIFT_VERSION=0.14.1
+ENV THRIFT_VERSION=0.15.0
 RUN git clone --branch ${THRIFT_VERSION} https://github.com/apache/thrift $IGNIS_DEVEL/thrift
