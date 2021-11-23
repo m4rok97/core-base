@@ -186,7 +186,7 @@ public final class IContainerCreateTask extends IContainerTask {
             }
 
             if (shared.barrier.await() == 0) {
-                String group = container.getProperties().getString(IKeys.JOB_GROUP);
+                String group = container.getProperties().getString(IKeys.JOB_NAME);
                 List<String> ids = scheduler.createExecutorContainers(group, name, parseContainer(), shared.containers.size());
                 List<IContainerInfo> details = scheduler.getExecutorContainers(ids);
                 for (int i = 0; i < shared.containers.size(); i++) {

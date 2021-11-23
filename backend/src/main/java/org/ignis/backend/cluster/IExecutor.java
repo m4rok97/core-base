@@ -96,7 +96,7 @@ public final class IExecutor {
         Map<String, String> map = getProperties().toMap(true);
         /*Executor dynamic properties*/
         map.put(IKeys.EXECUTOR_CORES, String.valueOf(cores));
-        map.put(IKeys.JOB_DIRECTORY, map.get(IKeys.DFS_HOME) + "/" + map.get(IKeys.JOB_GROUP));
+        map.put(IKeys.JOB_DIRECTORY, map.get(IKeys.DFS_HOME) + "/" + map.get(IKeys.JOB_NAME));
         map.put(IKeys.JOB_WORKER, String.valueOf(worker));
         map.put(IKeys.EXECUTOR_DIRECTORY, map.get(IKeys.JOB_DIRECTORY) + "/" + container.getCluster() + "/" + worker + "/" + id);
         return map;

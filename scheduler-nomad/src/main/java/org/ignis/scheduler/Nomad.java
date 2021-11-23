@@ -460,11 +460,14 @@ public class Nomad implements IScheduler {
             job.setName(groupId.getName());
             job.setType("batch");
             job.setDatacenters(getDatacenters(container));
-            TaskGroup driver = parseContainer(name, container, 1, true);
+            TaskGroup driver = parseContainer(fixName(name), container, 1, true);
+            String driverId = new ContainerId(job.getId(), driver.getName(), 0).toString();
+            driver.getTasks().get(0).getEnv().put("IGNIS_JOB_ID", driverId);
+            driver.getTasks().get(0).getEnv().put("IGNIS_JOB_NAME", group);
             driver.getMeta().put(MODIFIED, "0");
             job.addTaskGroups(driver);
             client.getJobsApi().register(job);
-            return new ContainerId(job.getId(), driver.getName(), 0).toString();
+            return driverId;
         } catch (IOException | NomadException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }

@@ -181,7 +181,6 @@ public class Submit implements Callable<Integer> {
             String app;
             try {
                 group = scheduler.createGroup(name != null ? name : "ignis");
-                props.setProperty(IKeys.JOB_GROUP, group);
                 app = scheduler.createDriverContainer(group, "driver", builder.build());
             } catch (ISchedulerException ex) {
                 if (group != null) {

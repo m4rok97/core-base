@@ -96,7 +96,7 @@ public final class Main {
         IAttributes attributes = new IAttributes(props);
         try {
             LOGGER.info("Getting Driver container info from scheduler");
-            attributes.driver.initInfo(scheduler.getDriverContainer(props.getProperty(IKeys.JOB_NAME)));
+            attributes.driver.initInfo(scheduler.getDriverContainer(props.getProperty(IKeys.JOB_ID)));
             LOGGER.info("Driver container info found");
         } catch (ISchedulerException ex) {
             LOGGER.error("Not found", ex);

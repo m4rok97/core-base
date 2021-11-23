@@ -171,8 +171,6 @@ public class Marathon implements IScheduler {
         }
 
         app.setEnv(new HashMap<>());
-        app.getEnv().put("IGNIS_JOB_NAME", app.getId());
-        app.getEnv().put("IGNIS_JOB_GROUP", group);
         if (System.getenv("TZ") != null) { //Copy timezone
             app.getEnv().put("TZ", System.getenv("TZ"));
         }
@@ -331,6 +329,8 @@ public class Marathon implements IScheduler {
     public String createDriverContainer(String group, String name, IContainerInfo container) throws ISchedulerException {
         try {
             App app = createApp(group, name, container);
+            app.getEnv().put("IGNIS_JOB_ID", app.getId());
+            app.getEnv().put("IGNIS_JOB_NAME", group);
             app.setInstances(1);
             return marathon.createApp(app).getId();
         } catch (MarathonException ex) {

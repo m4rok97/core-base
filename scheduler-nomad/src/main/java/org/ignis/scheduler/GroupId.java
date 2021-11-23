@@ -6,9 +6,9 @@ class GroupId {
     private String name;
 
     GroupId(String groupId) {
-        int sep = groupId.indexOf(":");
-        jobId = groupId.substring(0, sep);
-        name = groupId.substring(sep + 1);
+        int sep = groupId.indexOf("-");
+        name = groupId.substring(0, sep);
+        jobId = groupId.substring(sep + 1);
     }
 
     GroupId(String jobId, String name) {
@@ -34,6 +34,6 @@ class GroupId {
 
     @Override
     public String toString() {
-        return jobId + ":" + name;
+        return name + "-" + jobId;
     }
 }

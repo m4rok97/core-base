@@ -28,8 +28,8 @@ public final class IKeys {
     public static final String REGISTRY = "ignis.registry";
     public static final String WORKING_DIRECTORY = "ignis.working.directory";
     /*JOB*/
+    public static final String JOB_ID = "ignis.job.id";
     public static final String JOB_NAME = "ignis.job.name";
-    public static final String JOB_GROUP = "ignis.job.group";
     public static final String JOB_DIRECTORY = "ignis.job.directory";
     public static final String JOB_WORKER = "ignis.job.worker";
     /*DFS*/

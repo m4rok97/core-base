@@ -216,8 +216,8 @@ public class Singularity implements IScheduler {
 
         Map<String, String> deployEnv = new HashMap<>();
         deployBuilder.setEnv(Optional.of(deployEnv));
-        deployEnv.put("IGNIS_JOB_NAME", id);
-        deployEnv.put("IGNIS_JOB_GROUP", group);
+        deployEnv.put("IGNIS_JOB_ID", id);
+        deployEnv.put("IGNIS_JOB_NAME", group);
         if (System.getenv("TZ") != null) { //Copy timezone
             deployEnv.put("TZ", System.getenv("TZ"));
         }

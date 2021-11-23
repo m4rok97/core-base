@@ -153,7 +153,7 @@ public class Docker implements IScheduler {
                 mount.withVolumeOptions(volumeOptions);
                 mount.withType(MountType.VOLUME);
                 volumeOptions.withDriverConfig(driver);
-                driver.withOptions(Map.of("size", ""+volume.getSize()));
+                driver.withOptions(Map.of("size", "" + volume.getSize()));
                 mounts.add(mount);
             }
         }
@@ -223,7 +223,7 @@ public class Docker implements IScheduler {
             builder.preferedHosts(Arrays.asList(labels.get("prefered-hosts").split(",")));
         }
 
-        if(container.getHostConfig().getDns() != null){
+        if (container.getHostConfig().getDns() != null) {
             builder.hostnames(Arrays.asList(container.getHostConfig().getDns()));
         }
 
@@ -254,7 +254,11 @@ public class Docker implements IScheduler {
     public String createDriverContainer(String group, String name, IContainerInfo container) throws ISchedulerException {
         try {
             CreateContainerCmd dockerContainer = parseContainer(container);
+            ArrayList<String> env = new ArrayList<>(Arrays.asList(dockerContainer.getEnv()));
             dockerContainer.withName(group + "-" + name);
+            env.add("IGNIS_JOB_ID=" + dockerContainer.getName());
+            env.add("IGNIS_JOB_NAME=" + group);
+            dockerContainer.withEnv(env);
             String id = dockerContainer.exec().getId();
             dockerClient.startContainerCmd(id).exec();
             return id;
@@ -338,12 +342,12 @@ public class Docker implements IScheduler {
     @Override
     public IContainerInfo restartContainer(String id) throws ISchedulerException {
         try {
-            try{
-                if(getStatus(id) == IContainerStatus.RUNNING){
+            try {
+                if (getStatus(id) == IContainerStatus.RUNNING) {
                     return getDriverContainer(id);
                 }
                 dockerClient.stopContainerCmd(id).exec();
-            }catch (Exception ignore){
+            } catch (Exception ignore) {
             }
             dockerClient.startContainerCmd(id).exec();
             return getDriverContainer(id);
