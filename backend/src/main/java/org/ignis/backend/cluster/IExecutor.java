@@ -22,11 +22,13 @@ import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TZlibTransport;
+import org.ignis.backend.cluster.tasks.IMpiConfig;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.executor.*;
+import org.ignis.scheduler.model.IPort;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author César Pomar
@@ -95,10 +97,30 @@ public final class IExecutor {
     public Map<String, String> getExecutorProperties() {
         Map<String, String> map = getProperties().toMap(true);
         /*Executor dynamic properties*/
+        map.remove(IKeys.DRIVER_PRIVATE_KEY);
         map.put(IKeys.EXECUTOR_CORES, String.valueOf(cores));
         map.put(IKeys.JOB_DIRECTORY, map.get(IKeys.DFS_HOME) + "/" + map.get(IKeys.JOB_NAME));
         map.put(IKeys.JOB_WORKER, String.valueOf(worker));
         map.put(IKeys.EXECUTOR_DIRECTORY, map.get(IKeys.JOB_DIRECTORY) + "/" + container.getCluster() + "/" + worker + "/" + id);
+        map.putAll(getUserProperties());
+
+        return map;
+    }
+
+    public Map<String, String> getUserProperties() {
+        Map<String, String> map = new HashMap<>();
+        /*Ports*/
+        Set<String> mpiPorts = new HashSet<>();
+        for (IPort port : IMpiConfig.getPorts(this)) {
+            mpiPorts.add(port.getProtocol() + port.getContainerPort());
+        }
+        String portPrefix = container.getCluster() < 0 ? IKeys.DRIVER_PORT : IKeys.EXECUTOR_PORT;
+        for (IPort port : container.getInfo().getPorts()) {
+            if (!mpiPorts.contains(port.getProtocol() + port.getContainerPort())) {
+                String key = portPrefix + "." + port.getProtocol() + "." + port.getContainerPort();
+                map.put(key, String.valueOf(port.getHostPort()));
+            }
+        }
         return map;
     }
 

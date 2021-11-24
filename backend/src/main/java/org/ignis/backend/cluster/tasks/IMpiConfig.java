@@ -23,9 +23,7 @@ import org.ignis.backend.cluster.IExecutor;
 import org.ignis.properties.IKeys;
 import org.ignis.scheduler.model.IPort;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class IMpiConfig {
@@ -37,11 +35,29 @@ public class IMpiConfig {
             conf.put("MPIR_CVAR_CH4_NUM_VCIS", String.valueOf(executor.getCores()));
         }
         conf.put("MPICH_SERVICE", executor.getContainer().getInfo().getHost());
-        int mpiMaxPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
-        List<IPort> mpiPorts = executor.getContainer().getInfo().getPorts().subList(0, mpiMaxPorts);
+        List<IPort> mpiPorts = getPorts(executor);
         conf.put("MPICH_LIST_PORTS",
                 mpiPorts.stream().map((IPort p) -> String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
         return conf;
+    }
+
+    public static List<IPort> getPorts(IExecutor executor) {
+        Set<String> bussy = new HashSet<>();
+        for (IPort port : executor.getContainer().getContainerRequest().getPorts()) {
+            if (port.getContainerPort() != 0) {
+                bussy.add(port.getProtocol() + port.getContainerPort());
+            }
+        }
+
+        List<IPort> randomPorts = new ArrayList<>();
+        for (IPort port : executor.getContainer().getInfo().getPorts()) {
+            if (!bussy.contains(port.getProtocol() + port.getContainerPort()) && port.getProtocol().equalsIgnoreCase("tpc")) {
+                randomPorts.add(port);
+            }
+        }
+
+        int transportPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
+        return randomPorts.subList(0, transportPorts);
     }
 
 }

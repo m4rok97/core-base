@@ -87,7 +87,6 @@ public final class IKeys {
     /*TRANSPORT*/
     public static final String TRANSPORT_CORES = "ignis.transport.cores";
     public static final String TRANSPORT_COMPRESSION = "ignis.transport.compression";
-    public static final String TRANSPORT_PORT = "ignis.transport.port";
     public static final String TRANSPORT_PORTS = "ignis.transport.ports";
     public static final String TRANSPORT_ELEMENT_SIZE = "ignis.transport.element.size";
     public static final String TRANSPORT_MINIMAL = "ignis.transport.minimal";

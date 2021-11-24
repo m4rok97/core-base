@@ -30,14 +30,16 @@ public final class IContainer {
     private final long cluster;
     private final ITunnel tunnel;
     private final IProperties properties;
+    private final IContainerInfo containerRequest;
     private IContainerInfo info;
     private int resets;
 
-    public IContainer(long id, long cluster, ITunnel tunnel, IProperties properties) {
+    public IContainer(long id, long cluster, ITunnel tunnel, IProperties properties, IContainerInfo containerRequest) {
         this.id = id;
         this.cluster = cluster;
         this.tunnel = tunnel;
         this.properties = properties;
+        this.containerRequest = containerRequest;
         this.resets = -1;
     }
 
@@ -51,6 +53,10 @@ public final class IContainer {
 
     public ITunnel getTunnel() {
         return tunnel;
+    }
+
+    public IContainerInfo getContainerRequest() {
+        return containerRequest;
     }
 
     public IContainerInfo getInfo() {

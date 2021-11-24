@@ -21,16 +21,15 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
-import org.ignis.properties.IProperties;
 import org.ignis.scheduler.IScheduler;
 import org.ignis.scheduler.ISchedulerException;
-import org.ignis.scheduler.ISchedulerParser;
 import org.ignis.scheduler.model.IContainerInfo;
 import org.ignis.scheduler.model.IContainerStatus;
-import org.ignis.scheduler.model.IPort;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
 /**
@@ -56,53 +55,14 @@ public final class IContainerCreateTask extends IContainerTask {
 
     private final Shared shared;
     private final IScheduler scheduler;
+    private final IContainerInfo containerRequest;
 
-    public IContainerCreateTask(String name, IContainer container, IScheduler scheduler, Shared shared) {
+    public IContainerCreateTask(String name, IContainer container, IScheduler scheduler, IContainerInfo containerRequest,
+                                Shared shared) {
         super(name, container);
         this.shared = shared;
         this.scheduler = scheduler;
-    }
-
-    private IContainerInfo parseContainer() {
-        IProperties props = container.getProperties();
-        IContainerInfo.IContainerInfoBuilder builder = IContainerInfo.builder();
-
-        if (props.contains(IKeys.REGISTRY)) {
-            String registry = props.getProperty(IKeys.REGISTRY);
-            if (!registry.endsWith("/")) {
-                registry += "/";
-            }
-            builder.image(registry + props.getProperty(IKeys.EXECUTOR_IMAGE));
-        } else {
-            builder.image(props.getProperty(IKeys.EXECUTOR_IMAGE));
-        }
-        builder.cpus(props.getInteger(IKeys.EXECUTOR_CORES));
-        builder.memory(props.getSILong(IKeys.EXECUTOR_MEMORY));
-        builder.swappiness(props.contains(IKeys.EXECUTOR_SWAPPINESS) ? props.getInteger(IKeys.EXECUTOR_SWAPPINESS) : null);
-        builder.command("ignis-server");
-        builder.arguments(Arrays.asList(props.getString(IKeys.EXECUTOR_RPC_PORT)));
-        ISchedulerParser parser = new ISchedulerParser(props);
-        builder.schedulerParams(parser.schedulerParams());
-        List<IPort> ports;
-        builder.ports(ports = parser.ports(IKeys.EXECUTOR_PORT));
-        builder.binds(parser.binds(IKeys.EXECUTOR_BIND));
-        builder.volumes(parser.volumes(IKeys.EXECUTOR_VOLUME));
-        builder.hostnames(props.getStringList(IKeys.SCHEDULER_DNS));
-        Map<String, String> env = parser.env(IKeys.EXECUTOR_ENV);
-        env.put("IGNIS_DRIVER_PUBLIC_KEY", props.getString(IKeys.DRIVER_PUBLIC_KEY));
-        env.put("IGNIS_DRIVER_HEALTHCHECK_INTERVAL", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_INTERVAL)));
-        env.put("IGNIS_DRIVER_HEALTHCHECK_TIMEOUT", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_TIMEOUT)));
-        env.put("IGNIS_DRIVER_HEALTHCHECK_RETRIES", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_RETRIES)));
-        env.put("IGNIS_DRIVER_HEALTHCHECK_URL", props.getString(IKeys.DRIVER_HEALTHCHECK_URL));
-
-        builder.environmentVariables(env);
-        if (props.contains(IKeys.EXECUTOR_HOSTS)) {
-            builder.preferedHosts(props.getStringList(IKeys.EXECUTOR_HOSTS));
-        }
-
-        ports.add(new IPort(props.getInteger(IKeys.EXECUTOR_RPC_PORT), 0, "tcp"));
-
-        return builder.build();
+        this.containerRequest = containerRequest;
     }
 
     @Override
@@ -187,7 +147,7 @@ public final class IContainerCreateTask extends IContainerTask {
 
             if (shared.barrier.await() == 0) {
                 String group = container.getProperties().getString(IKeys.JOB_NAME);
-                List<String> ids = scheduler.createExecutorContainers(group, name, parseContainer(), shared.containers.size());
+                List<String> ids = scheduler.createExecutorContainers(group, name, containerRequest, shared.containers.size());
                 List<IContainerInfo> details = scheduler.getExecutorContainers(ids);
                 for (int i = 0; i < shared.containers.size(); i++) {
                     if (Boolean.getBoolean(IKeys.DEBUG)) {
