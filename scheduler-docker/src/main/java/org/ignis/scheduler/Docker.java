@@ -53,11 +53,13 @@ public class Docker implements IScheduler {
         }
     };
 
+    private final String path;
     private final DockerClientConfig config;
     private final DockerHttpClient httpClient;
     private final DockerClient dockerClient;
 
     public Docker(String url) {
+        this.path = url;
         config = DefaultDockerClientConfig.
                 createDefaultConfigBuilder().
                 withDockerHost(url).
@@ -144,7 +146,7 @@ public class Docker implements IScheduler {
             }
         }
 
-        if (container.getBinds() != null) {
+        if (container.getVolumes() != null) {
             for (IVolume volume : container.getVolumes()) {
                 Mount mount = new Mount();
                 VolumeOptions volumeOptions = new VolumeOptions();
@@ -254,11 +256,20 @@ public class Docker implements IScheduler {
     public String createDriverContainer(String group, String name, IContainerInfo container) throws ISchedulerException {
         try {
             CreateContainerCmd dockerContainer = parseContainer(container);
-            ArrayList<String> env = new ArrayList<>(Arrays.asList(dockerContainer.getEnv()));
-            dockerContainer.withName(group + "-" + name);
-            env.add("IGNIS_JOB_ID=" + dockerContainer.getName());
-            env.add("IGNIS_JOB_NAME=" + group);
+            String[] env = Arrays.copyOf(dockerContainer.getEnv(), dockerContainer.getEnv().length + 2);
+            env[env.length - 2] = "IGNIS_JOB_ID=" + dockerContainer.getName();
+            env[env.length - 1] = "IGNIS_JOB_NAME=" + group;
             dockerContainer.withEnv(env);
+            dockerContainer.withEnv(env);
+            if (path.startsWith("/")) {//Is a Unix-Socket
+                List<Mount> mounts = dockerContainer.getHostConfig().getMounts();
+                Mount mount = new Mount();
+                mount.withSource(path);
+                mount.withTarget(path);
+                mount.withReadOnly(false);
+                mount.withType(MountType.BIND);
+                mounts.add(mount);
+            }
             String id = dockerContainer.exec().getId();
             dockerClient.startContainerCmd(id).exec();
             return id;
