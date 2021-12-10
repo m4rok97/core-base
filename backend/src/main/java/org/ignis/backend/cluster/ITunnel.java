@@ -198,8 +198,18 @@ public final class ITunnel {
         }
     }
 
-    public void sendFile(String source, String target) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void sendFile(String source, String target) throws IgnisException{
+        try {
+            this.sem.acquire();
+            Channel channel = session.openChannel("sftp");
+            ChannelSftp sftp = (ChannelSftp) channel;
+            sftp.put(source, target);
+            channel.disconnect();
+        } catch (JSchException | InterruptedException | SftpException ex) {
+            throw new IgnisException("File could not be sent", ex);
+        }finally {
+            this.sem.release();
+        }
     }
 
 }

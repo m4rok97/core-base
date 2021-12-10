@@ -1,7 +1,8 @@
 
 ARG REGISTRY=""
+ARG NAMESPACE="ignishpc"
 ARG TAG=""
-FROM ${REGISTRY}ignishpc/common${TAG}
+FROM ${REGISTRY}${NAMESPACE}common${TAG}
 ARG RELPATH=""
 
 RUN ${IGNIS_HOME}/common/driver-install.sh && \
