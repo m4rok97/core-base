@@ -1,7 +1,8 @@
 
 ARG REGISTRY=""
+ARG NAMESPACE="ignishpc"
 ARG TAG=""
-FROM ${REGISTRY}ignishpc/mesos-base${TAG}
+FROM ${REGISTRY}${NAMESPACE}mesos-base${TAG}
 ARG RELPATH=""
 
 ENV _MARATHON_VERSION=1.8.222-86475ddac

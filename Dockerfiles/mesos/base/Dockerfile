@@ -1,5 +1,6 @@
 
 ARG REGISTRY=""
+ARG NAMESPACE="ignishpc"
 ARG TAG=""
 FROM ubuntu:18.04 as builder
 ARG RELPATH=""

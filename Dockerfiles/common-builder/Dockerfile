@@ -1,7 +1,8 @@
 
 ARG REGISTRY=""
+ARG NAMESPACE="ignishpc"
 ARG TAG=""
-FROM ${REGISTRY}ignishpc/builder${TAG}
+FROM ${REGISTRY}${NAMESPACE}builder${TAG}
 ARG RELPATH=""
 
 COPY ${RELPATH}mpi_patches /tmp/mpi_patches

@@ -1,7 +1,8 @@
 
 ARG REGISTRY=""
+ARG NAMESPACE="ignishpc"
 ARG TAG=""
-FROM ${REGISTRY}ignishpc/base${TAG}
+FROM ${REGISTRY}${NAMESPACE}base${TAG}
 ARG RELPATH=""
 
 RUN rm -fR /usr2 && \

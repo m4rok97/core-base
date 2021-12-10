@@ -1,10 +1,11 @@
 
 ARG REGISTRY=""
+ARG NAMESPACE="ignishpc"
 ARG TAG=""
-FROM ${REGISTRY}ignishpc/common-builder${TAG} as common-builder
-FROM ${REGISTRY}ignishpc/driver-builder${TAG} as driver-builder
-FROM ${REGISTRY}ignishpc/executor-builder${TAG} as executor-builder
-FROM ${REGISTRY}ignishpc/base${TAG}
+FROM ${REGISTRY}${NAMESPACE}common-builder${TAG} as common-builder
+FROM ${REGISTRY}${NAMESPACE}driver-builder${TAG} as driver-builder
+FROM ${REGISTRY}${NAMESPACE}executor-builder${TAG} as executor-builder
+FROM ${REGISTRY}${NAMESPACE}base${TAG}
 ARG RELPATH=""
 
 COPY --from=common-builder ${IGNIS_HOME} ${IGNIS_HOME}
