@@ -1,6 +1,6 @@
 
 ARG REGISTRY=""
-ARG NAMESPACE="ignishpc"
+ARG NAMESPACE="ignishpc/"
 ARG TAG=""
 FROM ${REGISTRY}${NAMESPACE}mesos-base${TAG}
 ARG RELPATH=""

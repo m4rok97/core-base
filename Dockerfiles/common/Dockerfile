@@ -1,6 +1,6 @@
 
 ARG REGISTRY=""
-ARG NAMESPACE="ignishpc"
+ARG NAMESPACE="ignishpc/"
 ARG TAG=""
 FROM ${REGISTRY}${NAMESPACE}common-builder${TAG} as common-builder
 FROM ${REGISTRY}${NAMESPACE}driver-builder${TAG} as driver-builder

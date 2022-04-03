@@ -1,6 +1,6 @@
 
 ARG REGISTRY=""
-ARG NAMESPACE="ignishpc"
+ARG NAMESPACE="ignishpc/"
 ARG TAG=""
 FROM ubuntu:20.04
 ARG RELPATH=""
