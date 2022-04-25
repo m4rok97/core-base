@@ -231,6 +231,7 @@ public class Marathon implements IScheduler {
 
             if (app.getContainer().getPortMappings() != null) {
                 List<IPort> ports = new ArrayList<>();
+                builder.networkMode(INetworkMode.BRIDGE);
                 builder.ports(ports);
                 Iterator<Integer> taskPorts = task.getPorts().iterator();
                 for (Port port : app.getContainer().getPortMappings()) {

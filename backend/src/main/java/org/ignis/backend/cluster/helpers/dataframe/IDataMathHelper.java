@@ -49,8 +49,8 @@ public final class IDataMathHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame("", builder.build());
         LOGGER.info(log() + "sample(" +
                 "withReplacement=" + withReplacement +
-                "fraction=" + fraction +
-                "seed=" + seed +
+                ", fraction=" + fraction +
+                ", seed=" + seed +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -68,8 +68,8 @@ public final class IDataMathHelper extends IDataHelper {
         builder.newTask(new ITakeSampleTask(driver.getName(), driver.getExecutor(), shared, true, withReplacement, num, seed, tp));
         LOGGER.info(log() + "takeSample(" +
                 "withReplacement=" + withReplacement +
-                "num=" + num +
-                "seed=" + seed +
+                ", num=" + num +
+                ", seed=" + seed +
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());

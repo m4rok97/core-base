@@ -21,6 +21,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 /**
  * @author César Pomar
  */
@@ -28,7 +30,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @ToString
-public class IBind {
+public class IBind implements Serializable {
 
     private String hostPath;
     private String containerPath;

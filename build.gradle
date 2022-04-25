@@ -14,6 +14,7 @@ task jarAndLibs(type: Copy, description: 'Copy subprojects dependencies.') {
     dependsOn ":scheduler-marathon:jarAndLibs"
     dependsOn ":scheduler-nomad:jarAndLibs"
     dependsOn ":scheduler-singularity:jarAndLibs"
+    dependsOn ":scheduler-slurm:jarAndLibs"
     dependsOn ":backend:jarAndLibs"
     dependsOn ":submitter:jarAndLibs"
     delete("libs")

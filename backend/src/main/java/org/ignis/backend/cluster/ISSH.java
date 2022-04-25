@@ -33,20 +33,30 @@ public class ISSH {
     private final AtomicInteger localPort;
     private final int remotePortInit;
 
-    public ISSH(int localPortinit, int remotePortInit) {
-        localPort = new AtomicInteger(localPortinit);
-        this.remotePortInit = remotePortInit;
-        ByteArrayOutputStream privateKeyBuff = new ByteArrayOutputStream(2048);
-        ByteArrayOutputStream publicKeyBuff = new ByteArrayOutputStream(2048);
-        try {
-            KeyPair keyPair = KeyPair.genKeyPair(new JSch(), KeyPair.RSA, 2048);
-            keyPair.writePrivateKey(privateKeyBuff);
-            keyPair.writePublicKey(publicKeyBuff, "");
-        } catch (JSchException ex) {
-        }
-        privateKey = privateKeyBuff.toString();
-        publicKey = publicKeyBuff.toString();
+    private boolean portForwarding;
 
+    public ISSH(int localPortinit, int remotePortInit, String privateKey, String publicKey) {
+        this.localPort = new AtomicInteger(localPortinit);
+        this.remotePortInit = remotePortInit;
+        if (privateKey != null && publicKey != null) {
+            this.privateKey = privateKey;
+            this.publicKey = publicKey;
+        } else {
+            ByteArrayOutputStream privateKeyBuff = new ByteArrayOutputStream(2048);
+            ByteArrayOutputStream publicKeyBuff = new ByteArrayOutputStream(2048);
+            try {
+                KeyPair keyPair = KeyPair.genKeyPair(new JSch(), KeyPair.RSA, 2048);
+                keyPair.writePrivateKey(privateKeyBuff);
+                keyPair.writePublicKey(publicKeyBuff, "");
+            } catch (JSchException ex) {
+            }
+            this.privateKey = privateKeyBuff.toString();
+            this.publicKey = publicKeyBuff.toString();
+        }
+    }
+
+    public ISSH(int localPortinit, int remotePortInit) {
+        this(localPortinit, remotePortInit, null, null);
     }
 
     public String getPublicKey() {
@@ -57,8 +67,12 @@ public class ISSH {
         return privateKey;
     }
 
+    public void setPortForwarding(boolean portForwarding) {
+        this.portForwarding = portForwarding;
+    }
+
     public ITunnel createTunnel() {
-        return new ITunnel(localPort, remotePortInit, privateKey, publicKey);
+        return new ITunnel(localPort, remotePortInit, portForwarding, privateKey, publicKey);
     }
 
 }

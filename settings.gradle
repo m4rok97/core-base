@@ -8,4 +8,5 @@ include 'scheduler-singularity'
 include 'scheduler-docker'
 include 'scheduler-ancoris'
 include 'scheduler-nomad'
+include 'scheduler-slurm'
 

@@ -21,6 +21,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 /**
  * @author César Pomar
  */
@@ -28,7 +30,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @ToString
-public class IVolume {
+public class IVolume implements Serializable {
 
     private String containerPath;
     private Long size;//Bytes

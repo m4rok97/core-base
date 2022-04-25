@@ -22,21 +22,29 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IExecutorException;
-import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author César Pomar
  */
-public final class IMapPartitionsWithIndexTask extends IExecutorContextTask {
+public final class IPlainFileTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMapPartitionsWithIndexTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPlainFileTask.class);
 
-    private final ISource function;
+    private final String path;
+    private final Long partitions;
 
-    public IMapPartitionsWithIndexTask(String name, IExecutor executor, ISource function) {
-        super(name, executor, Mode.LOAD_AND_SAVE);
-        this.function = function;
+    private final byte delim;
+
+    public IPlainFileTask(String name, IExecutor executor, String path, byte delim) {
+        this(name, executor, path, null, delim);
+    }
+
+    public IPlainFileTask(String name, IExecutor executor, String path, Long partitions, byte delim) {
+        super(name, executor, Mode.SAVE);
+        this.path = path;
+        this.partitions = partitions;
+        this.delim = delim;
     }
 
     @Override
@@ -46,15 +54,19 @@ public final class IMapPartitionsWithIndexTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "mapPartitionsWithIndex started");
+        LOGGER.info(log() + "plainFile started");
         try {
-            executor.getGeneralModule().mapPartitionsWithIndex(function);
+            if (partitions == null) {
+                executor.getIoModule().plainFile(path, delim);
+            } else {
+                executor.getIoModule().plainFile3(path, partitions, delim);
+            }
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "mapPartitionsWithIndex finished");
+        LOGGER.info(log() + "plainFile finished");
     }
 
 }

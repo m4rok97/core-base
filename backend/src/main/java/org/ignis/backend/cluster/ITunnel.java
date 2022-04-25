@@ -43,14 +43,16 @@ public final class ITunnel {
     private final Map<Integer, Integer> ports;
     private final String privateKey;
     private final String publicKey;
+    private final boolean portForwarding;
     private Session session;
     private int remotePort;
 
-    public ITunnel(AtomicInteger localPort, int remotePortInit, String privateKey, String publicKey) {
+    public ITunnel(AtomicInteger localPort, int remotePortInit, boolean portForwarding, String privateKey, String publicKey) {
         this.localPort = localPort;
         this.remotePort = remotePortInit;
         this.privateKey = privateKey;
         this.publicKey = publicKey;
+        this.portForwarding = portForwarding;
         this.jsch = new JSch();
         this.ports = new HashMap<>();
         this.sem = new Semaphore(10);//Maximum channels at the same time in a single session
@@ -72,8 +74,10 @@ public final class ITunnel {
                 session = jsch.getSession("root", host, port);
                 session.setConfig("StrictHostKeyChecking", "no");
                 jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
-                for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
-                    session.setPortForwardingL(entry.getKey(), "localhost", entry.getValue());
+                if (portForwarding){
+                    for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
+                        session.setPortForwardingL(entry.getKey(), "localhost", entry.getValue());
+                    }
                 }
                 session.connect();
                 break;
@@ -112,10 +116,10 @@ public final class ITunnel {
     }
 
     public int registerPort() throws IgnisException {
-        int newLocalPort = localPort.incrementAndGet();
         int newRemotePort = remotePort++;
+        int newLocalPort = portForwarding ? localPort.incrementAndGet() : newRemotePort;
         ports.put(newLocalPort, newRemotePort);
-        if (session != null) {
+        if (session != null && portForwarding) {
             try {
                 session.setPortForwardingL(newLocalPort, "localhost", newRemotePort);
             } catch (JSchException ex) {

@@ -69,7 +69,7 @@ public final class IWorkerImportDataHelper extends IWorkerHelper {
         IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
         LOGGER.info(log() + "importDataFrame(" +
                 "source=" + source.getName() +
-                "src=" + srcToString(src) +
+                ", src=" + srcToString(src) +
                 ") registered -> " + target.getName());
         return target;
     }

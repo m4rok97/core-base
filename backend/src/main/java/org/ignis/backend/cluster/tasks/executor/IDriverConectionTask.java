@@ -53,7 +53,7 @@ public class IDriverConectionTask extends IExecutorTask {
 
         for (int i = 0; i < 300; i++) {
             try {
-                executor.connect();
+                executor.connect("localhost");
                 break;
             } catch (TException ex) {
                 if (i == 299) {

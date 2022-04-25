@@ -337,6 +337,7 @@ public class Nomad implements IScheduler {
             ports.add(new IPort(container, port.getValue(), "tcp"));
             ports.add(new IPort(container, port.getValue(), "udp"));
         }
+        builder.networkMode(INetworkMode.BRIDGE);
         builder.ports(ports);
         List<IBind> binds = new ArrayList<>();
         List<IVolume> volumes = new ArrayList<>();

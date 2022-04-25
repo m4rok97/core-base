@@ -20,10 +20,7 @@ import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.IWorker;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
-import org.ignis.backend.cluster.tasks.executor.IPartitionJsonFileTask;
-import org.ignis.backend.cluster.tasks.executor.IPartitionObjectFileTask;
-import org.ignis.backend.cluster.tasks.executor.IPartitionTextFileTask;
-import org.ignis.backend.cluster.tasks.executor.ITextFileTask;
+import org.ignis.backend.cluster.tasks.executor.*;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.ISource;
@@ -38,6 +35,35 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
 
     public IWorkerReadFileHelper(IWorker worker, IProperties properties) {
         super(worker, properties);
+    }
+
+    public IDataFrame plainFile(String path, byte delim) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
+        builder.newDependency(worker.getTasks());
+        for (IExecutor executor : worker.getExecutors()) {
+            builder.newTask(new IPlainFileTask(getName(), executor, path, delim));
+        }
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "textFile(" +
+                "path=" + path +
+                ", delim=" + delim +
+                ") registered -> " + target.getName());
+        return target;
+    }
+
+    public IDataFrame plainFile(String path, long partitions, byte delim) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
+        builder.newDependency(worker.getTasks());
+        for (IExecutor executor : worker.getExecutors()) {
+            builder.newTask(new IPlainFileTask(getName(), executor, path, partitions, delim));
+        }
+        IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
+        LOGGER.info(log() + "textFile(" +
+                "path=" + path +
+                ", partitions=" + partitions +
+                ", delim=" + delim +
+                ") registered -> " + target.getName());
+        return target;
     }
 
     public IDataFrame textFile(String path) throws IgnisException {
@@ -62,7 +88,7 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
         LOGGER.info(log() + "textFile(" +
                 "path=" + path +
-                "partitions=" + partitions +
+                ", partitions=" + partitions +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -91,7 +117,7 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
         LOGGER.info(log() + "partitionObjectFile(" +
                 "path=" + path +
-                "src=" + srcToString(src) +
+                ", src=" + srcToString(src) +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -120,7 +146,7 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
         LOGGER.info(log() + "partitionJsonFile(" +
                 "path=" + path +
-                "objectMapping=" + objectMapping +
+                ", objectMapping=" + objectMapping +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -135,7 +161,7 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
         LOGGER.info(log() + "partitionJsonFile(" +
                 "path=" + path +
-                "src=" + srcToString(src) +
+                ", src=" + srcToString(src) +
                 ") registered -> " + target.getName());
         return target;
     }

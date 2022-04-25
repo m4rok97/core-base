@@ -16,7 +16,6 @@
  */
 package org.ignis.backend.cluster.helpers.dataframe;
 
-import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.helpers.worker.IWorkerImportDataHelper;
@@ -25,8 +24,6 @@ import org.ignis.backend.cluster.tasks.executor.*;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.ISource;
-import org.ignis.rpc.driver.IDataFrameId;
-import org.ignis.rpc.driver.IDriverException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -105,16 +102,15 @@ public final class IDataGeneralHelper extends IDataHelper {
         return target;
     }
 
-    public IDataFrame mapPartitionsWithIndex(ISource src, boolean preservesPartitioning) throws IgnisException {
+    public IDataFrame mapPartitionsWithIndex(ISource src) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IMapPartitionsWithIndexTask(getName(), executor, src, preservesPartitioning));
+            builder.newTask(new IMapPartitionsWithIndexTask(getName(), executor, src));
         }
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "mapPartitionsWithIndex(" +
-                "src=" + srcToString(src) + ", " +
-                "preservesPartitioning=" + preservesPartitioning +
+                "src=" + srcToString(src) +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -169,7 +165,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "groupBy(" +
                 "src=" + srcToString(src) +
-                "numPartitions=" + numPartitions +
+                ", numPartitions=" + numPartitions +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -197,7 +193,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "sort(" +
                 "ascending=" + ascending +
-                "numPartitions=" + numPartitions +
+                ", numPartitions=" + numPartitions +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -212,7 +208,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "sortBy(" +
                 "src=" + srcToString(src) +
-                "ascending=" + ascending +
+                ", ascending=" + ascending +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -233,7 +229,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "union(" +
                 "other=" + otherName +
-                "preserveOrder=" + preserveOrder +
+                ", preserveOrder=" + preserveOrder +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -254,8 +250,8 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "union(" +
                 "other=" + otherName +
-                "preserveOrder=" + preserveOrder +
-                "src=" + srcToString(src) +
+                ", preserveOrder=" + preserveOrder +
+                ", src=" + srcToString(src) +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -296,7 +292,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "join(" +
                 "other=" + otherName +
-                "numPartitions=" + numPartitions +
+                ", numPartitions=" + numPartitions +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -317,7 +313,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "join(" +
                 "other=" + otherName +
-                "src=" + srcToString(src) +
+                ", src=" + srcToString(src) +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -338,8 +334,8 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "join(" +
                 "other=" + otherName +
-                "numPartitions=" + numPartitions +
-                "src=" + srcToString(src) +
+                ", numPartitions=" + numPartitions +
+                ", src=" + srcToString(src) +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -399,7 +395,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "distinct(" +
                 "numPartitions=" + numPartitions +
-                "src=" + srcToString(src) +
+                ", src=" + srcToString(src) +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -415,8 +411,8 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "sortBy(" +
                 "src=" + srcToString(src) +
-                "ascending=" + ascending +
-                "numPartitions=" + numPartitions +
+                ", ascending=" + ascending +
+                ", numPartitions=" + numPartitions +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -457,8 +453,8 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "repartition(" +
                 "numPartitions=" + numPartitions +
-                "preserveOrdering=" + preserveOrdering +
-                "global=" + global +
+                ", preserveOrdering=" + preserveOrdering +
+                ", global=" + global +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -498,7 +494,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "partitionBy(" +
                 "src=" + srcToString(src) +
-                "numPartitions=" + numPartitions +
+                ", numPartitions=" + numPartitions +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -554,7 +550,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "groupByKey(" +
                 "numPartitions=" + numPartitions +
-                "src=" + srcToString(src) +
+                ", src=" + srcToString(src) +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -569,7 +565,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "reduceByKey(" +
                 "src=" + srcToString(src) +
-                "localReduce=" + localReduce +
+                ", localReduce=" + localReduce +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -584,8 +580,8 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "reduceByKey(" +
                 "src=" + srcToString(src) +
-                "numPartitions=" + numPartitions +
-                "localReduce=" + localReduce +
+                ", numPartitions=" + numPartitions +
+                ", localReduce=" + localReduce +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -600,7 +596,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "aggregateByKey(" +
                 "zero=" + srcToString(zero) +
-                "seqOp=" + srcToString(seqOp) +
+                ", seqOp=" + srcToString(seqOp) +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -615,8 +611,8 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "aggregateByKey(" +
                 "zero=" + srcToString(zero) +
-                "seqOp=" + srcToString(seqOp) +
-                "numPartitions=" + numPartitions +
+                ", seqOp=" + srcToString(seqOp) +
+                ", numPartitions=" + numPartitions +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -631,8 +627,8 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "aggregateByKey(" +
                 "zero=" + srcToString(zero) +
-                "seqOp=" + srcToString(seqOp) +
-                "combOp=" + srcToString(combOp) +
+                ", seqOp=" + srcToString(seqOp) +
+                ", combOp=" + srcToString(combOp) +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -647,9 +643,9 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "aggregateByKey(" +
                 "zero=" + srcToString(zero) +
-                "seqOp=" + srcToString(seqOp) +
-                "combOp=" + srcToString(combOp) +
-                "numPartitions=" + numPartitions +
+                ", seqOp=" + srcToString(seqOp) +
+                ", combOp=" + srcToString(combOp) +
+                ", numPartitions=" + numPartitions +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -664,8 +660,8 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "foldByKey(" +
                 "zero=" + srcToString(zero) +
-                "src=" + srcToString(src) +
-                "localFold=" + localFold +
+                ", src=" + srcToString(src) +
+                ", localFold=" + localFold +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -680,9 +676,9 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "foldByKey(" +
                 "zero=" + srcToString(zero) +
-                "src=" + srcToString(src) +
-                "numPartitions=" + numPartitions +
-                "localFold=" + localFold +
+                ", src=" + srcToString(src) +
+                ", numPartitions=" + numPartitions +
+                ", localFold=" + localFold +
                 ") registered -> " + target.getName());
         return target;
     }
@@ -710,7 +706,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "sortByKey(" +
                 "ascending=" + ascending +
-                "numPartitions=" + numPartitions +
+                ", numPartitions=" + numPartitions +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -725,7 +721,7 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "sortByKey(" +
                 "src=" + srcToString(src) +
-                "ascending=" + ascending +
+                ", ascending=" + ascending +
                 ") registered -> " + target.getName()
         );
         return target;
@@ -740,8 +736,8 @@ public final class IDataGeneralHelper extends IDataHelper {
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "sortByKey(" +
                 "src=" + srcToString(src) +
-                "ascending=" + ascending +
-                "numPartitions=" + numPartitions +
+                ", ascending=" + ascending +
+                ", numPartitions=" + numPartitions +
                 ") registered -> " + target.getName()
         );
         return target;

@@ -284,7 +284,7 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public IDataFrameId mapPartitions(IDataFrameId id, ISource src, boolean preservesPartitioning) throws IDriverException, TException {
+    public IDataFrameId mapPartitions(IDataFrameId id, ISource src) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
@@ -299,13 +299,13 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public IDataFrameId mapPartitionsWithIndex(IDataFrameId id, ISource src, boolean preservesPartitioning) throws IDriverException, TException {
+    public IDataFrameId mapPartitionsWithIndex(IDataFrameId id, ISource src) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).mapPartitionsWithIndex(src, preservesPartitioning);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).mapPartitionsWithIndex(src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {

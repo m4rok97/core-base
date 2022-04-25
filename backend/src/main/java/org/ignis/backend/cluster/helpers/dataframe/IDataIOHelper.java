@@ -64,7 +64,7 @@ public final class IDataIOHelper extends IDataHelper {
         }
         LOGGER.info(log() + "partitions(" +
                 "path=" + path +
-                "compression=" + compression +
+                ", compression=" + compression +
                 ") registered");
         return () -> {
             builder.build().start(data.getPool());
@@ -97,7 +97,7 @@ public final class IDataIOHelper extends IDataHelper {
         }
         LOGGER.info(log() + "saveAsJsonFile(" +
                 "path=" + path +
-                "pretty=" + pretty +
+                ", pretty=" + pretty +
                 ") registered");
         return () -> {
             builder.build().start(data.getPool());

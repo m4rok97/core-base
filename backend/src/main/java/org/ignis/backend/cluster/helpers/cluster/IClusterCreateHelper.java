@@ -30,7 +30,6 @@ import org.ignis.scheduler.model.IContainerInfo;
 import org.ignis.scheduler.model.IPort;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -84,14 +83,16 @@ public final class IClusterCreateHelper extends IClusterHelper {
         builder.memory(props.getSILong(IKeys.EXECUTOR_MEMORY));
         builder.swappiness(props.contains(IKeys.EXECUTOR_SWAPPINESS) ? props.getInteger(IKeys.EXECUTOR_SWAPPINESS) : null);
         builder.command("ignis-server");
-        builder.arguments(Arrays.asList(props.getString(IKeys.EXECUTOR_RPC_PORT)));
+        builder.arguments(List.of(props.getString(IKeys.EXECUTOR_RPC_PORT), "0"));
         ISchedulerParser parser = new ISchedulerParser(props);
         builder.schedulerParams(parser.schedulerParams());
         List<IPort> ports;
         builder.ports(ports = parser.ports(IKeys.EXECUTOR_PORT));
         builder.binds(parser.binds(IKeys.EXECUTOR_BIND));
         builder.volumes(parser.volumes(IKeys.EXECUTOR_VOLUME));
-        builder.hostnames(props.getStringList(IKeys.SCHEDULER_DNS));
+        if(props.contains(IKeys.SCHEDULER_DNS)){
+            builder.hostnames(props.getStringList(IKeys.SCHEDULER_DNS));
+        }
         Map<String, String> env = parser.env(IKeys.EXECUTOR_ENV);
         env.put("IGNIS_DRIVER_PUBLIC_KEY", props.getString(IKeys.DRIVER_PUBLIC_KEY));
         env.put("IGNIS_DRIVER_HEALTHCHECK_INTERVAL", String.valueOf(props.getInteger(IKeys.DRIVER_HEALTHCHECK_INTERVAL)));

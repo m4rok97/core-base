@@ -21,6 +21,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @ToString
-public class IContainerInfo {
+public class IContainerInfo implements Serializable {
 
     private final String id;
     private final String host;
@@ -42,6 +43,7 @@ public class IContainerInfo {
     private final long memory;//Bytes
     private final Integer swappiness;
     private final List<IPort> ports;
+    private final INetworkMode networkMode;
     private final List<IBind> binds;
     private final List<IVolume> volumes;
     private final List<String> preferedHosts;
@@ -57,4 +59,12 @@ public class IContainerInfo {
         }
         return null;
     }
+
+    public Integer getListeningPort(Integer containerPort){
+        if (networkMode ==INetworkMode.HOST){
+            return searchHostPort(containerPort);
+        }
+        return containerPort;
+    }
+
 }

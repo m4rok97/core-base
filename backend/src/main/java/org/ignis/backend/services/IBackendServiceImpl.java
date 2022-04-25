@@ -106,6 +106,9 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     private void startHealthServer() {
         try {
             int port = attributes.defaultProperties.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
+            if (port == 0){
+                return;
+            }
             healthEndpoint = HttpServer.create(new InetSocketAddress(port), 0);
             healthEndpoint.createContext("/", exchange -> {
                 exchange.sendResponseHeaders(200, -1);
@@ -121,8 +124,8 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
         try {
             if (healthEndpoint != null) {
                 healthEndpoint.stop(0);
+                LOGGER.info("Backend health server stopped");
             }
-            LOGGER.info("Backend health server stopped");
         } catch (Exception ex) {
         }
     }

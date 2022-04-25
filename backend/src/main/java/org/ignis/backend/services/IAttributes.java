@@ -48,7 +48,9 @@ public final class IAttributes {
         this.clusterList = new ArrayList<>();
         this.propertiesList = new ArrayList<>();
         this.ssh = new ISSH(defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT) + 1,//backend + 1
-                defaultProperties.getInteger(IKeys.EXECUTOR_RPC_PORT) + 1);//ssh server + 1
+                defaultProperties.getInteger(IKeys.EXECUTOR_RPC_PORT) + 1, //ssh server + 1
+                defaultProperties.getProperty(IKeys.DRIVER_PRIVATE_KEY, null),
+                defaultProperties.getProperty(IKeys.DRIVER_PUBLIC_KEY, null));
         this.driver = new IDriver(defaultProperties.getInteger(IKeys.EXECUTOR_RPC_PORT), defaultProperties);
     }
 

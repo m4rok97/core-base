@@ -128,9 +128,9 @@ public final class IExecutor {
         return transport.getConcreteTransport() != null && transport.getConcreteTransport().isOpen();
     }
 
-    public void connect() throws TException {
+    public void connect(String address) throws TException {
         disconnect();
-        TSocket socket = new TSocket("localhost", port);
+        TSocket socket = new TSocket(address, port);
         TZlibTransport zlib = new TZlibTransport(socket, container.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION));
         transport.setConcreteTransport(zlib);
         zlib.open();

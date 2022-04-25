@@ -266,6 +266,7 @@ public class Singularity implements IScheduler {
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> mesosPortMappings = (List<Map<String, Object>>) mesosDockerContainer.get("portMappings");
         List<IPort> ports = new ArrayList<>();
+        builder.networkMode(INetworkMode.BRIDGE);
         builder.ports(ports);
         for (Map<String, Object> port : mesosPortMappings) {
             ports.add(new IPort((int) port.get("containerPort"), (int) port.get("hostPort"), (String) port.get("protocol")));

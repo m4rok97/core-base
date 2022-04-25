@@ -107,8 +107,8 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         builder.newTask(new IAggregateTask(driver.getName(), driver.getExecutor(), shared, true, zero, seqOp, combOp, tp));
         LOGGER.info(log() + "aggregate(" +
                 "zero=" + srcToString(zero) +
-                "seqOp=" + srcToString(seqOp) +
-                "combOp=" + srcToString(combOp) +
+                ", seqOp=" + srcToString(seqOp) +
+                ", combOp=" + srcToString(combOp) +
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
@@ -128,8 +128,8 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         builder.newTask(new ITreeAggregateTask(driver.getName(), driver.getExecutor(), shared, true, zero, seqOp, combOp, tp));
         LOGGER.info(log() + "treeAggregate(" +
                 "zero=" + srcToString(zero) +
-                "seqOp=" + srcToString(seqOp) +
-                "combOp=" + srcToString(combOp) +
+                ", seqOp=" + srcToString(seqOp) +
+                ", combOp=" + srcToString(combOp) +
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
@@ -149,7 +149,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         builder.newTask(new IFoldTask(driver.getName(), driver.getExecutor(), shared, true, zero, src, tp));
         LOGGER.info(log() + "fold(" +
                 "zero=" + srcToString(zero) +
-                "src=" + srcToString(src) +
+                ", src=" + srcToString(src) +
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
@@ -169,7 +169,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         builder.newTask(new ITreeFoldTask(driver.getName(), driver.getExecutor(), shared, true, zero, src, tp));
         LOGGER.info(log() + "treeFold(" +
                 "zero=" + srcToString(zero) +
-                "src=" + srcToString(src) +
+                ", src=" + srcToString(src) +
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
@@ -272,7 +272,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         builder.newTask(new ITopTask(driver.getName(), driver.getExecutor(), shared, true, num, cmp, tp));
         LOGGER.info(log() + "top(" +
                 "num=" + num +
-                "cmp=" + srcToString(cmp) +
+                ", cmp=" + srcToString(cmp) +
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());
@@ -311,7 +311,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
         builder.newTask(new ITakeOrderedTask(driver.getName(), driver.getExecutor(), shared, true, num, cmp, tp));
         LOGGER.info(log() + "takeOrdered(" +
                 "num=" + num +
-                "cmp=" + srcToString(cmp) +
+                ", cmp=" + srcToString(cmp) +
                 ") registered");
         return () -> {
             ITaskContext context = builder.build().start(data.getPool());

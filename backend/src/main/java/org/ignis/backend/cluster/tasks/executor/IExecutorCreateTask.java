@@ -24,6 +24,8 @@ import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
 import org.ignis.backend.cluster.tasks.IMpiConfig;
 import org.ignis.rpc.IExecutorException;
+import org.ignis.scheduler.model.IContainerInfo;
+import org.ignis.scheduler.model.INetworkMode;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
@@ -44,7 +46,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
     }
 
     private void kill() {
-        if(executor.getContainer().getResets() != retry){
+        if (executor.getContainer().getResets() != retry) {
             return;
         }
         try {
@@ -74,6 +76,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
             }
 
         }
+        IContainerInfo containerInfo = executor.getContainer().getInfo();
         if (!running) {
             LOGGER.info(log() + "Starting new executor");
             StringBuilder startScript = new StringBuilder();
@@ -86,6 +89,7 @@ public final class IExecutorCreateTask extends IExecutorTask {
             startScript.append("ignis-").append(type).append(' ');
             startScript.append(executor.getContainer().getTunnel().getRemotePort(executor.getPort())).append(' ');
             startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
+            startScript.append(containerInfo.getNetworkMode() == INetworkMode.HOST ? 0 : 1);
             /*Redirect to docker log */
             startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2 ");
             startScript.append("&\n");
@@ -105,9 +109,10 @@ public final class IExecutorCreateTask extends IExecutorTask {
             }
         }
 
+        String address = containerInfo.getNetworkMode() == INetworkMode.HOST ? containerInfo.getHost() : "localhost";
         for (int i = 0; i < 300; i++) {
             try {
-                executor.connect();
+                executor.connect(address);
                 executor.getExecutorServerModule().test();
                 break;
             } catch (Exception ex) {

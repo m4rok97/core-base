@@ -19,12 +19,14 @@
 
 package org.ignis.scheduler.model;
 
+import java.io.Serializable;
+
 /**
  * Represents a Container status
  *
  * @author César Pomar
  */
-public enum IContainerStatus {
+public enum IContainerStatus implements Serializable {
     ACCEPTED,
     RUNNING,
     ERROR,

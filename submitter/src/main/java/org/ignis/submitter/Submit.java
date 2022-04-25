@@ -133,7 +133,9 @@ public class Submit implements Callable<Integer> {
             ports.add(new IPort(props.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT), 0, "tcp"));
             builder.binds(parser.binds(IKeys.DRIVER_BIND));
             builder.volumes(parser.volumes(IKeys.DRIVER_VOLUME));
-            builder.hostnames(props.getStringList(IKeys.SCHEDULER_DNS));
+            if(props.contains(IKeys.SCHEDULER_DNS)){
+                builder.hostnames(props.getStringList(IKeys.SCHEDULER_DNS));
+            }
             Map<String, String> env = parser.env(IKeys.DRIVER_ENV);
             env.put("IGNIS_OPTIONS", options.toString());//Send submit options to driver            
             builder.environmentVariables(env);

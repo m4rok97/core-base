@@ -199,6 +199,7 @@ public class Docker implements IScheduler {
 
         List<IPort> ports = new ArrayList<>();
         builder.ports(ports);
+        builder.networkMode(INetworkMode.BRIDGE);
         if (labels.containsKey("ports")) {
             int n = Integer.parseInt(labels.get("ports"));
             for (int i = 0; i < n; i++) {

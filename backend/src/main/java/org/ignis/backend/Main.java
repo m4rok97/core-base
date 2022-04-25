@@ -17,6 +17,8 @@
 package org.ignis.backend;
 
 import org.apache.thrift.TMultiplexedProcessor;
+import org.ignis.backend.cluster.IDriver;
+import org.ignis.backend.cluster.ISSH;
 import org.ignis.properties.IPropertyException;
 import org.ignis.scheduler.ISchedulerException;
 import org.ignis.properties.IKeys;
@@ -25,11 +27,15 @@ import org.ignis.scheduler.IScheduler;
 import org.ignis.scheduler.ISchedulerBuilder;
 import org.ignis.backend.services.*;
 import org.ignis.rpc.driver.*;
+import org.ignis.scheduler.model.IContainerInfo;
+import org.ignis.scheduler.model.INetworkMode;
+import org.ignis.scheduler.model.IPort;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 
 /**
  * @author César Pomar
@@ -93,26 +99,39 @@ public final class Main {
             System.exit(-1);
         }
 
-        IAttributes attributes = new IAttributes(props);
+        IContainerInfo driverInfo = null;
         try {
             LOGGER.info("Getting Driver container info from scheduler");
-            attributes.driver.initInfo(scheduler.getDriverContainer(props.getProperty(IKeys.JOB_ID)));
+            driverInfo = scheduler.getDriverContainer(props.getProperty(IKeys.JOB_ID));
             LOGGER.info("Driver container info found");
         } catch (ISchedulerException ex) {
             LOGGER.error("Not found", ex);
             System.exit(-1);
         }
 
+        int healthcheckPort = props.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
+        if (driverInfo.getNetworkMode() == INetworkMode.HOST) {
+            LOGGER.info("Backend is running with network in host mode, port properties will be ignored");
+            int transportPorts = props.getInteger(IKeys.TRANSPORT_PORTS);
+            int initPort = driverInfo.getPorts().get(transportPorts).getHostPort();
+            props.setProperty(IKeys.DRIVER_PRIVATE_KEY, String.valueOf(initPort + 1));
+            props.setProperty(IKeys.EXECUTOR_RPC_PORT, String.valueOf(initPort));
+            props.setProperty(IKeys.DRIVER_HEALTHCHECK_PORT, "0");
+        }
+
+        IAttributes attributes = new IAttributes(props);
+        attributes.driver.initInfo(driverInfo);
+        attributes.ssh.setPortForwarding(driverInfo.getNetworkMode() != INetworkMode.HOST);
+
         LOGGER.info("Setting dynamic properties");
         props.setProperty(IKeys.DRIVER_PUBLIC_KEY, attributes.ssh.getPublicKey());
         props.setProperty(IKeys.DRIVER_PRIVATE_KEY, attributes.ssh.getPrivateKey());
-        int healthcheckPort = props.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
         String healthcheck = "http://" + attributes.driver.getInfo().getHost() + ":";
         healthcheck += attributes.driver.getInfo().searchHostPort(healthcheckPort);
         props.setProperty(IKeys.DRIVER_HEALTHCHECK_URL, healthcheck);
 
         if (Boolean.getBoolean(IKeys.DEBUG)) {
-            LOGGER.info("Debug: " + props.toString());
+            LOGGER.info("Debug: " + props);
         }
 
         TMultiplexedProcessor processor = new TMultiplexedProcessor();
