@@ -21,7 +21,7 @@ if [ "$2" == "1" ]; then
 	done
 	echo "Client disconected"
 	exit 0
-else
+elif [ "$2" == "0" ]; then
 	interval=${IGNIS_DRIVER_HEALTHCHECK_INTERVAL}
 	timeout=${IGNIS_DRIVER_HEALTHCHECK_TIMEOUT}
 	retries=${IGNIS_DRIVER_HEALTHCHECK_RETRIES}
