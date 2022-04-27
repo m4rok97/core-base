@@ -58,7 +58,7 @@ public class ISchedulerParser {
 
         for (String key : propsPorts) {
             String subkey = key.substring((prefix + ".").length());
-            String[] portSpec = subkey.split(".");
+            String[] portSpec = subkey.split("\\.");
             if (portSpec.length != 2) {
                 throw new IPropertyException(key, " has bad format, use *.{type}.{continer_port}={host_port}");
             }

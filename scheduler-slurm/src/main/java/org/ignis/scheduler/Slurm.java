@@ -81,6 +81,9 @@ public class Slurm implements IScheduler {
         for (Map.Entry<String, String> entry : c.getEnvironmentVariables().entrySet()) {
             script.append(" --env ").append(esc(entry.getKey() + "=" + entry.getValue()));
         }
+        script.append(" --env IGNIS_JOB_ID=${IGNIS_JOB_ID}");
+        script.append(" --env IGNIS_JOB_NAME=${IGNIS_JOB_NAME}");
+        script.append(" --env SCHEDULER_PATH=${SCHEDULER_PATH}");
 
         script.append(' ').append(c.getImage()).append(' ').append(c.getCommand());
         for (String arg : c.getArguments()) {
@@ -93,14 +96,21 @@ public class Slurm implements IScheduler {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    private void parseContainerArgs(StringBuilder script, IContainerInfo c) throws ISchedulerException {
+    private void parseContainerArgs(StringBuilder script, IContainerInfo c, String wd) throws ISchedulerException {
         String flagPort = c.getSchedulerParams().get("port");
         script.append("srun");
         if (flagPort == null) {
             script.append(" --resv-ports=").append(c.getPorts().size());
         }
         script.append(" bash - <<'EOF'").append("\n");
-        script.append("#!/bin/bash").append("\n");
+        script.append("#!/bin/bash").append("\n\n");
+
+        for (IBind b : c.getBinds()) {
+            if (b.getHostPath().equals(wd)) {
+                script.append("export SCHEDULER_PATH='").append(b.getContainerPath()).append("'\n");
+                break;
+            }
+        }
 
         if (flagPort != null) {
             int initPort = Integer.parseInt(flagPort);
@@ -122,9 +132,10 @@ public class Slurm implements IScheduler {
         script.append("export IGNIS_JOB_ID=").append(jobId).append("\n");
         script.append("export IGNIS_JOB_NAME=").append(groupId).append("\n");
 
-        script.append("mkdir -p ${IGNIS_JOB_NAME}\n");
-        script.append("env --null > ${IGNIS_JOB_NAME}/${SLURM_PROCID}.env\n");
-        script.append("echo 1 > ${IGNIS_JOB_NAME}/${SLURM_PROCID}.ok\n");
+        String wd2 = wd.endsWith("/") ? wd : wd + "/";
+        script.append("mkdir -p ").append(wd2).append("${IGNIS_JOB_NAME}\n");
+        script.append("env --null > ").append(wd2).append("${IGNIS_JOB_NAME}/${SLURM_PROCID}.env\n");
+        script.append("echo 1 > ").append(wd2).append("${IGNIS_JOB_NAME}/${SLURM_PROCID}.ok\n");
 
         String platform = c.getSchedulerParams().get("platform");
         if (platform == null) {
@@ -148,22 +159,22 @@ public class Slurm implements IScheduler {
         script.append("#SBATCH --mem=").append(c.getMemory() / 1000 / 1000).append('\n');
     }
 
-    public void createJob(String time, String name, String args, IContainerInfo driver, IContainerInfo executors, int instances) throws ISchedulerException {
+    public void createJob(String time, String name, String args, String wd, IContainerInfo driver, IContainerInfo executors, int instances) throws ISchedulerException {
         StringBuilder script = new StringBuilder();
         script.append("#!/bin/bash").append('\n');
         script.append("#SBATCH --job-name=").append(name).append('\n');
         script.append("#SBATCH --time=").append(time).append('\n');
         parseSlurmArgs(script, driver, 1);
-        if(!args.isEmpty()){
+        if (!args.isEmpty()) {
             script.append("#SBATCH ").append(args).append('\n');
         }
-        parseContainerArgs(script, driver);
+        parseContainerArgs(script, driver, wd);
         script.append("#SBATCH hetjob").append('\n');
         parseSlurmArgs(script, executors, instances);
-        if(!args.isEmpty()){
+        if (!args.isEmpty()) {
             script.append("#SBATCH ").append(args).append('\n');
         }
-        parseContainerArgs(script, executors);
+        parseContainerArgs(script, executors, wd);
         if (Boolean.getBoolean("ignis.debug")) {
             LOGGER.info("Debug: slurm script{ \n    " + script.toString().replace("\n", "\n    ") + "\n}\n");
         }
@@ -171,10 +182,20 @@ public class Slurm implements IScheduler {
     }
 
     private IContainerInfo parseContainerInfo(String id) throws ISchedulerException {
+        String path = System.getenv("SCHEDULER_PATH");
         String groupId = System.getenv("IGNIS_JOB_NAME");
+        File jobFolder = new File(path, groupId);
         String envText;
         try {
-            envText = Files.readString(new File(groupId, id).toPath(), StandardCharsets.UTF_8);
+            File ok = new File(jobFolder, id + ".ok");
+            if (!ok.exists()) {
+                LOGGER.warn(ok.getPath() + " not found, waiting 30s before continue");
+                try {
+                    Thread.sleep(30000);
+                } catch (InterruptedException e) {
+                }
+            }
+            envText = Files.readString(new File(jobFolder, id + ".env").toPath(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new ISchedulerException(e.getMessage(), e);
         }
@@ -237,6 +258,25 @@ public class Slurm implements IScheduler {
         if (executorContainers) {
             throw new ISchedulerException(NAME + " scheduler allows only one cluster");
         }
+        IContainerInfo ref = parseContainerInfo("1");
+        boolean flag = true;
+
+        flag &= ref.getImage().equals(container.getImage());
+        flag &= ref.getCpus() == container.getCpus();
+        flag &= ref.getMemory()== container.getMemory();
+        flag &= ref.getBinds()== container.getBinds();
+        flag &= ref.getVolumes()== container.getVolumes();
+        flag &= ref.getHostnames()== container.getHostnames();
+        flag &= ref.getEnvironmentVariables().equals(container.getEnvironmentVariables());
+        flag &= ref.getSchedulerParams().equals(container.getSchedulerParams());
+
+        if (!flag) {
+            if (Boolean.getBoolean("ignis.debug")) {
+                LOGGER.info("Debug: " + ref + "\n" + container);
+            }
+            throw new ISchedulerException("Driver cannot change properties that affect the container executor. Use ignis-slurm.");
+        }
+
         return IntStream.range(1, instances + 1).mapToObj(i -> "" + i).toList();
     }
 

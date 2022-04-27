@@ -56,8 +56,9 @@ public final class Main {
 
         if (props.contains(IKeys.OPTIONS)) {//Submit user options
             try {
-                props.load(new ByteArrayInputStream(props.getProperty(IKeys.OPTIONS).getBytes()));
+                props.load64(props.getProperty(IKeys.OPTIONS));
             } catch (IOException ex) {
+                LOGGER.warn("User options load error", ex);
             }
             props.rmProperty(IKeys.OPTIONS);
         }
@@ -114,7 +115,7 @@ public final class Main {
             LOGGER.info("Backend is running with network in host mode, port properties will be ignored");
             int transportPorts = props.getInteger(IKeys.TRANSPORT_PORTS);
             int initPort = driverInfo.getPorts().get(transportPorts).getHostPort();
-            props.setProperty(IKeys.DRIVER_PRIVATE_KEY, String.valueOf(initPort + 1));
+            props.setProperty(IKeys.DRIVER_RPC_PORT, String.valueOf(initPort + 1));
             props.setProperty(IKeys.EXECUTOR_RPC_PORT, String.valueOf(initPort));
             props.setProperty(IKeys.DRIVER_HEALTHCHECK_PORT, "0");
         }

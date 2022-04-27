@@ -242,6 +242,15 @@ public final class IProperties {
         }
     }
 
+    public void load64(String s) throws IOException{
+        load64(s, true);
+    }
+
+    public void load64(String s, boolean replace) throws IOException{
+        ByteArrayInputStream bis = new ByteArrayInputStream(Base64.getDecoder().decode(s));
+        load(bis, replace);
+    }
+
     public void store(String path) throws IOException {
         try (OutputStream out = new BufferedOutputStream(new FileOutputStream(path))) {
             store(out);
@@ -250,6 +259,12 @@ public final class IProperties {
 
     public void store(OutputStream out) throws IOException {
         inner.store(out, "Ignis Job properties");
+    }
+
+    public String store64() throws IOException{
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        store(bos);
+        return Base64.getEncoder().encodeToString(bos.toByteArray());
     }
 
     public void clear() {

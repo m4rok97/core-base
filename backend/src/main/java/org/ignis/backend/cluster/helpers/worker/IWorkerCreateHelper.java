@@ -48,6 +48,7 @@ public final class IWorkerCreateHelper extends IWorkerHelper {
         if (instances < 1) {
             if (worker.getProperties().getStringList(IKeys.EXECUTOR_CORES_SINGLE).contains(worker.getType())) {
                 instances = cores;
+                cores = 1;
             } else {
                 instances = 1;
             }

@@ -73,15 +73,15 @@ public class SlurmSubmit implements Callable<Integer> {
             props.fromEnv(System.getenv());
 
             defaults.load(getClass().getClassLoader().getResourceAsStream("etc/ignis.conf"));
-            defaults.setProperty(IKeys.EXECUTOR_IMAGE, "docker://"+defaults.getProperty(IKeys.EXECUTOR_IMAGE));
+            props.setProperty(IKeys.EXECUTOR_IMAGE, "docker://"+defaults.getProperty(IKeys.EXECUTOR_IMAGE));
             try {
                 File conf = new File("/etc/ignis/ignis.conf");
                 if (conf.exists()) {
-                    defaults.load(conf.getPath());
+                    props.load(conf.getPath());
                 }
                 conf = new File(System.getProperty("user.home"), ".ignis/ignis.conf");
                 if (conf.exists()) {
-                    defaults.load(conf.getPath());
+                    props.load(conf.getPath());
                 }
             } catch (IPropertyException | IOException ex) {
                 LOGGER.error("Error loading ignis.conf, ignoring", ex);
@@ -143,7 +143,8 @@ public class SlurmSubmit implements Callable<Integer> {
             IContainerInfo executor = parse(props, false);
 
             Slurm scheduler = new Slurm(props.getProperty(IKeys.SCHEDULER_URL));
-            scheduler.createJob(time, name, customArgs.toString(), driver, executor, props.getInteger(IKeys.EXECUTOR_INSTANCES));
+            String hostWd = props.getString(IKeys.DFS_ID);
+            scheduler.createJob(time, name, customArgs.toString(), hostWd,driver, executor, props.getInteger(IKeys.EXECUTOR_INSTANCES));
 
         } catch (Exception ex) {
             LOGGER.error(ex.getLocalizedMessage(), ex);
@@ -195,9 +196,7 @@ public class SlurmSubmit implements Callable<Integer> {
         }
         Map<String, String> env = parser.env(driver ? IKeys.DRIVER_ENV : IKeys.EXECUTOR_ENV);
         if (driver) {
-            ByteArrayOutputStream options = new ByteArrayOutputStream();
-            props.store(options);
-            env.put("IGNIS_OPTIONS", options.toString());//Send submit options to driver
+            env.put("IGNIS_OPTIONS", props.store64());//Send submit options to driver
         }
 
         builder.environmentVariables(env);

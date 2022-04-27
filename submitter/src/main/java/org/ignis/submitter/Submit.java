@@ -101,8 +101,7 @@ public class Submit implements Callable<Integer> {
             if (userProperties != null) {
                 props.fromMap(userProperties);
             }
-            ByteArrayOutputStream options = new ByteArrayOutputStream();
-            props.store(options);
+            String options = props.store64();
             if (props.contains(IKeys.DEBUG) && props.getBoolean(IKeys.DEBUG)) {
                 System.setProperty(IKeys.DEBUG, "true");
                 LOGGER.info("DEBUG enabled");
@@ -137,7 +136,7 @@ public class Submit implements Callable<Integer> {
                 builder.hostnames(props.getStringList(IKeys.SCHEDULER_DNS));
             }
             Map<String, String> env = parser.env(IKeys.DRIVER_ENV);
-            env.put("IGNIS_OPTIONS", options.toString());//Send submit options to driver            
+            env.put("IGNIS_OPTIONS", options);//Send submit options to driver
             builder.environmentVariables(env);
             if (props.contains(IKeys.DRIVER_HOSTS)) {
                 builder.preferedHosts(props.getStringList(IKeys.DRIVER_HOSTS));

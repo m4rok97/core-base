@@ -21,6 +21,7 @@ package org.ignis.backend.cluster.tasks;
 
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.properties.IKeys;
+import org.ignis.scheduler.model.INetworkMode;
 import org.ignis.scheduler.model.IPort;
 
 import java.util.*;
@@ -42,18 +43,23 @@ public class IMpiConfig {
     }
 
     public static List<IPort> getPorts(IExecutor executor) {
-        Set<String> bussy = new HashSet<>();
-        for (IPort port : executor.getContainer().getContainerRequest().getPorts()) {
-            if (port.getContainerPort() != 0) {
-                bussy.add(port.getProtocol() + port.getContainerPort());
+        List<IPort> randomPorts;
+        if (executor.getContainer().getInfo().getNetworkMode().equals(INetworkMode.BRIDGE)){
+            Set<String> bussy = new HashSet<>();
+            for (IPort port : executor.getContainer().getContainerRequest().getPorts()) {
+                if (port.getContainerPort() != 0) {
+                    bussy.add(port.getProtocol() + port.getContainerPort());
+                }
             }
-        }
 
-        List<IPort> randomPorts = new ArrayList<>();
-        for (IPort port : executor.getContainer().getInfo().getPorts()) {
-            if (!bussy.contains(port.getProtocol() + port.getContainerPort()) && port.getProtocol().equalsIgnoreCase("tpc")) {
-                randomPorts.add(port);
+            randomPorts = new ArrayList<>();
+            for (IPort port : executor.getContainer().getInfo().getPorts()) {
+                if (!bussy.contains(port.getProtocol() + port.getContainerPort()) && port.getProtocol().equalsIgnoreCase("tcp")) {
+                    randomPorts.add(port);
+                }
             }
+        } else {
+            randomPorts = executor.getContainer().getInfo().getPorts();
         }
 
         int transportPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
