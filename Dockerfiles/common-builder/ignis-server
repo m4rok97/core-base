@@ -1,9 +1,11 @@
 #!/bin/bash
-export -p >> /etc/profile
-export -p | sed 's/^declare -x //' > /etc/environment
-mkdir -p ~/.ssh
-echo ${IGNIS_DRIVER_PUBLIC_KEY} >> ~/.ssh/authorized_keys
+sleep inf & export LOG_PIPE=/proc/$!/fd
+
+mkdir -p /ssh/.ssh
+export -p > /ssh/environment
+echo ${IGNIS_DRIVER_PUBLIC_KEY} > /ssh/.ssh/authorized_keys
 /usr/sbin/sshd -p $1
+
 
 if [ "$2" == "1" ]; then
 	attempt=0
@@ -41,4 +43,6 @@ elif [ "$2" == "0" ]; then
 		sleep ${interval} &
 		wait $!
 	done
+else
+	sleep inf
 fi

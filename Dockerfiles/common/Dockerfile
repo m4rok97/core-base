@@ -26,4 +26,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 	rm -rf /var/lib/apt/lists/* && \
 	ldconfig && \
 	mkdir /var/run/sshd && \
-	sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+	sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+	sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config && \
+	sed -i "s|#AuthorizedKeysFile.*|AuthorizedKeysFile /ssh/.ssh/authorized_keys|" /etc/ssh/sshd_config
