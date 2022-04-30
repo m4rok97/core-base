@@ -16,10 +16,7 @@
  */
 package org.ignis.scheduler.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,6 +29,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class IContainerInfo implements Serializable {
 
     private final String id;

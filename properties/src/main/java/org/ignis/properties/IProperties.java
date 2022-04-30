@@ -72,7 +72,8 @@ public final class IProperties {
     }
 
     public String getProperty(String key, String def) {
-        if (inner.contains(noNull(key))) {
+        String value = inner.getProperty(noNull(key));
+        if (value != null) {
             return getProperty(key);
         }
         return def;

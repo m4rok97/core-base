@@ -21,8 +21,7 @@ import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +62,7 @@ public final class ITunnel {
     }
 
     public void open(String host, int port) throws IgnisException {
+        String user = System.getProperty("user.name", "root");
         for (int i = 0; i < 300; i++) {
             try {
                 if (session != null) {
@@ -71,9 +71,9 @@ public final class ITunnel {
                     } catch (Exception ex) {
                     }
                 }
-                session = jsch.getSession("root", host, port);
+                session = jsch.getSession(user, host, port);
                 session.setConfig("StrictHostKeyChecking", "no");
-                jsch.addIdentity("root", privateKey.getBytes(), publicKey.getBytes(), null);
+                jsch.addIdentity(user, privateKey.getBytes(), publicKey.getBytes(), null);
                 if (portForwarding){
                     for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
                         session.setPortForwardingL(entry.getKey(), "localhost", entry.getValue());
@@ -83,7 +83,7 @@ public final class ITunnel {
                 break;
             } catch (JSchException ex) {
                 if (i == 299) {
-                    throw new IgnisException("Could not connect to " + host + ":" + port, ex);
+                    throw new IgnisException("Could not connect to " + user + " " + host + ":" + port, ex);
                 }
                 try {
                     Thread.sleep(1000);
@@ -146,56 +146,46 @@ public final class ITunnel {
         try {
             this.sem.acquire();
             Channel channel = session.openChannel("exec");
-            channel.setInputStream(null);
+            String envScript = "source /ssh/environment && bash - << 'EOF'\n" + script + "\nEOF\n";
+
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            ((ChannelExec) channel).setCommand(envScript);
+            ((ChannelExec) channel).setInputStream(null);
+            ((ChannelExec) channel).setOutputStream(buffer);
             if (stderr) {
-                script = "exec 2>&1\n" + script;
+                ((ChannelExec) channel).setErrStream(buffer);
+            } else {
+                ((ChannelExec) channel).setErrStream(new ByteArrayOutputStream());
             }
-            ((ChannelExec) channel).setCommand(script);
 
             channel.connect(60000);
 
-            InputStream in = channel.getInputStream();
-            StringBuilder out = new StringBuilder();
-
-            byte[] buffer = new byte[1024];
-            while (true) {
-                while (in.available() > 0) {
-                    int i = in.read(buffer, 0, buffer.length);
-                    if (i < 0) {
-                        break;
-                    }
-                    out.append(new String(buffer, 0, i, StandardCharsets.UTF_8));
-                }
-                if (channel.isClosed()) {
-                    if (in.available() > 0) {
-                        continue;
-                    }
-                    break;
-                }
+            while(!channel.isClosed()){
                 try {
                     Thread.sleep(1000);
                 } catch (Exception ee) {
                 }
             }
             channel.disconnect();
+            String out = buffer.toString(StandardCharsets.UTF_8);
 
             if (Boolean.getBoolean(IKeys.DEBUG)) {
                 LOGGER.info("Debug: Script: \n\t" + script.replace("\n", "\n\t"));
-                LOGGER.info("Debug: Script output: " + out.toString());
+                LOGGER.info("Debug: Script output: \n\t" + out.replace("\n", "\n\t"));
             }
 
             if (channel.getExitStatus() == 0) {
-                return out.toString();
+                return out;
             } else {
-                String error = "\t" + script.replace("\n", "\n\t");
-
-                LOGGER.error("Script:\n" + error + " exits with non zero exit status "
-                        + "(" + channel.getExitStatus() + ") and output: " + out);
+                LOGGER.error("Script: \n\t" + script.replace("\n", "\n\t") +
+                        " exits with non zero exit status "
+                        + "(" + channel.getExitStatus() + ") and output: \n\t" +
+                        out.replace("\n", "\n\t"));
 
                 throw new IgnisException("Script exits with non zero exit status (" + channel.getExitStatus() + ")");
             }
 
-        } catch (IOException | JSchException | InterruptedException ex) {
+        } catch (JSchException | InterruptedException ex) {
             throw new IgnisException("Script execution fails", ex);
         }finally {
             this.sem.release();

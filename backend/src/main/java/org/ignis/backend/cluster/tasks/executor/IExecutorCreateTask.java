@@ -89,9 +89,8 @@ public final class IExecutorCreateTask extends IExecutorTask {
             startScript.append("ignis-").append(type).append(' ');
             startScript.append(executor.getContainer().getTunnel().getRemotePort(executor.getPort())).append(' ');
             startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
-            startScript.append(containerInfo.getNetworkMode() == INetworkMode.HOST ? 0 : 1);
-            /*Redirect to docker log */
-            startScript.append("> /proc/1/fd/1 2> /proc/1/fd/2 ");
+            startScript.append(containerInfo.getNetworkMode() == INetworkMode.HOST ? 0 : 1).append(' ');
+            startScript.append("> ${LOG_PIPE}/1 2> ${LOG_PIPE}/2 ");
             startScript.append("&\n");
             startScript.append("sleep 1\n");
             startScript.append("jobs -p 1\n");

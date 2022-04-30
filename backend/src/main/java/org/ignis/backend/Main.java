@@ -17,8 +17,6 @@
 package org.ignis.backend;
 
 import org.apache.thrift.TMultiplexedProcessor;
-import org.ignis.backend.cluster.IDriver;
-import org.ignis.backend.cluster.ISSH;
 import org.ignis.properties.IPropertyException;
 import org.ignis.scheduler.ISchedulerException;
 import org.ignis.properties.IKeys;
@@ -29,13 +27,10 @@ import org.ignis.backend.services.*;
 import org.ignis.rpc.driver.*;
 import org.ignis.scheduler.model.IContainerInfo;
 import org.ignis.scheduler.model.INetworkMode;
-import org.ignis.scheduler.model.IPort;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Comparator;
 
 /**
  * @author César Pomar

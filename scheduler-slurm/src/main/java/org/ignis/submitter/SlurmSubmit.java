@@ -197,6 +197,9 @@ public class SlurmSubmit implements Callable<Integer> {
         Map<String, String> env = parser.env(driver ? IKeys.DRIVER_ENV : IKeys.EXECUTOR_ENV);
         if (driver) {
             env.put("IGNIS_OPTIONS", props.store64());//Send submit options to driver
+            env.put("IGNIS_WORKING_DIRECTORY", props.getProperty(IKeys.WORKING_DIRECTORY));
+        } else {
+            env.put("IGNIS_DRIVER_PUBLIC_KEY", props.getProperty(IKeys.DRIVER_PUBLIC_KEY).replace("\n", ""));
         }
 
         builder.environmentVariables(env);
@@ -208,7 +211,6 @@ public class SlurmSubmit implements Callable<Integer> {
             builder.command("ignis-server");
             builder.arguments(List.of("`expr","${SLURM_STEP_RESV_PORTS%%-*}", "+", transPorts + "`"));
         } else {
-            env.put("IGNIS_WORKING_DIRECTORY", props.getProperty(IKeys.WORKING_DIRECTORY));
             builder.command("ignis-run");
             List<String> arguments = new ArrayList<>();
             arguments.add(cmd);
