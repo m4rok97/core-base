@@ -99,7 +99,6 @@ public class Slurm implements IScheduler {
     }
 
     private void parseContainerArgs(StringBuilder script, IContainerInfo c, String wd, boolean driver) throws ISchedulerException {
-        script.append("#!/bin/bash\n");
         String port = c.getSchedulerParams().get("port");
         if (port != null) {
             int initPort = Integer.parseInt(port);
@@ -173,12 +172,23 @@ public class Slurm implements IScheduler {
         }
         parseSlurmArgs(script, executors, instances);
 
+        String errorCheck = "trap \"scancel --batch ${SLURM_JOBID}\" err\n";
+        String exit = "trap \"exit 0\" SIGUSR1\n";
+
+        script.append(exit).append("\n");
         script.append("DRIVER=$(cat - <<'EOF'").append("\n");
+        script.append("#!/bin/bash\n");
+        script.append("trap \"scancel --batch --signal=USR1 ${SLURM_JOBID}\" exit\n");
+        script.append(exit);
+        script.append(errorCheck);
         parseContainerArgs(script, driver, wd, true);
         script.append("EOF").append("\n");
         script.append(")").append("\n");
         script.append("\n");
         script.append("EXECUTOR=$(cat - <<'EOF'").append("\n");
+        script.append("#!/bin/bash\n");
+        script.append(exit);
+        script.append(errorCheck);
         parseContainerArgs(script, executors, wd, false);
         script.append("EOF").append("\n");
         script.append(")").append("\n");

@@ -35,7 +35,9 @@ public class IMpiConfig {
             conf.put("MPI_THREAD_MULTIPLE", "1");
             conf.put("MPIR_CVAR_CH4_NUM_VCIS", String.valueOf(executor.getCores()));
         }
-        conf.put("MPICH_SERVICE", executor.getContainer().getInfo().getHost());
+        if( executor.getContainer().getInfo().getNetworkMode().equals(INetworkMode.BRIDGE)){
+            conf.put("MPICH_SERVICE", executor.getContainer().getInfo().getHost());
+        }
         List<IPort> mpiPorts = getPorts(executor);
         conf.put("MPICH_LIST_PORTS",
                 mpiPorts.stream().map((IPort p) -> String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
