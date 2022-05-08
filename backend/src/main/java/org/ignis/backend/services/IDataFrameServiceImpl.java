@@ -115,13 +115,13 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
     }
 
     @Override
-    public IDataFrameId partitionByRandom(IDataFrameId id, long numPartitions) throws IDriverException, TException {
+    public IDataFrameId partitionByRandom(IDataFrameId id, long numPartitions, int seed) throws IDriverException, TException {
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
-                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).partitionByRandom(numPartitions);
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).partitionByRandom(numPartitions, seed);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {
@@ -276,6 +276,21 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
             synchronized (worker.getLock()) {
                 IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).keyBy(src);
+                return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
+            }
+        } catch (Exception ex) {
+            throw new IDriverExceptionImpl(ex);
+        }
+    }
+
+    @Override
+    public IDataFrameId mapWithIndex(IDataFrameId id, ISource src) throws IDriverException, TException {
+        try {
+            ICluster cluster = attributes.getCluster(id.getCluster());
+            IWorker worker = cluster.getWorker(id.getWorker());
+            IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            synchronized (worker.getLock()) {
+                IDataFrame result = new IDataGeneralHelper(data, worker.getProperties()).mapWithIndex(src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), result.getId());
             }
         } catch (Exception ex) {

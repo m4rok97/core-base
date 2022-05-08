@@ -37,12 +37,26 @@ public class IWorkerCallHelper extends IWorkerHelper {
         super(worker, properties);
     }
 
+    private void setName(boolean r, ISource src, boolean arg) {
+        if (src.getObj().isSetName()) {
+            String name = src.getObj().getName();
+            if (!r) {
+                name += "V";
+            }
+            if (!arg) {
+                name += "0";
+            }
+            src.getObj().setName(name);
+        }
+    }
+
     public ILazy<Void> voidCall(ISource src) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newDependency(worker.getTasks());
         for (IExecutor executor : worker.getExecutors()) {
             builder.newTask(new IVoidCallTask(getName(), executor, src, false));
         }
+        setName(false, src, false);
         LOGGER.info(log() + "voidCall(" +
                 "src=" + srcToString(src) +
                 ") registered");
@@ -61,9 +75,7 @@ public class IWorkerCallHelper extends IWorkerHelper {
         for (IExecutor executor : source.getExecutors()) {
             builder.newTask(new IVoidCallTask(getName(), executor, src, true));
         }
-        if (src.getObj().isSetName()) {
-            src.getObj().setName("df_" + src.getObj().getName());
-        }
+        setName(false, src, true);
         LOGGER.info(log() + "voidCall(" +
                 "src=" + srcToString(src) +
                 ") registered");
@@ -80,9 +92,7 @@ public class IWorkerCallHelper extends IWorkerHelper {
             builder.newTask(new ICallTask(getName(), executor, src, false));
         }
         IDataFrame target = worker.createDataFrame(worker.getExecutors(), builder.build());
-        if (src.getObj().isSetName()) {
-            src.getObj().setName(src.getObj().getName() + "_df");
-        }
+        setName(true, src, false);
         LOGGER.info(log() + "call(" +
                 "src=" + srcToString(src) +
                 ") registered -> " + target.getName());
@@ -99,9 +109,7 @@ public class IWorkerCallHelper extends IWorkerHelper {
             builder.newTask(new ICallTask(getName(), executor, src, true));
         }
         IDataFrame target = source.createDataFrame(builder.build());
-        if (src.getObj().isSetName()) {
-            src.getObj().setName("df_" + src.getObj().getName() + "_df");
-        }
+        setName(true, src, true);
         LOGGER.info(log() + "map(" +
                 "src=" + srcToString(src) +
                 ") registered -> " + target.getName());

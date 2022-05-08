@@ -22,22 +22,21 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.rpc.IExecutorException;
+import org.ignis.rpc.ISource;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author César Pomar
  */
-public final class IPartitionByRandomTask extends IExecutorContextTask {
+public final class IMapWithIndexTask extends IExecutorContextTask {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IPartitionByRandomTask.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IMapWithIndexTask.class);
 
-    private final long numPartitions;
-    private final int seed;
+    private final ISource function;
 
-    public IPartitionByRandomTask(String name, IExecutor executor, long numPartitions, int seed) {
+    public IMapWithIndexTask(String name, IExecutor executor, ISource function) {
         super(name, executor, Mode.LOAD_AND_SAVE);
-        this.numPartitions = numPartitions;
-        this.seed = seed;
+        this.function = function;
     }
 
     @Override
@@ -47,15 +46,15 @@ public final class IPartitionByRandomTask extends IExecutorContextTask {
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
-        LOGGER.info(log() + "partitionByRandom started");
+        LOGGER.info(log() + "mapWithIndex started");
         try {
-            executor.getGeneralModule().partitionByRandom(numPartitions, seed);
+            executor.getGeneralModule().mapWithIndex(function);
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {
             throw new IgnisException(ex.getMessage(), ex);
         }
-        LOGGER.info(log() + "partitionByRandom finished");
+        LOGGER.info(log() + "mapWithIndex finished");
     }
 
 }

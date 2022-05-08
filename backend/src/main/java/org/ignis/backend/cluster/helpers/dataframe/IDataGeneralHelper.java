@@ -89,6 +89,19 @@ public final class IDataGeneralHelper extends IDataHelper {
         return target;
     }
 
+    public IDataFrame mapWithIndex(ISource src) throws IgnisException {
+        ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
+        builder.newDependency(data.getTasks());
+        for (IExecutor executor : data.getExecutors()) {
+            builder.newTask(new IMapWithIndexTask(getName(), executor, src));
+        }
+        IDataFrame target = data.createDataFrame(builder.build());
+        LOGGER.info(log() + "mapWithIndex(" +
+                "src=" + srcToString(src) +
+                ") registered -> " + target.getName());
+        return target;
+    }
+
     public IDataFrame mapPartitions(ISource src) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
@@ -459,15 +472,16 @@ public final class IDataGeneralHelper extends IDataHelper {
         return target;
     }
 
-    public IDataFrame partitionByRandom(long numPartitions) throws IgnisException {
+    public IDataFrame partitionByRandom(long numPartitions, int seed) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(data.getLock());
         builder.newDependency(data.getTasks());
         for (IExecutor executor : data.getExecutors()) {
-            builder.newTask(new IPartitionByRandomTask(getName(), executor, numPartitions));
+            builder.newTask(new IPartitionByRandomTask(getName(), executor, numPartitions, seed));
         }
         IDataFrame target = data.createDataFrame(builder.build());
         LOGGER.info(log() + "partitionByRandom(" +
                 "numPartitions=" + numPartitions +
+                "seed=" + seed +
                 ") registered -> " + target.getName());
         return target;
     }
