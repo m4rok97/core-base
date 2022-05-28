@@ -72,7 +72,7 @@ public class ITakeSampleTask extends IDriverTask {
                 if (!withReplacement && elems < num) {
                     throw new IgnisException("There are not enough elements");
                 }
-                ISampleTask.sample(context, shared.count, withReplacement, num, elems, seed);
+                ISampleTask.sample(shared.count, num, withReplacement, seed);
             }
             shared.barrier.await();
             if (!driver) {

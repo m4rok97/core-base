@@ -16,15 +16,17 @@
  */
 package org.ignis.backend.cluster.tasks.executor;
 
+import org.hipparchus.distribution.IntegerDistribution;
+import org.hipparchus.distribution.continuous.NormalDistribution;
+import org.hipparchus.distribution.discrete.BinomialDistribution;
+import org.hipparchus.distribution.discrete.HypergeometricDistribution;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
 
 /**
@@ -76,11 +78,11 @@ public class ISampleTask extends IExecutorContextTask {
                 for (List<Long> l : shared.count) {
                     elems += l.stream().reduce(0l, Long::sum);
                 }
-                long num = (long) Math.ceil(elems * fraction);
-                if (!withReplacement && elems < num) {
+                long snum = (long) Math.ceil(elems * fraction);
+                if (!withReplacement && elems < snum) {
                     throw new IgnisException("There are not enough elements");
                 }
-                sample(context, shared.count, withReplacement, num, elems, seed);
+                sample(shared.count, snum, withReplacement, seed);
             }
             shared.barrier.await();
             executor.getMathModule().sample(withReplacement, shared.count[(int) executor.getId()], seed);
@@ -97,73 +99,104 @@ public class ISampleTask extends IExecutorContextTask {
         LOGGER.info(log() + "sample executed");
     }
 
-    public static void sample(ITaskContext context, List<Long>[] countListArray, boolean withReplacement, long num, long elems, int seed) throws Exception {
-        if ((countListArray.length == 1 && countListArray[0].size() == 1) || num == 0) {
-            countListArray[0].set(0, num);
+    static void sample(List<Long>[] flatCounts, long sample, boolean withReplacement, int seed) {
+        if (flatCounts.length == 1 && flatCounts[0].size() == 1) {
+            flatCounts[0].set(0, sample);
             return;
         }
-        int countListSize = Arrays.stream(countListArray).map(List::size).reduce(0, Integer::sum);
-        long[] count = new long[countListSize];
-        long[] elemsExecutor = new long[countListSize];
-        double[] probs = new double[countListSize];
-        double totalProb = 0;
-        int global_i = 0;
-        for (List<Long> countList : countListArray) {
-            for (int i = 0; i < countList.size(); i++) {
-                count[global_i] = countList.get(i);
-                probs[global_i] = ((double) count[global_i]) / elems;
-                totalProb += probs[global_i];
-                global_i++;
+        if (sample == 0) {
+            for (List<Long> flatCount : flatCounts) {
+                Collections.fill(flatCount, 0L);
             }
+            return;
         }
-        Random rand = new Random(seed);
-        long sample = Math.min(20 * countListSize, num);
-        double csum = 0;
-        for (long i = 0; i < num; i++) {
-            double r = rand.nextDouble() * totalProb;
-            for (int j = 0; j < probs.length; j++) {
-                csum += probs[j];
-                if (csum > r) {
-                    elemsExecutor[j]++;
-                    //Reduce probability
-                    if (!withReplacement) {
-                        count[j]--;
-                        double newProb = ((double) count[j]) / elems;
-                        totalProb -= probs[j] - newProb;
-                        probs[j] = newProb;
-                    }
-                }
+        int parts = Arrays.stream(flatCounts).map(List::size).reduce(0, Integer::sum);
+        long[] count = new long[parts];
+        for (int n = 0, i = 0; i < flatCounts.length; i++) {
+            for (int j = 0; j < flatCounts[i].size(); j++) {
+                count[n++] = flatCounts[i].get(j);
             }
         }
 
-        //Large sizes
-        if (sample != num) {
-            long total = 0;
-            double inc = (double) num / sample;
-            //Increase sample rounding down
-            for (int i = 0; i < elemsExecutor.length; i++) {
-                long aux = Math.round(elemsExecutor[i] * inc);
-                total += aux;
-                elemsExecutor[i] = aux;
-            }
-            //if not exact
-            for (long i = total; i < num; ) {
-                int r = rand.nextInt(elemsExecutor.length);
-                if (elemsExecutor[r] == count[r]) {
+        List<long[]> levels = new ArrayList<>();
+        levels.add(count);
+
+        long[] top = count;
+        while (top.length > 1) {
+            long[] leveln = new long[(int) Math.ceil(top.length / 2.0)];
+            for (int i = 0; i < leveln.length; i++) {
+                if (2 * i + 1 == top.length) {
+                    leveln[i] = top[2 * i];
                     continue;
                 }
-                i++;
-                elemsExecutor[r]++;
+                leveln[i] = top[2 * i] + top[2 * i + 1];
             }
+            levels.add(leveln);
+            top = leveln;
         }
 
-        global_i = 0;
-        for (List<Long> countList : countListArray) {
-            for (int i = 0; i < countList.size(); i++) {
-                countList.set(i, elemsExecutor[global_i]);
-                global_i++;
+        Random r = new Random(seed);
+        sampleTraverse(0, levels.size() - 1, levels, sample, r, withReplacement);
+
+        for (int n = 0, i = 0; i < flatCounts.length; i++) {
+            for (int j = 0; j < flatCounts[i].size(); j++) {
+                flatCounts[i].set(j, count[n++]);
             }
         }
+    }
+
+    private static void sampleTraverse(int i, int l, List<long[]> levels, long sample, Random r, boolean withReplacement) {
+        if (l == 0) {
+            levels.get(0)[i] = sample;
+            return;
+        }
+        long total = levels.get(l)[i];
+        long[] childs = levels.get(l - 1);
+
+        if (childs.length > 2 * i + 1) {
+            long k = sampleSize(childs[2 * i], sample, total, r, withReplacement);
+            sampleTraverse(2 * i, l - 1, levels, k, r, withReplacement);
+            sampleTraverse(2 * i + 1, l - 1, levels, sample - k, r, withReplacement);
+        } else {
+            sampleTraverse(2 * i, l - 1, levels, sample, r, withReplacement);
+        }
+    }
+
+    private static long sampleSize(long elems, long sample, long total, Random r, boolean withReplacement) {
+        IntegerDistribution dist;
+        if (total > Integer.MAX_VALUE) {
+            if (sample == 0) {
+                return 0;
+            }
+            double mean, sd;
+            if (withReplacement) {
+                final double p = ((double) elems / total);
+                mean = sample * p;
+                sd = mean * (1 - p);
+            } else {
+                final double N = total;
+                final double m = elems;
+                final double n = sample;
+                mean = n * m / N;
+                sd = (n * m * (N - n) * (N - m)) / (N * N * (N - 1));
+            }
+            sd = Math.max(sd, 10e-6);
+            NormalDistribution dist2 = new NormalDistribution(mean, sd);
+            double k = dist2.inverseCumulativeProbability(r.nextDouble());
+            if (k < 0) {
+                k = 0;
+            }
+            if (!withReplacement && sample > k + total - elems) {
+                k = sample + elems - total;
+            }
+            return Math.min((long) k, withReplacement ? sample : elems);
+        }
+        if (withReplacement) {
+            dist = new BinomialDistribution((int) sample, (double) elems / total);
+        } else {
+            dist = new HypergeometricDistribution((int) total, (int) elems, (int) sample);
+        }
+        return dist.inverseCumulativeProbability(r.nextDouble());
     }
 
 }

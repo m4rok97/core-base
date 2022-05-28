@@ -56,10 +56,10 @@ public class SlurmSubmit implements Callable<Integer> {
             "reserved for the job on each node. (default 10)", defaultValue = "10")
     Integer numPorts;
 
-    @Option(names = {"-s", "--slurm-arg"}, paramLabel = "'--arg [values...]'", description = "Slurm argument")
+    @Option(names = {"-s", "--slurm-arg"}, paramLabel = "--arg=value", description = "Slurm argument", preprocessor = SlurmConsumeArg.class)
     List<String> slurmArgs;
 
-    @Option(names = {"--slurm-init"}, paramLabel = "--arg [values...]... --slurm-end", description = "Slurm argument group", preprocessor = SlurmArgsGroup.class)
+    @Option(names = {"--slurm-init"}, paramLabel = "[--arg=value]... --slurm-end", description = "Slurm argument group", preprocessor = SlurmArgsGroup.class)
     List<String> slurmGroup;
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "display a help message")
@@ -73,7 +73,7 @@ public class SlurmSubmit implements Callable<Integer> {
             props.fromEnv(System.getenv());
 
             defaults.load(getClass().getClassLoader().getResourceAsStream("etc/ignis.conf"));
-            props.setProperty(IKeys.EXECUTOR_IMAGE, "docker://"+defaults.getProperty(IKeys.EXECUTOR_IMAGE));
+            props.setProperty(IKeys.EXECUTOR_IMAGE, "docker://" + defaults.getProperty(IKeys.EXECUTOR_IMAGE));
             try {
                 File conf = new File("/etc/ignis/ignis.conf");
                 if (conf.exists()) {
@@ -123,15 +123,13 @@ public class SlurmSubmit implements Callable<Integer> {
 
             if (slurmArgs != null) {
                 for (String arg : slurmArgs) {
-                    for (String param : arg.split(" ")) {
-                        customArgs.append('"').append(param).append('"').append(' ');
-                    }
+                    customArgs.append(arg).append(' ');
                 }
             }
 
             if (slurmGroup != null) {
                 for (String arg : slurmGroup) {
-                    customArgs.append('"').append(arg).append('"').append(' ');
+                    customArgs.append(arg).append(' ');
                 }
             }
 
@@ -144,7 +142,7 @@ public class SlurmSubmit implements Callable<Integer> {
 
             Slurm scheduler = new Slurm(props.getProperty(IKeys.SCHEDULER_URL));
             String hostWd = props.getString(IKeys.DFS_ID);
-            scheduler.createJob(time, name, customArgs.toString(), hostWd,driver, executor, props.getInteger(IKeys.EXECUTOR_INSTANCES));
+            scheduler.createJob(time, name, customArgs.toString(), hostWd, driver, executor, props.getInteger(IKeys.EXECUTOR_INSTANCES));
 
         } catch (Exception ex) {
             LOGGER.error(ex.getLocalizedMessage(), ex);
@@ -191,7 +189,7 @@ public class SlurmSubmit implements Callable<Integer> {
 
         builder.binds(parser.binds(driver ? IKeys.DRIVER_BIND : IKeys.EXECUTOR_BIND));
         builder.volumes(parser.volumes(driver ? IKeys.DRIVER_VOLUME : IKeys.EXECUTOR_VOLUME));
-        if(props.contains(IKeys.SCHEDULER_DNS)){
+        if (props.contains(IKeys.SCHEDULER_DNS)) {
             builder.hostnames(props.getStringList(IKeys.SCHEDULER_DNS));
         }
         Map<String, String> env = parser.env(driver ? IKeys.DRIVER_ENV : IKeys.EXECUTOR_ENV);
@@ -209,7 +207,7 @@ public class SlurmSubmit implements Callable<Integer> {
 
         if (!driver) {
             builder.command("ignis-server");
-            builder.arguments(List.of("`expr","${SLURM_STEP_RESV_PORTS%%-*}", "+", transPorts + "`"));
+            builder.arguments(List.of("`expr", "${SLURM_STEP_RESV_PORTS%%-*}", "+", transPorts + "`"));
         } else {
             builder.command("ignis-run");
             List<String> arguments = new ArrayList<>();
@@ -275,6 +273,22 @@ public class SlurmSubmit implements Callable<Integer> {
                 }
             }
             throw new CommandLine.ParameterException(commandSpec.commandLine(), "--slurm-end not found");
+        }
+    }
+
+    static class SlurmConsumeArg implements CommandLine.IParameterPreprocessor {
+        public boolean preprocess(Stack<String> args,
+                                  CommandSpec commandSpec,
+                                  ArgSpec argSpec,
+                                  Map<String, Object> info) {
+            if (argSpec.getValue() == null) {
+                argSpec.setValue(new ArrayList<>());
+            }
+            if (!args.isEmpty()) {
+                ((List<String>) argSpec.getValue()).add(args.pop());
+                return true;
+            }
+            return false;
         }
     }
 }
