@@ -20,7 +20,6 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.exception.DockerException;
-import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -29,6 +28,7 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 import org.ignis.scheduler.model.*;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -59,7 +59,18 @@ public class Docker implements IScheduler {
     private final DockerClient dockerClient;
 
     public Docker(String url) {
-        this.path = url;
+        if (!url.contains("://")) {
+            if (url.startsWith("/")) {
+                url = "unix://" + url;
+            } else if (url.contains(":") && !url.startsWith("tcp://")) {
+                url = "tcp://" + url;
+            }
+        }
+        if (url.toLowerCase().startsWith("unix:")) {
+            this.path = new File(url.substring("unix:".length())).getAbsolutePath();
+        } else {
+            this.path = null;
+        }
         config = DefaultDockerClientConfig.
                 createDefaultConfigBuilder().
                 withDockerHost(url).
@@ -83,6 +94,10 @@ public class Docker implements IScheduler {
         buffer.putLong(id.getMostSignificantBits());
         buffer.putLong(id.getLeastSignificantBits());
         return new BigInteger(buffer.array()).toString(36);
+    }
+
+    private String fixName(String name) {
+        return name.toLowerCase().replaceAll("[^\\w\\-\\._\\\\]", "");
     }
 
     private CreateContainerCmd parseContainer(IContainerInfo container) {
@@ -111,22 +126,17 @@ public class Docker implements IScheduler {
             int i = 0;
             for (IPort port : container.getPorts()) {
                 String value = "";
-                boolean flag = false;
-                if (port.getContainerPort() == 0) {
-                    value += dynPort;
-                    flag = true;
-                } else {
-                    value += port.getContainerPort();
-                }
-                value += ":";
-                if (port.getHostPort() == 0) {
-                    value += dynPort;
-                    flag = true;
-                } else {
-                    value += port.getHostPort();
-                }
-                if (flag) {
+                if(port.getContainerPort() == 0 && port.getHostPort() == 0){
+                    value += dynPort + ":" + dynPort;
                     dynPort++;
+                }else{
+                    if (port.getContainerPort() == 0){
+                      value += port.getContainerPort();
+                    }
+                    if (port.getHostPort() == 0){
+                        value += port.getContainerPort();
+                    }
+                    value = value + ":" + value;
                 }
                 value += ":" + port.getProtocol();
                 dockerContainer.getLabels().put("port" + i, value);
@@ -182,8 +192,8 @@ public class Docker implements IScheduler {
     private IContainerInfo parseContainer(InspectContainerResponse container) {
         IContainerInfo.IContainerInfoBuilder builder = IContainerInfo.builder();
         Map<String, String> labels = container.getConfig().getLabels();
-        builder.id(container.getId());
-        builder.host(container.getConfig().getHostName());
+        builder.id(container.getName().substring(1));
+        builder.host(container.getNetworkSettings().getNetworks().get("bridge").getIpAddress());
         builder.image(container.getConfig().getImage());
         builder.command(container.getConfig().getCmd()[0]);
         List<String> args = new ArrayList<>();
@@ -212,9 +222,13 @@ public class Docker implements IScheduler {
         builder.binds(binds);
         builder.volumes(volumes);
         if (container.getHostConfig().getMounts() != null) {
+            Map<String, InspectContainerResponse.Mount> mountInfo = new HashMap<>();
+            for (InspectContainerResponse.Mount mount : container.getMounts()) {
+                mountInfo.put(mount.getDestination().getPath(), mount);
+            }
             for (Mount mount : container.getHostConfig().getMounts()) {
                 if (mount.getType() == MountType.BIND) {
-                    binds.add(new IBind(mount.getSource(), mount.getTarget(), mount.getReadOnly()));
+                    binds.add(new IBind(mount.getSource(), mount.getTarget(), !mountInfo.get(mount.getTarget()).getRW()));
                 } else if (mount.getType() == MountType.VOLUME) {
                     String size = mount.getVolumeOptions().getDriverConfig().getOptions().get("size");
                     volumes.add(new IVolume(mount.getTarget(), Long.parseLong(size)));
@@ -244,9 +258,33 @@ public class Docker implements IScheduler {
         return builder.build();
     }
 
+    private List<String> getDockerIds(List<String> ids) throws ISchedulerException {
+        return getDockerIds(ids, true);
+    }
+
+    private List<String> getDockerIds(List<String> ids, boolean safe) throws ISchedulerException {
+        Map<String, String> map = new HashMap<>();
+        List<String> result = new ArrayList<>();
+        List<Container> containers = dockerClient.listContainersCmd().withNameFilter(ids).exec();
+        for (Container c : containers) {
+            map.put(c.getNames()[0].substring(1), c.getId());
+        }
+        for (String id : ids) {
+            if (!map.containsKey(id)) {
+                if (safe){
+                    throw new ISchedulerException("Container " + id + " not found");
+                }
+                result.add(null);
+            } else {
+                result.add(map.get(id));
+            }
+        }
+        return result;
+    }
+
     @Override
     public String createGroup(String name) throws ISchedulerException {
-        return name + "-" + newId();
+        return fixName(name + "-" + newId());
     }
 
     @Override
@@ -257,12 +295,13 @@ public class Docker implements IScheduler {
     public String createDriverContainer(String group, String name, IContainerInfo container) throws ISchedulerException {
         try {
             CreateContainerCmd dockerContainer = parseContainer(container);
+            dockerContainer.withName(fixName(group + "-" + name));
             String[] env = Arrays.copyOf(dockerContainer.getEnv(), dockerContainer.getEnv().length + 2);
             env[env.length - 2] = "IGNIS_JOB_ID=" + dockerContainer.getName();
             env[env.length - 1] = "IGNIS_JOB_NAME=" + group;
             dockerContainer.withEnv(env);
             dockerContainer.withEnv(env);
-            if (path.startsWith("/")) {//Is a Unix-Socket
+            if (path != null) {//Is a Unix-Socket
                 List<Mount> mounts = dockerContainer.getHostConfig().getMounts();
                 Mount mount = new Mount();
                 mount.withSource(path);
@@ -273,7 +312,7 @@ public class Docker implements IScheduler {
             }
             String id = dockerContainer.exec().getId();
             dockerClient.startContainerCmd(id).exec();
-            return id;
+            return dockerContainer.getName();
         } catch (DockerException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
@@ -282,16 +321,21 @@ public class Docker implements IScheduler {
     @Override
     public List<String> createExecutorContainers(String group, String name, IContainerInfo container, int instances) throws ISchedulerException {
         List<String> ids = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         try {
             CreateContainerCmd dockerContainer = parseContainer(container);
             for (int i = 0; i < instances; i++) {
-                dockerContainer.withName(group + "-" + name + "." + i);
+                dockerContainer.withName(fixName(group + "-" + name + "." + i));
+                names.add(dockerContainer.getName());
                 ids.add(dockerContainer.exec().getId());
             }
-            return ids;
+            for (int i = 0; i < instances; i++) {
+                dockerClient.startContainerCmd(ids.get(i)).exec();
+            }
+            return names;
         } catch (DockerException ex) {
             try {
-                destroyExecutorInstances(ids);
+                destroyExecutorInstances(names);
             } catch (ISchedulerException ex2) {
             }
             throw new ISchedulerException(ex.getMessage(), ex);
@@ -300,31 +344,19 @@ public class Docker implements IScheduler {
 
     @Override
     public IContainerStatus getStatus(String id) throws ISchedulerException {
-        try {
-            List<Container> containers = dockerClient.listContainersCmd().withIdFilter(List.of(id)).exec();
-            if (containers.isEmpty()) {
-                return IContainerStatus.DESTROYED;
-            }
-            return TASK_STATUS.getOrDefault(containers.get(0).getState(), IContainerStatus.UNKNOWN);
-        } catch (DockerException ex) {
-            throw new ISchedulerException(ex.getMessage(), ex);
-        }
+        return getStatus(List.of(id)).get(0);
     }
 
     @Override
     public List<IContainerStatus> getStatus(List<String> ids) throws ISchedulerException {
         try {
             List<IContainerStatus> status = new ArrayList<>();
-            Map<String, Container> map = new HashMap<>();
-            List<Container> containers = dockerClient.listContainersCmd().withIdFilter(ids).exec();
-            for (Container c : containers) {
-                map.put(c.getId(), c);
-            }
-            for (String id : ids) {
-                if (!map.containsKey(id)) {
+            for (String id : getDockerIds(ids, false)) {
+                if( id == null){
                     status.add(IContainerStatus.DESTROYED);
-                } else {
-                    status.add(TASK_STATUS.getOrDefault(map.get(id).getState(), IContainerStatus.UNKNOWN));
+                }else {
+                    String s = dockerClient.inspectContainerCmd(id).exec().getState().getStatus();
+                    status.add(TASK_STATUS.getOrDefault(s, IContainerStatus.UNKNOWN));
                 }
             }
             return status;
@@ -335,33 +367,30 @@ public class Docker implements IScheduler {
 
     @Override
     public IContainerInfo getDriverContainer(String id) throws ISchedulerException {
-        try {
-            return parseContainer(dockerClient.inspectContainerCmd(id).exec());
-        } catch (DockerException ex) {
-            throw new ISchedulerException(ex.getMessage(), ex);
-        }
+        return getExecutorContainers(List.of(id)).get(0);
     }
 
     @Override
     public List<IContainerInfo> getExecutorContainers(List<String> ids) throws ISchedulerException {
         List<IContainerInfo> result = new ArrayList<>();
-        for (String id : ids) {
-            result.add(getDriverContainer(id));
+        for (String id : getDockerIds(ids)) {
+            result.add(parseContainer(dockerClient.inspectContainerCmd(id).exec()));
         }
         return result;
     }
 
     @Override
     public IContainerInfo restartContainer(String id) throws ISchedulerException {
+        String dockerid = getDockerIds(List.of(id)).get(0);
         try {
             try {
                 if (getStatus(id) == IContainerStatus.RUNNING) {
                     return getDriverContainer(id);
                 }
-                dockerClient.stopContainerCmd(id).exec();
+                dockerClient.stopContainerCmd(dockerid).exec();
             } catch (Exception ignore) {
             }
-            dockerClient.startContainerCmd(id).exec();
+            dockerClient.startContainerCmd(dockerid).exec();
             return getDriverContainer(id);
         } catch (DockerException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
@@ -370,23 +399,17 @@ public class Docker implements IScheduler {
 
     @Override
     public void destroyDriverContainer(String id) throws ISchedulerException {
-        try {
-            dockerClient.removeContainerCmd(id).withForce(true).withRemoveVolumes(true).exec();
-        } catch (NotFoundException ex) {
-            //Ignore
-        } catch (DockerException ex) {
-            throw new ISchedulerException(ex.getMessage(), ex);
-        }
+        destroyExecutorInstances(List.of(id));
     }
 
     @Override
     public void destroyExecutorInstances(List<String> ids) throws ISchedulerException {
         DockerException error = null;
-        for (String id : ids) {
+        for (String id : getDockerIds(ids, false)) {
             try {
-                dockerClient.removeContainerCmd(id).withForce(true).withRemoveVolumes(true).exec();
-            } catch (NotFoundException ex) {
-                //Ignore
+                if(id != null){
+                    dockerClient.removeContainerCmd(id).withForce(true).withRemoveVolumes(true).exec();
+                }
             } catch (DockerException ex) {
                 error = ex;
             }

@@ -43,6 +43,7 @@ import java.util.concurrent.Callable;
 /**
  * @author César Pomar
  */
+@CommandLine.Command(version = "2.1")
 public class Submit implements Callable<Integer> {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Submit.class);
@@ -87,9 +88,16 @@ public class Submit implements Callable<Integer> {
             IProperties props = new IProperties(defaults);
             props.fromEnv(System.getenv());
 
+            defaults.load(getClass().getClassLoader().getResourceAsStream("etc/ignis.conf"));
             try {
-                String conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf").getPath();
-                defaults.load(conf);
+                File conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf");
+                if (conf.exists()) {
+                    defaults.load(conf.getPath());
+                }
+                conf = new File(System.getProperty("user.home"), ".ignis/ignis.conf");
+                if (conf.exists()) {
+                    defaults.load(conf.getPath());
+                }
             } catch (IPropertyException | IOException ex) {
                 LOGGER.error("Error loading ignis.conf, ignoring", ex);
             }

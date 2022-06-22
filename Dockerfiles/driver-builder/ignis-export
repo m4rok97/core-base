@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]
+    then echo "usage ignis-export <out-folder>"
+    exit
+fi
+
+cd "$1"
+mkdir -p ignis/lib
+cp -R ${IGNIS_HOME}/bin ignis/
+cp -R ${IGNIS_HOME}/etc ignis/
+cp -R  ${IGNIS_HOME}/backend ignis/
+cp -R ${IGNIS_HOME}/lib/java ignis/lib/

@@ -50,7 +50,7 @@ public final class IExecutorDestroyTask extends IExecutorTask {
                     "; do sleep 1; done\" || kill -9 " + executor.getPid();
             executor.getContainer().getTunnel().execute(killScript, false);
         } catch (IgnisException ex) {
-            LOGGER.warn(log() + ex.toString());
+            LOGGER.warn(log() + ex);
         }
         executor.setPid(-1);
         LOGGER.info(log() + "Executor destroyed");

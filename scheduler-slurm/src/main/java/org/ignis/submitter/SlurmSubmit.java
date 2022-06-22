@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
+@CommandLine.Command(version = "2.1")
 public class SlurmSubmit implements Callable<Integer> {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SlurmSubmit.class);
@@ -73,15 +74,15 @@ public class SlurmSubmit implements Callable<Integer> {
             props.fromEnv(System.getenv());
 
             defaults.load(getClass().getClassLoader().getResourceAsStream("etc/ignis.conf"));
-            props.setProperty(IKeys.EXECUTOR_IMAGE, "docker://" + defaults.getProperty(IKeys.EXECUTOR_IMAGE));
+            defaults.setProperty(IKeys.EXECUTOR_IMAGE, "docker://" + defaults.getProperty(IKeys.EXECUTOR_IMAGE));
             try {
-                File conf = new File("/etc/ignis/ignis.conf");
+                File conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf");
                 if (conf.exists()) {
-                    props.load(conf.getPath());
+                    defaults.load(conf.getPath());
                 }
                 conf = new File(System.getProperty("user.home"), ".ignis/ignis.conf");
                 if (conf.exists()) {
-                    props.load(conf.getPath());
+                    defaults.load(conf.getPath());
                 }
             } catch (IPropertyException | IOException ex) {
                 LOGGER.error("Error loading ignis.conf, ignoring", ex);
@@ -156,7 +157,6 @@ public class SlurmSubmit implements Callable<Integer> {
      * */
     private void deployProperties(IProperties props) {
         props.setProperty(IKeys.DFS_ID, props.getProperty(IKeys.DFS_ID));
-        props.setProperty(IKeys.DFS_HOME, props.getProperty(IKeys.DFS_HOME, "/media/dfs"));
         props.setProperty(IKeys.SCHEDULER_URL, props.getProperty(IKeys.SCHEDULER_URL, "sbatch"));
         props.setProperty(IKeys.SCHEDULER_TYPE, props.getProperty(IKeys.SCHEDULER_TYPE, "slurm"));
         if (props.contains(IKeys.REGISTRY)) {
@@ -226,7 +226,7 @@ public class SlurmSubmit implements Callable<Integer> {
      */
     public static void main(String[] args) {
         CommandLine cli = new CommandLine(new SlurmSubmit())
-                .setCommandName("ignis-slurm")
+                .setCommandName("Dockerfiles/slurm/ignis-slurm")
                 .setUsageHelpAutoWidth(true);
         int exitCode = cli.execute(args);
         System.exit(exitCode);

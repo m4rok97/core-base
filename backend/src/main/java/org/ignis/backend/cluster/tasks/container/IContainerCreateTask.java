@@ -128,6 +128,7 @@ public final class IContainerCreateTask extends IContainerTask {
                         try {
                             scheduler.destroyExecutorInstances(stopped);
                         } catch (ISchedulerException ex) {
+                            LOGGER.warn(log() + ex);
                         }
                     } else {
                         for (int i = 0; i < stoppedIndex.size(); i++) {

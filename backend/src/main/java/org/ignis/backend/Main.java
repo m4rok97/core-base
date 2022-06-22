@@ -48,6 +48,7 @@ public final class Main {
 
         LOGGER.info("Loading environment variables");
         props.fromEnv(System.getenv());
+        String home = props.getString(IKeys.HOME);
 
         if (props.contains(IKeys.OPTIONS)) {//Submit user options
             try {
@@ -57,6 +58,8 @@ public final class Main {
             }
             props.rmProperty(IKeys.OPTIONS);
         }
+        //Submitter home may be different so we ignore it.
+        props.setProperty(IKeys.HOME, home);
 
         LOGGER.info("Loading configuration file");
         try {

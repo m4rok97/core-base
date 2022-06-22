@@ -94,10 +94,6 @@ public class Slurm implements IScheduler {
         script.append('\n');
     }
 
-    private void parseUdockerContainerArgs(StringBuilder script, IContainerInfo c) throws ISchedulerException {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
     private void parseContainerArgs(StringBuilder script, IContainerInfo c, String wd, boolean driver) throws ISchedulerException {
         String port = c.getSchedulerParams().get("port");
         if (port != null) {
@@ -132,18 +128,7 @@ public class Slurm implements IScheduler {
         script.append("echo 1 > ").append(file).append(".ok\n");
         script.append("{\n");
 
-        String platform = c.getSchedulerParams().get("platform");
-        if (platform == null) {
-            throw new ISchedulerException("ignis.scheduler.param.platform not defined");
-        }
-
-        if (platform.equalsIgnoreCase("udocker")) {
-            parseUdockerContainerArgs(script, c);
-        } else if (platform.equalsIgnoreCase("singularity")) {
-            parseSingulauryContainerArgs(script, c);
-        } else {
-            throw new ISchedulerException("ignis.scheduler.param.platform=" + platform + " is not valid");
-        }
+        parseSingulauryContainerArgs(script, c);
 
         script.append("} > ").append(file).append(".out 2> ").append(file).append(".err\n");
     }

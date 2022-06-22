@@ -7,13 +7,12 @@ ARG RELPATH=""
 
 RUN ${IGNIS_HOME}/common/driver-install.sh && \
 	rm -fR ${IGNIS_HOME}/common && \
-	rm -f ${IGNIS_HOME}/bin/* && \
 	export DEBIAN_FRONTEND=noninteractive && \
 	apt update && \
 	apt install -y --no-install-recommends \
 		git \
 		wget \
-		unzip \ 
+		unzip \
 		python3 \
 		python3-distutils && \
 	rm -rf /var/lib/apt/lists/* && \

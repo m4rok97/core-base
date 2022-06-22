@@ -1,3 +1,0 @@
-#!/bin/bash
-
-java -cp "ignis-libs/*" org.ignis.submitter.SlurmSubmit "$@"

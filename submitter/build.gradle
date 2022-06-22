@@ -29,7 +29,7 @@ artifacts {
 }
 
 archivesBaseName = 'ignis-submitter'
-version = '1.0'
+version = '2.1'
 publishing {
     publications {
         maven(MavenPublication) {
@@ -55,6 +55,13 @@ dependencies {
     implementation group: 'info.picocli', name: 'picocli', version: '4.6.1'
     annotationProcessor group: 'info.picocli', name: 'picocli', version: '4.6.1'
 }
+
+task defaultConfig(type: Copy, description: 'Copy /etc into resources'){
+    from('../etc')
+    into('build/resources/main/etc')
+}
+
+processResources.dependsOn defaultConfig
 
 task jarAndLibs(type: Copy, description: 'Copy project dependencies.') {
     dependsOn "jar"

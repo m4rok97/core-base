@@ -14,7 +14,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 
 ENV GRADLE_VERSION=7.2
 RUN \
-	mkdir -p /tmp/gradle && \ 
+	mkdir -p /tmp/gradle && \
 	cd /tmp/gradle && \
 	wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -O src.zip && \
 	unzip src && \
@@ -38,4 +38,8 @@ RUN mkdir ${IGNIS_HOME}/lib/java && \
 	rm -fr /tmp/backend
 
 COPY ${RELPATH}driver-install.sh ${IGNIS_HOME}/common
-RUN chmod +x ${IGNIS_HOME}/common/driver-install.sh 
+COPY ${RELPATH}ignis-export ${IGNIS_HOME}/bin
+COPY ${RELPATH}ignis-export-all ${IGNIS_HOME}/bin
+RUN chmod +x ${IGNIS_HOME}/common/driver-install.sh && \
+    chmod +x ${IGNIS_HOME}/bin/ignis-export && \
+    chmod +x ${IGNIS_HOME}/bin/ignis-export-all
