@@ -90,9 +90,12 @@ public class Submit implements Callable<Integer> {
 
             defaults.load(getClass().getClassLoader().getResourceAsStream("etc/ignis.conf"));
             try {
-                File conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf");
-                if (conf.exists()) {
-                    defaults.load(conf.getPath());
+                File conf;
+                if(props.contains(IKeys.HOME)) {
+                    conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf");
+                    if (conf.exists()) {
+                        defaults.load(conf.getPath());
+                    }
                 }
                 conf = new File(System.getProperty("user.home"), ".ignis/ignis.conf");
                 if (conf.exists()) {
