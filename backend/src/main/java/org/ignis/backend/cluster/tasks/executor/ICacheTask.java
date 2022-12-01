@@ -43,6 +43,11 @@ public class ICacheTask extends IExecutorTask {
     public void run(ITaskContext context) throws IgnisException {
         LOGGER.info(log() + "updating cache from " + cache.getActualLevel() + " to " + cache.getNextLevel());
         try {
+            if (cache.getActualLevel().equals(ICache.Level.NO_CACHE) &&
+                    cache.getNextLevel().equals(ICache.Level.NO_CACHE)) {
+                executor.getCacheContextModule().loadCache(cache.getId());
+                executor.getCacheContextModule().cache(cache.getId(), (byte) ICache.Level.NO_CACHE.getInt());
+            }
             executor.getCacheContextModule().cache(cache.getId(), (byte) cache.getNextLevel().getInt());
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);

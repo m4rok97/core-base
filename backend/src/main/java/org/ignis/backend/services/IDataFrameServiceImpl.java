@@ -91,9 +91,11 @@ public final class IDataFrameServiceImpl extends IService implements IDataFrameS
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             IDataFrame data = worker.getDataFrame(id.getDataFrame());
+            ILazy<Void> result;
             synchronized (worker.getLock()) {
-                new IDataCacheHelper(data, worker.getProperties()).uncache();
+                result = new IDataCacheHelper(data, worker.getProperties()).uncache();
             }
+            result.execute();
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }

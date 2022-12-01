@@ -34,13 +34,13 @@ public final class IPlainFileTask extends IExecutorContextTask {
     private final String path;
     private final Long partitions;
 
-    private final byte delim;
+    private final String delim;
 
-    public IPlainFileTask(String name, IExecutor executor, String path, byte delim) {
+    public IPlainFileTask(String name, IExecutor executor, String path, String delim) {
         this(name, executor, path, null, delim);
     }
 
-    public IPlainFileTask(String name, IExecutor executor, String path, Long partitions, byte delim) {
+    public IPlainFileTask(String name, IExecutor executor, String path, Long partitions, String delim) {
         super(name, executor, Mode.SAVE);
         this.path = path;
         this.partitions = partitions;

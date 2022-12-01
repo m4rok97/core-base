@@ -201,7 +201,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId plainFile(IWorkerId id, String path, byte delim) throws IDriverException,TException{
+    public IDataFrameId plainFile(IWorkerId id, String path, String delim) throws IDriverException,TException{
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
@@ -215,7 +215,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     }
 
     @Override
-    public IDataFrameId plainFile4(IWorkerId id, String path, long minPartitions, byte delim) throws IDriverException, TException{
+    public IDataFrameId plainFile4(IWorkerId id, String path, long minPartitions, String delim) throws IDriverException, TException{
         try {
             ICluster cluster = attributes.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());

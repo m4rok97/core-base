@@ -19,6 +19,7 @@ package org.ignis.backend.cluster.helpers.dataframe;
 import org.ignis.backend.cluster.IDataFrame;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.tasks.ICache;
+import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.ITaskGroupCache;
 import org.ignis.backend.exception.IgnisException;
@@ -53,13 +54,17 @@ public class IDataCacheHelper extends IDataHelper {
         data.getCache().setNextLevel(ICache.Level.PRESERVE);
     }
 
-    public void uncache() throws IgnisException {
+    public ILazy<Void> uncache() throws IgnisException {
         data.getCache().setNextLevel(ICache.Level.NO_CACHE);
         if (!data.getCache().isCached()) {
-            return;
+            return () -> {
+                return null;
+            };
         }
-
-        data.getTasks().start(data.getPool());
+        return () -> {
+            data.getTasks().start(data.getPool());
+            return null;
+        };
     }
 
 }

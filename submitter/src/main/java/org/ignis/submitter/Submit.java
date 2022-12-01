@@ -43,7 +43,7 @@ import java.util.concurrent.Callable;
 /**
  * @author César Pomar
  */
-@CommandLine.Command(version = "2.1")
+@CommandLine.Command(version = "2.2")
 public class Submit implements Callable<Integer> {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Submit.class);

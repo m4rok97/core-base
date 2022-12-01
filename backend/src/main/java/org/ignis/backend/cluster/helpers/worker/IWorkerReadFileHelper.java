@@ -37,7 +37,7 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         super(worker, properties);
     }
 
-    public IDataFrame plainFile(String path, byte delim) throws IgnisException {
+    public IDataFrame plainFile(String path, String delim) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newDependency(worker.getTasks());
         for (IExecutor executor : worker.getExecutors()) {
@@ -51,7 +51,7 @@ public final class IWorkerReadFileHelper extends IWorkerHelper {
         return target;
     }
 
-    public IDataFrame plainFile(String path, long partitions, byte delim) throws IgnisException {
+    public IDataFrame plainFile(String path, long partitions, String delim) throws IgnisException {
         ITaskGroup.Builder builder = new ITaskGroup.Builder(worker.getLock());
         builder.newDependency(worker.getTasks());
         for (IExecutor executor : worker.getExecutors()) {

@@ -21,9 +21,9 @@ public class IIOModule {
 
     public long partitionApproxSize() throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void plainFile(java.lang.String path, byte delim) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void plainFile(java.lang.String path, java.lang.String delim) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
-    public void plainFile3(java.lang.String path, long minPartitions, byte delim) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
+    public void plainFile3(java.lang.String path, long minPartitions, java.lang.String delim) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
     public void textFile(java.lang.String path) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException;
 
@@ -59,9 +59,9 @@ public class IIOModule {
 
     public void partitionApproxSize(org.apache.thrift.async.AsyncMethodCallback<java.lang.Long> resultHandler) throws org.apache.thrift.TException;
 
-    public void plainFile(java.lang.String path, byte delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void plainFile(java.lang.String path, java.lang.String delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void plainFile3(java.lang.String path, long minPartitions, byte delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void plainFile3(java.lang.String path, long minPartitions, java.lang.String delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
     public void textFile(java.lang.String path, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
@@ -226,13 +226,13 @@ public class IIOModule {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "partitionApproxSize failed: unknown result");
     }
 
-    public void plainFile(java.lang.String path, byte delim) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void plainFile(java.lang.String path, java.lang.String delim) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
       send_plainFile(path, delim);
       recv_plainFile();
     }
 
-    public void send_plainFile(java.lang.String path, byte delim) throws org.apache.thrift.TException
+    public void send_plainFile(java.lang.String path, java.lang.String delim) throws org.apache.thrift.TException
     {
       plainFile_args args = new plainFile_args();
       args.setPath(path);
@@ -250,13 +250,13 @@ public class IIOModule {
       return;
     }
 
-    public void plainFile3(java.lang.String path, long minPartitions, byte delim) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
+    public void plainFile3(java.lang.String path, long minPartitions, java.lang.String delim) throws org.ignis.rpc.IExecutorException, org.apache.thrift.TException
     {
       send_plainFile3(path, minPartitions, delim);
       recv_plainFile3();
     }
 
-    public void send_plainFile3(java.lang.String path, long minPartitions, byte delim) throws org.apache.thrift.TException
+    public void send_plainFile3(java.lang.String path, long minPartitions, java.lang.String delim) throws org.apache.thrift.TException
     {
       plainFile3_args args = new plainFile3_args();
       args.setPath(path);
@@ -693,7 +693,7 @@ public class IIOModule {
       }
     }
 
-    public void plainFile(java.lang.String path, byte delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void plainFile(java.lang.String path, java.lang.String delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       plainFile_call method_call = new plainFile_call(path, delim, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -702,8 +702,8 @@ public class IIOModule {
 
     public static class plainFile_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private java.lang.String path;
-      private byte delim;
-      public plainFile_call(java.lang.String path, byte delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private java.lang.String delim;
+      public plainFile_call(java.lang.String path, java.lang.String delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.path = path;
         this.delim = delim;
@@ -728,7 +728,7 @@ public class IIOModule {
       }
     }
 
-    public void plainFile3(java.lang.String path, long minPartitions, byte delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void plainFile3(java.lang.String path, long minPartitions, java.lang.String delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       plainFile3_call method_call = new plainFile3_call(path, minPartitions, delim, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -738,8 +738,8 @@ public class IIOModule {
     public static class plainFile3_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
       private java.lang.String path;
       private long minPartitions;
-      private byte delim;
-      public plainFile3_call(java.lang.String path, long minPartitions, byte delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private java.lang.String delim;
+      public plainFile3_call(java.lang.String path, long minPartitions, java.lang.String delim, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.path = path;
         this.minPartitions = minPartitions;
@@ -6488,13 +6488,13 @@ public class IIOModule {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("plainFile_args");
 
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField DELIM_FIELD_DESC = new org.apache.thrift.protocol.TField("delim", org.apache.thrift.protocol.TType.BYTE, (short)2);
+    private static final org.apache.thrift.protocol.TField DELIM_FIELD_DESC = new org.apache.thrift.protocol.TField("delim", org.apache.thrift.protocol.TType.STRING, (short)2);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new plainFile_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new plainFile_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable java.lang.String path; // required
-    private byte delim; // required
+    private @org.apache.thrift.annotation.Nullable java.lang.String delim; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -6560,15 +6560,13 @@ public class IIOModule {
     }
 
     // isset id assignments
-    private static final int __DELIM_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.PATH, new org.apache.thrift.meta_data.FieldMetaData("path", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       tmpMap.put(_Fields.DELIM, new org.apache.thrift.meta_data.FieldMetaData("delim", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BYTE)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(plainFile_args.class, metaDataMap);
     }
@@ -6578,23 +6576,23 @@ public class IIOModule {
 
     public plainFile_args(
       java.lang.String path,
-      byte delim)
+      java.lang.String delim)
     {
       this();
       this.path = path;
       this.delim = delim;
-      setDelimIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public plainFile_args(plainFile_args other) {
-      __isset_bitfield = other.__isset_bitfield;
       if (other.isSetPath()) {
         this.path = other.path;
       }
-      this.delim = other.delim;
+      if (other.isSetDelim()) {
+        this.delim = other.delim;
+      }
     }
 
     public plainFile_args deepCopy() {
@@ -6604,8 +6602,7 @@ public class IIOModule {
     @Override
     public void clear() {
       this.path = null;
-      setDelimIsSet(false);
-      this.delim = 0;
+      this.delim = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -6633,27 +6630,29 @@ public class IIOModule {
       }
     }
 
-    public byte getDelim() {
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getDelim() {
       return this.delim;
     }
 
-    public plainFile_args setDelim(byte delim) {
+    public plainFile_args setDelim(@org.apache.thrift.annotation.Nullable java.lang.String delim) {
       this.delim = delim;
-      setDelimIsSet(true);
       return this;
     }
 
     public void unsetDelim() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __DELIM_ISSET_ID);
+      this.delim = null;
     }
 
     /** Returns true if field delim is set (has been assigned a value) and false otherwise */
     public boolean isSetDelim() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __DELIM_ISSET_ID);
+      return this.delim != null;
     }
 
     public void setDelimIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __DELIM_ISSET_ID, value);
+      if (!value) {
+        this.delim = null;
+      }
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
@@ -6670,7 +6669,7 @@ public class IIOModule {
         if (value == null) {
           unsetDelim();
         } else {
-          setDelim((java.lang.Byte)value);
+          setDelim((java.lang.String)value);
         }
         break;
 
@@ -6727,12 +6726,12 @@ public class IIOModule {
           return false;
       }
 
-      boolean this_present_delim = true;
-      boolean that_present_delim = true;
+      boolean this_present_delim = true && this.isSetDelim();
+      boolean that_present_delim = true && that.isSetDelim();
       if (this_present_delim || that_present_delim) {
         if (!(this_present_delim && that_present_delim))
           return false;
-        if (this.delim != that.delim)
+        if (!this.delim.equals(that.delim))
           return false;
       }
 
@@ -6747,7 +6746,9 @@ public class IIOModule {
       if (isSetPath())
         hashCode = hashCode * 8191 + path.hashCode();
 
-      hashCode = hashCode * 8191 + (int) (delim);
+      hashCode = hashCode * 8191 + ((isSetDelim()) ? 131071 : 524287);
+      if (isSetDelim())
+        hashCode = hashCode * 8191 + delim.hashCode();
 
       return hashCode;
     }
@@ -6810,7 +6811,11 @@ public class IIOModule {
       first = false;
       if (!first) sb.append(", ");
       sb.append("delim:");
-      sb.append(this.delim);
+      if (this.delim == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.delim);
+      }
       first = false;
       sb.append(")");
       return sb.toString();
@@ -6831,8 +6836,6 @@ public class IIOModule {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -6866,8 +6869,8 @@ public class IIOModule {
               }
               break;
             case 2: // DELIM
-              if (schemeField.type == org.apache.thrift.protocol.TType.BYTE) {
-                struct.delim = iprot.readByte();
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.delim = iprot.readString();
                 struct.setDelimIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -6893,9 +6896,11 @@ public class IIOModule {
           oprot.writeString(struct.path);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(DELIM_FIELD_DESC);
-        oprot.writeByte(struct.delim);
-        oprot.writeFieldEnd();
+        if (struct.delim != null) {
+          oprot.writeFieldBegin(DELIM_FIELD_DESC);
+          oprot.writeString(struct.delim);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -6925,7 +6930,7 @@ public class IIOModule {
           oprot.writeString(struct.path);
         }
         if (struct.isSetDelim()) {
-          oprot.writeByte(struct.delim);
+          oprot.writeString(struct.delim);
         }
       }
 
@@ -6938,7 +6943,7 @@ public class IIOModule {
           struct.setPathIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.delim = iprot.readByte();
+          struct.delim = iprot.readString();
           struct.setDelimIsSet(true);
         }
       }
@@ -7321,14 +7326,14 @@ public class IIOModule {
 
     private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)1);
     private static final org.apache.thrift.protocol.TField MIN_PARTITIONS_FIELD_DESC = new org.apache.thrift.protocol.TField("minPartitions", org.apache.thrift.protocol.TType.I64, (short)2);
-    private static final org.apache.thrift.protocol.TField DELIM_FIELD_DESC = new org.apache.thrift.protocol.TField("delim", org.apache.thrift.protocol.TType.BYTE, (short)3);
+    private static final org.apache.thrift.protocol.TField DELIM_FIELD_DESC = new org.apache.thrift.protocol.TField("delim", org.apache.thrift.protocol.TType.STRING, (short)3);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new plainFile3_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new plainFile3_argsTupleSchemeFactory();
 
     private @org.apache.thrift.annotation.Nullable java.lang.String path; // required
     private long minPartitions; // required
-    private byte delim; // required
+    private @org.apache.thrift.annotation.Nullable java.lang.String delim; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -7398,7 +7403,6 @@ public class IIOModule {
 
     // isset id assignments
     private static final int __MINPARTITIONS_ISSET_ID = 0;
-    private static final int __DELIM_ISSET_ID = 1;
     private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
@@ -7408,7 +7412,7 @@ public class IIOModule {
       tmpMap.put(_Fields.MIN_PARTITIONS, new org.apache.thrift.meta_data.FieldMetaData("minPartitions", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       tmpMap.put(_Fields.DELIM, new org.apache.thrift.meta_data.FieldMetaData("delim", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BYTE)));
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(plainFile3_args.class, metaDataMap);
     }
@@ -7419,14 +7423,13 @@ public class IIOModule {
     public plainFile3_args(
       java.lang.String path,
       long minPartitions,
-      byte delim)
+      java.lang.String delim)
     {
       this();
       this.path = path;
       this.minPartitions = minPartitions;
       setMinPartitionsIsSet(true);
       this.delim = delim;
-      setDelimIsSet(true);
     }
 
     /**
@@ -7438,7 +7441,9 @@ public class IIOModule {
         this.path = other.path;
       }
       this.minPartitions = other.minPartitions;
-      this.delim = other.delim;
+      if (other.isSetDelim()) {
+        this.delim = other.delim;
+      }
     }
 
     public plainFile3_args deepCopy() {
@@ -7450,8 +7455,7 @@ public class IIOModule {
       this.path = null;
       setMinPartitionsIsSet(false);
       this.minPartitions = 0;
-      setDelimIsSet(false);
-      this.delim = 0;
+      this.delim = null;
     }
 
     @org.apache.thrift.annotation.Nullable
@@ -7502,27 +7506,29 @@ public class IIOModule {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __MINPARTITIONS_ISSET_ID, value);
     }
 
-    public byte getDelim() {
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getDelim() {
       return this.delim;
     }
 
-    public plainFile3_args setDelim(byte delim) {
+    public plainFile3_args setDelim(@org.apache.thrift.annotation.Nullable java.lang.String delim) {
       this.delim = delim;
-      setDelimIsSet(true);
       return this;
     }
 
     public void unsetDelim() {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __DELIM_ISSET_ID);
+      this.delim = null;
     }
 
     /** Returns true if field delim is set (has been assigned a value) and false otherwise */
     public boolean isSetDelim() {
-      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __DELIM_ISSET_ID);
+      return this.delim != null;
     }
 
     public void setDelimIsSet(boolean value) {
-      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __DELIM_ISSET_ID, value);
+      if (!value) {
+        this.delim = null;
+      }
     }
 
     public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
@@ -7547,7 +7553,7 @@ public class IIOModule {
         if (value == null) {
           unsetDelim();
         } else {
-          setDelim((java.lang.Byte)value);
+          setDelim((java.lang.String)value);
         }
         break;
 
@@ -7618,12 +7624,12 @@ public class IIOModule {
           return false;
       }
 
-      boolean this_present_delim = true;
-      boolean that_present_delim = true;
+      boolean this_present_delim = true && this.isSetDelim();
+      boolean that_present_delim = true && that.isSetDelim();
       if (this_present_delim || that_present_delim) {
         if (!(this_present_delim && that_present_delim))
           return false;
-        if (this.delim != that.delim)
+        if (!this.delim.equals(that.delim))
           return false;
       }
 
@@ -7640,7 +7646,9 @@ public class IIOModule {
 
       hashCode = hashCode * 8191 + org.apache.thrift.TBaseHelper.hashCode(minPartitions);
 
-      hashCode = hashCode * 8191 + (int) (delim);
+      hashCode = hashCode * 8191 + ((isSetDelim()) ? 131071 : 524287);
+      if (isSetDelim())
+        hashCode = hashCode * 8191 + delim.hashCode();
 
       return hashCode;
     }
@@ -7717,7 +7725,11 @@ public class IIOModule {
       first = false;
       if (!first) sb.append(", ");
       sb.append("delim:");
-      sb.append(this.delim);
+      if (this.delim == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.delim);
+      }
       first = false;
       sb.append(")");
       return sb.toString();
@@ -7781,8 +7793,8 @@ public class IIOModule {
               }
               break;
             case 3: // DELIM
-              if (schemeField.type == org.apache.thrift.protocol.TType.BYTE) {
-                struct.delim = iprot.readByte();
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.delim = iprot.readString();
                 struct.setDelimIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -7811,9 +7823,11 @@ public class IIOModule {
         oprot.writeFieldBegin(MIN_PARTITIONS_FIELD_DESC);
         oprot.writeI64(struct.minPartitions);
         oprot.writeFieldEnd();
-        oprot.writeFieldBegin(DELIM_FIELD_DESC);
-        oprot.writeByte(struct.delim);
-        oprot.writeFieldEnd();
+        if (struct.delim != null) {
+          oprot.writeFieldBegin(DELIM_FIELD_DESC);
+          oprot.writeString(struct.delim);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -7849,7 +7863,7 @@ public class IIOModule {
           oprot.writeI64(struct.minPartitions);
         }
         if (struct.isSetDelim()) {
-          oprot.writeByte(struct.delim);
+          oprot.writeString(struct.delim);
         }
       }
 
@@ -7866,7 +7880,7 @@ public class IIOModule {
           struct.setMinPartitionsIsSet(true);
         }
         if (incoming.get(2)) {
-          struct.delim = iprot.readByte();
+          struct.delim = iprot.readString();
           struct.setDelimIsSet(true);
         }
       }

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(version = "2.1")
+@CommandLine.Command(version = "2.2")
 public class SlurmSubmit implements Callable<Integer> {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SlurmSubmit.class);
