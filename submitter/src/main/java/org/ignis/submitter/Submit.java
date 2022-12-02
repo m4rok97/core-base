@@ -86,6 +86,10 @@ public class Submit implements Callable<Integer> {
         try {
             IProperties defaults = new IProperties();
             IProperties props = new IProperties(defaults);
+            String home = System.getProperty("user.home");
+            if(home!= null) {
+                props.setProperty(IKeys.DFS_ID, System.getProperty("user.home"));
+            }
             props.fromEnv(System.getenv());
 
             defaults.load(getClass().getClassLoader().getResourceAsStream("etc/ignis.conf"));
@@ -94,12 +98,14 @@ public class Submit implements Callable<Integer> {
                 if(props.contains(IKeys.HOME)) {
                     conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf");
                     if (conf.exists()) {
-                        defaults.load(conf.getPath());
+                        props.load(conf.getPath());
                     }
                 }
-                conf = new File(System.getProperty("user.home"), ".ignis/ignis.conf");
-                if (conf.exists()) {
-                    defaults.load(conf.getPath());
+                if(home != null){
+                    conf = new File(System.getProperty("user.home"), ".ignis/ignis.conf");
+                    if (conf.exists()) {
+                        props.load(conf.getPath());
+                    }
                 }
             } catch (IPropertyException | IOException ex) {
                 LOGGER.error("Error loading ignis.conf, ignoring", ex);

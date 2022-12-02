@@ -71,18 +71,27 @@ public class SlurmSubmit implements Callable<Integer> {
         try {
             IProperties defaults = new IProperties();
             IProperties props = new IProperties(defaults);
+            String home = System.getProperty("user.home");
+            props.setProperty(IKeys.EXECUTOR_IMAGE, image);
+            if(home!= null) {
+                props.setProperty(IKeys.DFS_ID, System.getProperty("user.home"));
+            }
             props.fromEnv(System.getenv());
 
             defaults.load(getClass().getClassLoader().getResourceAsStream("etc/ignis.conf"));
-            defaults.setProperty(IKeys.EXECUTOR_IMAGE, "docker://" + defaults.getProperty(IKeys.EXECUTOR_IMAGE));
             try {
-                File conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf");
-                if (conf.exists()) {
-                    defaults.load(conf.getPath());
+                File conf;
+                if(props.contains(IKeys.HOME)) {
+                    conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf");
+                    if (conf.exists()) {
+                        props.load(conf.getPath());
+                    }
                 }
-                conf = new File(System.getProperty("user.home"), ".ignis/ignis.conf");
-                if (conf.exists()) {
-                    defaults.load(conf.getPath());
+                if(home != null){
+                    conf = new File(System.getProperty("user.home"), ".ignis/ignis.conf");
+                    if (conf.exists()) {
+                        props.load(conf.getPath());
+                    }
                 }
             } catch (IPropertyException | IOException ex) {
                 LOGGER.error("Error loading ignis.conf, ignoring", ex);
