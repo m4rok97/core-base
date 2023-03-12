@@ -126,14 +126,14 @@ public class Docker implements IScheduler {
             int i = 0;
             for (IPort port : container.getPorts()) {
                 String value = "";
-                if(port.getContainerPort() == 0 && port.getHostPort() == 0){
+                if (port.getContainerPort() == 0 && port.getHostPort() == 0) {
                     value += dynPort + ":" + dynPort;
                     dynPort++;
-                }else{
-                    if (port.getContainerPort() == 0){
-                      value += port.getContainerPort();
+                } else {
+                    if (port.getContainerPort() == 0) {
+                        value += port.getContainerPort();
                     }
-                    if (port.getHostPort() == 0){
+                    if (port.getHostPort() == 0) {
                         value += port.getContainerPort();
                     }
                     value = value + ":" + value;
@@ -271,7 +271,7 @@ public class Docker implements IScheduler {
         }
         for (String id : ids) {
             if (!map.containsKey(id)) {
-                if (safe){
+                if (safe) {
                     throw new ISchedulerException("Container " + id + " not found");
                 }
                 result.add(null);
@@ -300,7 +300,12 @@ public class Docker implements IScheduler {
             env[env.length - 2] = "IGNIS_JOB_ID=" + dockerContainer.getName();
             env[env.length - 1] = "IGNIS_JOB_NAME=" + group;
             dockerContainer.withEnv(env);
-            dockerContainer.withEnv(env);
+            ArrayList<String> cmd = new ArrayList<>();
+            cmd.add("ignis-log");
+            cmd.add("$IGNIS_WORKING_DIRECTORY/" + dockerContainer.getName() + ".out");
+            cmd.add("$IGNIS_WORKING_DIRECTORY/" + dockerContainer.getName() + ".err");
+            cmd.addAll(Arrays.asList(dockerContainer.getCmd()));
+            dockerContainer.withCmd(cmd);
             if (path != null) {//Is a Unix-Socket
                 List<Mount> mounts = dockerContainer.getHostConfig().getMounts();
                 Mount mount = new Mount();
@@ -322,10 +327,17 @@ public class Docker implements IScheduler {
     public List<String> createExecutorContainers(String group, String name, IContainerInfo container, int instances) throws ISchedulerException {
         List<String> ids = new ArrayList<>();
         List<String> names = new ArrayList<>();
+        String IGNIS_WORKING_DIRECTORY = System.getenv("IGNIS_WORKING_DIRECTORY");
         try {
             CreateContainerCmd dockerContainer = parseContainer(container);
             for (int i = 0; i < instances; i++) {
                 dockerContainer.withName(fixName(group + "-" + name + "." + i));
+                ArrayList<String> cmd = new ArrayList<>();
+                cmd.add("ignis-log");
+                cmd.add(IGNIS_WORKING_DIRECTORY + "/" + dockerContainer.getName() + ".out");
+                cmd.add(IGNIS_WORKING_DIRECTORY + "/" + dockerContainer.getName() + ".err");
+                cmd.addAll(Arrays.asList(dockerContainer.getCmd()));
+                dockerContainer.withCmd(cmd);
                 names.add(dockerContainer.getName());
                 ids.add(dockerContainer.exec().getId());
             }
@@ -352,9 +364,9 @@ public class Docker implements IScheduler {
         try {
             List<IContainerStatus> status = new ArrayList<>();
             for (String id : getDockerIds(ids, false)) {
-                if( id == null){
+                if (id == null) {
                     status.add(IContainerStatus.DESTROYED);
-                }else {
+                } else {
                     String s = dockerClient.inspectContainerCmd(id).exec().getState().getStatus();
                     status.add(TASK_STATUS.getOrDefault(s, IContainerStatus.UNKNOWN));
                 }
@@ -407,7 +419,7 @@ public class Docker implements IScheduler {
         DockerException error = null;
         for (String id : getDockerIds(ids, false)) {
             try {
-                if(id != null){
+                if (id != null) {
                     dockerClient.removeContainerCmd(id).withForce(true).withRemoveVolumes(true).exec();
                 }
             } catch (DockerException ex) {
