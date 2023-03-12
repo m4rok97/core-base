@@ -34,7 +34,7 @@ RUN mkdir /tmp/mesos && \
 	tar -zxf mesos-${_MESOS_VERSION}.tar.gz && \
 	cd mesos-${_MESOS_VERSION} && \
 	./configure && \
-	make -j && \
+	make -j4 && \
 	make install DESTDIR=/tmp/root && \
 	rm -fR /tmp/mesos
 
