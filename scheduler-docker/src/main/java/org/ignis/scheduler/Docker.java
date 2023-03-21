@@ -330,13 +330,14 @@ public class Docker implements IScheduler {
         String IGNIS_WORKING_DIRECTORY = System.getenv("IGNIS_WORKING_DIRECTORY");
         try {
             CreateContainerCmd dockerContainer = parseContainer(container);
+            List<String> baseCmd = new ArrayList<>(Arrays.asList(dockerContainer.getCmd()));
             for (int i = 0; i < instances; i++) {
                 dockerContainer.withName(fixName(group + "-" + name + "." + i));
                 ArrayList<String> cmd = new ArrayList<>();
                 cmd.add("ignis-log");
                 cmd.add(IGNIS_WORKING_DIRECTORY + "/" + dockerContainer.getName() + ".out");
                 cmd.add(IGNIS_WORKING_DIRECTORY + "/" + dockerContainer.getName() + ".err");
-                cmd.addAll(Arrays.asList(dockerContainer.getCmd()));
+                cmd.addAll(baseCmd);
                 dockerContainer.withCmd(cmd);
                 names.add(dockerContainer.getName());
                 ids.add(dockerContainer.exec().getId());
