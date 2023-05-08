@@ -124,6 +124,7 @@ public final class IExecutor {
                 map.put(key, String.valueOf(port.getHostPort()));
             }
         }
+        map.put(container.getCluster() < 0 ? IKeys.DRIVER_HOST : IKeys.EXECUTOR_HOST, container.getInfo().getHost());
         return map;
     }
 

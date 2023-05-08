@@ -48,6 +48,7 @@ public final class IKeys {
     public static final String DRIVER_RPC_COMPRESSION = "ignis.driver.rpc.compression";
     public static final String DRIVER_SWAPPINESS = "ignis.driver.swappiness";
     public static final String DRIVER_RPC_POOL = "ignis.driver.pool";
+    public static final String DRIVER_HOST = "ignis.driver.host";
     public static final String DRIVER_PORT = "ignis.driver.port";
     public static final String DRIVER_PORTS = DRIVER_PORT + "s";
     public static final String DRIVER_BIND = "ignis.driver.bind";
@@ -73,6 +74,7 @@ public final class IKeys {
     public static final String EXECUTOR_SWAPPINESS = "ignis.executor.swappiness";
     public static final String EXECUTOR_ISOLATION = "ignis.executor.isolation";
     public static final String EXECUTOR_DIRECTORY = "ignis.executor.directory";
+    public static final String EXECUTOR_HOST = "ignis.executor.host";
     public static final String EXECUTOR_PORT = "ignis.executor.port";
     public static final String EXECUTOR_PORTS = EXECUTOR_PORT + "s";
     public static final String EXECUTOR_BIND = "ignis.executor.bind";
