@@ -103,7 +103,7 @@ public class Nomad implements IScheduler {
         Resources res = new Resources();
         task.getMeta().put("cores", "" + container.getCpus());
         task.getMeta().put("memory", "" + container.getMemory());
-        res.setMemoryMb((int) container.getMemory() / (1024 * 1024));
+        res.setMemoryMb((int) (container.getMemory() / (1024 * 1024)));
         res.addUnmappedProperty("memory_max", (int) container.getMemory());
         Integer freq;
         if (params.containsKey("nomad.frequency")) {

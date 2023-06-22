@@ -291,6 +291,7 @@ public final class IProperties {
         int len = str.length();
         char[] cs = str.toCharArray();
         while (i < len && cs[i] == ' ') {
+            i++;
         }
         while (i < len) {
             if (cs[i] >= '0' && cs[i] <= '9') {
