@@ -74,6 +74,8 @@ public class Nomad implements IScheduler {
                 }
 
             }
+        } else {
+            configBuilder.setAddress(url);
         }
         client = new NomadApiClient(configBuilder.build());
         Integer cpuFrequencyDefault = null;
