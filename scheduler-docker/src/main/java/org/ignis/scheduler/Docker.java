@@ -112,9 +112,6 @@ public class Docker implements IScheduler {
         dockerContainer.withCmd(cmd);
         dockerContainer.getHostConfig().withCpuCount((long) container.getCpus());
         dockerContainer.getHostConfig().withMemory(container.getMemory());
-        if (container.getSwappiness() != null) {
-            dockerContainer.getHostConfig().withMemorySwappiness((long) container.getSwappiness());
-        }
 
         /*
          * Ports are not exposed because all container are in the host inner network
@@ -203,9 +200,6 @@ public class Docker implements IScheduler {
         builder.arguments(args);
         builder.cpus(container.getHostConfig().getCpuCount().intValue());
         builder.memory(container.getHostConfig().getMemory());
-        if (container.getHostConfig().getMemorySwappiness() != null) {
-            builder.swappiness(container.getHostConfig().getMemorySwappiness().intValue());
-        }
 
         List<IPort> ports = new ArrayList<>();
         builder.ports(ports);
@@ -356,6 +350,14 @@ public class Docker implements IScheduler {
     }
 
     @Override
+    public String createDriverWithExecutorContainers(String group, String driverName,
+                                                     IContainerInfo driverContainer,
+                                                     List<ExecutorContainers> executorContainers)
+            throws ISchedulerException {
+        throw new UnsupportedOperationException("Not supported yet.");//TODO
+    }
+
+    @Override
     public IContainerStatus getStatus(String id) throws ISchedulerException {
         return getStatus(List.of(id)).get(0);
     }
@@ -379,7 +381,7 @@ public class Docker implements IScheduler {
     }
 
     @Override
-    public IContainerInfo getDriverContainer(String id) throws ISchedulerException {
+    public IContainerInfo getContainer(String id) throws ISchedulerException {
         return getExecutorContainers(List.of(id)).get(0);
     }
 
@@ -398,13 +400,13 @@ public class Docker implements IScheduler {
         try {
             try {
                 if (getStatus(id) == IContainerStatus.RUNNING) {
-                    return getDriverContainer(id);
+                    return getContainer(id);
                 }
                 dockerClient.stopContainerCmd(dockerid).exec();
             } catch (Exception ignore) {
             }
             dockerClient.startContainerCmd(dockerid).exec();
-            return getDriverContainer(id);
+            return getContainer(id);
         } catch (DockerException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
@@ -444,5 +446,11 @@ public class Docker implements IScheduler {
     @Override
     public String getName() {
         return NAME;
+    }
+
+
+    @Override
+    public boolean isDynamic() {
+        return true;
     }
 }

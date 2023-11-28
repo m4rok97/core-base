@@ -1,45 +1,19 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'application'
+plugins {
+    id('java')
+}
 
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 javadoc {
-    options.addBooleanOption('html5', true)
-}
-
-tasks.withType(Javadoc) {
-    options.addStringOption('Xdoclint:none', '-quiet')
-}
-
-task javadocsJar(type: Jar, dependsOn: javadoc, description: 'Creates a jar from the javadocs files.') {
-    from javadoc.destinationDir
-    archiveClassifier.set('javadoc')
-}
-
-task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
-    from sourceSets.main.allJava
-    archiveClassifier.set('sources')
-}
-
-artifacts {
-    archives jar
-    archives sourcesJar
-    archives javadocsJar
-}
-
-
-archivesBaseName = 'ignis-properties'
-version = '1.0'
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'org.ignis'
-            artifactId = archivesBaseName
-            version = version
-            from components.java
-        }
-    }
+    (options as StandardJavadocDocletOptions).addBooleanOption('html5', true)
 }
 
 repositories {
@@ -49,10 +23,19 @@ repositories {
 dependencies {
 }
 
-task jarAndLibs(type: Copy, description: 'Copy project dependencies.') {
-    dependsOn "jar"
-    delete("$buildDir/jarAndLibs")
-    from project.configurations.runtimeClasspath
-    into "$buildDir/jarAndLibs"
+jar {
+    archiveBaseName = 'ignishpc-properties'
+    version = file("../VERSION").text.trim()
+    manifest {
+        attributes("Implementation-Title": archiveBaseName,
+                "Implementation-Version": version)
+    }
 }
 
+tasks.register('jarlibs', Copy) {
+    description('Copy project jar and libraries into jarlibs')
+    dependsOn("jar")
+    delete(layout.buildDirectory.file("jarlibs"))
+    from(jar, project.configurations.compileClasspath)
+    into(layout.buildDirectory.file("jarlibs"))
+}

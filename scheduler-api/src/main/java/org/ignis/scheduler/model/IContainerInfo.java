@@ -39,9 +39,9 @@ public class IContainerInfo implements Serializable {
     private final List<String> arguments;
     private final int cpus;
     private final long memory;//Bytes
-    private final Integer swappiness;
     private final List<IPort> ports;
     private final INetworkMode networkMode;
+    private final Long time;//Seconds
     private final List<IBind> binds;
     private final List<IVolume> volumes;
     private final List<String> preferedHosts;

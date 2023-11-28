@@ -3,21 +3,23 @@ ARG REGISTRY=""
 ARG NAMESPACE="ignishpc/"
 ARG TAG=""
 FROM ${REGISTRY}${NAMESPACE}mesos-base${TAG}
-ARG RELPATH=""
+
+LABEL ignis.build="optional"
 
 ENV _SINGULARITY_VERSION=1.4.0
 RUN mkdir /opt/singularity && \
-	cd /opt/singularity && \
-	wget https://repo1.maven.org/maven2/com/hubspot/SingularityService/${_SINGULARITY_VERSION}/SingularityService-${_SINGULARITY_VERSION}-shaded.jar && \
-	wget https://repo1.maven.org/maven2/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar && \
-	wget https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar  && \
-	wget https://repo1.maven.org/maven2/com/sun/xml/bind/jaxb-core/3.0.0/jaxb-core-3.0.0.jar && \
-	wget https://repo1.maven.org/maven2/com/sun/xml/bind/jaxb-impl/3.0.0/jaxb-impl-3.0.0.jar
+    cd /opt/singularity && \
+    wget https://repo1.maven.org/maven2/com/hubspot/SingularityService/${_SINGULARITY_VERSION}/SingularityService-${_SINGULARITY_VERSION}-shaded.jar && \
+    wget https://repo1.maven.org/maven2/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar && \
+    wget https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar  && \
+    wget https://repo1.maven.org/maven2/com/sun/xml/bind/jaxb-core/3.0.0/jaxb-core-3.0.0.jar && \
+    wget https://repo1.maven.org/maven2/com/sun/xml/bind/jaxb-impl/3.0.0/jaxb-impl-3.0.0.jar
 
 RUN { \
-		echo '#!/bin/bash'; \
-		echo 'start-mesos.sh &'; \
-		echo 'java -cp "/opt/singularity/*" com.hubspot.singularity.SingularityService server /etc/singularity/config.yaml &'; \
-		echo 'wait'; \
-	} > /bin/start-singularity.sh  && chmod +x /bin/start-singularity.sh
+        echo '#!/bin/bash'; \
+        echo 'start-mesos.sh &'; \
+        echo 'export JAVA_HOME=$(echo /usr/lib/jvm/java-8-openjdk-* | cut -d "" -f1)'; \
+        echo 'java -cp "/opt/singularity/*" com.hubspot.singularity.SingularityService server /etc/singularity/config.yaml &'; \
+        echo 'wait'; \
+    } > /bin/start-singularity.sh  && chmod +x /bin/start-singularity.sh
 

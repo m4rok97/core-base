@@ -22,13 +22,14 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.*;
 import java.util.stream.IntStream;
 
 /**
  * @author César Pomar
  */
-public class Slurm implements IScheduler {
+public final class Slurm implements IScheduler {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Slurm.class);
 
@@ -142,7 +143,8 @@ public class Slurm implements IScheduler {
         }
     }
 
-    public void createJob(String time, String name, String args, String wd, IContainerInfo driver, IContainerInfo executors, int instances) throws ISchedulerException {
+    private void createJob(String time, String name, String args, String wd, IContainerInfo driver,
+                           IContainerInfo executors, int instances) throws ISchedulerException {
         StringBuilder script = new StringBuilder();
         script.append("#!/bin/bash").append('\n');
         script.append("#SBATCH --job-name=").append(name).append('\n');
@@ -233,7 +235,6 @@ public class Slurm implements IScheduler {
         builder.arguments(request.getArguments());
         builder.cpus(request.getCpus());
         builder.memory(request.getMemory());
-        builder.swappiness(request.getSwappiness());
         int initPort = Integer.parseInt(env.get("SLURM_STEP_RESV_PORTS").split("-")[0]);
         List<IPort> ports = new ArrayList<>();
         for (IPort p : request.getPorts()) {
@@ -262,7 +263,7 @@ public class Slurm implements IScheduler {
 
     @Override
     public String createDriverContainer(String group, String name, IContainerInfo container) throws ISchedulerException {
-        throw new ISchedulerException(NAME + " scheduler must be used with ignis-slurm");
+        throw new ISchedulerException(NAME + " scheduler is static");
     }
 
     @Override
@@ -283,7 +284,7 @@ public class Slurm implements IScheduler {
         if (container.getEnvironmentVariables() != null) {
             Map<String, String> env = new HashMap<>(container.getEnvironmentVariables());
             env.entrySet().removeIf(e -> e.getKey().toUpperCase().startsWith("IGNIS_"));
-            if(ref.getEnvironmentVariables() == null){
+            if (ref.getEnvironmentVariables() == null) {
                 flag &= env.isEmpty();
             } else {
                 Map<String, String> envRef = new HashMap<>(ref.getEnvironmentVariables());
@@ -303,6 +304,24 @@ public class Slurm implements IScheduler {
     }
 
     @Override
+    public String createDriverWithExecutorContainers(String group, String driverName,
+                                                     IContainerInfo driverContainer,
+                                                     List<ExecutorContainers> executorContainers)
+            throws ISchedulerException {
+        if (driverContainer.getTime() == null) {
+            throw new ISchedulerException(NAME + " scheduler requires time");
+        }
+        Duration duration = Duration.ofSeconds(driverContainer.getTime());
+
+        String time = duration.toDays() + "-" +
+                duration.toHoursPart() + ":" + duration.toMinutesPart() + ":" + duration.toSecondsPart();
+
+        //TODO adapt
+
+        return "none";
+    }
+
+    @Override
     public IContainerStatus getStatus(String id) throws ISchedulerException {
         return IContainerStatus.RUNNING;
     }
@@ -313,7 +332,7 @@ public class Slurm implements IScheduler {
     }
 
     @Override
-    public IContainerInfo getDriverContainer(String id) throws ISchedulerException {
+    public IContainerInfo getContainer(String id) throws ISchedulerException {
         return parseContainerInfo(id);
     }
 
@@ -343,6 +362,11 @@ public class Slurm implements IScheduler {
     @Override
     public String getName() {
         return NAME;
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
     }
 
 }

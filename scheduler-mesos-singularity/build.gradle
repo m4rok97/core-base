@@ -22,28 +22,12 @@ repositories {
 
 dependencies {
     implementation(project(":scheduler-api"))
-    implementation(project(":properties"))
     implementation(group: 'org.slf4j', name: 'slf4j-api', version: '2.0.9')
-    implementation(group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.21.1')
-    implementation(group: 'org.apache.logging.log4j', name: 'log4j-slf4j2-impl', version: '2.21.1')
-    implementation(group: 'com.github.mwiede', name: 'jsch', version: '0.2.13')
-    implementation(group: 'info.picocli', name: 'picocli', version: '4.7.5')
-    annotationProcessor(group: 'info.picocli', name: 'picocli', version: '4.7.5')
+    implementation(group: 'com.hubspot', name: 'SingularityClient', version: '1.5.0')
 }
-
-tasks.register('defaultConfig', Copy) {
-    description("Copy ../etc/* into resources")
-    from('../etc')
-    into('build/resources/main/etc')
-}
-
-processResources.configure {
-    dependsOn(defaultConfig)
-}
-
 
 jar {
-    archiveBaseName = 'ignishpc-submitter'
+    archiveBaseName = 'ignishpc-scheduler-mesos-singularity'
     version = file("../VERSION").text.trim()
     manifest {
         attributes("Implementation-Title": archiveBaseName,

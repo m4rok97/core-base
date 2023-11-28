@@ -1,29 +1,23 @@
-apply plugin: 'java'
-
-dependencies {
+plugins {
+    id('java')
 }
 
-test {
-}
-
-task jarAndLibs(type: Copy, description: 'Copy subprojects dependencies.') {
-    dependsOn ":properties:jarAndLibs"
-    dependsOn ":scheduler-api:jarAndLibs"
-    dependsOn ":scheduler-ancoris:jarAndLibs"
-    dependsOn ":scheduler-docker:jarAndLibs"
-    dependsOn ":scheduler-marathon:jarAndLibs"
-    dependsOn ":scheduler-nomad:jarAndLibs"
-    dependsOn ":scheduler-singularity:jarAndLibs"
-    dependsOn ":scheduler-slurm:jarAndLibs"
-    dependsOn ":backend:jarAndLibs"
-    dependsOn ":submitter:jarAndLibs"
-    delete("libs")
-    def jars= []
-    subprojects.each {
-        jars += new File(it.getBuildDir().getPath(), "jarAndLibs")
-        jars += new File(it.getBuildDir().getPath(), "libs")
-    }
-    from jars ext
+tasks.register('jarlibs', Copy) {
+    description('Copy project jar and libraries into jarlibs')
+    dependsOn(
+            ":properties:jarlibs",
+            ":scheduler-api:jarlibs",
+            ":scheduler-ancoris:jarlibs",
+            ":scheduler-docker:jarlibs",
+            ":scheduler-mesos-marathon:jarlibs",
+            ":scheduler-mesos-singularity:jarlibs",
+            ":scheduler-nomad:jarlibs",
+            ":scheduler-slurm:jarlibs",
+            ":submitter:jarlibs",
+            ":backend:jarlibs"
+    )
+    delete(layout.buildDirectory.file("jarlibs"))
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    into "libs"
+    from(subprojects.collect {it.getLayout().buildDirectory.file("jarlibs")})
+    into(layout.buildDirectory.file("jarlibs"))
 }

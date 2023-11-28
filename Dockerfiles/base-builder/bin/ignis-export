@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]
+    then echo "Usage: ignis-export <out-folder>"
+    exit
+fi
+
+cd "$1"
+mkdir -p ignis
+cp -R ${IGNIS_HOME}/* ignis/

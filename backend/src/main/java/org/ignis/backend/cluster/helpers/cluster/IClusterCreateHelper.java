@@ -81,7 +81,6 @@ public final class IClusterCreateHelper extends IClusterHelper {
         }
         builder.cpus(props.getInteger(IKeys.EXECUTOR_CORES));
         builder.memory(props.getSILong(IKeys.EXECUTOR_MEMORY));
-        builder.swappiness(props.contains(IKeys.EXECUTOR_SWAPPINESS) ? props.getInteger(IKeys.EXECUTOR_SWAPPINESS) : null);
         builder.command("ignis-server");
         builder.arguments(List.of(props.getString(IKeys.EXECUTOR_RPC_PORT), "0"));
         ISchedulerParser parser = new ISchedulerParser(props);

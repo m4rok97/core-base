@@ -101,7 +101,7 @@ public final class Main {
         IContainerInfo driverInfo = null;
         try {
             LOGGER.info("Getting Driver container info from scheduler");
-            driverInfo = scheduler.getDriverContainer(props.getProperty(IKeys.JOB_ID));
+            driverInfo = scheduler.getContainer(props.getProperty(IKeys.JOB_ID));
             LOGGER.info("Driver container info found");
         } catch (ISchedulerException ex) {
             LOGGER.error("Not found", ex);

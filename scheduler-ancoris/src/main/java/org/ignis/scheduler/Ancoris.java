@@ -48,7 +48,16 @@ public class Ancoris implements IScheduler {
     }
 
     @Override
-    public List<String> createExecutorContainers(String group, String name, IContainerInfo container, int instances) throws ISchedulerException {
+    public List<String> createExecutorContainers(String group, String name, IContainerInfo container, int instances)
+            throws ISchedulerException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String createDriverWithExecutorContainers(String group, String driverName,
+                                                     IContainerInfo driverContainer,
+                                                     List<ExecutorContainers> executorContainers)
+            throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -63,7 +72,7 @@ public class Ancoris implements IScheduler {
     }
 
     @Override
-    public IContainerInfo getDriverContainer(String id) throws ISchedulerException {
+    public IContainerInfo getContainer(String id) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -97,4 +106,8 @@ public class Ancoris implements IScheduler {
         return NAME;
     }
 
+    @Override
+    public boolean isDynamic() {
+        return true;
+    }
 }

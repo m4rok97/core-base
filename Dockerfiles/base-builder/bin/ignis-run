@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -f "$IGNIS_HOME/etc/env"]; then
+  source "$IGNIS_HOME/etc/env"
+fi
+
+cd $IGNIS_WORKING_DIRECTORY;
+exec mpirun "$@"

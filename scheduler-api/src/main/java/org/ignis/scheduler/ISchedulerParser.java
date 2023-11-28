@@ -31,7 +31,7 @@ import java.util.*;
 /**
  * @author César Pomar
  */
-public class ISchedulerParser {
+public final class ISchedulerParser {
 
     private final IProperties props;
 

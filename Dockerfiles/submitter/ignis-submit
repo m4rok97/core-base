@@ -1,7 +1,0 @@
-#!/bin/bash
-#script is inside IGNIS_HOME so if it is not set, we can discover it.
-if [[ -z "${IGNIS_HOME}" ]]; then
-  export IGNIS_HOME=$(builtin cd $(dirname "$0"); cd ..; pwd)
-fi
-
-exec ${IGNIS_HOME}/backend/jre/bin/java -cp "${IGNIS_HOME}/lib/java/*" org.ignis.submitter.Submit "$@"

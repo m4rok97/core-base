@@ -183,10 +183,6 @@ public class Nomad implements IScheduler {
         }
         config.put("network_mode", "bridge");
 
-        if (container.getSwappiness() != null) {
-            LOGGER.warn("swappiness > 0 ignored. According to the nomad documentation docker containers cannot use swap.");
-        }
-
         if (params.containsKey("nomad.shm_size")) {
             config.put("shm_size", Integer.parseInt(params.get("nomad.shm_size")));
         }
@@ -301,7 +297,6 @@ public class Nomad implements IScheduler {
         builder.id(alloc.getName());
         builder.cpus(Integer.parseInt(task.getMeta().get("cores")));
         builder.memory(Long.parseLong(task.getMeta().get("memory")));
-        builder.swappiness(0);
         builder.image((String) config.get("image"));
         builder.command((String) config.get("command"));
         if (config.containsKey("arguments")) {
@@ -526,6 +521,14 @@ public class Nomad implements IScheduler {
     }
 
     @Override
+    public String createDriverWithExecutorContainers(String group, String driverName,
+                                                     IContainerInfo driverContainer,
+                                                     List<ExecutorContainers> executorContainers)
+            throws ISchedulerException {
+        throw new UnsupportedOperationException("Not supported yet.");//TODO
+    }
+
+    @Override
     public IContainerStatus getStatus(String id) throws ISchedulerException {
         return getStatus(List.of(id)).get(0);
     }
@@ -557,7 +560,7 @@ public class Nomad implements IScheduler {
     }
 
     @Override
-    public IContainerInfo getDriverContainer(String id) throws ISchedulerException {
+    public IContainerInfo getContainer(String id) throws ISchedulerException {
         return getExecutorContainers(List.of(id)).get(0);
     }
 
@@ -588,7 +591,7 @@ public class Nomad implements IScheduler {
         try {
             IContainerStatus status = getStatus(id);
             if (status == IContainerStatus.ACCEPTED || status == IContainerStatus.RUNNING) {
-                return getDriverContainer(id);
+                return getContainer(id);
             }
             ContainerId containerId = new ContainerId(id);
 
@@ -622,7 +625,7 @@ public class Nomad implements IScheduler {
                     break;
                 }
             }
-            return getDriverContainer(id);
+            return getContainer(id);
         } catch (IOException | NomadException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
@@ -682,5 +685,10 @@ public class Nomad implements IScheduler {
     @Override
     public String getName() {
         return NAME;
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return true;
     }
 }

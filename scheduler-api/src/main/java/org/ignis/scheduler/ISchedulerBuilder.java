@@ -18,11 +18,16 @@ package org.ignis.scheduler;
 
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author César Pomar
  */
-public class ISchedulerBuilder {
+public final class ISchedulerBuilder {
+
+    private ISchedulerBuilder() {
+    }
 
     private static String capitalize(String str) {
         if (str == null || str.isEmpty()) {
@@ -35,23 +40,25 @@ public class ISchedulerBuilder {
     public static IScheduler create(String type, String url) {
         Class<? extends IScheduler> found;
         if (type.indexOf('.') == -1) {
-            type = "org.ignis.scheduler." + capitalize(type);
+            type = "org.ignis.scheduler." + Arrays.stream(type.split("_"))
+                    .map(ISchedulerBuilder::capitalize).collect(Collectors.joining());
         }
 
         try {
             found = (Class<? extends IScheduler>) Class.forName(type);
         } catch (ClassNotFoundException ex) {
-            throw new ISchedulerException("Scheduler " + type + " not found", ex);
+            throw new ISchedulerException("Scheduler '" + type + "' not found", ex);
         } catch (ClassCastException ex) {
-            throw new ISchedulerException(type + " is not a valid IScheduler", ex);
-        }catch (Throwable ex){
-            throw new ISchedulerException("Scheduler " + type + " can not be loaded", ex);
+            throw new ISchedulerException("Scheduler '" + type + "' is not a valid IScheduler", ex);
+        } catch (Throwable ex) {
+            throw new ISchedulerException("Scheduler '" + type + "' can not be loaded", ex);
         }
 
         try {
             return found.getDeclaredConstructor(String.class).newInstance(url);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-            throw new ISchedulerException("Scheduler " + type + " can not be instantiated", ex);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException ex) {
+            throw new ISchedulerException("Scheduler '" + type + "' can not be instantiated", ex);
         }
     }
 
