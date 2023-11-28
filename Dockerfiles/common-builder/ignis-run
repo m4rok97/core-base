@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd $IGNIS_WORKING_DIRECTORY;
+mpirun "$@"
