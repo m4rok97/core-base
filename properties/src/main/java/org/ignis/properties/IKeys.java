@@ -26,10 +26,16 @@ public final class IKeys {
     public static final String HOME = "ignis.home";
     public static final String OPTIONS = "ignis.options";
     public static final String REGISTRY = "ignis.registry";
-    public static final String WORKING_DIRECTORY = "ignis.working.directory";
+    public static final String WORKING_DIRECTORY = "ignis.wdir";
+    public static final String TMPDIR = "ignis.tmpdir";
+    public static final String PORT = "ignis.port";
+
+    public static final String TIME = "ignis.time";
     /*JOB*/
     public static final String JOB_ID = "ignis.job.id";
     public static final String JOB_NAME = "ignis.job.name";
+
+    public static final String JOB_TIME = "ignis.job.time";
     public static final String JOB_DIRECTORY = "ignis.job.directory";
     public static final String JOB_WORKER = "ignis.job.worker";
     /*DFS*/
@@ -41,43 +47,57 @@ public final class IKeys {
     public static final String SCHEDULER_DNS = "ignis.scheduler.dns";
     public static final String SCHEDULER_PARAMS = "ignis.scheduler.param";
     /*DRIVER*/
+    public static final String DRIVER = "ignis.driver";
+    public static final String DRIVER_NAME = "ignis.driver.name";
     public static final String DRIVER_IMAGE = "ignis.driver.image";
     public static final String DRIVER_CORES = "ignis.driver.cores";
+    public static final String DRIVER_GPU = "ignis.driver.gpu";
     public static final String DRIVER_MEMORY = "ignis.driver.memory";
     public static final String DRIVER_RPC_PORT = "ignis.driver.rpc.port";
     public static final String DRIVER_RPC_COMPRESSION = "ignis.driver.rpc.compression";
     public static final String DRIVER_RPC_POOL = "ignis.driver.pool";
-    public static final String DRIVER_HOST = "ignis.driver.host";
-    public static final String DRIVER_PORT = "ignis.driver.port";
-    public static final String DRIVER_PORTS = DRIVER_PORT + "s";
-    public static final String DRIVER_BIND = "ignis.driver.bind";
+    public static final String DRIVER_HOST = "ignis.driver.node";
+    public static final String DRIVER_NODELIST = "ignis.driver.nodelist";
+    public static final String DRIVER_PORTS = "ignis.driver.ports";
+    public static final String DRIVER_BINDS = "ignis.driver.binds";
     public static final String DRIVER_VOLUME = "ignis.driver.volume";
-    public static final String DRIVER_HOSTS = "ignis.driver.hosts";
+    public static final String DRIVER_HOSTNAMES = "ignis.driver.hostnames";
     public static final String DRIVER_ENV = "ignis.driver.env";
-    public static final String DRIVER_PUBLIC_KEY = "ignis.driver.public.key";
-    public static final String DRIVER_PRIVATE_KEY = "ignis.driver.private.key";
+    public static final String DRIVER_PUBLIC_KEY = "ignis.driver.public.key";//TOREMOVE
+    public static final String DRIVER_PRIVATE_KEY = "ignis.driver.private.key";//TOREMOVE
+    public static final String CRYPTO_SECRET = "ignis.crypto.secret";
+    public static final String CRYPTO_PUBLIC = "ignis.crypto.public";
+    public static final String CRYPTO_PRIVATE = "ignis.crypto.private";
     public static final String DRIVER_HEALTHCHECK_PORT = "ignis.driver.healthcheck.port";
     public static final String DRIVER_HEALTHCHECK_URL = "ignis.driver.healthcheck.url";
     public static final String DRIVER_HEALTHCHECK_INTERVAL = "ignis.driver.healthcheck.interval";
     public static final String DRIVER_HEALTHCHECK_TIMEOUT = "ignis.driver.healthcheck.timeout";
     public static final String DRIVER_HEALTHCHECK_RETRIES = "ignis.driver.healthcheck.retries";
+
+    public static final String DISCOVERY_TYPE = "ignis.discovery.type";
+    public static final String DISCOVERY_TARGER = "ignis.discovery.target";
+
     /*EXECUTOR*/
+
+    public static final String EXECUTOR = "ignis.executor";
+    public static final String EXECUTOR_NAME = "ignis.executor.name";
     public static final String EXECUTOR_INSTANCES = "ignis.executor.instances";
     public static final String EXECUTOR_ATTEMPTS = "ignis.executor.attempts";
     public static final String EXECUTOR_IMAGE = "ignis.executor.image";
     public static final String EXECUTOR_CORES = "ignis.executor.cores";
+    public static final String EXECUTOR_GPU = "ignis.executor.gpu";
     public static final String EXECUTOR_CORES_SINGLE = "ignis.executor.cores.single";
     public static final String EXECUTOR_MEMORY = "ignis.executor.memory";
     public static final String EXECUTOR_RPC_PORT = "ignis.executor.rpc.port";
     public static final String EXECUTOR_RPC_COMPRESSION = "ignis.executor.rpc.compression";
     public static final String EXECUTOR_ISOLATION = "ignis.executor.isolation";
     public static final String EXECUTOR_DIRECTORY = "ignis.executor.directory";
-    public static final String EXECUTOR_HOST = "ignis.executor.host";
-    public static final String EXECUTOR_PORT = "ignis.executor.port";
-    public static final String EXECUTOR_PORTS = EXECUTOR_PORT + "s";
-    public static final String EXECUTOR_BIND = "ignis.executor.bind";
+    public static final String EXECUTOR_HOST = "ignis.executor.node";
+    public static final String EXECUTOR_NODELIST = "ignis.executor.nodelist";
+    public static final String EXECUTOR_PORTS = "ignis.executor.ports";
+    public static final String EXECUTOR_BINDS = "ignis.executor.binds";
     public static final String EXECUTOR_VOLUME = "ignis.executor.volume";
-    public static final String EXECUTOR_HOSTS = "ignis.executor.hosts";
+    public static final String EXECUTOR_HOSTNAMES = "ignis.executor.hostnames";
     public static final String EXECUTOR_ENV = "ignis.executor.env";
     /*PARTITION*/
     public static final String PARTITION_TYPE = "ignis.partition.type";
@@ -95,5 +115,18 @@ public final class IKeys {
     public static final String MODULES_IO_OVERWRITE = "ignis.modules.io.overwrite";
     /*  SORT*/
     public static final String MODULES_SORT_SAMPLES = "ignis.modules.sort.samples";
+
+    public static final String CONTAINER_DOCKER_REGISTRY = "ignis.container.docker.registry";
+    public static final String CONTAINER_DOCKER_NAMESPACE = "ignis.container.docker.namespace";
+    public static final String CONTAINER_DOCKER_DEFAULT = "ignis.container.docker.default";
+    public static final String CONTAINER_DOCKER_TAG = "ignis.container.docker.tag";
+    public static final String CONTAINER_DOCKER_ROOT = "ignis.container.docker.root";
+    public static final String CONTAINER_DOCKER_NETWORK = "ignis.container.docker.network";
+    public static final String CONTAINER_SINGULARITY_SOURCE = "ignis.container.singularity.source";
+    public static final String CONTAINER_SINGULARITY_DEFAULT = "ignis.container.singularity.default";
+    public static final String CONTAINER_SINGULARITY_NETWORK = "ignis.container.singularity.network";
+    public static final String CONTAINER_WRITABLE = "ignis.container.writable";
+    public static final String CONTAINER_PROVIDER = "ignis.container.provider";
+
 
 }

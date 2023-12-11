@@ -1,4 +1,5 @@
 rootProject.name = 'core-base'
+include 'logging'
 include 'properties'
 include 'scheduler-api'
 include 'scheduler-ancoris'
@@ -9,4 +10,7 @@ include 'scheduler-nomad'
 include 'scheduler-slurm'
 include 'submitter'
 include 'backend'
+include 'logging'
+include 'untitled'
+include 'logging'
 

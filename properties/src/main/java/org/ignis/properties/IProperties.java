@@ -16,8 +16,12 @@
  */
 package org.ignis.properties;
 
+import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -27,22 +31,44 @@ import java.util.stream.Collectors;
 public final class IProperties {
 
     private final static Pattern BOOLEAN = Pattern.compile("y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON");
-    private final Properties inner;
-    private final Properties defaults;
+    private final Map<String, String> inner;
+    private final IProperties defaults;
+
+    public static String join(String... skeys) {
+        return String.join(".", skeys);
+    }
+
+    public static String[] split(String key) {
+        return key.split("\\.");
+    }
+
+    public static String asEnv(String key) {
+        return key.toUpperCase().replace(".", "_");
+    }
+
+    public void encrypt(String key) {
+        try {
+            setProperty(key, ICrypto.openssl(getProperty(key), getProperty(IKeys.CRYPTO_SECRET), false));
+        } catch (IOException ex) {
+            throw new IPropertyException(key, ex.getMessage());
+        }
+    }
+
+    public void decrypt(String key) {
+        try {
+            setProperty(key, ICrypto.openssl(getProperty(key), getProperty(IKeys.CRYPTO_SECRET), true));
+        } catch (IOException ex) {
+            throw new IPropertyException(key, ex.getMessage());
+        }
+    }
 
     public IProperties(IProperties defaults) {
-        this.defaults = defaults.inner;
-        inner = new Properties(defaults.inner);
+        this.defaults = defaults;
+        inner = new HashMap<>();
     }
 
     public IProperties() {
-        defaults = null;
-        inner = new Properties();
-    }
-
-    private IProperties(Properties defaults) {
-        this.defaults = defaults;
-        inner = new Properties(defaults);
+        this(null);
     }
 
 
@@ -52,7 +78,7 @@ public final class IProperties {
         return copy;
     }
 
-    private String noNull(String value) {
+    private String nn(String value) {
         if (value == null) {
             return "";
         }
@@ -60,130 +86,139 @@ public final class IProperties {
     }
 
     public String setProperty(String key, String value) {
-        return noNull((String) inner.setProperty(noNull(key), noNull(value)));
+        return nn(inner.put(nn(key), nn(value)));
     }
 
     public String getProperty(String key) throws IPropertyException {
-        String value = inner.getProperty(noNull(key));
-        if (value == null) {
-            throw new IPropertyException(noNull(key), " not found");
+        var value = inner.get(nn(key));
+        if (value != null) {
+            return value;
+        } else if (defaults != null) {
+            return defaults.getProperty(key);
         }
-        return value;
+        throw new IPropertyException(nn(key), "value not found");
     }
 
     public String getProperty(String key, String def) {
-        String value = inner.getProperty(noNull(key));
+        var value = inner.get(nn(key));
         if (value != null) {
-            return getProperty(key);
+            return value;
+        } else if (defaults != null) {
+            return defaults.getProperty(key, def);
         }
         return def;
+    }
+
+    public boolean hasProperty(String key) {
+        return inner.containsKey(nn(key)) || (defaults != null && defaults.hasProperty(key));
     }
 
     public String rmProperty(String key) {
-        return noNull((String) inner.remove(noNull(key)));
+        return nn(inner.remove(nn(key)));
+    }
+
+    private <T> List<T> getList(String key, Function<String, T> f) {
+        try {
+            return Arrays.stream(getProperty(nn(key)).split(",")).map(f).collect(Collectors.toList());
+        } catch (NumberFormatException ex) {
+            throw new IPropertyException(nn(key), ex.toString());
+        }
+    }
+
+    private static boolean isTrue(String value) {
+        return BOOLEAN.matcher(value).matches();
     }
 
     public boolean getBoolean(String key) throws IPropertyException {
-        return BOOLEAN.matcher(getProperty(key)).matches();
+        return isTrue(getProperty(key));
     }
 
     public boolean getBoolean(String key, boolean def) throws IPropertyException {
-        if (inner.contains(noNull(key))) {
+        if (hasProperty(key)) {
             return getBoolean(key);
         }
         return def;
+    }
+
+    public List<Boolean> getBooleanList(String key) throws IPropertyException {
+        return getList(key, IProperties::isTrue);
     }
 
     public int getInteger(String key) throws IPropertyException {
         try {
             return Integer.parseInt(getProperty(key));
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.toString());
+            throw new IPropertyException(nn(key), ex.toString());
         }
     }
 
     public int getInteger(String key, int def) throws IPropertyException {
-        if (inner.contains(noNull(key))) {
+        if (hasProperty(key)) {
             return getInteger(key);
         }
         return def;
     }
 
     public List<Integer> getIntegerList(String key) throws IPropertyException {
-        try {
-            return getStringList(key).stream().map((String value) -> Integer.parseInt(value)).collect(Collectors.toList());
-        } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.toString());
-        }
+        return getList(key, Integer::parseInt);
     }
 
     public long getLong(String key) throws IPropertyException {
         try {
             return Long.parseLong(getProperty(key));
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.toString());
+            throw new IPropertyException(nn(key), ex.toString());
         }
     }
 
     public long getLong(String key, long def) throws IPropertyException {
-        if (inner.contains(noNull(key))) {
+        if (hasProperty(key)) {
             return getLong(key);
         }
         return def;
     }
 
     public List<Long> getLongList(String key) throws IPropertyException {
-        try {
-            return getStringList(key).stream().map((String value) -> Long.parseLong(value)).collect(Collectors.toList());
-        } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.toString());
-        }
+        return getList(key, Long::parseLong);
     }
 
     public float getFloat(String key) throws IPropertyException {
         try {
             return Float.parseFloat(getProperty(key));
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.toString());
+            throw new IPropertyException(nn(key), ex.toString());
         }
     }
 
     public float getFloat(String key, float def) throws IPropertyException {
-        if (inner.contains(noNull(key))) {
+        if (hasProperty(key)) {
             return getFloat(key);
         }
         return def;
     }
 
+
     public List<Float> getFloatList(String key) throws IPropertyException {
-        try {
-            return getStringList(key).stream().map((String value) -> Float.parseFloat(value)).collect(Collectors.toList());
-        } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.toString());
-        }
+        return getList(key, Float::parseFloat);
     }
 
     public double getDouble(String key) throws IPropertyException {
         try {
             return Double.parseDouble(getProperty(key));
         } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.toString());
+            throw new IPropertyException(nn(key), ex.toString());
         }
     }
 
     public double getDouble(String key, double def) throws IPropertyException {
-        if (inner.contains(noNull(key))) {
+        if (hasProperty(key)) {
             return getDouble(key);
         }
         return def;
     }
 
     public List<Double> getDoubleList(String key) throws IPropertyException {
-        try {
-            return getStringList(key).stream().map((String value) -> Double.parseDouble(value)).collect(Collectors.toList());
-        } catch (NumberFormatException ex) {
-            throw new IPropertyException(noNull(key), ex.toString());
-        }
+        return getList(key, Double::parseDouble);
     }
 
     public String getString(String key) throws IPropertyException {
@@ -191,31 +226,42 @@ public final class IProperties {
     }
 
     public List<String> getStringList(String key) throws IPropertyException {
-        return Arrays.asList(getProperty(key).split(","));
+        return getList(key, (s) -> s);
     }
 
-    @SuppressWarnings("unchecked")
-    public Collection<String> getPrefixKeys(String prefixKey) {
-        String prefix = prefixKey + ".";
-        return inner.stringPropertyNames().stream().filter((String key) -> key.startsWith(prefix)).collect(Collectors.toList());
+    public IProperties withPrefix(String key) {
+        var pp = new IProperties();
+        pp.inner.putAll(toMap(true));
+        pp.inner.entrySet().removeIf((e) -> !e.getKey().startsWith(key + "."));
+        return pp;
     }
 
-    public boolean contains(String key) {
-        return inner.getProperty(noNull(key)) != null;
-    }
-
-    @SuppressWarnings("unchecked")
-    public Map<String, String> toMap(boolean useDefaults) {
-        if (!useDefaults || this.defaults == null) {
-            return new HashMap<>((Map) inner);
+    public Map<String, String> toMap(boolean def) {
+        var result = new HashMap<String, String>();
+        if (def && defaults != null) {
+            result.putAll(defaults.toMap(def));
         }
-        Map<String, String> map = new HashMap<>((Map) this.defaults);
-        map.putAll((Map) inner);
-        return map;
+        result.putAll(inner);
+        return result;
     }
 
     public void fromMap(Map<String, String> map) {
         inner.putAll(map);
+    }
+
+    public List<IProperties> multiLoad(String path) throws IOException {
+        var result = new ArrayList<IProperties>();
+        var yamlMapper = new YAMLMapper();
+        var javaMapper = new JavaPropsMapper();
+        var parser = yamlMapper.createParser(path);
+        var dataList = yamlMapper.readValues(parser, HashMap.class).readAll();
+        for (var data : dataList) {
+            var tmp = javaMapper.writeValueAsMap(data);
+            var copy = this.copy();
+            copy.inner.putAll(tmp);
+            result.add(copy);
+        }
+        return result;
     }
 
     public void load(String path) throws IOException {
@@ -233,21 +279,24 @@ public final class IProperties {
     }
 
     public void load(InputStream in, boolean replace) throws IOException {
-        if (replace) {
-            inner.load(in);
-        } else {
-            Properties tmp = new Properties();
-            tmp.putAll(inner);
-            inner.load(in);
-            inner.putAll(tmp);
+        var yamlMapper = new YAMLMapper();
+        var javaMapper = new JavaPropsMapper();
+        var data = yamlMapper.readValue(in, HashMap.class);
+        var tmp = javaMapper.writeValueAsMap(data);
+        for (var entry : tmp.entrySet()) {
+            if (replace) {
+                inner.put(entry.getKey(), entry.getValue());
+            } else {
+                inner.putIfAbsent(entry.getKey(), entry.getValue());
+            }
         }
     }
 
-    public void load64(String s) throws IOException{
+    public void load64(String s) throws IOException {
         load64(s, true);
     }
 
-    public void load64(String s, boolean replace) throws IOException{
+    public void load64(String s, boolean replace) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(Base64.getDecoder().decode(s));
         load(bis, replace);
     }
@@ -259,10 +308,13 @@ public final class IProperties {
     }
 
     public void store(OutputStream out) throws IOException {
-        inner.store(out, "Ignis Job properties");
+        var yamlMapper = new YAMLMapper();
+        var javaMapper = new JavaPropsMapper();
+        var data = javaMapper.readMapAs(this.toMap(true), HashMap.class);
+        yamlMapper.writeValue(out, data);
     }
 
-    public String store64() throws IOException{
+    public String store64() throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         store(bos);
         return Base64.getEncoder().encodeToString(bos.toByteArray());
@@ -345,7 +397,7 @@ public final class IProperties {
         for (Map.Entry<String, String> entry : toMap(true).entrySet()) {
             writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
         }
-        return "IProperties{\n" + writer.toString() + '}';
+        return "IProperties{\n" + writer + '}';
     }
 
 

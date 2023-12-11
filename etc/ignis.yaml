@@ -1,0 +1,103 @@
+ignis:
+  debug: false
+  verbose: false
+  #options:
+  #wdir:
+  #tmpdir:
+  port: 1963
+  driver:
+    name: driver
+    #image:
+    cores: 1
+    memory: 1GB
+    #node:
+    #nodelist:
+    #ports:
+      #tpc:
+        #host:
+        #0: 0
+      #udp:
+        #host:
+        #0: 0
+    #binds:
+      #"/container": "/host"
+    #env:
+      #name: value
+  discovery:
+    type: file #url
+    #target:
+  #crypto:
+    #secret:
+    #public:
+    #private:
+  executor:
+    #name:
+    #image:
+    instances: 1
+    cores: 1
+    memory: 1GB
+    #node:
+    #nodelist:
+    #ports:
+      #tpc:
+        #host:
+        #0: 0
+      #udp:
+        #host:
+        #0: 0
+    #binds:
+      #"/container": "/host"
+    #env:
+      #name: value
+  healthcheck:
+    port: 2005
+    #url:
+    interval: 60
+    timeout: 20
+    retries: 5
+  partition:
+    type: Memory
+    minimal: 128MB
+    compression: 0
+    encoding: ignis #native
+  transport:
+    cores: 1.0
+    compression: 0
+    ports: 5
+    type: auto #mpi rpc
+    minimal: 100KB
+  modules:
+    io:
+      compression: 0
+      cores: 1.0
+      overwrite: false
+    sort:
+      samples: 0.001
+      resampling: false
+    exchange:
+      type: auto #sync async
+  #scheduler:
+    #url:
+    #name:
+    #param:
+      #a: b
+  #job:
+    #id:
+    #name:
+    #directory:
+    #time:
+    #worker:
+  #container:
+    #docker:
+      #registry: ""
+      #namespace: "ignishpc"
+      #default: "ignishpc"
+      #tag: "latest"
+      #root: false
+      #network: "default"
+    #singularity:
+      #source: "~/.ignis/images"
+      #default: "ignishpc.sif"
+      #network: "default"
+    #writable: false
+    #provider: ""
