@@ -1,0 +1,10 @@
+#!/bin/env bash
+
+if [ "$1" == "encode" ]; then
+  openssl aes-256-cbc -pbkdf2 -a -e -kfile $2
+elif [ "$1" == "decode" ]; then
+  openssl aes-256-cbc -pbkdf2 -a -d -kfile $2
+elif [ "$1" == "certificate" ]; then
+  openssl req -x509 -new -key /dev/stdin -subj '/C=ig/ST=ignis/L=ignis/O=ignis/CN=www.ignishpc.readthedocs.io'
+fi
+

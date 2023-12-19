@@ -34,10 +34,3 @@ jar {
     }
 }
 
-tasks.register('jarlibs', Copy) {
-    description('Copy project jar and libraries into jarlibs')
-    dependsOn("jar")
-    delete(layout.buildDirectory.file("jarlibs"))
-    from(jar, project.configurations.compileClasspath)
-    into(layout.buildDirectory.file("jarlibs"))
-}

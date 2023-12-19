@@ -25,8 +25,6 @@ dependencies {
     implementation(project(":properties"))
     implementation(group: 'org.apache.thrift', name: 'libthrift', version: '0.15.0')//TODO update to 0.19.0
     implementation(group: 'org.slf4j', name: 'slf4j-api', version: '2.0.9')
-    implementation(group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.21.1')
-    implementation(group: 'org.apache.logging.log4j', name: 'log4j-slf4j2-impl', version: '2.21.1')
     implementation(group: 'commons-io', name: 'commons-io', version: '2.15.0')
     implementation(group: 'com.github.mwiede', name: 'jsch', version: '0.2.13')
     implementation(group: 'org.hipparchus', name: 'hipparchus-core', version: '3.0')
@@ -61,12 +59,4 @@ jar {
         attributes("Implementation-Title": archiveBaseName,
                 "Implementation-Version": version)
     }
-}
-
-tasks.register('jarlibs', Copy) {
-    description('Copy project jar and libraries into jarlibs')
-    dependsOn("jar")
-    delete(layout.buildDirectory.file("jarlibs"))
-    from(jar, project.configurations.compileClasspath)
-    into(layout.buildDirectory.file("jarlibs"))
 }

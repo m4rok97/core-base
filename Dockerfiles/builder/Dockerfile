@@ -20,6 +20,7 @@ RUN rm -fR /usr2 && \
       automake \
       unzip \
       gettext-base \
+      moreutils \
       pkg-config && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir ${IGNIS_DEVEL}

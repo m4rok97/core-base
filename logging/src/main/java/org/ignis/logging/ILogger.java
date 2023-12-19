@@ -14,9 +14,13 @@ public final class ILogger {
     public static void init(boolean debug, boolean verbose) {
         try {
             LoggerContext context = (LoggerContext) LogManager.getContext(false);
+            context.setConfigLocation(ILogger.class.getResource("/logger.properties").toURI());
+
             Configuration config = context.getConfiguration();
+            if(!config.getAppenders().containsKey("INFO") || !config.getAppenders().containsKey("DEBUG")){
+                throw new RuntimeException("Logger appenders not found");
+            }
             LoggerConfig rootConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-            rootConfig.removeAppender("INFO");//disable logger
             if (debug) {
                 rootConfig.addAppender(config.getAppender("DEBUG"), Level.DEBUG, null);
             } else {
@@ -24,14 +28,12 @@ public final class ILogger {
             }
             context.updateLoggers();
         } catch (Exception ex) {
-            System.err.println("Logger error");//in case the logger was disabled
+            if(debug){
+                ex.printStackTrace();
+            } else {
+                System.err.println("Logger error: " + ex.getLocalizedMessage() );
+            }
             System.exit(-1);
-        }
-
-
-        if (!debug) {
-
-
         }
     }
 }

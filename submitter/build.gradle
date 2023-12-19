@@ -27,7 +27,7 @@ dependencies {
     implementation(group: 'org.slf4j', name: 'slf4j-api', version: '2.0.9')
     implementation(group: 'com.github.mwiede', name: 'jsch', version: '0.2.13')
     implementation(group: 'info.picocli', name: 'picocli', version: '4.7.5')
-    implementation(group: 'org.jcommander', name: 'jcommander', version: '1.83')
+    implementation(group: 'io.etcd', name: 'jetcd-core', version: '0.7.6')
     annotationProcessor(group: 'info.picocli', name: 'picocli', version: '4.7.5')
 }
 
@@ -49,12 +49,4 @@ jar {
         attributes("Implementation-Title": archiveBaseName,
                 "Implementation-Version": version)
     }
-}
-
-tasks.register('jarlibs', Copy) {
-    description('Copy project jar and libraries into jarlibs')
-    dependsOn("jar")
-    delete(layout.buildDirectory.file("jarlibs"))
-    from(jar, project.configurations.compileClasspath)
-    into(layout.buildDirectory.file("jarlibs"))
 }

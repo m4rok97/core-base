@@ -2,22 +2,22 @@ plugins {
     id('java')
 }
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    subprojects.each { subproject ->
+        implementation(project(":" + subproject.name))
+    }
+}
+
+jar.enabled=false
+
 tasks.register('jarlibs', Copy) {
     description('Copy project jar and libraries into jarlibs')
-    dependsOn(
-            ":properties:jarlibs",
-            ":scheduler-api:jarlibs",
-            ":scheduler-ancoris:jarlibs",
-            ":scheduler-docker:jarlibs",
-            ":scheduler-mesos-marathon:jarlibs",
-            ":scheduler-mesos-singularity:jarlibs",
-            ":scheduler-nomad:jarlibs",
-            ":scheduler-slurm:jarlibs",
-            ":submitter:jarlibs",
-            ":backend:jarlibs"
-    )
+    dependsOn("jar")
     delete(layout.buildDirectory.file("jarlibs"))
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from(subprojects.collect {it.getLayout().buildDirectory.file("jarlibs")})
+    from(jar, project.configurations.runtimeClasspath)
     into(layout.buildDirectory.file("jarlibs"))
 }

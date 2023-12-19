@@ -24,12 +24,17 @@ ignis:
     #env:
       #name: value
   discovery:
-    type: file #url
+    type: file #etcd
     #target:
-  #crypto:
-    #secret:
-    #public:
-    #private:
+    #etcd
+      #ca
+      #endpoint
+      #user
+      #$password$
+    #crypto:
+      #secret:
+      #public:
+      #$private$:
   executor:
     #name:
     #image:
@@ -38,7 +43,7 @@ ignis:
     memory: 1GB
     #node:
     #nodelist:
-    #ports:
+        #ports:
       #tpc:
         #host:
         #0: 0
@@ -76,28 +81,31 @@ ignis:
       resampling: false
     exchange:
       type: auto #sync async
-  #scheduler:
-    #url:
-    #name:
-    #param:
-      #a: b
-  #job:
-    #id:
-    #name:
-    #directory:
+    #scheduler:
+      #url:
+      #name:
+      #env:
+        #job
+        #container
+      #param:
+        #a: b
+    #job:
+      #id:
+      #name:
+      #directory:
     #time:
     #worker:
-  #container:
-    #docker:
-      #registry: ""
-      #namespace: "ignishpc"
-      #default: "ignishpc"
-      #tag: "latest"
-      #root: false
-      #network: "default"
-    #singularity:
-      #source: "~/.ignis/images"
-      #default: "ignishpc.sif"
-      #network: "default"
-    #writable: false
-    #provider: ""
+  container:
+    docker:
+      registry: ""
+      namespace: ignishpc
+      default: ignishpc
+      tag: latest
+      root: false
+      network: default
+    singularity:
+      source: ""
+      default: "ignishpc.sif"
+      network: default
+    writable: false
+    provider: docker #singularity
