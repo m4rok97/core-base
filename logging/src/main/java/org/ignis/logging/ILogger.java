@@ -21,11 +21,16 @@ public final class ILogger {
                 throw new RuntimeException("Logger appenders not found");
             }
             LoggerConfig rootConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+            rootConfig.getAppenders().keySet().forEach(rootConfig::removeAppender);
+            Level lvl;
             if (debug) {
-                rootConfig.addAppender(config.getAppender("DEBUG"), Level.DEBUG, null);
+                lvl = Level.INFO;
+                rootConfig.addAppender(config.getAppender("DEBUG"), lvl, null);
             } else {
-                rootConfig.addAppender(config.getAppender("INFO"), verbose ? Level.INFO : Level.ERROR, null);
+                lvl = verbose ? Level.INFO : Level.ERROR;
+                rootConfig.addAppender(config.getAppender("INFO"), lvl, null);
             }
+            rootConfig.setLevel(lvl);
             context.updateLoggers();
         } catch (Exception ex) {
             if(debug){

@@ -65,17 +65,23 @@ public final class IKeys {
     public static final String DRIVER_ENV = "ignis.driver.env";
     public static final String DRIVER_PUBLIC_KEY = "ignis.driver.public.key";//TOREMOVE
     public static final String DRIVER_PRIVATE_KEY = "ignis.driver.private.key";//TOREMOVE
+    public static final String CRYPTO_STRICT = "ignis.crypto.strict";
     public static final String CRYPTO_SECRET = "ignis.crypto.secret";
     public static final String CRYPTO_PUBLIC = "ignis.crypto.public";
-    public static final String CRYPTO_PRIVATE = "ignis.crypto.private";
-    public static final String DRIVER_HEALTHCHECK_PORT = "ignis.driver.healthcheck.port";
-    public static final String DRIVER_HEALTHCHECK_URL = "ignis.driver.healthcheck.url";
-    public static final String DRIVER_HEALTHCHECK_INTERVAL = "ignis.driver.healthcheck.interval";
-    public static final String DRIVER_HEALTHCHECK_TIMEOUT = "ignis.driver.healthcheck.timeout";
-    public static final String DRIVER_HEALTHCHECK_RETRIES = "ignis.driver.healthcheck.retries";
+    public static final String CRYPTO_PRIVATE = "ignis.crypto.$private$";
+    public static final String DRIVER_HEALTHCHECK_PORT = "ignis.healthcheck.port";
+    public static final String DRIVER_HEALTHCHECK_URL = "ignis.healthcheck.url";
+    public static final String DRIVER_HEALTHCHECK_INTERVAL = "ignis.healthcheck.interval";
+    public static final String DRIVER_HEALTHCHECK_TIMEOUT = "ignis.healthcheck.timeout";
+    public static final String DRIVER_HEALTHCHECK_RETRIES = "ignis.healthcheck.retries";
 
     public static final String DISCOVERY_TYPE = "ignis.discovery.type";
-    public static final String DISCOVERY_TARGER = "ignis.discovery.target";
+    public static final String DISCOVERY_TARGET = "ignis.discovery.target";
+
+    public static final String DISCOVERY_ETCD_CA = "ignis.discovery.etcd.ca";
+    public static final String DISCOVERY_ETCD_ENDPOINT = "ignis.discovery.etcd.endpoint";
+    public static final String DISCOVERY_ETCD_USER = "ignis.discovery.etcd.user";
+    public static final String DISCOVERY_ETCD_PASSWORD = "ignis.discovery.etcd.$password$";
 
     /*EXECUTOR*/
 

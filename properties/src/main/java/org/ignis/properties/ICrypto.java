@@ -46,6 +46,9 @@ public final class ICrypto {
     }
 
     public static String encode(String value, String secret) {
+        if (secret == null) {
+            return value;
+        }
         try {
             byte[] salt = (new SecureRandom()).generateSeed(8);
             var cipher = newCipher(secret, salt, Cipher.ENCRYPT_MODE);
@@ -63,6 +66,9 @@ public final class ICrypto {
     }
 
     public static String decode(String value, String secret) {
+        if (secret == null) {
+            return value;
+        }
         try {
             var rawValue = Base64.getDecoder().decode(value);
             if (Arrays.compare(rawValue, 0, SALTED.length, SALTED, 0, SALTED.length) != 0) {

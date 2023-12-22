@@ -20,6 +20,7 @@ import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -34,8 +35,28 @@ public final class IProperties {
     private final Map<String, String> inner;
     private final IProperties defaults;
 
+    private String secret;
+
+    private static boolean isTrue(String value) {
+        return BOOLEAN.matcher(value).matches();
+    }
+
     public static String join(String... skeys) {
         return String.join(".", skeys);
+    }
+
+    public static String parent(String key) {
+        if (!key.contains(".")) {
+            return "";
+        }
+        return key.substring(0, key.lastIndexOf('.'));
+    }
+
+    public static String relative(String prefix, String key) {
+        if (!key.startsWith(prefix + ".")) {
+            return key;
+        }
+        return key.substring(prefix.length() + 1);
     }
 
     public static String[] split(String key) {
@@ -44,22 +65,6 @@ public final class IProperties {
 
     public static String asEnv(String key) {
         return key.toUpperCase().replace(".", "_");
-    }
-
-    public void encrypt(String key) {
-        try {
-            setProperty(key, ICrypto.openssl(getProperty(key), getProperty(IKeys.CRYPTO_SECRET), false));
-        } catch (IOException ex) {
-            throw new IPropertyException(key, ex.getMessage());
-        }
-    }
-
-    public void decrypt(String key) {
-        try {
-            setProperty(key, ICrypto.openssl(getProperty(key), getProperty(IKeys.CRYPTO_SECRET), true));
-        } catch (IOException ex) {
-            throw new IPropertyException(key, ex.getMessage());
-        }
     }
 
     public IProperties(IProperties defaults) {
@@ -85,12 +90,94 @@ public final class IProperties {
         return value;
     }
 
+    private String secret() {
+        if (secret == null) {
+            String path = getProperty(IKeys.CRYPTO_SECRET, null);
+            if (path == null) {
+                return null;
+            }
+            try {
+                secret = Files.readString(new File(path).toPath());
+            } catch (IOException ex) {
+                throw new IPropertyException(IKeys.CRYPTO_SECRET, ex.getMessage());
+            }
+        }
+        return secret;
+    }
+
+    private String put(String key, String value) {
+        if (key.contains("$")) {
+            var subKeys = split(key);
+            var lastKey = subKeys[subKeys.length - 1];
+            if (lastKey.startsWith("$") && lastKey.endsWith("$")) {
+                if (!value.startsWith("$") || !value.endsWith("$")) {
+                    try {
+                        value = ICrypto.encode(value, secret());
+                    } catch (RuntimeException ex) {
+                        throw new IPropertyException(key, ex.getMessage());
+                    }
+                }
+            }
+        }
+        return inner.put(key, value);
+    }
+
+    private String get(String key) {
+        var value = inner.get(key);
+        if (value == null) {
+            return null;
+        }
+        if (key.contains("$")) {
+            var subKeys = split(key);
+            var lastKey = subKeys[subKeys.length - 1];
+            if (lastKey.startsWith("$") && lastKey.endsWith("$")) {
+                if (value.startsWith("$") && value.endsWith("$")) {
+                    try {
+                        return ICrypto.decode(value, secret());
+                    } catch (RuntimeException ex) {
+                        throw new IPropertyException(key, ex.getMessage());
+                    }
+                }
+            }
+        }
+        return value;
+    }
+
+    public String getRawProperty(String key) {
+        var value = inner.get(nn(key));
+        if (value != null) {
+            return value;
+        } else if (defaults != null) {
+            return defaults.getRawProperty(key);
+        }
+        throw new IPropertyException(nn(key), "value not found");
+    }
+
+    public void toEnv(String key, Map<String, String> env) {
+        toEnv(key, env, true);
+    }
+
+    public void toEnv(String key, Map<String, String> env, boolean required) {
+        if (required || hasProperty(key)) {
+            env.put(asEnv(key), getRawProperty(key));
+        }
+    }
+
+    public boolean requireCrypto() {
+        return toMap(true).entrySet().stream().anyMatch(e -> {
+            var subKeys = split(e.getKey());
+            var lastKey = subKeys[subKeys.length - 1];
+            var v = e.getValue();
+            return lastKey.startsWith("$") && lastKey.endsWith("$") && !v.startsWith("$") && !v.endsWith("$");
+        });
+    }
+
     public String setProperty(String key, String value) {
-        return nn(inner.put(nn(key), nn(value)));
+        return nn(put(nn(key), nn(value)));
     }
 
     public String getProperty(String key) throws IPropertyException {
-        var value = inner.get(nn(key));
+        var value = get(nn(key));
         if (value != null) {
             return value;
         } else if (defaults != null) {
@@ -100,7 +187,7 @@ public final class IProperties {
     }
 
     public String getProperty(String key, String def) {
-        var value = inner.get(nn(key));
+        var value = get(nn(key));
         if (value != null) {
             return value;
         } else if (defaults != null) {
@@ -125,8 +212,8 @@ public final class IProperties {
         }
     }
 
-    private static boolean isTrue(String value) {
-        return BOOLEAN.matcher(value).matches();
+    public <T> void setList(String key, List<T> l) {
+        setProperty(key, l.stream().map(T::toString).collect(Collectors.joining(",")));
     }
 
     public boolean getBoolean(String key) throws IPropertyException {
@@ -225,14 +312,27 @@ public final class IProperties {
         return getProperty(key);
     }
 
+    public String getString(String key, String def) throws IPropertyException {
+        if (hasProperty(key)) {
+            return getString(key);
+        }
+        return def;
+    }
+
     public List<String> getStringList(String key) throws IPropertyException {
         return getList(key, (s) -> s);
     }
 
     public IProperties withPrefix(String key) {
         var pp = new IProperties();
-        pp.inner.putAll(toMap(true));
-        pp.inner.entrySet().removeIf((e) -> !e.getKey().startsWith(key + "."));
+        var tmp = toMap(true);
+        var prefix = join(key, "");
+        for (var e : tmp.entrySet()) {
+            if (e.getKey().startsWith(prefix)) {
+                pp.inner.put(e.getKey().substring(prefix.length()), e.getValue());
+            }
+        }
+        pp.secret = secret();
         return pp;
     }
 
@@ -246,7 +346,9 @@ public final class IProperties {
     }
 
     public void fromMap(Map<String, String> map) {
-        inner.putAll(map);
+        for (var entry : map.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
     }
 
     public List<IProperties> multiLoad(String path) throws IOException {
@@ -258,7 +360,7 @@ public final class IProperties {
         for (var data : dataList) {
             var tmp = javaMapper.writeValueAsMap(data);
             var copy = this.copy();
-            copy.inner.putAll(tmp);
+            copy.fromMap(tmp);
             result.add(copy);
         }
         return result;
@@ -283,22 +385,25 @@ public final class IProperties {
         var javaMapper = new JavaPropsMapper();
         var data = yamlMapper.readValue(in, HashMap.class);
         var tmp = javaMapper.writeValueAsMap(data);
-        for (var entry : tmp.entrySet()) {
-            if (replace) {
-                inner.put(entry.getKey(), entry.getValue());
-            } else {
-                inner.putIfAbsent(entry.getKey(), entry.getValue());
-            }
+
+        if (!replace) {
+            tmp.entrySet().removeIf(e -> hasProperty(e.getKey()));
         }
+
+        fromMap(tmp);
     }
 
     public void load64(String s) throws IOException {
         load64(s, true);
     }
 
-    public void load64(String s, boolean replace) throws IOException {
-        ByteArrayInputStream bis = new ByteArrayInputStream(Base64.getDecoder().decode(s));
-        load(bis, replace);
+    public void load64(String s, boolean replace) {
+        try {
+            ByteArrayInputStream bis = new ByteArrayInputStream(Base64.getDecoder().decode(s));
+            load(bis, replace);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public void store(String path) throws IOException {
@@ -314,10 +419,14 @@ public final class IProperties {
         yamlMapper.writeValue(out, data);
     }
 
-    public String store64() throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        store(bos);
-        return Base64.getEncoder().encodeToString(bos.toByteArray());
+    public String store64() {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            store(bos);
+            return Base64.getEncoder().encodeToString(bos.toByteArray());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public void clear() {
