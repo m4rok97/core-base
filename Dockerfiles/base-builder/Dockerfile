@@ -12,6 +12,11 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt -y --no-install-recommends install openjdk-${JDK_VERSION}-jdk && \
     rm -rf /var/lib/apt/lists/*
 
+RUN cp -R ${IGNIS_DEVEL}/mpi/bin/* ${IGNIS_HOME}/bin && \
+    cp -R ${IGNIS_DEVEL}/mpi/include/* ${IGNIS_HOME}/include && \
+    cp -R ${IGNIS_DEVEL}/mpi/lib/* ${IGNIS_HOME}/lib && \
+    ldconfig
+
 ENV GRADLE_VERSION=8.5
 RUN cd /opt && \
     wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -O gradle.zip && \

@@ -1,48 +1,96 @@
-#!/bin/bash
-sleep inf & export LOG_PIPE=/proc/$!/fd
+#!/bin/env bash
 
-mkdir -p /ssh/.ssh
-export -p > /ssh/environment
-echo ${IGNIS_DRIVER_PUBLIC_KEY} > /ssh/.ssh/authorized_keys
-/usr/sbin/sshd -p $1
+source "$IGNIS_HOME/etc/environment"
+
+MODE=$1
+PORT=$2
+H_INTERVAL=${IGNIS_HEALTHCHECK_INTERVAL}
+H_TIMEOUT=${IGNIS_HEALTHCHECK_TIMEOUT}
+H_RETRIES=${IGNIS_HEALTHCHECK_RETRIES}
+H_URL=${IGNIS_HEALTHCHECK_URL}
 
 
-if [ "$2" == "1" ]; then
-	attempt=0
-	while [ "$(last -10 | grep -c "still logged")" -eq 0 ]; do
-		echo "waiting client conection"
-		sleep 10
-		if [ ${attempt} -eq 30 ];then
-			echo "Client timeout, exiting" 1>&2
-			exit 1
-		fi
-		attempt=$(($attempt+1))
-	done
-	while [ "$(last -10 | grep -c "still logged")" -ge 0 ]; do
-		sleep ${IGNIS_DRIVER_HEALTHCHECK_INTERVAL}
-	done
-	echo "Client disconected"
-	exit 0
-elif [ "$2" == "0" ]; then
-	interval=${IGNIS_DRIVER_HEALTHCHECK_INTERVAL}
-	timeout=${IGNIS_DRIVER_HEALTHCHECK_TIMEOUT}
-	retries=${IGNIS_DRIVER_HEALTHCHECK_RETRIES}
-	url=${IGNIS_DRIVER_HEALTHCHECK_URL}
-	attempt=0
-	trap "exit 0" TERM 
-	while true; do
-		if $(curl --output /dev/null --silent --head --fail --connect-timeout ${timeout} ${url}); then
-			attempt=0
-		else
-			if [ ${attempt} -eq ${retries} ];then
-				echo "Driver lost, exiting" 1>&2
-				exit 1
-			fi
-			attempt=$(($attempt+1))
-		fi
-		sleep ${interval} &
-		wait $!
-	done
-else
-	sleep inf
+
+sleep inf & FD=/proc/$!/fd
+export IGNIS_JOB_STDOUT=${FD}/1
+export IGNIS_JOB_STDERR=${FD}/2
+
+export IGNIS_CONTAINER_DIR=${IGNIS_TMPDIR}/${IGNIS_JOB_ID}/tmp/${IGNIS_CONTAINER_ID}/
+SSH_DIR=${IGNIS_CONTAINER_DIR}/ssh
+mkdir -p -m 700 ${SSH_DIR}
+export -p > ${CONTAINER_FOLDER}/environment
+mkdir -m 700 ${IGNIS_CONTAINER_DIR}/sockets
+
+cp /etc/ssh/sshd_config ${SSH_DIR}
+chmod 644 ${SSH_DIR}/sshd_config
+ssh-keygen -q -N "" -t rsa -b 2048 -f ${SSH_DIR}/ssh_host_rsa_key
+
+if [ "${MODE}" == "driver" ]; then
+  EXTRA_ARGS="-d -o ForceCommand='touch ${IGNIS_CONTAINER_DIR}/ready;\$SSH_ORIGINAL_COMMAND'"
 fi
+
+sshd(){
+    /usr/bin/sshd -p $1 \
+                  -c "${CONFIG_SSH}/sshd_config" \
+                  -h "${CONFIG_SSH}/ssh_host_rsa_key" \
+                  -e ${EXTRA_ARGS} \
+                  -D 2>&1 | grep -v "^Server listening" > ${CONFIG_SSH}/check & SSHD_PID=$!
+}
+
+host_sshd(){
+  BASE=$(shuf -i 1-64000 -n 1)
+  for i in 1...64000; do
+    PORT=$((($BASE+$i)%64000+1024))
+    sshd $PORT
+    while [ -e "/proc/${SSHD_PID}" ]; do
+      if grep -q "Server listening on" ${CONFIG_SSH}/check; then
+        break 2
+      fi
+    done
+  done
+}
+
+if [ "$PORT" == "0" ];then
+  sshd $PORT
+else
+  host_sshd
+  if [ "$IGNIS_DISCOVERY_TYPE" == "file" ]; then
+    echo $PORT > $IGNIS_DISCOVERY_TARGET
+  elif [ "$IGNIS_DISCOVERY_TYPE" == "url" ]; then #TODO etcd
+    URL=$IGNIS_DISCOVERY_TARGET
+    if [ -z "${IGNIS_CRYPTO_SECRET}"]; then
+      URL=$(ignis-crypto decode ${IGNIS_CRYPTO_SECRET} <<<${URL}))
+    fi
+    for i in {1..${H_RETRIES}}; do
+      curl --output /dev/null --silent --head --fail -H "PORT:$PORT" -H "INDEX:${!IGNIS_SCHEDULER_INDEX}" \
+           --connect-timeout ${H_TIMEOUT} ${URL} && \
+      s=0 && break || s=$? && sleep ${H_INTERVAL}
+    done
+    if [ "$s" != "0" ];then
+      echo "Failed to connect to $URL" 1>&2
+      exit $s
+    fi
+fi
+
+trap "exit 0" TERM
+if [ "${MODE}" == "driver" ]; then
+  echo "Waiting client connection" 1>&2
+  sleep 60
+  if [ ! -f ${IGNIS_CONTAINER_DIR}/ready ]; then
+    echo "Client connection timeout" 1>&2
+    exit -1
+  fi
+  wait ${SSHD_PID}
+  echo "Client disconnected" 1>&2
+  exit 0
+elif [ "${MODE}" == "executor" ]; then
+  while true; do
+    for i in {1..${H_RETRIES}}; do
+      curl --output /dev/null --silent --head --fail --connect-timeout ${H_TIMEOUT} ${H_URL} && \
+      continue 2 || sleep ${H_INTERVAL}
+    done
+    echo "Driver lost, exiting" 1>&2
+    exit 1
+  done
+fi
+sleep inf

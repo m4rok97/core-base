@@ -1,0 +1,9 @@
+#!/bin/env bash
+
+source "$IGNIS_HOME/etc/environment"
+
+LOGS="${IGNIS_JOB_DIRECTORY}/logs"
+mkdir -p -m 700 ${LOGS}
+
+exec "$@" >"${LOGS}/${IGNIS_CONTAINER_ID}.out" \
+         2>"${LOGS}/${IGNIS_CONTAINER_ID}.err"

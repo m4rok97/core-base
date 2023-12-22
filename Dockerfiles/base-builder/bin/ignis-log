@@ -1,7 +1,0 @@
-#!/bin/env bash
-
-OUT=$(eval "echo $1")
-ERR=$(eval "echo $2")
-
-
-exec ${@:3} >$OUT 2>$ERR

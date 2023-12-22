@@ -95,6 +95,8 @@ ignis:
       #directory:
     #time:
     #worker:
+  #submitter:
+    #binds:
   container:
     docker:
       registry: ""

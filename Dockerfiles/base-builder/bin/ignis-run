@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/env bash
 
-if [ -f "$IGNIS_HOME/etc/env"]; then
-  source "$IGNIS_HOME/etc/env"
+if [ -f "${IGNIS_HOME}/etc/environment" ]; then
+  source "${IGNIS_HOME}/etc/environment"
 fi
 
-cd $IGNIS_WORKING_DIRECTORY;
+cd ${IGNIS_WDIR};
 exec mpirun "$@"

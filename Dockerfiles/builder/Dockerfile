@@ -46,5 +46,5 @@ RUN mkdir /tmp/mpi && \
     make install && \
     rm -f /usr2/lib/*.a /usr2/lib/*.la && \
     rm -fR /tmp/mpi* && \
-    mkdir -p $IGNIS_HOME/core/base/mpi && \
-    mv /usr2/* $IGNIS_HOME/core/base/mpi
+    mkdir -p ${IGNIS_DEVEL}/mpi && \
+    mv /usr2/* ${IGNIS_DEVEL}/mpi

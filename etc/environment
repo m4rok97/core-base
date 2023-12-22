@@ -1,0 +1,9 @@
+#!/bin/env bash
+
+if [ -z "${IGNIS_TMPDIR}" ] && [ -f "${IGNIS_TMPDIR}/environment" ]; then
+  source "${IGNIS_TMPDIR}/environment"
+fi
+
+export IGNIS_JOB_ID=$(envsubst<<<"${IGNIS_SCHEDULER_ENV_JOB}")
+export IGNIS_CONTAINER_ID=$(envsubst<<<"${IGNIS_SCHEDULER_ENV_CONTAINER}")
+export IGNIS_JOB_DIRECTORY="${IGNIS_WDIR}/${IGNIS_JOB_ID}"
