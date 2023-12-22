@@ -1,0 +1,48 @@
+package org.ignis.scheduler3.model;
+
+import lombok.Builder;
+
+import java.util.List;
+import java.util.Map;
+
+@Builder(toBuilder = true)
+public record IContainerInfo(
+        String id,
+        String node,
+        String image,
+        List<String> args,
+        int cpus,
+        String gpu,
+        long memory,//Bytes
+        Long time,//Seconds
+        String user,//name:UID:GUID
+        boolean writable,
+        String tmpdir,
+        List<IPortMapping> ports,
+        List<IBindMount> binds,
+        List<String> nodelist,
+        Map<String, String> hostnames,
+        Map<String, String> env,
+        INetworkMode network,
+        IProvider provider,
+        Map<String, String> schedulerOptArgs
+) {
+    public enum IStatus {
+        ACCEPTED,
+        RUNNING,
+        ERROR,
+        FINISHED,
+        DESTROYED,
+        UNKNOWN
+    }
+
+    public enum INetworkMode {
+        HOST, BRIDGE
+    }
+
+    public enum IProvider {
+        DOCKER, SINGULARITY
+    }
+
+
+}
