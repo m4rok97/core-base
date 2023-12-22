@@ -1,456 +1,325 @@
-/*
- * Copyright (C) 2019 César Pomar
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package org.ignis.scheduler;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.exception.DockerException;
+import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
-import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
-import com.github.dockerjava.transport.DockerHttpClient;
-import org.ignis.scheduler.model.*;
+import org.ignis.scheduler3.IScheduler;
+import org.ignis.scheduler3.ISchedulerException;
+import org.ignis.scheduler3.ISchedulerUtils;
+import org.ignis.scheduler3.model.*;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author César Pomar
+ * <p>
+ * Scheduler parameters:
+ * docker.gpu.driver=nvidia : Default driver for gpu request
  */
 public class Docker implements IScheduler {
 
-    public static final String NAME = "docker";
-    private final static Map<String, IContainerStatus> TASK_STATUS = new HashMap<>() {
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Docker.class);
+    private final DockerClient client;
+
+    private final static Map<String, IContainerInfo.IStatus> DOCKER_STATUS = new HashMap<>() {
         {
-            put("created", IContainerStatus.ACCEPTED);
-            put("restarting", IContainerStatus.ACCEPTED);
-            put("running", IContainerStatus.RUNNING);
-            put("exited", IContainerStatus.FINISHED);
-            put("removing", IContainerStatus.DESTROYED);
-            put("paused", IContainerStatus.ERROR);
-            put("dead", IContainerStatus.ERROR);
+            put("created", IContainerInfo.IStatus.ACCEPTED);
+            put("restarting", IContainerInfo.IStatus.ACCEPTED);
+            put("running", IContainerInfo.IStatus.RUNNING);
+            put("exited", IContainerInfo.IStatus.FINISHED);
+            put("removing", IContainerInfo.IStatus.DESTROYED);
+            put("paused", IContainerInfo.IStatus.ERROR);
+            put("dead", IContainerInfo.IStatus.ERROR);
         }
     };
 
-    private final String path;
-    private final DockerClientConfig config;
-    private final DockerHttpClient httpClient;
-    private final DockerClient dockerClient;
-
     public Docker(String url) {
-        if (!url.contains("://")) {
-            if (url.startsWith("/")) {
-                url = "unix://" + url;
-            } else if (url.contains(":") && !url.startsWith("tcp://")) {
-                url = "tcp://" + url;
-            }
+        if (url == null) {
+            url = "/var/run/docker.sock";
         }
-        if (url.toLowerCase().startsWith("unix:")) {
-            this.path = new File(url.substring("unix:".length())).getAbsolutePath();
-        } else {
-            this.path = null;
+        if (!url.contains(":")) {
+            url = "unix://" + url;
         }
-        config = DefaultDockerClientConfig.
+
+        var config = DefaultDockerClientConfig.
                 createDefaultConfigBuilder().
                 withDockerHost(url).
                 build();
 
-        httpClient = new ApacheDockerHttpClient.Builder().
+        var httpClient = new ApacheDockerHttpClient.Builder().
                 dockerHost(config.getDockerHost())
                 .sslConfig(config.getSSLConfig())
-                .maxConnections(100)
                 .connectionTimeout(Duration.ofSeconds(30))
                 .responseTimeout(Duration.ofSeconds(45))
                 .build();
 
-        dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        client = DockerClientImpl.getInstance(config, httpClient);
     }
 
-    private String newId() {
-        UUID id = UUID.randomUUID();
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 2 + 1);
-        buffer.put((byte) 0);
-        buffer.putLong(id.getMostSignificantBits());
-        buffer.putLong(id.getLeastSignificantBits());
-        return new BigInteger(buffer.array()).toString(36);
-    }
 
-    private String fixName(String name) {
-        return name.toLowerCase().replaceAll("[^\\w\\-\\._\\\\]", "");
-    }
-
-    private CreateContainerCmd parseContainer(IContainerInfo container) {
-        CreateContainerCmd dockerContainer = dockerClient.createContainerCmd(container.getImage());
-        dockerContainer.withLabels(new HashMap<>());
-        dockerContainer.withHostConfig(new HostConfig());
-        List<String> cmd = new ArrayList<>();
-        cmd.add(container.getCommand());
-        if (container.getArguments() != null) {
-            cmd.addAll(container.getArguments());
-        }
-        dockerContainer.withCmd(cmd);
-        dockerContainer.getHostConfig().withCpuCount((long) container.getCpus());
-        dockerContainer.getHostConfig().withMemory(container.getMemory());
-
-        /*
-         * Ports are not exposed because all container are in the host inner network
-         * */
-        dockerContainer.getHostConfig().withNetworkMode("bridge");
-        int dynPort = 32000;
-        if (container.getPorts() != null) {
-            dockerContainer.getLabels().put("ports", "" + container.getPorts().size());
-            int i = 0;
-            for (IPort port : container.getPorts()) {
-                String value = "";
-                if (port.getContainerPort() == 0 && port.getHostPort() == 0) {
-                    value += dynPort + ":" + dynPort;
-                    dynPort++;
-                } else {
-                    if (port.getContainerPort() == 0) {
-                        value += port.getContainerPort();
+    private List<CreateContainerCmd> parseRequest(String jobId, IClusterRequest request) throws ISchedulerException {
+        var containers = new ArrayList<CreateContainerCmd>();
+        for (int i = 0; i < request.instances(); i++) {
+            var resources = request.resources();
+            var container = client.createContainerCmd(resources.image());
+            container.withName(jobId + "-" + ISchedulerUtils.name(request.name()) + "-" + i);
+            container.withHostConfig(new HostConfig());
+            container.getHostConfig().withCpuCount((long) resources.cpus());
+            if (resources.gpu() != null) {
+                String defDriver = resources.schedulerOptArgs().getOrDefault("docker.gpu.driver", "nvidia");
+                container.getHostConfig().withDeviceRequests(new ArrayList<>());
+                String driver, count;
+                for (var device : resources.gpu().split(",")) {
+                    if (device.contains(":")) {
+                        var fields = device.split(":", 2);
+                        driver = fields[0];
+                        count = fields[1];
+                    } else {
+                        driver = defDriver;
+                        count = device;
                     }
-                    if (port.getHostPort() == 0) {
-                        value += port.getContainerPort();
+                    try {
+                        container.getHostConfig().getDeviceRequests().add(new DeviceRequest().withDriver(driver).
+                                withCount(Integer.parseInt(count)));
+                    } catch (NumberFormatException ex) {
+                        throw new ISchedulerException("gpu '" + device + "' bad format", ex);
                     }
-                    value = value + ":" + value;
-                }
-                value += ":" + port.getProtocol();
-                dockerContainer.getLabels().put("port" + i, value);
-                i++;
-            }
-        }
 
-        List<Mount> mounts = new ArrayList<>();
-        if (container.getBinds() != null) {
-            for (IBind bind : container.getBinds()) {
-                Mount mount = new Mount();
-                mount.withSource(bind.getHostPath());
-                mount.withTarget(bind.getContainerPath());
-                mount.withReadOnly(bind.isReadOnly());
-                mount.withType(MountType.BIND);
-                mounts.add(mount);
-            }
-        }
-
-        if (container.getVolumes() != null) {
-            for (IVolume volume : container.getVolumes()) {
-                Mount mount = new Mount();
-                VolumeOptions volumeOptions = new VolumeOptions();
-                Driver driver = new Driver();
-                mount.withTarget(volume.getContainerPath());
-                mount.withVolumeOptions(volumeOptions);
-                mount.withType(MountType.VOLUME);
-                volumeOptions.withDriverConfig(driver);
-                driver.withOptions(Map.of("size", "" + volume.getSize()));
-                mounts.add(mount);
-            }
-        }
-        dockerContainer.getHostConfig().withMounts(mounts);
-        if (container.getPreferedHosts() != null) {
-            dockerContainer.getLabels().put("prefered-hosts",
-                    container.getPreferedHosts().stream().collect(Collectors.joining(",")));
-        }
-        if (container.getHostnames() != null) {
-            dockerContainer.getHostConfig().withDns(container.getHostnames());
-        }
-        Map<String, String> env = new HashMap<>();
-        if (System.getenv("TZ") != null) { //Copy timezone
-            env.put("TZ", System.getenv("TZ"));
-        }
-        if (container.getEnvironmentVariables() != null) {
-            env.putAll(container.getEnvironmentVariables());
-        }
-        dockerContainer.withEnv(env.entrySet().stream().map((e) -> e.getKey() + "=" + e.getValue()).collect(Collectors.toList()));
-
-        return dockerContainer;
-    }
-
-    private IContainerInfo parseContainer(InspectContainerResponse container) {
-        IContainerInfo.IContainerInfoBuilder builder = IContainerInfo.builder();
-        Map<String, String> labels = container.getConfig().getLabels();
-        builder.id(container.getName().substring(1));
-        builder.host(container.getNetworkSettings().getNetworks().get("bridge").getIpAddress());
-        builder.image(container.getConfig().getImage());
-        builder.command(container.getConfig().getCmd()[0]);
-        List<String> args = new ArrayList<>();
-        for (int i = 1; i < container.getConfig().getCmd().length; i++) {
-            args.add(container.getConfig().getCmd()[i]);
-        }
-        builder.arguments(args);
-        builder.cpus(container.getHostConfig().getCpuCount().intValue());
-        builder.memory(container.getHostConfig().getMemory());
-
-        List<IPort> ports = new ArrayList<>();
-        builder.ports(ports);
-        builder.networkMode(INetworkMode.BRIDGE);
-        if (labels.containsKey("ports")) {
-            int n = Integer.parseInt(labels.get("ports"));
-            for (int i = 0; i < n; i++) {
-                String[] aux = labels.get("port" + i).split(":");
-                ports.add(new IPort(Integer.parseInt(aux[0]), Integer.parseInt(aux[1]), aux[2]));
-            }
-        }
-        List<IBind> binds = new ArrayList<>();
-        List<IVolume> volumes = new ArrayList<>();
-        builder.binds(binds);
-        builder.volumes(volumes);
-        if (container.getHostConfig().getMounts() != null) {
-            Map<String, InspectContainerResponse.Mount> mountInfo = new HashMap<>();
-            for (InspectContainerResponse.Mount mount : container.getMounts()) {
-                mountInfo.put(mount.getDestination().getPath(), mount);
-            }
-            for (Mount mount : container.getHostConfig().getMounts()) {
-                if (mount.getType() == MountType.BIND) {
-                    binds.add(new IBind(mount.getSource(), mount.getTarget(), !mountInfo.get(mount.getTarget()).getRW()));
-                } else if (mount.getType() == MountType.VOLUME) {
-                    String size = mount.getVolumeOptions().getDriverConfig().getOptions().get("size");
-                    volumes.add(new IVolume(mount.getTarget(), Long.parseLong(size)));
                 }
             }
-        }
-
-        if (labels.containsKey("prefered-hosts")) {
-            builder.preferedHosts(Arrays.asList(labels.get("prefered-hosts").split(",")));
-        }
-
-        if (container.getHostConfig().getDns() != null) {
-            builder.hostnames(Arrays.asList(container.getHostConfig().getDns()));
-        }
-
-        Map<String, String> envs = new HashMap<>();
-        builder.environmentVariables(envs);
-        if (container.getConfig().getEnv() != null) {
-            for (String env : container.getConfig().getEnv()) {
-                String[] aux = env.split("=");
-                envs.put(aux[0], aux[1]);
+            container.getHostConfig().withMemory(resources.memory());
+            if (resources.user() != null) {
+                var fields = resources.user().split(":", 3);
+                if (fields.length != 3) {
+                    throw new ISchedulerException("user '" + resources.user() + "' bad format");
+                }
+                container.withUser(fields[1] + ":" + fields[2]);
             }
+            container.getHostConfig().withReadonlyRootfs(!resources.writable());
+            if (resources.tmpdir() != null) {
+                String opts = "nosuid,";
+                if (container.getUser() != null) {
+                    opts += "uid=" + container.getUser().replace(":", ",gid=") + ",";
+                }
+                opts += "mode=0700,size=20m";
+                container.getHostConfig().withTmpFs(Collections.singletonMap(resources.tmpdir(), opts));
+            }
+            if (resources.network().equals(IContainerInfo.INetworkMode.HOST)) {
+                container.getHostConfig().withNetworkMode("host");
+            } else {
+                container.getHostConfig().withNetworkMode("bridge");
+            }
+
+            if (resources.binds() != null) {
+                container.getHostConfig().withMounts(new ArrayList<>());
+                for (var bind : resources.binds()) {
+                    Mount mount = new Mount();
+                    mount.withSource(bind.host());
+                    mount.withTarget(bind.container());
+                    mount.withReadOnly(bind.ro());
+                    mount.withType(MountType.BIND);
+                    container.getHostConfig().getMounts().add(mount);
+                }
+            }
+
+            if (resources.hostnames() != null) {
+                container.getHostConfig().withDns(resources.hostnames().entrySet().stream().
+                        map(e -> e.getKey() + ":" + e.getValue()).toList());
+            }
+
+            var env = new ArrayList<String>();
+            env.add("IGNIS_SCHEDULER_ENV_JOB=" + jobId);
+            env.add("IGNIS_SCHEDULER_ENV_CONTAINER=" + container.getName());
+            if (resources.env() != null) {
+                env.addAll(resources.env().entrySet().stream().
+                        map(e -> e.getKey() + "=" + e.getValue()).toList());
+            }
+            container.withEnv(env);
+
+            container.withLabels(new HashMap<>() {{
+                put("scheduler.resources", ISchedulerUtils.encode(resources));
+                put("scheduler.job", jobId);
+                put("scheduler.name", ISchedulerUtils.name(request.name()));
+                put("scheduler.instances", String.valueOf(request.instances()));
+            }});
+
+            //container.getHostConfig().withAutoRemove(true);TODO
+            ArrayList<String> cmd = new ArrayList<>(resources.args());
+            cmd.add(0, "ignis-logger");
+            container.withCmd(cmd);
+
+            containers.add(container);
         }
-        Map<String, String> params = new HashMap<>();
-        builder.schedulerParams(params);
+        return containers;
+    }
+
+    private IContainerInfo parseContainer(Container c) {
+        var info = ISchedulerUtils.decode(c.getLabels().get("scheduler.resources"));
+
+        var builder = info.toBuilder();
+
+        builder.id(c.getNames()[0].substring(1));
+        var port = new Integer[]{6000};
+        if (c.getNetworkSettings() != null && c.getNetworkSettings().getNetworks().containsKey("bridge")) {
+            builder.node(c.getNetworkSettings().getNetworks().get("bridge").getIpAddress());
+            builder.ports(info.ports().stream().map((p) -> {
+                var p2 = IPortMapping.builder();
+                int container = p.container() != 0 ? p.container() : (p.host() != 0 ? p.host() : port[0]++);
+                int host = p.host() != 0 ? p.host() : container;
+                return p2.container(container).host(host).protocol(p.protocol()).build();
+            }).toList());
+        } else {
+            builder.node("127.0.0.1");
+        }
 
         return builder.build();
     }
 
-    private List<String> getDockerIds(List<String> ids) throws ISchedulerException {
-        return getDockerIds(ids, true);
-    }
-
-    private List<String> getDockerIds(List<String> ids, boolean safe) throws ISchedulerException {
-        Map<String, String> map = new HashMap<>();
-        List<String> result = new ArrayList<>();
-        List<Container> containers = dockerClient.listContainersCmd().withNameFilter(ids).exec();
-        for (Container c : containers) {
-            map.put(c.getNames()[0].substring(1), c.getId());
-        }
-        for (String id : ids) {
-            if (!map.containsKey(id)) {
-                if (safe) {
-                    throw new ISchedulerException("Container " + id + " not found");
-                }
-                result.add(null);
-            } else {
-                result.add(map.get(id));
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public String createGroup(String name) throws ISchedulerException {
-        return fixName(name + "-" + newId());
-    }
-
-    @Override
-    public void destroyGroup(String group) throws ISchedulerException {
-    }
-
-    @Override
-    public String createDriverContainer(String group, String name, IContainerInfo container) throws ISchedulerException {
+    private List<Container> listContainers(String job, String cluster) throws ISchedulerException {
         try {
-            CreateContainerCmd dockerContainer = parseContainer(container);
-            dockerContainer.withName(fixName(group + "-" + name));
-            String[] env = Arrays.copyOf(dockerContainer.getEnv(), dockerContainer.getEnv().length + 2);
-            env[env.length - 2] = "IGNIS_JOB_ID=" + dockerContainer.getName();
-            env[env.length - 1] = "IGNIS_JOB_NAME=" + group;
-            dockerContainer.withEnv(env);
-            ArrayList<String> cmd = new ArrayList<>();
-            cmd.add("ignis-log");
-            cmd.add("$IGNIS_WORKING_DIRECTORY/" + dockerContainer.getName() + ".out");
-            cmd.add("$IGNIS_WORKING_DIRECTORY/" + dockerContainer.getName() + ".err");
-            cmd.addAll(Arrays.asList(dockerContainer.getCmd()));
-            dockerContainer.withCmd(cmd);
-            if (path != null) {//Is a Unix-Socket
-                List<Mount> mounts = dockerContainer.getHostConfig().getMounts();
-                Mount mount = new Mount();
-                mount.withSource(path);
-                mount.withTarget(path);
-                mount.withReadOnly(false);
-                mount.withType(MountType.BIND);
-                mounts.add(mount);
+            return client.listContainersCmd().withNameFilter(
+                    Collections.singleton(job + "-" + cluster)).exec();
+        } catch (Exception ex) {
+            throw new ISchedulerException("docker list containers error", ex);
+        }
+    }
+
+    @Override
+    public String createJob(String name, IClusterRequest driver, IClusterRequest... executors) throws ISchedulerException {
+        String jobId = ISchedulerUtils.name(name) + "-" + ISchedulerUtils.genId();
+        var containers = new ArrayList<>(parseRequest(jobId, driver));
+        for (var exec : executors) {
+            containers.addAll(parseRequest(jobId, exec));
+        }
+        var responses = new ArrayList<CreateContainerResponse>();
+        try {
+            for (CreateContainerCmd container : containers) {
+                responses.add(container.exec());
             }
-            String id = dockerContainer.exec().getId();
-            dockerClient.startContainerCmd(id).exec();
-            return dockerContainer.getName();
-        } catch (DockerException ex) {
+            client.startContainerCmd(responses.getLast().getId()).exec();
+
+        } catch (NotFoundException | ConflictException ex) {
+            for (var res : responses) {
+                try {
+                    client.killContainerCmd(res.getId());
+                } catch (Exception ex2) {
+                    LOGGER.debug(ex2.getMessage(), ex2);
+                }
+            }
+            throw new ISchedulerException("docker error", ex);
+        }
+        return jobId;
+    }
+
+    @Override
+    public void cancelJob(String id) throws ISchedulerException {
+        try {
+            for (var c : listContainers(id, "*")) {
+                try {
+                    client.removeContainerCmd(c.getId()).withForce(true).exec();
+                } catch (Exception ex) {
+                    LOGGER.debug("docker error", ex);
+                }
+            }
+
+        } catch (Exception ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public List<String> createExecutorContainers(String group, String name, IContainerInfo container, int instances) throws ISchedulerException {
-        List<String> ids = new ArrayList<>();
-        List<String> names = new ArrayList<>();
-        String IGNIS_WORKING_DIRECTORY = System.getenv("IGNIS_WORKING_DIRECTORY");
+    public IJobInfo getJob(String id) throws ISchedulerException {
+        var list = listContainers(id, "*");
+        var resources = list.stream().collect(Collectors.groupingBy(c -> c.getLabels().get("scheduler.name")));
+        var clusters = new ArrayList<IClusterInfo>();
+        String jobId = "";
+        for (var entry : resources.entrySet()) {
+            jobId = entry.getValue().get(0).getLabels().get("scheduler.job");
+            var name = entry.getValue().get(0).getLabels().get("scheduler.name");
+            var instances = Integer.parseInt(entry.getValue().get(0).getLabels().get("scheduler.instances"));
+            var containers = entry.getValue().stream().sorted(Comparator.comparing(Container::getId)).
+                    map(this::parseContainer).toList();
+            clusters.add(IClusterInfo.builder().name(name).instances(instances).containers(containers).build());
+        }
+        return IJobInfo.builder().name(jobId.split("-")[0]).id(jobId).clusters(clusters).build();
+    }
+
+    @Override
+    public List<IJobInfo> listJobs(Map<String, String> filters) throws ISchedulerException {
+        return null;
+    }
+
+    @Override
+    public IClusterInfo createCluster(String job, IClusterRequest resources) throws ISchedulerException {
+        return null;
+    }
+
+    @Override
+    public void destroyCluster(String job, String id) throws ISchedulerException {
         try {
-            CreateContainerCmd dockerContainer = parseContainer(container);
-            List<String> baseCmd = new ArrayList<>(Arrays.asList(dockerContainer.getCmd()));
-            for (int i = 0; i < instances; i++) {
-                dockerContainer.withName(fixName(group + "-" + name + "." + i));
-                ArrayList<String> cmd = new ArrayList<>();
-                cmd.add("ignis-log");
-                cmd.add(IGNIS_WORKING_DIRECTORY + "/" + dockerContainer.getName() + ".out");
-                cmd.add(IGNIS_WORKING_DIRECTORY + "/" + dockerContainer.getName() + ".err");
-                cmd.addAll(baseCmd);
-                dockerContainer.withCmd(cmd);
-                names.add(dockerContainer.getName());
-                ids.add(dockerContainer.exec().getId());
+            for (var c : listContainers(job, id)) {
+                try {
+                    client.removeContainerCmd(c.getId()).withForce(true).exec();
+                } catch (Exception ex) {
+                    LOGGER.debug("docker error", ex);
+                }
             }
-            for (int i = 0; i < instances; i++) {
-                dockerClient.startContainerCmd(ids.get(i)).exec();
-            }
-            return names;
-        } catch (DockerException ex) {
-            try {
-                destroyExecutorInstances(names);
-            } catch (ISchedulerException ex2) {
-            }
+
+        } catch (Exception ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public String createDriverWithExecutorContainers(String group, String driverName,
-                                                     IContainerInfo driverContainer,
-                                                     List<ExecutorContainers> executorContainers)
-            throws ISchedulerException {
-        throw new UnsupportedOperationException("Not supported yet.");//TODO
-    }
-
-    @Override
-    public IContainerStatus getStatus(String id) throws ISchedulerException {
-        return getStatus(List.of(id)).get(0);
-    }
-
-    @Override
-    public List<IContainerStatus> getStatus(List<String> ids) throws ISchedulerException {
+    public IClusterInfo getCluster(String job, String id) throws ISchedulerException {
         try {
-            List<IContainerStatus> status = new ArrayList<>();
-            for (String id : getDockerIds(ids, false)) {
-                if (id == null) {
-                    status.add(IContainerStatus.DESTROYED);
-                } else {
-                    String s = dockerClient.inspectContainerCmd(id).exec().getState().getStatus();
-                    status.add(TASK_STATUS.getOrDefault(s, IContainerStatus.UNKNOWN));
-                }
+            var list = listContainers(job, id);
+            if (list.isEmpty()) {
+                throw new ISchedulerException("cluster not found");
             }
-            return status;
-        } catch (DockerException ex) {
+            var name = list.get(0).getLabels().get("scheduler.name");
+            var resources = list.stream().map(this::parseContainer).toList();
+            var instances = Integer.parseInt(list.get(0).getLabels().get("scheduler.instances"));
+            return IClusterInfo.builder().name(name).instances(instances).containers(resources).build();
+        } catch (Exception ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public IContainerInfo getContainer(String id) throws ISchedulerException {
-        return getExecutorContainers(List.of(id)).get(0);
-    }
-
-    @Override
-    public List<IContainerInfo> getExecutorContainers(List<String> ids) throws ISchedulerException {
-        List<IContainerInfo> result = new ArrayList<>();
-        for (String id : getDockerIds(ids)) {
-            result.add(parseContainer(dockerClient.inspectContainerCmd(id).exec()));
-        }
-        return result;
-    }
-
-    @Override
-    public IContainerInfo restartContainer(String id) throws ISchedulerException {
-        String dockerid = getDockerIds(List.of(id)).get(0);
+    public IContainerInfo.IStatus getClusterStatus(String job, String id) throws ISchedulerException {
         try {
-            try {
-                if (getStatus(id) == IContainerStatus.RUNNING) {
-                    return getContainer(id);
-                }
-                dockerClient.stopContainerCmd(dockerid).exec();
-            } catch (Exception ignore) {
+            var list = listContainers(job, id);
+            if (list.isEmpty()) {
+                return IContainerInfo.IStatus.DESTROYED;
             }
-            dockerClient.startContainerCmd(dockerid).exec();
-            return getContainer(id);
-        } catch (DockerException ex) {
+            return DOCKER_STATUS.getOrDefault(list.get(0).getState(), IContainerInfo.IStatus.UNKNOWN);
+        } catch (Exception ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public void destroyDriverContainer(String id) throws ISchedulerException {
-        destroyExecutorInstances(List.of(id));
-    }
-
-    @Override
-    public void destroyExecutorInstances(List<String> ids) throws ISchedulerException {
-        DockerException error = null;
-        for (String id : getDockerIds(ids, false)) {
-            try {
-                if (id != null) {
-                    dockerClient.removeContainerCmd(id).withForce(true).withRemoveVolumes(true).exec();
-                }
-            } catch (DockerException ex) {
-                error = ex;
-            }
-        }
-        if (error != null) {
-            throw new ISchedulerException(error.getMessage(), error);
-        }
+    public IClusterInfo repairCluster(String job, IClusterInfo cluster) throws ISchedulerException {
+        return null;
     }
 
     @Override
     public void healthCheck() throws ISchedulerException {
         try {
-            dockerClient.pingCmd().exec();
+            client.pingCmd().exec();
         } catch (DockerException ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
-    }
-
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
-
-    @Override
-    public boolean isDynamic() {
-        return true;
     }
 }
