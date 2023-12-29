@@ -67,12 +67,13 @@ public class Docker implements IScheduler {
     }
 
 
-    private List<CreateContainerCmd> parseRequest(String jobId, IClusterRequest request) throws ISchedulerException {
+    private List<CreateContainerCmd> parseRequest(String jobID, IClusterRequest request) throws ISchedulerException {
         var containers = new ArrayList<CreateContainerCmd>();
         for (int i = 0; i < request.instances(); i++) {
             var resources = request.resources();
             var container = client.createContainerCmd(resources.image());
-            container.withName(jobId + "-" + ISchedulerUtils.name(request.name()) + "-" + i);
+            var env = new ArrayList<String>();
+            container.withName(jobID + "-" + ISchedulerUtils.name(request.name()) + "-" + i);
             container.withHostConfig(new HostConfig());
             container.getHostConfig().withCpuCount((long) resources.cpus());
             if (resources.gpu() != null) {
@@ -137,8 +138,7 @@ public class Docker implements IScheduler {
                         map(e -> e.getKey() + ":" + e.getValue()).toList());
             }
 
-            var env = new ArrayList<String>();
-            env.add("IGNIS_SCHEDULER_ENV_JOB=" + jobId);
+            env.add("IGNIS_SCHEDULER_ENV_JOB=" + jobID);
             env.add("IGNIS_SCHEDULER_ENV_CONTAINER=" + container.getName());
             if (resources.env() != null) {
                 env.addAll(resources.env().entrySet().stream().
@@ -148,7 +148,8 @@ public class Docker implements IScheduler {
 
             container.withLabels(new HashMap<>() {{
                 put("scheduler.resources", ISchedulerUtils.encode(resources));
-                put("scheduler.job", jobId);
+                put("scheduler.job", jobID);
+                put("scheduler.id", container.getName());
                 put("scheduler.name", ISchedulerUtils.name(request.name()));
                 put("scheduler.instances", String.valueOf(request.instances()));
             }});
@@ -179,7 +180,7 @@ public class Docker implements IScheduler {
                 return p2.container(container).host(host).protocol(p.protocol()).build();
             }).toList());
         } else {
-            builder.node("127.0.0.1");
+            builder.node("localhost");
         }
 
         return builder.build();
@@ -196,10 +197,10 @@ public class Docker implements IScheduler {
 
     @Override
     public String createJob(String name, IClusterRequest driver, IClusterRequest... executors) throws ISchedulerException {
-        String jobId = ISchedulerUtils.name(name) + "-" + ISchedulerUtils.genId();
-        var containers = new ArrayList<>(parseRequest(jobId, driver));
+        String jobID = ISchedulerUtils.name(name) + "-" + ISchedulerUtils.genId();
+        var containers = new ArrayList<>(parseRequest(jobID, driver));
         for (var exec : executors) {
-            containers.addAll(parseRequest(jobId, exec));
+            containers.addAll(parseRequest(jobID, exec));
         }
         var responses = new ArrayList<CreateContainerResponse>();
         try {
@@ -218,7 +219,7 @@ public class Docker implements IScheduler {
             }
             throw new ISchedulerException("docker error", ex);
         }
-        return jobId;
+        return jobID;
     }
 
     @Override
@@ -242,16 +243,17 @@ public class Docker implements IScheduler {
         var list = listContainers(id, "*");
         var resources = list.stream().collect(Collectors.groupingBy(c -> c.getLabels().get("scheduler.name")));
         var clusters = new ArrayList<IClusterInfo>();
-        String jobId = "";
+        String jobID = "";
         for (var entry : resources.entrySet()) {
-            jobId = entry.getValue().get(0).getLabels().get("scheduler.job");
+            jobID = entry.getValue().get(0).getLabels().get("scheduler.job");
             var name = entry.getValue().get(0).getLabels().get("scheduler.name");
+            var cID = entry.getValue().get(0).getLabels().get("scheduler.id");
             var instances = Integer.parseInt(entry.getValue().get(0).getLabels().get("scheduler.instances"));
             var containers = entry.getValue().stream().sorted(Comparator.comparing(Container::getId)).
                     map(this::parseContainer).toList();
-            clusters.add(IClusterInfo.builder().name(name).instances(instances).containers(containers).build());
+            clusters.add(IClusterInfo.builder().name(name).id(cID).instances(instances).containers(containers).build());
         }
-        return IJobInfo.builder().name(jobId.split("-")[0]).id(jobId).clusters(clusters).build();
+        return IJobInfo.builder().name(jobID.split("-")[0]).id(jobID).clusters(clusters).build();
     }
 
     @Override
@@ -290,14 +292,19 @@ public class Docker implements IScheduler {
             var name = list.get(0).getLabels().get("scheduler.name");
             var resources = list.stream().map(this::parseContainer).toList();
             var instances = Integer.parseInt(list.get(0).getLabels().get("scheduler.instances"));
-            return IClusterInfo.builder().name(name).instances(instances).containers(resources).build();
+            return IClusterInfo.builder().name(name).id(id).instances(instances).containers(resources).build();
         } catch (Exception ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
     }
 
     @Override
-    public IContainerInfo.IStatus getClusterStatus(String job, String id) throws ISchedulerException {
+    public IClusterInfo repairCluster(String job, IClusterInfo cluster) throws ISchedulerException {
+        return null;
+    }
+
+    @Override
+    public IContainerInfo.IStatus getContainerStatus(String job, String id) throws ISchedulerException {
         try {
             var list = listContainers(job, id);
             if (list.isEmpty()) {
@@ -307,11 +314,6 @@ public class Docker implements IScheduler {
         } catch (Exception ex) {
             throw new ISchedulerException(ex.getMessage(), ex);
         }
-    }
-
-    @Override
-    public IClusterInfo repairCluster(String job, IClusterInfo cluster) throws ISchedulerException {
-        return null;
     }
 
     @Override

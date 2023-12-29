@@ -76,7 +76,6 @@ public final class IKeys {
     public static final String DRIVER_HEALTHCHECK_RETRIES = "ignis.healthcheck.retries";
 
     public static final String DISCOVERY_TYPE = "ignis.discovery.type";
-    public static final String DISCOVERY_TARGET = "ignis.discovery.target";
 
     public static final String DISCOVERY_ETCD_CA = "ignis.discovery.etcd.ca";
     public static final String DISCOVERY_ETCD_ENDPOINT = "ignis.discovery.etcd.endpoint";

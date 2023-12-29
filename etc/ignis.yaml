@@ -25,16 +25,15 @@ ignis:
       #name: value
   discovery:
     type: file #etcd
-    #target:
     #etcd
       #ca
       #endpoint
       #user
       #$password$
-    #crypto:
-      #secret:
-      #public:
-      #$private$:
+  #crypto:
+    #secret:
+    #public:
+    #$private$:
   executor:
     #name:
     #image:
@@ -60,6 +59,13 @@ ignis:
     interval: 60
     timeout: 20
     retries: 5
+    #disable
+  #job
+    #id
+    #container:
+      #id
+      #dir
+    #dir
   partition:
     type: Memory
     minimal: 128MB
@@ -89,10 +95,6 @@ ignis:
         #container
       #param:
         #a: b
-    #job:
-      #id:
-      #name:
-      #directory:
     #time:
     #worker:
   #submitter:

@@ -33,16 +33,19 @@ import java.util.Map;
  * order.<p>
  * 2) The scheduler must define 'IGNIS_SCHEDULER_ENV_JOB' and 'IGNIS_SCHEDULER_ENV_CONTAINER' environment variables
  *   with the return of {@link IScheduler#createJob} and the value of {@link IContainerInfo#id() IContainerInfo.id}.
- *   '$' can be used to reference a future container enviroment variable.
+ *   '$' can be used to reference a future container enviroment variable.<p>
+ * 3) If network is bridge and container hostname cannot be resolved externally, 'HOST_HOSTNAME' must be set to a
+ *   valid hostname.<p>
+ * 4) If scheduler has its own healthcheck system, define 'IGNIS_HEALTHCHECK_DISABLE' to disable IgnisHPC healthcheck.
  */
 public interface IScheduler {
 
     /**
      * Creates a new job with the specified name.
      *
-     * @param name      The name of the job to be created.
-     * @param driver    The resources of the driver of the job.
-     * @param executors The resources of all clusters of the job.
+     * @param name      The name of the job.
+     * @param driver    The resources of the driver.
+     * @param executors The resources of executors clusters.
      * @return A String ID representing the created job.
      * @throws ISchedulerException If an error occurs during job creation.
      */
@@ -69,7 +72,7 @@ public interface IScheduler {
      * Lists jobs based on the provided filters.
      *
      * @param filters A Map containing key-value pairs for filtering jobs.
-     * @return A List of IJobInfo objects representing the filtered jobs.
+     * @return A List of IJobInfo.
      * @throws ISchedulerException If an error occurs during job listing.
      */
     List<IJobInfo> listJobs(Map<String, String> filters) throws ISchedulerException;
@@ -77,7 +80,7 @@ public interface IScheduler {
     /**
      * Creates a new cluster with the given name.
      *
-     * @param job       The job ID of the job to create a cluster.
+     * @param job       The ID of the job to create a cluster.
      * @param resources The resources of the cluster to be created.
      * @return An IClusterInfo object representing the created cluster.
      * @throws ISchedulerException If an error occurs during cluster creation.
@@ -85,18 +88,9 @@ public interface IScheduler {
     IClusterInfo createCluster(String job, IClusterRequest resources) throws ISchedulerException;
 
     /**
-     * Destroys the cluster with the specified ID.
-     *
-     * @param job The job ID of the job to create a cluster.
-     * @param id  The ID of the cluster to be destroyed.
-     * @throws ISchedulerException If an error occurs during cluster destruction.
-     */
-    void destroyCluster(String job, String id) throws ISchedulerException;
-
-    /**
      * Gets the cluster with the specified ID.
      *
-     * @param job The job ID of the job to get the cluster.
+     * @param job The ID of the job.
      * @param id  The ID of the cluster to be retrieved.
      * @return An IClusterInfo object representing the cluster.
      * @throws ISchedulerException If an error occurs during cluster retrieval.
@@ -104,24 +98,33 @@ public interface IScheduler {
     IClusterInfo getCluster(String job, String id) throws ISchedulerException;
 
     /**
-     * Gets the Status of cluster with the specified ID.
+     * Destroys the cluster with the specified ID.
      *
-     * @param job The job ID of the job to get the cluster status.
-     * @param id  The ID of the cluster to retrieve the status.
-     * @return An IContainerInfo.IStatus object representing the Status of cluster.
-     * @throws ISchedulerException If an error occurs during cluster status retrieval.
+     * @param job The job ID of the job to create a cluster.
+     * @param id  The ID of the cluster.
+     * @throws ISchedulerException If an error occurs during cluster destruction.
      */
-    IContainerInfo.IStatus getClusterStatus(String job, String id) throws ISchedulerException;
+    void destroyCluster(String job, String id) throws ISchedulerException;
 
     /**
      * Repairs the specified cluster.
      *
-     * @param job The job ID of the job to get the cluster status.
+     * @param job The ID of the job.
      * @param cluster An IClusterInfo object representing the cluster to be repaired.
      * @return An IClusterInfo object representing the repaired cluster.
      * @throws ISchedulerException If an error occurs during cluster repair.
      */
     IClusterInfo repairCluster(String job, IClusterInfo cluster) throws ISchedulerException;
+
+    /**
+     * Gets the Status of container with the specified ID.
+     *
+     * @param job The ID of the job.
+     * @param id  The ID of the container to retrieve the status.
+     * @return An IContainerInfo.IStatus object representing the Status of container.
+     * @throws ISchedulerException If an error occurs during container status retrieval.
+     */
+    IContainerInfo.IStatus getContainerStatus(String job, String id) throws ISchedulerException;
 
     /**
      * Performs a health check on the scheduler.

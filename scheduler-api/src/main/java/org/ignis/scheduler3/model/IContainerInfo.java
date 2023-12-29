@@ -44,5 +44,14 @@ public record IContainerInfo(
         DOCKER, SINGULARITY
     }
 
+    public int hostPort(int n) {
+        for (var port : ports) {
+            if (n == port.container()) {
+                return port.host();
+            }
+        }
+        return -1;
+    }
+
 
 }

@@ -26,10 +26,10 @@ import picocli.CommandLine.Parameters;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "run", description = "Run a job")
@@ -70,7 +70,7 @@ public class RunJob extends BaseJob {
     private String time;
 
     @Option(names = {"-s", "--static"}, paramLabel = "path",
-            description = "force static allocation, cluster properties are load from a file. Use '-' for a single cluster")
+            description = "force static allocation, cluster properties are load from a file. Use 'int' for a homogeneous cluster")
     private String staticConfig;
 
     @Option(names = {"-t", "--time"}, paramLabel = "[dd-]hh:mm:ss", description = "set a limit on the total run time of the job")
@@ -118,14 +118,11 @@ public class RunJob extends BaseJob {
 
     private ICrypto.IKeyPair keyPair;
 
-    private volatile Integer interactivePort;
-
     @Override
     public void run() throws Exception {
         if (name == null) {
             name = cmd;
         }
-        props.setProperty(IKeys.JOB_NAME, name);
         if (env != null) {
             for (var entry : env.entrySet()) {
                 props.setProperty(IProperties.join(IKeys.DRIVER_ENV, entry.getKey()), entry.getValue());
@@ -145,7 +142,7 @@ public class RunJob extends BaseJob {
         var driverArgs = new ArrayList<String>();
         var schedulerParser = new ISchedulerParser(props);
         boolean hostNetwork = schedulerParser.networkMode().equals(IContainerInfo.INetworkMode.HOST);
-        boolean discoveryFile = props.getProperty(IKeys.DISCOVERY_TYPE).equals("file");
+        boolean isStatic = staticConfig != null;
 
         if (props.hasProperty(IKeys.CRYPTO_SECRET)) {
             var path = new File(props.getProperty(IKeys.CRYPTO_SECRET));
@@ -157,38 +154,30 @@ public class RunJob extends BaseJob {
             LOGGER.info(IKeys.CRYPTO_SECRET + " not set");
         }
 
-        if (!hostNetwork) {
-            props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.DRIVER_HEALTHCHECK_PORT)), "0");
-            List<String> ports = new ArrayList<>();
-            if (props.hasProperty(IProperties.join(IKeys.PORT, "host"))) {
-                ports.addAll(props.getStringList(IProperties.join(IKeys.PORT, "host")));
-            }
-            for (int i = 0; i < props.getInteger(IKeys.TRANSPORT_PORTS); i++) {
-                ports.add("0");
-            }
-            props.setProperty(IProperties.join(IKeys.PORT, "host"), String.join(",", ports));
-        }
-        if (interactive || staticConfig != null) {
+        if (interactive || isStatic) {
             keyPair = ICrypto.genKeyPair();
-            if (staticConfig != null) {
+            if (isStatic) {
                 props.setProperty(IKeys.DRIVER_PRIVATE_KEY, keyPair.privateKey());
             }
             props.setProperty(IKeys.DRIVER_PUBLIC_KEY, keyPair.publicKey());
         }
 
+        if (!hostNetwork) {
+            props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", IKeys.PORT), "0");
+            props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.DRIVER_HEALTHCHECK_PORT)), "0");
+            var key = IProperties.join(IKeys.DRIVER_PORTS, "tcp", "host");
+            var ports = props.hasProperty(key) ? props.getStringList(key) : new ArrayList<String>();
+            ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), ""));
+            props.setList(key, ports);
+        }
+
         if (interactive) {
-            if (discoveryFile) {
-                fileDiscovery();
-            } else {
-                etcdDiscovery();
-            }
             driverArgs.add("ignis-sshserver");
             driverArgs.add("driver");
             if (hostNetwork) {
                 driverArgs.add("0");
             } else {
                 driverArgs.add(props.getString(IKeys.PORT));
-                props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", IKeys.PORT), "0");
             }
         } else {
             driverArgs.add("ignis-run");
@@ -198,12 +187,14 @@ public class RunJob extends BaseJob {
             }
         }
 
-        props.setProperty(IProperties.join(IKeys.DRIVER_ENV, IProperties.asEnv(IKeys.OPTIONS)), props.store64());
-        var driver = schedulerParser.parse(IKeys.DRIVER, driverArgs);
-        schedulerParser.containerEnvironment(driver, true, interactive, staticConfig != null);
-        var executors = new IClusterRequest[0];
+        if (isStatic) {
+            driverArgs.add(0, "ignis-healthcheck");
+        }
 
-        if (staticConfig != null) {
+        var executors = new IClusterRequest[0];
+        var options = new ArrayList<String>();
+        options.add(props.store64());
+        if (isStatic) {
             var execArgs = new ArrayList<String>();
             execArgs.add("ignis-sshserver");
             execArgs.add("executor");
@@ -211,49 +202,135 @@ public class RunJob extends BaseJob {
                 execArgs.add("0");
             } else {
                 execArgs.add(props.getString(IKeys.PORT));
-                props.setProperty(IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", IKeys.PORT), "0");
             }
-            if (staticConfig.equals("-")) {
-                executors = new IClusterRequest[]{schedulerParser.parse(IKeys.EXECUTOR, execArgs)};
-                schedulerParser.containerEnvironment(executors[0], false, interactive, true);
+            Consumer<IProperties> setPorts = (p) -> {
+                if (!hostNetwork) {
+                    props.setProperty(IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", IKeys.PORT), "0");
+                    var key = IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "host");
+                    var ports = props.hasProperty(key) ? props.getStringList(key) : new ArrayList<String>();
+                    ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), ""));
+                    props.setList(key, ports);
+                }
+            };
+
+            if (staticConfig.matches("\\d+")) {
+                executors = new IClusterRequest[Integer.parseInt(staticConfig)];
+                setPorts.accept(props);
+                for (int i = 0; i < executors.length; i++) {
+                    executors[i] = schedulerParser.parse(IKeys.EXECUTOR, execArgs);
+                    schedulerParser.containerEnvironment(executors[i]);
+                }
             } else {
                 var multiple = props.multiLoad(staticConfig);
                 executors = new IClusterRequest[multiple.size()];
                 for (int i = 0; i < executors.length; i++) {
+                    setPorts.accept(multiple.get(i));
+                    options.add(multiple.get(i).store64());
                     var parser = new ISchedulerParser(multiple.get(i));
                     executors[i] = parser.parse(IKeys.EXECUTOR, execArgs);
-                    schedulerParser.containerEnvironment(executors[i], false, interactive, true);
+                    schedulerParser.containerEnvironment(executors[i]);
                 }
             }
         }
 
-        synchronized (this) {
-            if (Boolean.getBoolean(IKeys.DEBUG)) {
-                LOGGER.info(props.toString());
-                LOGGER.info("Driver Request: {" + ISchedulerUtils.yaml(driver) + "\n}\n");
-                for (var e : executors) {
-                    LOGGER.info("Executor Request: {" + ISchedulerUtils.yaml(e) + "\n}\n");
-                }
-            }
+        props.setProperty(IProperties.join(IKeys.DRIVER_ENV, IProperties.asEnv(IKeys.OPTIONS)),
+                String.join(";", options));
+        var driver = schedulerParser.parse(IKeys.DRIVER, driverArgs);
+        schedulerParser.containerEnvironment(driver);
 
-            String jobID = scheduler.createJob(props.getProperty(IKeys.JOB_NAME), driver, executors);
-            if (interactive) {
-                System.exit(connect(jobID, driverArgs));
-            } else {
-                System.out.println("submitted job " + jobID);
+        if (Boolean.getBoolean(IKeys.DEBUG)) {
+            LOGGER.info(props.toString());
+            LOGGER.info("Driver Request: {" + ISchedulerUtils.yaml(driver) + "\n}\n");
+            for (var e : executors) {
+                LOGGER.info("Executor Request: {" + ISchedulerUtils.yaml(e) + "\n}\n");
             }
+        }
+
+        String jobID = scheduler.createJob(props.getProperty(IKeys.JOB_NAME), driver, executors);
+        if (interactive) {
+            System.exit(connect(jobID));
+        } else {
+            System.out.println("submitted job " + jobID);
         }
     }
 
-    private void etcdDiscovery() {
+    private synchronized int connect(String jobID) throws Exception {
+        var cancel = new Thread(() -> {
+            try {
+                scheduler.cancelJob(jobID);
+            } catch (ISchedulerException ex) {
+                LOGGER.error(ex.getMessage(), ex);
+            }
+        });
+        Runtime.getRuntime().addShutdownHook(cancel);
+        var job = scheduler.getJob(jobID);
+        IContainerInfo driver = null;
+        for (var cluster : job.clusters()) {
+            if (cluster.name().equals(props.getProperty(IKeys.DRIVER_NAME))) {
+                driver = cluster.containers().get(0);
+                break;
+            }
+        }
+
+        while (scheduler.getContainerStatus(jobID, driver.id()).equals(IContainerInfo.IStatus.ACCEPTED)) {
+            Thread.sleep(5000);
+        }
+
+        var user = driver.user().split(":")[0];
+        var port = driver.network().equals(IContainerInfo.INetworkMode.HOST) ? discovery(jobID, driver.id()) :
+                driver.hostPort(props.getInteger(IKeys.PORT));
+
+        var jsch = new JSch();
+        var session = jsch.getSession(user, driver.node(), port);
+        session.setConfig("StrictHostKeyChecking", "no");
+        jsch.addIdentity(user, keyPair.privateKey().getBytes(), keyPair.publicKey().getBytes(), null);
+        session.connect(60000);
+        var channel = (ChannelExec) session.openChannel("exec");
+        channel.setOutputStream(System.out, true);
+        channel.setErrStream(System.err, true);
+        channel.setInputStream(System.in, true);
+
+        var driverArgs = new ArrayList<String>();
+        driverArgs.add("ignis-run");
+        driverArgs.add(cmd);
+        if (args != null) {
+            driverArgs.addAll(args);
+        }
+        channel.setCommand(
+                driverArgs.stream().map((a) -> '"' + a.replace("\"", "\\\"") + '"').
+                        collect(Collectors.joining(" "))
+        );
+        channel.connect();
+        while (!channel.isClosed()) {
+            Thread.sleep(5000);
+        }
+        channel.disconnect();
+        session.disconnect();
+        Runtime.getRuntime().removeShutdownHook(cancel);
+        return channel.getExitStatus();
+    }
+
+    private synchronized Integer discovery(String jobID, String driverId) throws Exception {
+        AtomicInteger port = new AtomicInteger(-1);
+        if (props.getProperty(IKeys.DISCOVERY_TYPE).equals("file")) {
+            fileDiscovery(jobID, driverId, port);
+        } else {
+            etcdDiscovery(jobID, driverId, port);
+        }
+        this.wait();
+        if (port.get() == -1) {
+            throw new RuntimeException("port discovery error");
+        }
+        return port.get();
+    }
+
+    private void etcdDiscovery(String jobID, String driverId, AtomicInteger port) {
         try {
-            String token = ISchedulerUtils.genId() + "-driver";
             var endpoint = props.getProperty(IKeys.DISCOVERY_ETCD_ENDPOINT);
             var ca = props.getString(IKeys.DISCOVERY_ETCD_CA, null);
             var builder = Client.builder().waitForReady(false).endpoints(endpoint);
             var user = props.getProperty(IKeys.DISCOVERY_ETCD_USER, null);
             var password = props.getProperty(IKeys.DISCOVERY_ETCD_PASSWORD, null);
-            props.setProperty(IKeys.DISCOVERY_TARGET, endpoint + (endpoint.endsWith("/") ? "" : "/") + token);
             if (ca == null) {
                 builder.sslContext(GrpcSslContexts.forClient().trustManager(ICrypto.selfSignedTrust()).build());
             } else {
@@ -268,15 +345,14 @@ public class RunJob extends BaseJob {
             Thread.ofPlatform().name("discovery").daemon().start(() -> {
                 try (var client = builder.build()) {
                     var parent = this;
-                    var key = ByteSequence.from(token.getBytes());
+                    var key = ByteSequence.from((jobID + "/" + driverId + "-discovery").getBytes());
                     synchronized (this) {
                         var watch = client.getWatchClient().watch(key,
                                 watchResponse -> {
                                     for (var event : watchResponse.getEvents()) {
                                         if (event.getEventType() == WatchEvent.EventType.PUT) {
                                             try {
-                                                parent.interactivePort =
-                                                        Integer.parseInt(event.getKeyValue().getValue().toString());
+                                                port.set(Integer.parseInt(event.getKeyValue().getValue().toString()));
                                             } catch (Exception ex) {
                                                 LOGGER.error(ex.getMessage(), ex);
                                             } finally {
@@ -293,8 +369,7 @@ public class RunJob extends BaseJob {
                             var values = client.getKVClient().get(key).get().getKvs();
                             if (!values.isEmpty()) {
                                 try {
-                                    parent.interactivePort =
-                                            Integer.parseInt(values.get(0).getValue().toString());
+                                    port.set(Integer.parseInt(values.get(0).getValue().toString()));
                                 } finally {
                                     parent.notifyAll();
                                 }
@@ -313,21 +388,18 @@ public class RunJob extends BaseJob {
         }
     }
 
-    private void fileDiscovery() {
-        String token = ISchedulerUtils.genId() + "-driver";
-        var filename = new File(props.getProperty(IKeys.WORKING_DIRECTORY), "." + token).getPath();
-        var delete = new Thread(() -> new File(filename).delete());
+    private void fileDiscovery(String jobID, String driverId, AtomicInteger port) {
+        var file = Paths.get(props.getProperty(IKeys.WORKING_DIRECTORY), jobID, "tmp", driverId, "discovery").toFile();
+        var delete = new Thread(() -> file.delete());
         Runtime.getRuntime().addShutdownHook(delete);
-        props.setProperty(IKeys.DISCOVERY_TARGET, filename);
         Thread.ofPlatform().name("discovery").daemon().start(() -> {
             while (true) {
-                var file = new File(filename);
                 if (file.exists()) {
                     try {
-                        var port = Files.readString(file.toPath());
-                        if (port.endsWith("\n")) {
-                            this.interactivePort = Integer.parseInt(port);
-                            new File(filename).delete();
+                        var value = Files.readString(file.toPath());
+                        if (value.endsWith("\n")) {
+                            port.set(Integer.parseInt(value));
+                            file.delete();
                             Runtime.getRuntime().removeShutdownHook(delete);
                             break;
                         }
@@ -340,70 +412,12 @@ public class RunJob extends BaseJob {
                     }
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     break;
                 }
             }
         });
-    }
-
-    private int connect(String jobID, List<String> args) throws Exception {
-        var cancel = new Thread(() -> {
-            try {
-                scheduler.cancelJob(jobID);
-            } catch (ISchedulerException ex) {
-                LOGGER.error(ex.getMessage(), ex);
-            }
-        });
-        Runtime.getRuntime().addShutdownHook(cancel);
-        synchronized (this) {
-            try {
-                this.wait();
-                if (interactivePort == null) {
-                    System.exit(-1);
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        var jsch = new JSch();
-        var job = scheduler.getJob(jobID);
-        IContainerInfo driver = null;
-        for (var cluster : job.clusters()) {
-            if (cluster.name().equals(props.getProperty(IKeys.DRIVER_NAME))) {
-                driver = cluster.containers().get(0);
-                break;
-            }
-        }
-        var user = driver.user().split(":")[0];
-        this.wait();//Port Wait
-        if (interactivePort == null) {
-            throw new RuntimeException("Port error");
-        }
-        var session = jsch.getSession(user, driver.node(), interactivePort);
-        session.setConfig("StrictHostKeyChecking", "no");
-        jsch.addIdentity(user, keyPair.privateKey().getBytes(), keyPair.publicKey().getBytes(), null);
-        session.connect(60000);
-        var channel = (ChannelExec) session.openChannel("exec");
-        channel.setOutputStream(System.out, true);
-        channel.setErrStream(System.err, true);
-        channel.setInputStream(System.in, true);
-
-        channel.setCommand(
-                args.stream().map((a) -> '"' + a.replace("\"", "\\\"") + '"').collect(Collectors.joining(" "))
-        );
-        channel.connect();
-        while (!channel.isClosed()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-            }
-        }
-        channel.disconnect();
-        session.disconnect();
-        Runtime.getRuntime().removeShutdownHook(cancel);
-        return channel.getExitStatus();
     }
 
 }

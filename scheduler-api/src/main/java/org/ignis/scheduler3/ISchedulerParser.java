@@ -234,10 +234,10 @@ public final class ISchedulerParser {
         return ports;
     }
 
-    public void containerEnvironment(IClusterRequest request, boolean driver, boolean interactive, boolean _static) {
+    public void containerEnvironment(IClusterRequest request) {
         var env = request.resources().env();
-        var hostMode = request.resources().network().equals(IContainerInfo.INetworkMode.HOST);
         props.toEnv(IKeys.WORKING_DIRECTORY, env, true);
+        props.toEnv(IKeys.TMPDIR, env, false);
         props.toEnv(IKeys.DRIVER_HEALTHCHECK_INTERVAL, env, false);
         props.toEnv(IKeys.DRIVER_HEALTHCHECK_TIMEOUT, env, false);
         props.toEnv(IKeys.DRIVER_HEALTHCHECK_RETRIES, env, false);
@@ -245,14 +245,10 @@ public final class ISchedulerParser {
 
         props.toEnv(IKeys.CRYPTO_SECRET, env, false);
         props.toEnv(IKeys.DISCOVERY_TYPE, env, false);
-        props.toEnv(IKeys.DISCOVERY_TARGET, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_USER, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_PASSWORD, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_ENDPOINT, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_CA, env, false);
-
-        //TODo TMP DIR ???
-
     }
 
 }

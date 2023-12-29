@@ -1,0 +1,38 @@
+#!/bin/env bash
+
+if [ -n "${IGNIS_HEALTHCHECK_DISABLE}" ]; then
+  exec "$@"
+fi
+
+source "${IGNIS_HOME}/etc/environment"
+
+healthcheck(){
+  socat tcp-l:$1,reuseaddr,fork,max-children=4 SYSTEM:"echo HTTP/1.1 200 OK" & HEALTH_PID=$!
+}
+
+if [ "$1" == "0" ]; then
+    BASE=$(shuf -i 1-64000 -n 1)
+    for i in 1...64000; do
+      PORT=$((($BASE+$i)%64000+1024))
+      healthcheck $PORT
+      while [ -e "/proc/${HEALTH_PID}" ]; do
+        if  curl --output /dev/null --silent --head --fail http://127.0.0.1:$PORT; then
+          break 2
+        fi
+        sleep 1
+      done
+    done
+
+    if [ "${IGNIS_DISCOVERY_TYPE}" == "file" ]; then
+      echo "http://${HOST_HOSTNAME}:${PORT}" > ${IGNIS_JOB_CONTAINER_DIR}/discovery
+    elif [ "${IGNIS_DISCOVERY_TYPE}" == "etcd" ]; then #TODO etcd
+    fi
+
+else
+  healthcheck $1
+fi
+
+"$@"
+kill HEALTH_PID
+
+
