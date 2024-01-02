@@ -1,5 +1,8 @@
 package org.ignis.properties;
 
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKeyFactory;
@@ -14,11 +17,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -102,16 +102,13 @@ public final class ICrypto {
 
     public static IKeyPair genKeyPair() {
         try {
-            KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-            generator.initialize(2048);
-            var pair = generator.generateKeyPair();
-            var privateKey = "-----BEGIN PRIVATE KEY-----\n%s\n-----END PRIVATE KEY-----".formatted(
-                    Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded()));
-            var publicKey = "-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----".formatted(
-                    Base64.getEncoder().encodeToString(pair.getPublic().getEncoded()));
-
-            return new IKeyPair(privateKey, publicKey);
-        } catch (NoSuchAlgorithmException e) {
+            ByteArrayOutputStream privateKey = new ByteArrayOutputStream(2048);
+            ByteArrayOutputStream publicKey = new ByteArrayOutputStream(2048);
+            var kpair = com.jcraft.jsch.KeyPair.genKeyPair(new JSch(), com.jcraft.jsch.KeyPair.RSA, 2048);
+            kpair.writePrivateKey(privateKey);
+            kpair.writePublicKey(publicKey, "");
+            return new IKeyPair(privateKey.toString(), publicKey.toString());
+        } catch (JSchException e) {
             throw new RuntimeException(e);
         }
     }
@@ -131,36 +128,6 @@ public final class ICrypto {
                 return new X509Certificate[0];
             }
         };
-    }
-
-    public static KeyStore newSelfSigned(IKeyPair pair) {
-        try {
-            var keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-
-            var keyFactory = KeyFactory.getInstance("RSA");
-            var certFactory = CertificateFactory.getInstance("X.509");
-
-            var rawPrivate = Base64.getDecoder().decode(pair.privateKey.split("\n")[1]);
-
-            Process openssl = Runtime.getRuntime().exec(new String[]{
-                    "ignis-crypto", "certificate"
-            });
-            openssl.getOutputStream().write(pair.privateKey.getBytes());
-            openssl.getOutputStream().close();
-
-            keyStore.load(null);
-            keyStore.setKeyEntry("cert",
-                    keyFactory.generatePrivate(new PKCS8EncodedKeySpec(rawPrivate)),
-                    null,
-                    new Certificate[]{
-                            certFactory.generateCertificate(openssl.getInputStream())
-                    }
-            );
-            openssl.getInputStream().close();
-            return keyStore;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

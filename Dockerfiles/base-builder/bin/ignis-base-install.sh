@@ -11,3 +11,4 @@ apt -y --no-install-recommends install \
   gettext \
   socat
 rm -rf /var/lib/apt/lists/*
+mkdir /run/sshd

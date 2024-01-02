@@ -1,7 +1,12 @@
 #!/bin/env bash
 
-if [ -n "${IGNIS_TMPDIR}" ] && [ -f "${IGNIS_TMPDIR}/environment" ]; then
-  source "${IGNIS_TMPDIR}/environment"
+if [ -n "${_IGNIS_ENVIRONMENT_ENABLED}" ]; then
+  return
+fi
+export _IGNIS_ENVIRONMENT_ENABLED=1
+
+if [ -n "${_IGNIS_ENVIRONMENT}" ]; then
+  source "${_IGNIS_ENVIRONMENT}"
 fi
 
 if [ -z "${HOST_HOSTNAME}" ]; then
@@ -15,7 +20,5 @@ export IGNIS_JOB_DIR="${IGNIS_WDIR}/${IGNIS_JOB_ID}"
 if [ -n "${IGNIS_TMPDIR}" ];then
   export IGNIS_JOB_CONTAINER_DIR=${IGNIS_TMPDIR}
 else
-  export IGNIS_JOB_CONTAINER_DIR=${IGNIS_JOB_DIR}/tmp/${IGNIS_JOB_CONTAINER_ID}/
+  export IGNIS_JOB_CONTAINER_DIR=${IGNIS_JOB_DIR}/tmp/${IGNIS_JOB_CONTAINER_ID}
 fi
-
-

@@ -243,6 +243,7 @@ public final class ISchedulerParser {
         props.toEnv(IKeys.DRIVER_HEALTHCHECK_RETRIES, env, false);
         props.toEnv(IKeys.DRIVER_HEALTHCHECK_URL, env, false);
 
+        props.toEnv(IKeys.CRYPTO_PUBLIC, env, false);
         props.toEnv(IKeys.CRYPTO_SECRET, env, false);
         props.toEnv(IKeys.DISCOVERY_TYPE, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_USER, env, false);

@@ -1,9 +1,9 @@
 #!/bin/env bash
 
-source "$IGNIS_HOME/etc/environment"
+source "${IGNIS_HOME}/etc/environment"
 
-LOGS="${IGNIS_JOB_DIRECTORY}/logs"
+LOGS="${IGNIS_JOB_DIR}/logs"
 mkdir -p -m 700 ${LOGS}
 
-exec "$@" >"${LOGS}/${IGNIS_CONTAINER_ID}.out" \
-         2>"${LOGS}/${IGNIS_CONTAINER_ID}.err"
+exec "$@" >"${LOGS}/${IGNIS_JOB_CONTAINER_ID}.out" \
+         2>"${LOGS}/${IGNIS_JOB_CONTAINER_ID}.err"

@@ -3,6 +3,7 @@ package org.ignis.submitter;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.watch.WatchEvent;
@@ -157,13 +158,13 @@ public class RunJob extends BaseJob {
         if (interactive || isStatic) {
             keyPair = ICrypto.genKeyPair();
             if (isStatic) {
-                props.setProperty(IKeys.DRIVER_PRIVATE_KEY, keyPair.privateKey());
+                props.setProperty(IKeys.CRYPTO_PRIVATE, keyPair.privateKey());
             }
-            props.setProperty(IKeys.DRIVER_PUBLIC_KEY, keyPair.publicKey());
+            props.setProperty(IKeys.CRYPTO_PUBLIC, keyPair.publicKey());
         }
 
         if (!hostNetwork) {
-            props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", IKeys.PORT), "0");
+            props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.PORT)), "0");
             props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.DRIVER_HEALTHCHECK_PORT)), "0");
             var key = IProperties.join(IKeys.DRIVER_PORTS, "tcp", "host");
             var ports = props.hasProperty(key) ? props.getStringList(key) : new ArrayList<String>();
@@ -205,7 +206,7 @@ public class RunJob extends BaseJob {
             }
             Consumer<IProperties> setPorts = (p) -> {
                 if (!hostNetwork) {
-                    props.setProperty(IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", IKeys.PORT), "0");
+                    props.setProperty(IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", props.getString(IKeys.PORT)), "0");
                     var key = IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "host");
                     var ports = props.hasProperty(key) ? props.getStringList(key) : new ArrayList<String>();
                     ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), ""));
@@ -246,7 +247,7 @@ public class RunJob extends BaseJob {
             }
         }
 
-        String jobID = scheduler.createJob(props.getProperty(IKeys.JOB_NAME), driver, executors);
+        String jobID = scheduler.createJob(name, driver, executors);
         if (interactive) {
             System.exit(connect(jobID));
         } else {
@@ -284,13 +285,25 @@ public class RunJob extends BaseJob {
         var session = jsch.getSession(user, driver.node(), port);
         session.setConfig("StrictHostKeyChecking", "no");
         jsch.addIdentity(user, keyPair.privateKey().getBytes(), keyPair.publicKey().getBytes(), null);
-        session.connect(60000);
+
+        for (int i = 0; i < 10; i++) {
+            try {
+                session.connect(60000);
+                break;
+            } catch (JSchException ex) {
+                if (!(ex.getCause() != null && ex.getCause() instanceof IOException) || i == 9) {
+                    throw ex;
+                }
+                Thread.sleep(10000);
+            }
+        }
         var channel = (ChannelExec) session.openChannel("exec");
         channel.setOutputStream(System.out, true);
         channel.setErrStream(System.err, true);
         channel.setInputStream(System.in, true);
 
         var driverArgs = new ArrayList<String>();
+        driverArgs.add("ignis-client");
         driverArgs.add("ignis-run");
         driverArgs.add(cmd);
         if (args != null) {

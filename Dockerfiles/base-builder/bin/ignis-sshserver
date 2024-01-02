@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-source "$IGNIS_HOME/etc/environment"
+source "${IGNIS_HOME}/etc/environment"
 
 MODE=$1
 PORT=$2
@@ -13,34 +13,40 @@ sleep inf & FD=/proc/$!/fd
 export IGNIS_JOB_STDOUT=${FD}/1
 export IGNIS_JOB_STDERR=${FD}/2
 
-SSH_DIR=${IGNIS_JOB_CONTAINER_DIR}/ssh
-mkdir -p -m 700 ${SSH_DIR}
-export -p > ${CONTAINER_FOLDER}/environment
-mkdir -m 700 ${IGNIS_JOB_CONTAINER_DIR}/sockets
+SSH_DIR="${IGNIS_JOB_CONTAINER_DIR}/ssh"
+_IGNIS_ENVIRONMENT="${IGNIS_JOB_CONTAINER_DIR}/environment"
+mkdir -p -m 700 "${SSH_DIR}"
+export -p > "${_IGNIS_ENVIRONMENT}"
+mkdir -m 700 "${IGNIS_JOB_CONTAINER_DIR}/sockets"
 
-cp /etc/ssh/sshd_config ${SSH_DIR}
-chmod 644 ${SSH_DIR}/sshd_config
-ssh-keygen -q -N "" -t rsa -b 2048 -f ${SSH_DIR}/ssh_host_rsa_key
+cp /etc/ssh/sshd_config "${SSH_DIR}"
+chmod 644 "${SSH_DIR}/sshd_config"
+ssh-keygen -q -N "" -t rsa -b 2048 -f "${SSH_DIR}/ssh_host_rsa_key"
+printf "%s" "${IGNIS_CRYPTO_PUBLIC}" >"${SSH_DIR}/authorized_keys"
 
-if [ "${MODE}" == "driver" ]; then
-  EXTRA_ARGS="-d -o ForceCommand='touch ${IGNIS_JOB_CONTAINER_DIR}/ready;\$SSH_ORIGINAL_COMMAND'"
+if [ "$(id -u)" == "0" ]; then
+  sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' "${SSH_DIR}/sshd_config"
 fi
+sed -i 's/UsePAM yes/UsePAM no/g' "${SSH_DIR}/sshd_config" && \
+sed -i 's/#StrictModes yes/StrictModes no/g' "${SSH_DIR}/sshd_config" && \
+sed -i "s|#AuthorizedKeysFile.*|AuthorizedKeysFile \"${SSH_DIR}/authorized_keys\"|" "${SSH_DIR}/sshd_config"
 
 sshd(){
-  /usr/bin/sshd -p $1 \
-                -c "${CONFIG_SSH}/sshd_config" \
-                -h "${CONFIG_SSH}/ssh_host_rsa_key" \
-                -e ${EXTRA_ARGS} \
-                -D 2>&1 | grep -v "^Server listening" > ${CONFIG_SSH}/check & SSHD_PID=$!
+  /usr/sbin/sshd -p $1 \
+                -f "${SSH_DIR}/sshd_config" \
+                -h "${SSH_DIR}/ssh_host_rsa_key" \
+                -o "PidFile=\"${SSH_DIR}/sshd.pid\"" \
+                -o "SetEnv=PATH=\"${PATH}\" IGNIS_HOME=\"${IGNIS_HOME}\" _IGNIS_ENVIRONMENT=\"${_IGNIS_ENVIRONMENT}\"" \
+                -e -D 2>&1 | tee /dev/stderr | grep "^Server listening" > "${IGNIS_JOB_CONTAINER_DIR}/check" &
 }
 
 host_sshd(){
   BASE=$(shuf -i 1-64000 -n 1)
-  for i in 1...64000; do
+  for i in {1..64000}; do
     PORT=$((($BASE+$i)%64000+1024))
     sshd ${PORT}
     while [ -e "/proc/${SSHD_PID}" ]; do
-      if grep -q "Server listening on" ${CONFIG_SSH}/check; then
+      if grep -q "^Server listening" "${IGNIS_JOB_CONTAINER_DIR}/check"; then
         break 2
       fi
       sleep 1
@@ -48,16 +54,13 @@ host_sshd(){
   done
 }
 
-if [ "${PORT}" == "0" ];then
+if [ "${PORT}" != "0" ];then
   sshd ${PORT}
 else
   host_sshd
   if [ "${IGNIS_DISCOVERY_TYPE}" == "file" ]; then
-    echo "${HOST_HOSTNAME}:${PORT}" > ${IGNIS_JOB_CONTAINER_DIR}/discovery
+    echo "${HOST_HOSTNAME}:${PORT}" > "${IGNIS_JOB_CONTAINER_DIR}/discovery"
   elif [ "${IGNIS_DISCOVERY_TYPE}" == "etcd" ]; then #TODO etcd
-
-
-
     #URL=$IGNIS_DISCOVERY_TARGET
     #if [ -n "${IGNIS_CRYPTO_SECRET}"]; then
     #  URL=$(ignis-crypto decode ${IGNIS_CRYPTO_SECRET} <<<${URL}))
@@ -71,17 +74,25 @@ else
       echo "Failed to connect to $URL" 1>&2
       exit $s
     fi
+  fi
 fi
 
 trap "exit 0" TERM
 if [ "${MODE}" == "driver" ]; then
   echo "Waiting client connection" 1>&2
-  sleep 60
-  if [ ! -f ${IGNIS_JOB_CONTAINER_DIR}/ready ]; then
+  for i in {1..60}; do
+    if [ -f "${IGNIS_JOB_CONTAINER_DIR}/client.pid" ]; then
+      break
+    fi
+    sleep 1
+  done
+  if [ ! -f "${IGNIS_JOB_CONTAINER_DIR}/client.pid" ]; then
     echo "Client connection timeout" 1>&2
     exit -1
   fi
-  wait ${SSHD_PID}
+  echo "Client connected" 1>&2
+  tail --pid $(cat "${IGNIS_JOB_CONTAINER_DIR}/client.pid") -f /dev/null 2>/dev/null
+  kill -9 $(cat "${SSH_DIR}/sshd.pid")
   echo "Client disconnected" 1>&2
   exit 0
 elif [ "${MODE}" == "executor" ] && [ -z "${IGNIS_HEALTHCHECK_DISABLE}" ]; then

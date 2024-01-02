@@ -1,0 +1,8 @@
+#!/bin/env bash
+
+source "${IGNIS_HOME}/etc/environment"
+
+printf "$$" >"${IGNIS_JOB_CONTAINER_DIR}/client.pid.tmp"
+mv "${IGNIS_JOB_CONTAINER_DIR}/client.pid.tmp" "${IGNIS_JOB_CONTAINER_DIR}/client.pid"
+
+exec "$@"

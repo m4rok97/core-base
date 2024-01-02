@@ -12,7 +12,7 @@ healthcheck(){
 
 if [ "$1" == "0" ]; then
     BASE=$(shuf -i 1-64000 -n 1)
-    for i in 1...64000; do
+    for i in {1..64000}; do
       PORT=$((($BASE+$i)%64000+1024))
       healthcheck $PORT
       while [ -e "/proc/${HEALTH_PID}" ]; do

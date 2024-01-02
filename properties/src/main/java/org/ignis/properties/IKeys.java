@@ -65,7 +65,6 @@ public final class IKeys {
     public static final String DRIVER_ENV = "ignis.driver.env";
     public static final String DRIVER_PUBLIC_KEY = "ignis.driver.public.key";//TOREMOVE
     public static final String DRIVER_PRIVATE_KEY = "ignis.driver.private.key";//TOREMOVE
-    public static final String CRYPTO_STRICT = "ignis.crypto.strict";
     public static final String CRYPTO_SECRET = "ignis.crypto.secret";
     public static final String CRYPTO_PUBLIC = "ignis.crypto.public";
     public static final String CRYPTO_PRIVATE = "ignis.crypto.$private$";

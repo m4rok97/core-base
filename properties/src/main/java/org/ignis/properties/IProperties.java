@@ -112,7 +112,7 @@ public final class IProperties {
             if (lastKey.startsWith("$") && lastKey.endsWith("$")) {
                 if (!value.startsWith("$") || !value.endsWith("$")) {
                     try {
-                        value = ICrypto.encode(value, secret());
+                        value = "$" + ICrypto.encode(value, secret()) + "$";
                     } catch (RuntimeException ex) {
                         throw new IPropertyException(key, ex.getMessage());
                     }

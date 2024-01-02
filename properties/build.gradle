@@ -23,6 +23,7 @@ repositories {
 dependencies {
     implementation(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.16.0')
     implementation(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.16.0')
+    implementation(group: 'com.github.mwiede', name: 'jsch', version: '0.2.13')
 }
 
 jar {
