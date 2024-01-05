@@ -16,11 +16,11 @@ export IGNIS_JOB_STDERR=${FD}/2
 SSH_DIR="${IGNIS_JOB_CONTAINER_DIR}/ssh"
 _IGNIS_ENVIRONMENT="${IGNIS_JOB_CONTAINER_DIR}/environment"
 mkdir -p -m 700 "${SSH_DIR}"
+mkdir -p -m 700 "${IGNIS_JOB_SOCKETS}"
 export -p > "${_IGNIS_ENVIRONMENT}"
-mkdir -m 700 "${IGNIS_JOB_CONTAINER_DIR}/sockets"
 
 cp /etc/ssh/sshd_config "${SSH_DIR}"
-chmod 644 "${SSH_DIR}/sshd_config"
+chmod 600 "${SSH_DIR}/sshd_config"
 ssh-keygen -q -N "" -t rsa -b 2048 -f "${SSH_DIR}/ssh_host_rsa_key"
 printf "%s" "${IGNIS_CRYPTO_PUBLIC}" >"${SSH_DIR}/authorized_keys"
 

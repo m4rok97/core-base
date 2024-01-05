@@ -2,8 +2,8 @@
 ARG REGISTRY=""
 ARG NAMESPACE="ignishpc/"
 ARG TAG=""
-#24.04 LTS TODO
-FROM ubuntu:23.10 
+
+FROM ubuntu:24.04
 ARG DOCK_DIR=""
 ARG VERSION="dev"
 

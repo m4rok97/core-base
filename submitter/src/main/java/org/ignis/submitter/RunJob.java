@@ -136,7 +136,7 @@ public class RunJob extends BaseJob {
                 props.setProperty(IProperties.join(IKeys.EXECUTOR_BINDS, entry.getKey()), entry.getValue());
             }
         }
-        var wd = props.getProperty(IKeys.WORKING_DIRECTORY);
+        var wd = props.getProperty(IKeys.WDIR);
         props.setProperty(IProperties.join(IKeys.DRIVER_BINDS, wd), wd);
         props.setProperty(IProperties.join(IKeys.EXECUTOR_BINDS, wd), wd);
 
@@ -158,14 +158,14 @@ public class RunJob extends BaseJob {
         if (interactive || isStatic) {
             keyPair = ICrypto.genKeyPair();
             if (isStatic) {
-                props.setProperty(IKeys.CRYPTO_PRIVATE, keyPair.privateKey());
+                props.setProperty(IKeys.CRYPTO_$PRIVATE$, keyPair.privateKey());
             }
             props.setProperty(IKeys.CRYPTO_PUBLIC, keyPair.publicKey());
         }
 
         if (!hostNetwork) {
             props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.PORT)), "0");
-            props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.DRIVER_HEALTHCHECK_PORT)), "0");
+            props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.HEALTHCHECK_PORT)), "0");
             var key = IProperties.join(IKeys.DRIVER_PORTS, "tcp", "host");
             var ports = props.hasProperty(key) ? props.getStringList(key) : new ArrayList<String>();
             ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), ""));
@@ -196,14 +196,8 @@ public class RunJob extends BaseJob {
         var options = new ArrayList<String>();
         options.add(props.store64());
         if (isStatic) {
-            var execArgs = new ArrayList<String>();
-            execArgs.add("ignis-sshserver");
-            execArgs.add("executor");
-            if (hostNetwork) {
-                execArgs.add("0");
-            } else {
-                execArgs.add(props.getString(IKeys.PORT));
-            }
+            var execArgs = List.of("ignis-sshserver", "executor",
+                    String.valueOf(hostNetwork ? 0 : props.getString(IKeys.PORT)));
             Consumer<IProperties> setPorts = (p) -> {
                 if (!hostNetwork) {
                     props.setProperty(IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", props.getString(IKeys.PORT)), "0");
@@ -267,10 +261,15 @@ public class RunJob extends BaseJob {
         var job = scheduler.getJob(jobID);
         IContainerInfo driver = null;
         for (var cluster : job.clusters()) {
-            if (cluster.name().equals(props.getProperty(IKeys.DRIVER_NAME))) {
+            if (cluster.id().startsWith("0")) {
                 driver = cluster.containers().get(0);
                 break;
             }
+        }
+
+        if (driver == null) {
+            LOGGER.error("Driver not found");
+            System.exit(-1);
         }
 
         while (scheduler.getContainerStatus(jobID, driver.id()).equals(IContainerInfo.IStatus.ACCEPTED)) {
@@ -343,7 +342,7 @@ public class RunJob extends BaseJob {
             var ca = props.getString(IKeys.DISCOVERY_ETCD_CA, null);
             var builder = Client.builder().waitForReady(false).endpoints(endpoint);
             var user = props.getProperty(IKeys.DISCOVERY_ETCD_USER, null);
-            var password = props.getProperty(IKeys.DISCOVERY_ETCD_PASSWORD, null);
+            var password = props.getProperty(IKeys.DISCOVERY_ETCD_$PASSWORD$, null);
             if (ca == null) {
                 builder.sslContext(GrpcSslContexts.forClient().trustManager(ICrypto.selfSignedTrust()).build());
             } else {
@@ -402,7 +401,7 @@ public class RunJob extends BaseJob {
     }
 
     private void fileDiscovery(String jobID, String driverId, AtomicInteger port) {
-        var file = Paths.get(props.getProperty(IKeys.WORKING_DIRECTORY), jobID, "tmp", driverId, "discovery").toFile();
+        var file = Paths.get(props.getProperty(IKeys.WDIR), jobID, "tmp", driverId, "discovery").toFile();
         var delete = new Thread(() -> file.delete());
         Runtime.getRuntime().addShutdownHook(delete);
         Thread.ofPlatform().name("discovery").daemon().start(() -> {

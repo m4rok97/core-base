@@ -1,15 +1,18 @@
 ignis:
   debug: false
   verbose: false
+  #home
   #options:
   #wdir:
   #tmpdir:
   port: 1963
+  #time:
   driver:
     name: driver
     #image:
     cores: 1
     memory: 1GB
+    #gpu:
     #node:
     #nodelist:
     #ports:
@@ -35,11 +38,12 @@ ignis:
     #public:
     #$private$:
   executor:
-    #name:
+    name: cluster
     #image:
     instances: 1
     cores: 1
     memory: 1GB
+    #gpu:
     #node:
     #nodelist:
         #ports:
@@ -53,6 +57,7 @@ ignis:
       #"/container": "/host"
     #env:
       #name: value
+    isolation: true
   healthcheck:
     port: 2005
     #url:
@@ -62,10 +67,12 @@ ignis:
     #disable
   #job
     #id
+    #cluster
+    #sockets
+    #dir
     #container:
       #id
       #dir
-    #dir
   partition:
     type: Memory
     minimal: 128MB
@@ -87,16 +94,13 @@ ignis:
       resampling: false
     exchange:
       type: auto #sync async
-    #scheduler:
-      #url:
-      #name:
-      #env:
-        #job
-        #container
-      #param:
-        #a: b
-    #time:
-    #worker:
+    recovery:
+      attempts: 3
+  #scheduler:
+    #url:
+    #name:
+    #param:
+      #a: b
   #submitter:
     #binds:
   container:
