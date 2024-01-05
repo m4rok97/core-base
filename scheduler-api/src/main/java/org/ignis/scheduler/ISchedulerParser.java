@@ -18,14 +18,15 @@
  */
 package org.ignis.scheduler;
 
-import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.properties.IPropertyException;
 import org.ignis.scheduler.model.IBind;
 import org.ignis.scheduler.model.IPort;
 import org.ignis.scheduler.model.IVolume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -40,17 +41,17 @@ public final class ISchedulerParser {
     }
 
     public Map<String, String> schedulerParams() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();/*
         int plen = IKeys.SCHEDULER_PARAMS.length() + 1;
         for (String key : props.getPrefixKeys(IKeys.SCHEDULER_PARAMS)) {
             params.put(key.substring(plen), props.getProperty(key));
-        }
+        }*/
         return params;
     }
 
 
     public List<IPort> ports(String prefix) {
-        List<IPort> ports = new ArrayList<>();
+        List<IPort> ports = new ArrayList<>();/*
         Collection<String> propsPorts = props.getPrefixKeys(prefix);
 
         int transportPorts = props.getInteger(IKeys.TRANSPORT_PORTS);
@@ -83,13 +84,14 @@ public final class ISchedulerParser {
             for (Integer port : props.getIntegerList(prefix + "s.udp")) {
                 ports.add(new IPort(port, 0, "tcp"));
             }
-        }
+        }*/
 
         return ports;
     }
 
     public List<IBind> binds(String prefix) {
         List<IBind> binds = new ArrayList<>();
+        /*
         binds.add(IBind.builder()
                 .hostPath(props.getString(IKeys.DFS_ID))
                 .containerPath(props.getString(IKeys.DFS_HOME))
@@ -107,28 +109,28 @@ public final class ISchedulerParser {
                     .hostPath(hostpath)
                     .containerPath(key.substring(prefix.length() + 1))
                     .readOnly(ro).build());
-        }
+        }*/
 
         return binds;
     }
 
     public List<IVolume> volumes(String prefix) {
         List<IVolume> volumes = new ArrayList<>();
-
+/*
         for (String key : props.getPrefixKeys(prefix)) {
             volumes.add(IVolume.builder()
                     .containerPath(key.substring(prefix.length() + 1))
                     .size(props.getSILong(key)).build());
-        }
+        }*/
         return volumes;
     }
 
     public Map<String, String> env(String prefix) {
         Map<String, String> env = new HashMap<>();
-        int plen = prefix.length() + 1;
+        int plen = prefix.length() + 1;/*
         for (String key : props.getPrefixKeys(prefix)) {
             env.put(key.substring(plen), props.getString(key));
-        }
+        }*/
         return env;
     }
 

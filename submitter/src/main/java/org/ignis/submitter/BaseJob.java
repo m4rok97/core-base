@@ -51,9 +51,9 @@ public abstract class BaseJob implements Callable<Integer> {
         var defaults = new IProperties();
         defaults.load(getClass().getClassLoader().getResourceAsStream("etc/ignis.yaml"));
         props = new IProperties(defaults);
-        props.setProperty(IKeys.WORKING_DIRECTORY, System.getProperty("user.dir"));
-        if(!props.hasProperty(IKeys.SCHEDULER_TYPE) && props.hasProperty(IKeys.CONTAINER_PROVIDER)){
-            props.setProperty(IKeys.SCHEDULER_TYPE, props.getProperty(IKeys.CONTAINER_PROVIDER));
+        props.setProperty(IKeys.WDIR, System.getProperty("user.dir"));
+        if(!props.hasProperty(IKeys.SCHEDULER_NAME) && props.hasProperty(IKeys.CONTAINER_PROVIDER)){
+            props.setProperty(IKeys.SCHEDULER_NAME, props.getProperty(IKeys.CONTAINER_PROVIDER));
         }
         LOGGER.info("Loading environment variables");
         props.fromEnv(System.getenv());
@@ -93,7 +93,7 @@ public abstract class BaseJob implements Callable<Integer> {
         String url = "", type = null;
         try {
             url = props.getProperty(IKeys.SCHEDULER_URL, null);
-            type = props.getProperty(IKeys.SCHEDULER_TYPE);
+            type = props.getProperty(IKeys.SCHEDULER_NAME);
 
             LOGGER.info("Checking scheduler " + type);
             scheduler = ISchedulerFactory.create(type, url);

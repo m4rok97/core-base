@@ -78,14 +78,14 @@ public interface IScheduler {
     List<IJobInfo> listJobs(Map<String, String> filters) throws ISchedulerException;
 
     /**
-     * Creates a new cluster with the given name.
+     * Creates a new cluster with the given name. (Blocking function)
      *
      * @param job       The ID of the job to create a cluster.
-     * @param resources The resources of the cluster to be created.
+     * @param request The resources of the cluster to be created.
      * @return An IClusterInfo object representing the created cluster.
      * @throws ISchedulerException If an error occurs during cluster creation.
      */
-    IClusterInfo createCluster(String job, IClusterRequest resources) throws ISchedulerException;
+    IClusterInfo createCluster(String job, IClusterRequest request) throws ISchedulerException;
 
     /**
      * Gets the cluster with the specified ID.
@@ -111,10 +111,11 @@ public interface IScheduler {
      *
      * @param job The ID of the job.
      * @param cluster An IClusterInfo object representing the cluster to be repaired.
+     * @param request The resources of the cluster to be repaired.
      * @return An IClusterInfo object representing the repaired cluster.
      * @throws ISchedulerException If an error occurs during cluster repair.
      */
-    IClusterInfo repairCluster(String job, IClusterInfo cluster) throws ISchedulerException;
+    IClusterInfo repairCluster(String job, IClusterInfo cluster, IClusterRequest request) throws ISchedulerException;
 
     /**
      * Gets the Status of container with the specified ID.

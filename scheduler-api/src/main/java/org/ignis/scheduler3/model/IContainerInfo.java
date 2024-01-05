@@ -24,6 +24,7 @@ public record IContainerInfo(
         Map<String, String> hostnames,
         Map<String, String> env,
         INetworkMode network,
+        IStatus status,
         IProvider provider,
         Map<String, String> schedulerOptArgs
 ) {

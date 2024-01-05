@@ -37,6 +37,8 @@ public final class IProperties {
 
     private String secret;
 
+    private boolean readOnly;
+
     private static boolean isTrue(String value) {
         return BOOLEAN.matcher(value).matches();
     }
@@ -50,6 +52,16 @@ public final class IProperties {
             return "";
         }
         return key.substring(0, key.lastIndexOf('.'));
+    }
+
+    public static String basekey(String key) {
+        if (!key.contains(".")) {
+            return key;
+        }
+        if (key.endsWith(".")) {
+            return "";
+        }
+        return key.substring(key.lastIndexOf('.') + 1);
     }
 
     public static String relative(String prefix, String key) {
@@ -67,9 +79,25 @@ public final class IProperties {
         return key.toUpperCase().replace(".", "_");
     }
 
+    public static boolean isCrypted(String s) {
+        return s.startsWith("$") && s.endsWith("$");
+    }
+
     public IProperties(IProperties defaults) {
         this.defaults = defaults;
         inner = new HashMap<>();
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    private void readOnlyError(String key) {
+        throw new IPropertyException(key, "properties is Read-only");
     }
 
     public IProperties() {
@@ -105,12 +133,15 @@ public final class IProperties {
         return secret;
     }
 
+
     private String put(String key, String value) {
+        if (readOnly) {
+            readOnlyError(key);
+        }
         if (key.contains("$")) {
-            var subKeys = split(key);
-            var lastKey = subKeys[subKeys.length - 1];
-            if (lastKey.startsWith("$") && lastKey.endsWith("$")) {
-                if (!value.startsWith("$") || !value.endsWith("$")) {
+            var base = basekey(key);
+            if (isCrypted(base)) {
+                if (!isCrypted(value)) {
                     try {
                         value = "$" + ICrypto.encode(value, secret()) + "$";
                     } catch (RuntimeException ex) {
@@ -128,10 +159,9 @@ public final class IProperties {
             return null;
         }
         if (key.contains("$")) {
-            var subKeys = split(key);
-            var lastKey = subKeys[subKeys.length - 1];
-            if (lastKey.startsWith("$") && lastKey.endsWith("$")) {
-                if (value.startsWith("$") && value.endsWith("$")) {
+            var base = basekey(key);
+            if (isCrypted(base)) {
+                if (isCrypted(value)) {
                     try {
                         return ICrypto.decode(value, secret());
                     } catch (RuntimeException ex) {
@@ -164,16 +194,20 @@ public final class IProperties {
     }
 
     public boolean requireCrypto() {
-        return toMap(true).entrySet().stream().anyMatch(e -> {
-            var subKeys = split(e.getKey());
-            var lastKey = subKeys[subKeys.length - 1];
-            var v = e.getValue();
-            return lastKey.startsWith("$") && lastKey.endsWith("$") && !v.startsWith("$") && !v.endsWith("$");
-        });
+        return toMap(true).entrySet().stream().anyMatch(e ->
+            isCrypted(basekey(e.getKey())) && !isCrypted(e.getValue())
+        );
     }
 
     public String setProperty(String key, String value) {
         return nn(put(nn(key), nn(value)));
+    }
+
+    public <T> String setProperty(String key, T value) {
+        if(value == null){
+            return nn(put(nn(key), ""));
+        }
+        return nn(put(nn(key), value.toString()));
     }
 
     public String getProperty(String key) throws IPropertyException {
@@ -201,6 +235,9 @@ public final class IProperties {
     }
 
     public String rmProperty(String key) {
+        if (readOnly) {
+            readOnlyError(key);
+        }
         return nn(inner.remove(nn(key)));
     }
 
@@ -430,6 +467,9 @@ public final class IProperties {
     }
 
     public void clear() {
+        if (readOnly && !inner.isEmpty()) {
+            readOnlyError(inner.keySet().iterator().next());
+        }
         inner.clear();
     }
 

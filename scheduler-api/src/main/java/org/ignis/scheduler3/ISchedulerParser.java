@@ -71,10 +71,6 @@ public final class ISchedulerParser {
                     case IKeys.EXECUTOR_NODELIST:
                         builder.nodelist(props.getStringList(key));
                         break SEARCH;
-                    case IKeys.DRIVER_HOSTNAMES:
-                    case IKeys.EXECUTOR_HOSTNAMES:
-                        parseKeyValue(prefix, hostnames, key, props.getProperty(key));
-                        break SEARCH;
                     case IKeys.DRIVER_ENV:
                     case IKeys.EXECUTOR_ENV:
                         parseKeyValue(prefix, env, key, props.getProperty(key));
@@ -193,9 +189,9 @@ public final class ISchedulerParser {
         dest.put(keys[1], value);
     }
 
-    public Long parseTime() {
-        if (props.hasProperty(IKeys.JOB_TIME)) {
-            var text = props.getString(IKeys.JOB_TIME);
+    private Long parseTime() {
+        if (props.hasProperty(IKeys.TIME)) {
+            var text = props.getString(IKeys.TIME);
             var fields = text.split("[-:]");
             Collections.reverse(Arrays.asList(fields));
             int[] w = {1, 60, 60 * 60, 60 * 60 * 24};
@@ -204,7 +200,7 @@ public final class ISchedulerParser {
                 try {
                     seconds += Long.parseLong(fields[i]) * w[i];
                 } catch (NumberFormatException ex) {
-                    throw new IPropertyException(IKeys.JOB_TIME, " has bad format");
+                    throw new IPropertyException(IKeys.TIME, " has bad format");
                 }
             }
             return seconds;
@@ -234,20 +230,55 @@ public final class ISchedulerParser {
         return ports;
     }
 
+    public Map<String, String> dumpPorts(String prefix, IContainerInfo info) {
+        var result = new IProperties();
+        if (info.network().equals(IContainerInfo.INetworkMode.HOST)) {
+            return Map.of();
+        }
+        for (var proto : List.of("tcp", "udp")) {
+            var khost = IProperties.join(prefix, proto, "host");
+            var host = props.hasProperty(khost) ? props.getStringList(khost) : List.<String>of();
+            var free = new LinkedList<String>();
+            for(var port: info.ports()){
+                if(!port.protocol().name().equalsIgnoreCase(proto)){
+                    continue;
+                }
+                var n = IProperties.join(prefix, proto, String.valueOf(port.container()));
+                if(props.hasProperty(n)){
+                    result.setProperty(n, port.host());
+                } else {
+                    free.add(String.valueOf(port.host()));
+                }
+            }
+            for(int i=0; i< host.size();i++){
+                if(host.get(i).equals("0")){
+                    host.set(i, free.pollFirst());
+                }
+            }
+            if(!host.isEmpty()){
+                result.setList(khost, host);
+            }
+        }
+
+        return result.toMap(true);
+    }
+
     public void containerEnvironment(IClusterRequest request) {
         var env = request.resources().env();
-        props.toEnv(IKeys.WORKING_DIRECTORY, env, true);
+        props.toEnv(IKeys.WDIR, env, true);
+        props.toEnv(IKeys.TRANSPORT_COMPRESSION, env, true);
+
         props.toEnv(IKeys.TMPDIR, env, false);
-        props.toEnv(IKeys.DRIVER_HEALTHCHECK_INTERVAL, env, false);
-        props.toEnv(IKeys.DRIVER_HEALTHCHECK_TIMEOUT, env, false);
-        props.toEnv(IKeys.DRIVER_HEALTHCHECK_RETRIES, env, false);
-        props.toEnv(IKeys.DRIVER_HEALTHCHECK_URL, env, false);
+        props.toEnv(IKeys.HEALTHCHECK_INTERVAL, env, false);
+        props.toEnv(IKeys.HEALTHCHECK_TIMEOUT, env, false);
+        props.toEnv(IKeys.HEALTHCHECK_RETRIES, env, false);
+        props.toEnv(IKeys.HEALTHCHECK_URL, env, false);
 
         props.toEnv(IKeys.CRYPTO_PUBLIC, env, false);
         props.toEnv(IKeys.CRYPTO_SECRET, env, false);
         props.toEnv(IKeys.DISCOVERY_TYPE, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_USER, env, false);
-        props.toEnv(IKeys.DISCOVERY_ETCD_PASSWORD, env, false);
+        props.toEnv(IKeys.DISCOVERY_ETCD_$PASSWORD$, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_ENDPOINT, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_CA, env, false);
     }
