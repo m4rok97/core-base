@@ -64,7 +64,7 @@ public final class IDataMathHelper extends IDataHelper {
         }
 
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ITakeSampleTask(driver.getName(), driver.getExecutor(), shared, true, withReplacement, num, seed, tp));
         LOGGER.info(log() + "takeSample(" +
                 "withReplacement=" + withReplacement +
@@ -101,7 +101,7 @@ public final class IDataMathHelper extends IDataHelper {
         }
 
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new IMaxTask(driver.getName(), driver.getExecutor(), shared, true, tp));
         LOGGER.info(log() + "max(" +
                 ") registered");
@@ -120,7 +120,7 @@ public final class IDataMathHelper extends IDataHelper {
         }
 
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new IMaxTask(driver.getName(), driver.getExecutor(), shared, true, cmp, tp));
         LOGGER.info(log() + "max(" +
                 "cmp=" + srcToString(cmp) +
@@ -140,7 +140,7 @@ public final class IDataMathHelper extends IDataHelper {
         }
 
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new IMinTask(driver.getName(), driver.getExecutor(), shared, true, tp));
         LOGGER.info(log() + "min(" +
                 ") registered");
@@ -159,7 +159,7 @@ public final class IDataMathHelper extends IDataHelper {
         }
 
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new IMinTask(driver.getName(), driver.getExecutor(), shared, true, cmp, tp));
         LOGGER.info(log() + "min(" +
                 "cmp=" + srcToString(cmp) +
@@ -183,7 +183,7 @@ public final class IDataMathHelper extends IDataHelper {
         }
 
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ICountByKeyTask(driver.getName(), driver.getExecutor(), shared, true, tp));
         LOGGER.info(log() + "countByKey(" +
                 ") registered");
@@ -202,7 +202,7 @@ public final class IDataMathHelper extends IDataHelper {
         }
 
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ICountByValueTask(driver.getName(), driver.getExecutor(), shared, true, tp));
         LOGGER.info(log() + "countByValue(" +
                 ") registered");

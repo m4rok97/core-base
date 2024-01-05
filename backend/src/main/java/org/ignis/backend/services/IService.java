@@ -21,10 +21,10 @@ package org.ignis.backend.services;
  */
 public class IService {
 
-    protected IAttributes attributes;
+    protected IServiceStorage ss;
 
-    public IService(IAttributes attributes) {
-        this.attributes = attributes;
+    public IService(IServiceStorage ss) {
+        this.ss = ss;
     }
 
 }

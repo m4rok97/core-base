@@ -25,7 +25,7 @@ import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler.IScheduler;
+import org.ignis.scheduler3.IScheduler;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public final class ICluster {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ICluster.class);
 
-    private String name;
+    private final String name;
     private final long id;
     private final ILock lock;
     private final ITaskGroup tasks;
@@ -47,7 +47,7 @@ public final class ICluster {
     private final List<IContainer> containers;
     private final List<IWorker> workers;
 
-    public ICluster(String name, long id, IProperties properties, IThreadPool pool, IScheduler scheduler, ISSH ssh)
+    public ICluster(String name, long id, IProperties properties, IThreadPool pool, IScheduler scheduler)
             throws IgnisException {
         this.id = id;
         this.properties = properties;
@@ -55,8 +55,8 @@ public final class ICluster {
         this.containers = new ArrayList<>();
         this.workers = new ArrayList<>();
         this.lock = new ILock(id);
-        setName(name);
-        this.tasks = new IClusterCreateHelper(this, properties).create(scheduler, ssh);//Must be the last
+        this.name = id + "-" + name;
+        this.tasks = new IClusterCreateHelper(this, properties).create(scheduler);//Must be the last
         if (Boolean.getBoolean(IKeys.DEBUG)) {
             LOGGER.info("Debug: " + getName() + " " + properties.toString());
         }
@@ -80,13 +80,6 @@ public final class ICluster {
 
     public boolean isRunning() {
         return !containers.isEmpty() && containers.get(0).getInfo() != null;
-    }
-
-    public void setName(String name) {
-        if (name.isEmpty()) {
-            name = "Cluster(" + id + ")";
-        }
-        this.name = name;
     }
 
     public ITaskGroup getTasks() {

@@ -22,6 +22,9 @@ import org.ignis.properties.IProperties;
 import org.ignis.rpc.driver.IDriverException;
 import org.ignis.rpc.driver.IPropertiesService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,14 +32,27 @@ import java.util.Map;
  */
 public final class IPropertiesServiceImpl extends IService implements IPropertiesService.Iface {
 
-    public IPropertiesServiceImpl(IAttributes attributes) {
-        super(attributes);
+    private final List<IProperties> defs;
+
+
+    public IPropertiesServiceImpl(IServiceStorage ss, List<IProperties> defs) {
+        super(ss);
+        this.defs = new ArrayList<>(defs);
+        Collections.reverse(this.defs);
     }
 
     @Override
     public long newInstance() throws IDriverException, TException {
         try {
-            return attributes.addProperties(new IProperties(attributes.defaultProperties));
+            if (!defs.isEmpty()) {
+                synchronized (defs) {
+                    if (!defs.isEmpty()) {
+                        return ss.addProperties(defs.removeLast());
+                    }
+                }
+            }
+
+            return ss.addProperties(new IProperties(ss.props()));
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }
@@ -45,12 +61,12 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public long newInstance2(long id) throws IDriverException, TException {
         try {
-            IProperties source = attributes.getProperties(id);
+            IProperties source = ss.getProperties(id);
             IProperties properties;
             synchronized (source) {
                 properties = source.copy();
             }
-            return attributes.addProperties(properties);
+            return ss.addProperties(properties);
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }
@@ -59,7 +75,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public String setProperty(long id, String key, String value) throws IDriverException, TException {
         try {
-            IProperties properties = attributes.getProperties(id);
+            IProperties properties = ss.getProperties(id);
             synchronized (properties) {
                 return properties.setProperty(key, value);
             }
@@ -71,7 +87,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public String getProperty(long id, String key) throws IDriverException, TException {
         try {
-            IProperties properties = attributes.getProperties(id);
+            IProperties properties = ss.getProperties(id);
             synchronized (properties) {
                 return properties.getProperty(key);
             }
@@ -83,7 +99,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public String rmProperty(long id, String key) throws IDriverException, TException {
         try {
-            IProperties properties = attributes.getProperties(id);
+            IProperties properties = ss.getProperties(id);
             synchronized (properties) {
                 return properties.rmProperty(key);
             }
@@ -95,9 +111,9 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public boolean contains(long id, String key) throws IDriverException, TException {
         try {
-            IProperties properties = attributes.getProperties(id);
+            IProperties properties = ss.getProperties(id);
             synchronized (properties) {
-                return properties.contains(key);
+                return properties.hasProperty(key);
             }
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
@@ -107,7 +123,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public Map<String, String> toMap(long id, boolean defaults) throws IDriverException, TException {
         try {
-            IProperties properties = attributes.getProperties(id);
+            IProperties properties = ss.getProperties(id);
             synchronized (properties) {
                 return properties.toMap(defaults);
             }
@@ -119,7 +135,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public void fromMap(long id, Map<String, String> map_) throws IDriverException, TException {
         try {
-            IProperties properties = attributes.getProperties(id);
+            IProperties properties = ss.getProperties(id);
             synchronized (properties) {
                 properties.fromMap(map_);
             }
@@ -131,7 +147,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public void load(long id, String path) throws IDriverException, TException {
         try {
-            IProperties properties = attributes.getProperties(id);
+            IProperties properties = ss.getProperties(id);
             synchronized (properties) {
                 properties.load(path);
             }
@@ -143,7 +159,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public void store(long id, String path) throws IDriverException, TException {
         try {
-            IProperties properties = attributes.getProperties(id);
+            IProperties properties = ss.getProperties(id);
             synchronized (properties) {
                 properties.store(path);
             }
@@ -155,7 +171,7 @@ public final class IPropertiesServiceImpl extends IService implements IPropertie
     @Override
     public void clear(long id) throws IDriverException, TException {
         try {
-            IProperties properties = attributes.getProperties(id);
+            IProperties properties = ss.getProperties(id);
             synchronized (properties) {
                 properties.clear();
             }

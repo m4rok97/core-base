@@ -21,51 +21,31 @@ package org.ignis.backend.cluster.tasks;
 
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.properties.IKeys;
-import org.ignis.scheduler.model.INetworkMode;
-import org.ignis.scheduler.model.IPort;
+import org.ignis.properties.IProperties;
+import org.ignis.scheduler3.model.IContainerInfo;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class IMpiConfig {
 
-    public static Map<String, String> get(IExecutor executor) {
-        Map<String, String> conf = new HashMap<>();
+    public static Map<String, String> getEnv(IExecutor executor) {
+        Map<String, String> env = new HashMap<>();
         if (executor.getProperties().getDouble(IKeys.TRANSPORT_CORES) > 0 && executor.getCores() > 1) {
-            conf.put("MPI_THREAD_MULTIPLE", "1");
-            conf.put("MPIR_CVAR_CH4_NUM_VCIS", String.valueOf(executor.getCores()));
+            env.put("MPI_THREAD_MULTIPLE", "1");
+            env.put("MPIR_CVAR_CH4_NUM_VCIS", String.valueOf(executor.getCores()));
         }
-        if( executor.getContainer().getInfo().getNetworkMode().equals(INetworkMode.BRIDGE)){
-            conf.put("MPICH_SERVICE", executor.getContainer().getInfo().getHost());
+        if (executor.getContainer().getInfo().network().equals(IContainerInfo.INetworkMode.BRIDGE)) {
+            env.put("MPICH_SERVICE", executor.getContainer().getInfo().node());
+            int n = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
+
+            List<String> ports = executor.getContext().getStringList(
+                    IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "host"));
+
+            env.put("MPICH_LIST_PORTS", String.join(" ", ports.subList(n - 1, ports.size())));
         }
-        List<IPort> mpiPorts = getPorts(executor);
-        conf.put("MPICH_LIST_PORTS",
-                mpiPorts.stream().map((IPort p) -> String.valueOf(p.getContainerPort())).collect(Collectors.joining(" ")));
-        return conf;
-    }
-
-    public static List<IPort> getPorts(IExecutor executor) {
-        List<IPort> randomPorts;
-        if (executor.getContainer().getInfo().getNetworkMode().equals(INetworkMode.BRIDGE)){
-            Set<String> bussy = new HashSet<>();
-            for (IPort port : executor.getContainer().getContainerRequest().getPorts()) {
-                if (port.getContainerPort() != 0) {
-                    bussy.add(port.getProtocol() + port.getContainerPort());
-                }
-            }
-
-            randomPorts = new ArrayList<>();
-            for (IPort port : executor.getContainer().getInfo().getPorts()) {
-                if (!bussy.contains(port.getProtocol() + port.getContainerPort()) && port.getProtocol().equalsIgnoreCase("tcp")) {
-                    randomPorts.add(port);
-                }
-            }
-        } else {
-            randomPorts = executor.getContainer().getInfo().getPorts();
-        }
-
-        int transportPorts = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
-        return randomPorts.subList(0, transportPorts);
+        return env;
     }
 
 }

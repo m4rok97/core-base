@@ -21,16 +21,16 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
-import org.ignis.scheduler.IScheduler;
-import org.ignis.scheduler.ISchedulerException;
-import org.ignis.scheduler.model.IContainerInfo;
-import org.ignis.scheduler.model.IContainerStatus;
+import org.ignis.scheduler3.IScheduler;
+import org.ignis.scheduler3.ISchedulerException;
+import org.ignis.scheduler3.model.IClusterInfo;
+import org.ignis.scheduler3.model.IClusterRequest;
+import org.ignis.scheduler3.model.IContainerInfo;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author César Pomar
@@ -44,130 +44,98 @@ public final class IContainerCreateTask extends IContainerTask {
         public Shared(List<IContainer> containers) {
             this.containers = containers;
             this.barrier = new IBarrier(containers.size());
-            this.status = new IContainerStatus[containers.size()];
+            this.alive = new AtomicInteger();
         }
 
         private final IBarrier barrier;
         private final List<IContainer> containers;
-        private final IContainerStatus[] status;
+        private final AtomicInteger alive;
+        private IClusterInfo clusterInfo;
 
     }
 
     private final Shared shared;
     private final IScheduler scheduler;
-    private final IContainerInfo containerRequest;
+    private final IClusterRequest request;
 
-    public IContainerCreateTask(String name, IContainer container, IScheduler scheduler, IContainerInfo containerRequest,
+    public IContainerCreateTask(String name, IContainer container, IScheduler scheduler, IClusterRequest request,
                                 Shared shared) {
         super(name, container);
         this.shared = shared;
         this.scheduler = scheduler;
-        this.containerRequest = containerRequest;
+        this.request = request;
+    }
+
+    private void checkContainers() throws BrokenBarrierException, InterruptedException, ISchedulerException, IgnisException {
+        String jobID = container.getProperties().getProperty(IKeys.JOB_ID);
+        boolean ok = false;
+        if (shared.barrier.await() == 0) {
+            shared.alive.set(0);
+        }
+        shared.barrier.await();
+
+        if (container.testConnection()) {
+            ok = true;
+        } else {
+            LOGGER.info(log() + "Container connection lost");
+            if (scheduler.getContainerStatus(jobID, container.getInfo().id()).equals(IContainerInfo.IStatus.RUNNING)) {
+                LOGGER.info(log() + "Container already running");
+                try {
+                    LOGGER.info(log() + "Reconnecting to the container");
+                    container.connect();
+                    ok = true;
+                } catch (IgnisException ex) {
+                    LOGGER.warn(log() + "Container dead");
+                }
+            }
+        }
+
+        if (ok) {
+            shared.alive.incrementAndGet();
+        }
+
+        if (shared.alive.get() != shared.containers.size()) {
+            if (shared.barrier.await() == 0) {
+                LOGGER.info(log() + "Repairing new Cluster");
+                shared.clusterInfo = scheduler.repairCluster(jobID, shared.clusterInfo, request);
+            }
+        }
+
+        if (!ok) {
+            container.setInfo(shared.clusterInfo.containers().get((int)container.getId()));
+            container.connect();
+        }
+
+    }
+
+    private void createContainers() throws BrokenBarrierException, InterruptedException, ISchedulerException, IgnisException {
+        String jobID = container.getProperties().getProperty(IKeys.JOB_ID);
+        LOGGER.info(log() + "Container not found");
+        if (shared.barrier.await() == 0) {
+            LOGGER.info(log() + "Creating new Cluster");
+            scheduler.createCluster(jobID, request);
+        }
+        shared.barrier.await();
+        container.setInfo(shared.clusterInfo.containers().get((int)container.getId()));
+        LOGGER.info(log() + "Connecting to the container");
+        container.connect();
     }
 
     @Override
     public void run(ITaskContext context) throws IgnisException {
         try {
-            int containerId = (int) container.getId();
-            boolean tested = false;
-            if (container.getInfo() != null) {
-                if (container.testConnection()) {
-                    shared.status[containerId] = IContainerStatus.RUNNING;
-                    tested = true;
-                } else {
-                    shared.status[containerId] = IContainerStatus.ERROR;
-                }
-                if (shared.barrier.await() == 0) {
-                    List<String> ids = new ArrayList<>();
-                    for (IContainer c : shared.containers) {
-                        if (shared.status[(int) c.getId()] == IContainerStatus.ERROR) {
-                            ids.add(c.getInfo().getId());
-                        }
-                    }
-                    List<IContainerStatus> status = scheduler.getStatus(ids);
-                    Iterator<IContainerStatus> it = status.iterator();
-                    for (IContainer c : shared.containers) {
-                        if (shared.status[(int) c.getId()] == IContainerStatus.ERROR) {
-                            shared.status[(int) c.getId()] = it.next();
-                        }
-                    }
-                }
-                shared.barrier.await();
-                if (!tested) {
-                    switch (shared.status[containerId]) {
-                        case DESTROYED:
-                        case FINISHED:
-                        case ERROR:
-                            shared.status[containerId] = IContainerStatus.ERROR;
-                            break;
-                        default:
-                            LOGGER.info(log() + "Container already running");
-                            if (!container.testConnection()) {
-                                LOGGER.info(log() + "Reconnecting to the container");
-                                try {
-                                    container.connect();
-                                } catch (IgnisException ex) {
-                                    LOGGER.warn(log() + "Container dead");
-                                    shared.status[containerId] = IContainerStatus.ERROR;
-                                }
-                            }
-                    }
-                }
-                if (shared.barrier.await() == 0) {
-                    List<String> stopped = new ArrayList<>();
-                    List<Integer> stoppedIndex = new ArrayList<>();
-                    for (int i = 0; i < shared.containers.size(); i++) {
-                        if (shared.status[i] == IContainerStatus.ERROR) {
-                            stopped.add(shared.containers.get(i).getInfo().getId());
-                            stoppedIndex.add(i);
-                            shared.containers.get(i).setInfo(null);
-                        }
-                    }
-                    if (stopped.size() == shared.containers.size()) {
-                        LOGGER.info(log() + "All containers dead");
-                        try {
-                            scheduler.destroyExecutorInstances(stopped);
-                        } catch (ISchedulerException ex) {
-                            LOGGER.warn(log() + ex);
-                        }
-                    } else {
-                        for (int i = 0; i < stoppedIndex.size(); i++) {
-                            shared.containers.get(i).setInfo(scheduler.restartContainer(stopped.get(i)));
-                            if (Boolean.getBoolean(IKeys.DEBUG)) {
-                                LOGGER.info("Debug:" + log() + "[" + i + "]" + shared.containers.get(i).getInfo());
-                            }
-                        }
-                    }
-                }
-                shared.barrier.await();
+            if (container.getInfo() == null) {
+                createContainers();
+            } else {
+                checkContainers();
             }
+            LOGGER.warn(log() + "Container ready");
 
-            if (container.getInfo() != null) {
-                return;
-            }
-
-            if (shared.barrier.await() == 0) {
-                String group = container.getProperties().getString(IKeys.JOB_NAME);
-                List<String> ids = scheduler.createExecutorContainers(group, name, containerRequest, shared.containers.size());
-                List<IContainerInfo> details = scheduler.getExecutorContainers(ids);
-                for (int i = 0; i < shared.containers.size(); i++) {
-                    if (Boolean.getBoolean(IKeys.DEBUG)) {
-                        LOGGER.info("Debug:" + log() + "[" + i + "]" + details.get(i));
-                    }
-                    shared.containers.get(i).setInfo(details.get(i));
-                }
-            }
-            shared.barrier.await();
-
-            LOGGER.info(log() + "Connecting to the container");
-            container.connect();
-
-            if (Boolean.getBoolean(IKeys.DEBUG) && containerId == 0) {
+            if (Boolean.getBoolean(IKeys.DEBUG)) {
                 LOGGER.info("Debug:" + log() + " ExecutorEnvironment{\n" +
                         container.getTunnel().execute("env", false)
                         + '}');
             }
-            LOGGER.info(log() + "Containers ready");
         } catch (IgnisException ex) {
             shared.barrier.fails();
             throw ex;

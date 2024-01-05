@@ -21,14 +21,12 @@ import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.helpers.cluster.IClusterExecuteHelper;
 import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
 import org.ignis.backend.cluster.tasks.ILazy;
-import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.driver.IClusterService;
 import org.ignis.rpc.driver.IDriverException;
-import org.ignis.scheduler.IScheduler;
+import org.ignis.scheduler3.IScheduler;
 
 import java.util.List;
 
@@ -37,21 +35,17 @@ import java.util.List;
  */
 public final class IClusterServiceImpl extends IService implements IClusterService.Iface {
 
-    private final IThreadPool threadPool;
     private final IScheduler scheduler;
 
-    public IClusterServiceImpl(IAttributes attributes, IScheduler scheduler) throws IgnisException {
-        super(attributes);
-        int minWorkers = attributes.defaultProperties.getInteger(IKeys.DRIVER_RPC_POOL);
-        int attempts = attributes.defaultProperties.getInteger(IKeys.EXECUTOR_ATTEMPTS);
-        this.threadPool = new IThreadPool(minWorkers, attempts);
+    public IClusterServiceImpl(IServiceStorage ss, IScheduler scheduler) throws IgnisException {
+        super(ss);
         this.scheduler = scheduler;
     }
 
     @Override
     public void start(long id) throws TException {
         try {
-            ICluster clusterObject = attributes.getCluster(id);
+            ICluster clusterObject = ss.getCluster(id);
             ILazy<Void> result;
             synchronized (clusterObject.getLock()) {
                 result = clusterObject.start();
@@ -65,7 +59,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     @Override
     public void destroy(long id) throws TException {
         try {
-            ICluster clusterObject = attributes.getCluster(id);
+            ICluster clusterObject = ss.getCluster(id);
             ILazy<Void> result;
             synchronized (clusterObject.getLock()) {
                 result = clusterObject.destroy(scheduler);
@@ -84,9 +78,10 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     @Override
     public long newInstance1a(String name) throws IDriverException, TException {
         try {
-            IProperties clusterProperties = new IProperties(attributes.defaultProperties);
-            long id = attributes.newCluster();
-            attributes.setCluster(new ICluster(name, id, clusterProperties, threadPool, scheduler, attributes.ssh));
+            IProperties propertiesObject = ss.props().copy();
+            propertiesObject.setReadOnly(true);
+            long id = ss.newCluster();
+            ss.setCluster(new ICluster(name, id, propertiesObject, ss.pool(), scheduler));
             return id;
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
@@ -101,13 +96,14 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     @Override
     public long newInstance2(String name, long properties) throws IDriverException, TException {
         try {
-            IProperties propertiesObject = attributes.getProperties(properties);
+            IProperties propertiesObject = ss.getProperties(properties);
             IProperties clusterProperties;
             synchronized (propertiesObject) {
                 clusterProperties = propertiesObject.copy();
             }
-            long id = attributes.newCluster();
-            attributes.setCluster(new ICluster(name, id, clusterProperties, threadPool, scheduler, attributes.ssh));
+            clusterProperties.setReadOnly(true);
+            long id = ss.newCluster();
+            ss.setCluster(new ICluster(name, id, clusterProperties, ss.pool(), scheduler));
             return id;
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
@@ -117,7 +113,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     @Override
     public void setName(long cluster, String name) throws IDriverException, TException {
         try {
-            attributes.changeClusterName(cluster, name);
+            throw new UnsupportedOperationException("Cluster renaming is no longer supported");
         } catch (Exception ex) {
             throw new IDriverExceptionImpl(ex);
         }
@@ -126,7 +122,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     @Override
     public void execute(long id, List<String> cmd) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id);
+            ICluster cluster = ss.getCluster(id);
             ILazy<Void> result;
             synchronized (cluster.getLock()) {
                 result = new IClusterExecuteHelper(cluster, cluster.getProperties()).execute(cmd);
@@ -140,7 +136,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     @Override
     public void executeScript(long id, String script) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id);
+            ICluster cluster = ss.getCluster(id);
             ILazy<Void> result;
             synchronized (cluster.getLock()) {
                 result = new IClusterExecuteHelper(cluster, cluster.getProperties()).executeScript(script);
@@ -154,7 +150,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     @Override
     public void sendFile(long id, String source, String target) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id);
+            ICluster cluster = ss.getCluster(id);
             ILazy<Void> result;
             synchronized (cluster.getLock()) {
                 result = new IClusterFileHelper(cluster, cluster.getProperties()).sendFile(source, target);
@@ -168,7 +164,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     @Override
     public void sendCompressedFile(long id, String source, String target) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id);
+            ICluster cluster = ss.getCluster(id);
             ILazy<Void> result;
             synchronized (cluster.getLock()) {
                 result = new IClusterFileHelper(cluster, cluster.getProperties()).sendCompressedFile(source, target);
@@ -180,7 +176,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
     }
 
     public void destroyClusters() {
-        for (ICluster cluster : attributes.getClusters()) {
+        for (ICluster cluster : ss.getClusters()) {
             try {
                 cluster.destroy(scheduler).execute();
             } catch (IgnisException ex) {

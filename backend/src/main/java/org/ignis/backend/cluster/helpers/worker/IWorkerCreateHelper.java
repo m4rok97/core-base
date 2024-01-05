@@ -23,7 +23,6 @@ import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.executor.ICommGroupCreateTask;
 import org.ignis.backend.cluster.tasks.executor.IExecutorCreateTask;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.slf4j.LoggerFactory;
 
@@ -44,14 +43,6 @@ public final class IWorkerCreateHelper extends IWorkerHelper {
         int cores = worker.getCores();
         if(cores < 1){
             throw new  IgnisException("Executor cores must be greater than zero");
-        }
-        if (instances < 1) {
-            if (worker.getProperties().getStringList(IKeys.EXECUTOR_CORES_SINGLE).contains(worker.getType())) {
-                instances = cores;
-                cores = 1;
-            } else {
-                instances = 1;
-            }
         }
         int executors = worker.getCluster().getContainers().size() * instances;
         LOGGER.info(log() + "Registering worker with " + executors + " executors with " + cores + " cores");

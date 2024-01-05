@@ -22,12 +22,14 @@ import org.ignis.properties.IKeys;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.UnixDomainSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author César Pomar
@@ -38,31 +40,22 @@ public final class ITunnel {
 
     private final JSch jsch;
     private final Semaphore sem;
-    private final AtomicInteger localPort;
-    private final Map<Integer, Integer> ports;
+    private final Map<String, Integer> sockets;
+    private int socketIDs;
     private final String privateKey;
     private final String publicKey;
-    private final boolean portForwarding;
     private Session session;
-    private int remotePort;
 
-    public ITunnel(AtomicInteger localPort, int remotePortInit, boolean portForwarding, String privateKey, String publicKey) {
-        this.localPort = localPort;
-        this.remotePort = remotePortInit;
+    public ITunnel(String privateKey, String publicKey) {
         this.privateKey = privateKey;
         this.publicKey = publicKey;
-        this.portForwarding = portForwarding;
         this.jsch = new JSch();
-        this.ports = new HashMap<>();
+        this.sockets = new HashMap<>();
+        this.socketIDs = 1;
         this.sem = new Semaphore(10);//Maximum channels at the same time in a single session
     }
 
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    public void open(String host, int port) throws IgnisException {
-        String user = System.getProperty("user.name", "root");
+    public void open(String user, String host, int port) throws IgnisException {
         for (int i = 0; i < 300; i++) {
             try {
                 if (session != null) {
@@ -74,10 +67,8 @@ public final class ITunnel {
                 session = jsch.getSession(user, host, port);
                 session.setConfig("StrictHostKeyChecking", "no");
                 jsch.addIdentity(user, privateKey.getBytes(), publicKey.getBytes(), null);
-                if (portForwarding){
-                    for (Map.Entry<Integer, Integer> entry : ports.entrySet()) {
-                        session.setPortForwardingL(entry.getKey(), "localhost", entry.getValue());
-                    }
+                for (var entry : sockets.entrySet()) {
+                    setSocketForwardingL(entry.getKey(), entry.getValue());
                 }
                 session.connect();
                 break;
@@ -105,31 +96,37 @@ public final class ITunnel {
 
     public void close() {
         if (session != null) {
-            for (Integer port : ports.keySet()) {
+            for (Integer id : sockets.values()) {
                 try {
-                    session.delPortForwardingL(port);
-                } catch (JSchException e) {
+                    session.delPortForwardingL(id);
+                } catch (JSchException ex) {
+                    LOGGER.info(ex.getMessage(), ex);
                 }
             }
             session.disconnect();
         }
     }
 
-    public int registerPort() throws IgnisException {
-        int newRemotePort = remotePort++;
-        int newLocalPort = portForwarding ? localPort.incrementAndGet() : newRemotePort;
-        ports.put(newLocalPort, newRemotePort);
-        if (session != null && portForwarding) {
+    private void setSocketForwardingL(String path, int id) throws JSchException {
+        ServerSocketFactory ssf = (int port, int backlog, InetAddress bindAddr) -> {
+            var socket = new ServerSocket();
+            socket.bind(UnixDomainSocketAddress.of(path));
+            socket.setSoTimeout(0);
+            return socket;
+        };
+        session.setSocketForwardingL("0.0.0.0", id, path, ssf, 0);
+
+
+    }
+
+    public synchronized void registerSocket(String path) throws IgnisException {
+        sockets.put(path, socketIDs++);
+        if (session != null) {
             try {
-                session.setPortForwardingL(newLocalPort, "localhost", newRemotePort);
+                setSocketForwardingL(path, socketIDs - 1);
             } catch (JSchException ex) {
             }
         }
-        return newLocalPort;
-    }
-
-    public int getRemotePort(int port) {
-        return ports.get(port);
     }
 
     public String execute(List<String> cmds) throws IgnisException {
@@ -146,7 +143,7 @@ public final class ITunnel {
         try {
             this.sem.acquire();
             Channel channel = session.openChannel("exec");
-            String envScript = "source /ssh/environment && bash - << 'EOF'\n" + script + "\nEOF\n";
+            String envScript = "bash - << 'EOF'\n" + script + "\nEOF\n";
 
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             ((ChannelExec) channel).setCommand(envScript);
@@ -160,7 +157,7 @@ public final class ITunnel {
 
             channel.connect(60000);
 
-            while(!channel.isClosed()){
+            while (!channel.isClosed()) {
                 try {
                     Thread.sleep(1000);
                 } catch (Exception ee) {
@@ -187,12 +184,12 @@ public final class ITunnel {
 
         } catch (JSchException | InterruptedException ex) {
             throw new IgnisException("Script execution fails", ex);
-        }finally {
+        } finally {
             this.sem.release();
         }
     }
 
-    public void sendFile(String source, String target) throws IgnisException{
+    public void sendFile(String source, String target) throws IgnisException {
         try {
             this.sem.acquire();
             Channel channel = session.openChannel("sftp");
@@ -201,7 +198,7 @@ public final class ITunnel {
             channel.disconnect();
         } catch (JSchException | InterruptedException | SftpException ex) {
             throw new IgnisException("File could not be sent", ex);
-        }finally {
+        } finally {
             this.sem.release();
         }
     }

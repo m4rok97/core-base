@@ -53,7 +53,7 @@ public class IDriverConectionTask extends IExecutorTask {
 
         for (int i = 0; i < 300; i++) {
             try {
-                executor.connect("localhost");
+                executor.connect();
                 break;
             } catch (TException ex) {
                 if (i == 299) {
@@ -69,7 +69,7 @@ public class IDriverConectionTask extends IExecutorTask {
 
         try {
             executor.getExecutorServerModule().test();
-            executor.getExecutorServerModule().start(executor.getExecutorProperties(), IMpiConfig.get(executor));
+            executor.getExecutorServerModule().start(executor.getContext().toMap(true), IMpiConfig.getEnv(executor));
         } catch (IExecutorException ex) {
             throw new IExecutorExceptionWrapper(ex);
         } catch (TException ex) {

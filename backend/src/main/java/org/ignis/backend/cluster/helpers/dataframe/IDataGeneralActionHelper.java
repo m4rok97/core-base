@@ -47,7 +47,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new IReduceTask(getName(), executor, shared, false, src, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new IReduceTask(driver.getName(), driver.getExecutor(), shared, true, src, tp));
         LOGGER.info(log() + "reduce(" +
                 "zero=" + srcToString(src) +
@@ -66,7 +66,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new ITreeReduceTask(getName(), executor, shared, false, src, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ITreeReduceTask(driver.getName(), driver.getExecutor(), shared, true, src, tp));
         LOGGER.info(log() + "treeReduce(" +
                 "zero=" + srcToString(src) +
@@ -85,7 +85,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new ICollectTask(getName(), executor, shared, false, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ICollectTask(driver.getName(), driver.getExecutor(), shared, true, tp));
         LOGGER.info(log() + "collect(" +
                 ") registered");
@@ -103,7 +103,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new IAggregateTask(getName(), executor, shared, false, zero, seqOp, combOp, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new IAggregateTask(driver.getName(), driver.getExecutor(), shared, true, zero, seqOp, combOp, tp));
         LOGGER.info(log() + "aggregate(" +
                 "zero=" + srcToString(zero) +
@@ -124,7 +124,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new ITreeAggregateTask(getName(), executor, shared, false, zero, seqOp, combOp, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ITreeAggregateTask(driver.getName(), driver.getExecutor(), shared, true, zero, seqOp, combOp, tp));
         LOGGER.info(log() + "treeAggregate(" +
                 "zero=" + srcToString(zero) +
@@ -145,7 +145,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new IFoldTask(getName(), executor, shared, false, zero, src, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new IFoldTask(driver.getName(), driver.getExecutor(), shared, true, zero, src, tp));
         LOGGER.info(log() + "fold(" +
                 "zero=" + srcToString(zero) +
@@ -165,7 +165,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new ITreeFoldTask(getName(), executor, shared, false, zero, src, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ITreeFoldTask(driver.getName(), driver.getExecutor(), shared, true, zero, src, tp));
         LOGGER.info(log() + "treeFold(" +
                 "zero=" + srcToString(zero) +
@@ -185,7 +185,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new ITakeTask(getName(), executor, shared, false, num, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ITakeTask(driver.getName(), driver.getExecutor(), shared, true, num, tp));
         LOGGER.info(log() + "take(" +
                 "num=" + num +
@@ -249,7 +249,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new ITopTask(getName(), executor, shared, false, num, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ITopTask(driver.getName(), driver.getExecutor(), shared, true, num, tp));
         LOGGER.info(log() + "top(" +
                 "num=" + num +
@@ -268,7 +268,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new ITopTask(getName(), executor, shared, false, num, cmp, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ITopTask(driver.getName(), driver.getExecutor(), shared, true, num, cmp, tp));
         LOGGER.info(log() + "top(" +
                 "num=" + num +
@@ -288,7 +288,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new ITakeOrderedTask(getName(), executor, shared, false, num, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ITakeOrderedTask(driver.getName(), driver.getExecutor(), shared, true, num, tp));
         LOGGER.info(log() + "takeOrdered(" +
                 "num=" + num +
@@ -307,7 +307,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new ITakeOrderedTask(getName(), executor, shared, false, num, cmp, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new ITakeOrderedTask(driver.getName(), driver.getExecutor(), shared, true, num, cmp, tp));
         LOGGER.info(log() + "takeOrdered(" +
                 "num=" + num +
@@ -327,7 +327,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new IKeysTask(getName(), executor, shared, false, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new IKeysTask(driver.getName(), driver.getExecutor(), shared, true, tp));
         LOGGER.info(log() + "keys(" +
                 ") registered");
@@ -345,7 +345,7 @@ public final class IDataGeneralActionHelper extends IDataHelper {
             builder.newTask(new IValuesTask(getName(), executor, shared, false, tp));
         }
         builder.newLock(driver.getLock());
-        builder.newDependency(driver.driverContection());
+        builder.newDependency(driver.driverConnection());
         builder.newTask(new IValuesTask(driver.getName(), driver.getExecutor(), shared, true, tp));
         LOGGER.info(log() + "values(" +
                 ") registered");

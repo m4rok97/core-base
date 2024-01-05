@@ -43,6 +43,9 @@ public final class ILock implements Comparable<ILock> {
         }
         cmp = weak - lock.weak;
         if (cmp >= 0) {
+            if (cmp == 0) {
+                return 0;
+            }
             return 1;
         }
         return -1;
@@ -50,7 +53,7 @@ public final class ILock implements Comparable<ILock> {
 
     @Override
     public String toString() {
-        return String.valueOf(id);
+        return id + (weak != -1 ? (":" + weak) : "");
     }
 
     @Override

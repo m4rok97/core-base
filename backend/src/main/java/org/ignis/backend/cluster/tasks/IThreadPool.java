@@ -17,32 +17,31 @@
 package org.ignis.backend.cluster.tasks;
 
 import org.ignis.backend.cluster.ITaskContext;
+import org.ignis.properties.IKeys;
+import org.ignis.properties.IProperties;
 
-import java.util.concurrent.Future;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author César Pomar
  */
 public final class IThreadPool {
 
-    private final ThreadPoolExecutor pool;
-    private final int retries;
+    private final ExecutorService pool;
+    private final int attempts;
 
-    public IThreadPool(int threads, int retries) {
-        pool = new ThreadPoolExecutor(threads, Integer.MAX_VALUE, 10, TimeUnit.SECONDS, new SynchronousQueue<>());
-        this.retries = retries;
+    public IThreadPool(IProperties props) {
+        this.pool = Executors.newVirtualThreadPerTaskExecutor();
+        this.attempts = props.getInteger(IKeys.MODULES_RECOVERY_ATTEMPS);
     }
 
-    int getRetries() {
-        return retries;
+    int getAttempts() {
+        return attempts;
     }
 
     Future<ITaskGroup> submit(ITaskGroup scheduler, ITaskContext context) {
         return pool.submit(() -> {
-            scheduler.start(this, context, retries);
+            scheduler.start(this, context, attempts);
             return scheduler;
         });
     }

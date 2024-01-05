@@ -22,16 +22,15 @@ import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TZlibTransport;
-import org.ignis.backend.cluster.tasks.IMpiConfig;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.executor.*;
-import org.ignis.scheduler.model.IPort;
+import org.ignis.scheduler3.ISchedulerParser;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnixDomainSocketAddress;
+import java.nio.file.Path;
 
 /**
  * @author César Pomar
@@ -40,7 +39,6 @@ public final class IExecutor {
 
     private final long id;
     private final long worker;
-    private final int port;
     private final int cores;
     private final IContainer container;
     private final ITransportDecorator transport;
@@ -52,18 +50,19 @@ public final class IExecutor {
     private final IIOModule.Iface ioModule;
     private final ICacheContextModule.Iface cacheContextModule;
     private final ICommModule.Iface commModule;
+    private final IProperties context;
     private int pid;
     private int resets;
 
-    public IExecutor(long id, long worker, IContainer container, int port, int cores) {
+    public IExecutor(long id, long worker, IContainer container, int cores) {
         this.id = id;
         this.worker = worker;
         this.container = container;
-        this.port = port;
         this.cores = cores;
         this.resets = -1;
         this.transport = new ITransportDecorator();
         this.protocol = new TCompactProtocol(transport);
+        this.context = new IProperties();
         executorServerModule = new IExecutorServerModule.Client(new TMultiplexedProtocol(protocol, "IExecutorServer"));
         generalModule = new IGeneralModule.Client(new TMultiplexedProtocol(protocol, "IGeneral"));
         generalActionModule = new IGeneralActionModule.Client(new TMultiplexedProtocol(protocol, "IGeneralAction"));
@@ -85,10 +84,6 @@ public final class IExecutor {
         return container;
     }
 
-    public int getPort() {
-        return port;
-    }
-
     public int getCores() {
         return cores;
     }
@@ -97,51 +92,51 @@ public final class IExecutor {
         return container.getProperties();
     }
 
-    public Map<String, String> getExecutorProperties() {
-        Map<String, String> map = getProperties().toMap(true);
-        /*Executor dynamic properties*/
-        map.remove(IKeys.DRIVER_PRIVATE_KEY);
-        map.put(IKeys.EXECUTOR_CORES, String.valueOf(cores));
-        map.put(IKeys.JOB_DIRECTORY, map.get(IKeys.DFS_HOME) + "/" + map.get(IKeys.JOB_NAME));
-        map.put(IKeys.JOB_WORKER, String.valueOf(worker));
-        map.put(IKeys.EXECUTOR_DIRECTORY, map.get(IKeys.JOB_DIRECTORY) + "/" + container.getCluster() + "/" + worker + "/" + id);
-        map.putAll(getUserProperties());
+    private void initContext() {
+        context.fromMap(getProperties().toMap(true));
+        context.fromMap(new ISchedulerParser(getProperties()).dumpPorts(IKeys.EXECUTOR_PORTS, container.getInfo()));
+        if (context.hasProperty(IKeys.CRYPTO_$PRIVATE$)) {
+            context.rmProperty(IKeys.CRYPTO_$PRIVATE$);
+        }
+        context.setProperty(IKeys.EXECUTOR_CORES, String.valueOf(cores));
+        context.setProperty(IKeys.JOB_CLUSTER, String.valueOf(container.getCluster()));
+        context.setProperty(IKeys.JOB_CONTAINER_ID, String.valueOf(container.getId()));
+        context.setProperty(IKeys.JOB_CONTAINER_ID, Path.of(context.getProperty(IKeys.JOB_DIR),
+                "tmp", context.getProperty(IKeys.JOB_CONTAINER_ID)).toString());
 
-        return map;
     }
 
-    public Map<String, String> getUserProperties() {
-        Map<String, String> map = new HashMap<>();
-        /*Ports*/
-        Set<String> mpiPorts = new HashSet<>();
-        for (IPort port : IMpiConfig.getPorts(this)) {
-            mpiPorts.add(port.getProtocol() + port.getContainerPort());
-        }
-        String portPrefix = container.getCluster() < 0 ? IKeys.DRIVER_PORT : IKeys.EXECUTOR_PORT;
-        for (IPort port : container.getInfo().getPorts()) {
-            if (!mpiPorts.contains(port.getProtocol() + port.getContainerPort())) {
-                String key = portPrefix + "." + port.getProtocol() + "." + port.getContainerPort();
-                map.put(key, String.valueOf(port.getHostPort()));
-            }
-        }
-        map.put(container.getCluster() < 0 ? IKeys.DRIVER_HOST : IKeys.EXECUTOR_HOST, container.getInfo().getHost());
-        return map;
+    public IProperties getContext() {
+        return context;
     }
 
     public boolean isConnected() {
         return transport.getConcreteTransport() != null && transport.getConcreteTransport().isOpen();
     }
 
-    public void connect(String address) throws TException {
-        disconnect();
-        TSocket socket = new TSocket(address, port);
-        TZlibTransport zlib = new TZlibTransport(socket, container.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION));
-        transport.setConcreteTransport(zlib);
-        zlib.open();
+    public String getSocket() {
+        var name = container.getCluster() + "-" + worker + "-" + id + ".sock";
+        return Path.of(getProperties().getProperty(IKeys.JOB_SOCKETS), name).toString();
+    }
+
+    public void connect() throws TException {
+        try {
+            initContext();
+            disconnect();
+            var rawSocket = new Socket();
+            rawSocket.bind(UnixDomainSocketAddress.of(getSocket()));
+            var socket = new TSocket(rawSocket);
+            var zlib = new TZlibTransport(socket, container.getProperties().getInteger(IKeys.TRANSPORT_COMPRESSION));
+            transport.setConcreteTransport(zlib);
+            zlib.open();
+        } catch (IOException ex) {
+            throw new TException(ex);
+        }
     }
 
     public void disconnect() {
         if (isConnected()) {
+            context.clear();
             try {
                 protocol.getTransport().close();
             } catch (Exception ex) {

@@ -89,7 +89,7 @@ public class ITaskGroup {
 
     public final ITaskContext start(IThreadPool pool) throws IgnisException {
         ITaskContext context = new ITaskContext();
-        start(pool, context, pool.getRetries());
+        start(pool, context, pool.getAttempts());
         return context;
     }
 

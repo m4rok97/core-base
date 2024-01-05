@@ -27,7 +27,12 @@ import org.ignis.properties.IKeys;
 import org.ignis.rpc.driver.IBackendService;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.UnixDomainSocketAddress;
+import java.nio.file.Path;
+import java.util.concurrent.Executors;
 
 /**
  * @author César Pomar
@@ -35,21 +40,25 @@ import java.net.InetSocketAddress;
 public final class IBackendServiceImpl extends IService implements IBackendService.Iface {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IBackendServiceImpl.class);
-
-    private TServerTransport transport;
     private TServer server;
     private HttpServer healthEndpoint;
 
-    public IBackendServiceImpl(IAttributes attributes) {
-        super(attributes);
+    public IBackendServiceImpl(IServiceStorage ss) {
+        super(ss);
     }
 
-    public void start(TProcessor processor, int port, int compression) {
-        LOGGER.info("Backend server started on port " + port);
+    public void start(TProcessor processor) {
+        LOGGER.info("Backend server started");
         driverHealthCheck();
-        startHealthServer();
+        TServerSocket transport = null;
         try {
-            transport = new TServerSocket(port);
+            startHealthServer();
+            var path = Path.of(ss.props().getProperty(IKeys.JOB_SOCKETS), "backend.sock");
+            var compression = ss.props().getInteger(IKeys.TRANSPORT_COMPRESSION);
+            var socket = new ServerSocket();
+            socket.bind(UnixDomainSocketAddress.of(path));
+            socket.setSoTimeout(0);
+            transport = new TServerSocket(socket);
             server = new TThreadPoolServer(new TThreadPoolServer.Args(transport)
                     .protocolFactory(new TCompactProtocol.Factory())
                     .transportFactory(new TTransportFactory() {
@@ -62,24 +71,28 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
                             }
                         }
                     })
+                    .executorService(Executors.newVirtualThreadPerTaskExecutor())
                     .processor(processor));
+            ss.props().setReadOnly(true);
             server.serve();
-        } catch (TTransportException ex) {
-            LOGGER.error("Backend server fails");
+        } catch (TTransportException | IOException ex) {
+            LOGGER.error("Backend server fails", ex);
         }
-        transport.close();
+        if (transport != null) {
+            transport.close();
+        }
         LOGGER.info("Backend server stopped");
     }
 
     @Override
     public void stop() throws TException {
-        new Thread(() -> {
+        Thread.startVirtualThread(() -> {
             try {
                 Thread.sleep(20000);//wait driver disconnection
             } catch (InterruptedException ex) {
             }
             stopAll();
-        }).start();
+        });
     }
 
     private void stopAll() {
@@ -93,31 +106,37 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     }
 
     private void driverHealthCheck() {
-        Thread lc = new Thread(() -> {
+        Thread.startVirtualThread(() -> {
             try {
                 System.in.read();
             } catch (Exception ex) {
             }
             stopAll();
         });
-        lc.start();
     }
 
-    private void startHealthServer() {
-        try {
-            int port = attributes.defaultProperties.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
-            if (port == 0){
-                return;
-            }
-            healthEndpoint = HttpServer.create(new InetSocketAddress(port), 0);
-            healthEndpoint.createContext("/", exchange -> {
-                exchange.sendResponseHeaders(200, -1);
-            });
-            healthEndpoint.start();
-            LOGGER.info("Backend health server started");
-        } catch (Exception ex) {
-            LOGGER.info("Backend health server error");
+    private void startHealthServer() throws IOException {
+        if (ss.props().hasProperty(IKeys.HEALTHCHECK_DISABLE)) {
+            return;
         }
+        int port = ss.isHostNetwork() ? 0 : ss.props().getInteger(IKeys.HEALTHCHECK_PORT);
+
+        healthEndpoint = HttpServer.create(new InetSocketAddress(port), 0);
+        healthEndpoint.createContext("/", exchange -> {
+            exchange.sendResponseHeaders(200, -1);
+        });
+        healthEndpoint.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
+        healthEndpoint.start();
+        LOGGER.info("Backend health server started");
+
+        if (port == 0) {
+            port = healthEndpoint.getAddress().getPort();
+        } else {
+            ss.driver().getInfo().hostPort(port);
+        }
+
+        String url = "http://" + ss.driver.getInfo().node() + ":" + port;
+        ss.props().setProperty(IKeys.HEALTHCHECK_URL, url);
     }
 
     private void stopHealthServer() {

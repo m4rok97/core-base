@@ -17,20 +17,35 @@
 package org.ignis.backend;
 
 import org.apache.thrift.TMultiplexedProcessor;
-import org.ignis.properties.IPropertyException;
-import org.ignis.scheduler.ISchedulerException;
+import org.ignis.backend.cluster.IDriver;
+import org.ignis.backend.cluster.tasks.IThreadPool;
+import org.ignis.backend.services.*;
+import org.ignis.logging.ILogger;
+import org.ignis.properties.ICrypto;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler.IScheduler;
-import org.ignis.scheduler.ISchedulerBuilder;
-import org.ignis.backend.services.*;
-import org.ignis.rpc.driver.*;
-import org.ignis.scheduler.model.IContainerInfo;
-import org.ignis.scheduler.model.INetworkMode;
+import org.ignis.properties.IPropertyException;
+import org.ignis.rpc.driver.IBackendService;
+import org.ignis.rpc.driver.IClusterService;
+import org.ignis.rpc.driver.IPropertiesService;
+import org.ignis.rpc.driver.IDataFrameService;
+import org.ignis.rpc.driver.IWorkerService;
+import org.ignis.scheduler3.IScheduler;
+import org.ignis.scheduler3.ISchedulerException;
+import org.ignis.scheduler3.ISchedulerFactory;
+import org.ignis.scheduler3.model.IClusterInfo;
+import org.ignis.scheduler3.model.IContainerInfo;
+import org.ignis.scheduler3.model.IJobInfo;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author César Pomar
@@ -43,16 +58,37 @@ public final class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        ILogger.init(Boolean.getBoolean(IProperties.asEnv(IKeys.DEBUG)),
+                Boolean.getBoolean(IProperties.asEnv(IKeys.VERBOSE)));
         LOGGER.info("Backend started");
-        IProperties props = new IProperties();
+        var props = new IProperties();
+        try {
+            props.load(Main.class.getClassLoader().getResourceAsStream("etc/ignis.yaml"));
+        } catch (IOException ex) {
+            LOGGER.warn("Default options load error", ex);
+        }
+
+        LOGGER.info("Loading configuration file");
+        try {
+            props.load(new File(props.getString(IKeys.HOME), "etc/ignis.yaml").getPath());
+        } catch (IPropertyException | IOException ex) {
+            LOGGER.error("Error loading ignis.yaml", ex);
+        }
 
         LOGGER.info("Loading environment variables");
         props.fromEnv(System.getenv());
-        String home = props.getString(IKeys.HOME);
+        var home = props.getString(IKeys.HOME);
 
-        if (props.contains(IKeys.OPTIONS)) {//Submit user options
+        List<IProperties> staticProps = new ArrayList<>();
+        if (props.hasProperty(IKeys.OPTIONS)) {//Submit user options
             try {
-                props.load64(props.getProperty(IKeys.OPTIONS));
+                var array = props.getProperty(IKeys.OPTIONS).split(";");
+                props.load64(array[0]);
+                for (int i = 1; i < array.length; i++) {
+                    var tmp = new IProperties(props);
+                    tmp.load64(array[i]);
+                    staticProps.add(tmp);
+                }
             } catch (IOException ex) {
                 LOGGER.warn("User options load error", ex);
             }
@@ -61,16 +97,7 @@ public final class Main {
         //Submitter home may be different so we ignore it.
         props.setProperty(IKeys.HOME, home);
 
-        LOGGER.info("Loading configuration file");
-        try {
-            String conf = new File(props.getString(IKeys.HOME), "etc/ignis.conf").getPath();
-            props.load(conf, false);//only load not set properties
-        } catch (IPropertyException | IOException ex) {
-            LOGGER.error("Error loading ignis.conf, aborting", ex);
-            System.exit(-1);
-        }
-
-        if (props.contains(IKeys.DEBUG) && props.getBoolean(IKeys.DEBUG)) {
+        if (props.getBoolean(IKeys.DEBUG)) {
             System.setProperty(IKeys.DEBUG, "true");
             LOGGER.info("DEBUG enabled");
         } else {
@@ -79,55 +106,89 @@ public final class Main {
 
         LOGGER.info("Loading scheduler");
         IScheduler scheduler = null;
-        String schedulerType = null;
-        String schedulerUrl = null;
+        {
+            String url = "", type = null;
+            try {
+                url = props.getProperty(IKeys.SCHEDULER_URL, null);
+                type = props.getProperty(IKeys.SCHEDULER_NAME);
+
+                LOGGER.info("Checking scheduler " + type);
+                scheduler = ISchedulerFactory.create(type, url);
+                scheduler.healthCheck();
+                LOGGER.info("Scheduler " + type + (url != null ? (" '" + url + "'") : "") + "...OK");
+            } catch (ISchedulerException ex) {
+                LOGGER.error("Scheduler " + type + (url != null ? (" '" + url + "'") : "") + "...Fails", ex);
+                System.exit(-1);
+            }
+        }
+
+        if (props.hasProperty(IKeys.CRYPTO_SECRET)) {
+            var path = new File(props.getProperty(IKeys.CRYPTO_SECRET));
+            if (!path.isFile()) {
+                throw new IPropertyException(IKeys.CRYPTO_SECRET, path + " not found error");
+            }
+            LOGGER.info(IKeys.CRYPTO_SECRET + " set");
+        } else {
+            LOGGER.info(IKeys.CRYPTO_SECRET + " not set");
+            for (var entry : props.toMap(true).keySet()) {
+                if (IProperties.isCrypted(IProperties.basekey(entry))) {
+                    LOGGER.error(IKeys.CRYPTO_SECRET + " is required to avoid security problems or decode encrypted properties");
+                    break;
+                }
+            }
+        }
+
+        IJobInfo job = null;
         try {
-            schedulerType = props.getString(IKeys.SCHEDULER_TYPE);
-            schedulerUrl = props.getString(IKeys.SCHEDULER_URL);
-        } catch (IPropertyException ex) {
+            LOGGER.info("Getting Job from scheduler");
+            job = scheduler.getJob(props.getProperty(IKeys.JOB_ID));
+            LOGGER.info("Job found");
+        } catch (ISchedulerException ex) {
+            LOGGER.error("Job not found", ex);
+            System.exit(-1);
+        }
+
+        IContainerInfo driver = null;
+        for (var cluster : job.clusters()) {
+            if (cluster.id().startsWith("0")) {
+                driver = cluster.containers().get(0);
+                break;
+            }
+        }
+
+        if (driver == null) {
+            LOGGER.error("Driver not found");
+            System.exit(-1);
+        }
+
+        if (driver.network().equals(IContainerInfo.INetworkMode.HOST)) {
+            LOGGER.info("Backend is running in network host mode, properties 'ignis.ports.*' will be ignored");
+        }
+
+        LOGGER.info("Creating job folders");
+        var perm = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
+
+        try {
+            Files.createDirectory(Path.of(props.getProperty(IKeys.JOB_CONTAINER_DIR)), perm);
+        } catch (FileAlreadyExistsException ex) {
+        } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
-            System.exit(-1);
         }
         try {
-            LOGGER.info("Checking scheduler " + schedulerType);
-            scheduler = ISchedulerBuilder.create(schedulerType, schedulerUrl);
-            scheduler.healthCheck();
-            LOGGER.info("Scheduler " + schedulerType + " " + schedulerUrl + " ... OK");
-        } catch (ISchedulerException ex) {
-            LOGGER.error("Scheduler " + schedulerType + " " + schedulerUrl + " ... Fails\n" + ex);
-            System.exit(-1);
+            Files.createDirectory(Path.of(props.getProperty(IKeys.JOB_SOCKETS)), perm);
+        } catch (FileAlreadyExistsException ex) {
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage(), ex);
         }
 
-        IContainerInfo driverInfo = null;
-        try {
-            LOGGER.info("Getting Driver container info from scheduler");
-            driverInfo = scheduler.getContainer(props.getProperty(IKeys.JOB_ID));
-            LOGGER.info("Driver container info found");
-        } catch (ISchedulerException ex) {
-            LOGGER.error("Not found", ex);
-            System.exit(-1);
+        if (!props.hasProperty(IKeys.CRYPTO_$PRIVATE$)) {
+            var pair = ICrypto.genKeyPair();
+            props.setProperty(IKeys.CRYPTO_PUBLIC, pair.publicKey());
+            props.setProperty(IKeys.CRYPTO_$PRIVATE$, pair.privateKey());
         }
 
-        int healthcheckPort = props.getInteger(IKeys.DRIVER_HEALTHCHECK_PORT);
-        if (driverInfo.getNetworkMode() == INetworkMode.HOST) {
-            LOGGER.info("Backend is running with network in host mode, port properties will be ignored");
-            int transportPorts = props.getInteger(IKeys.TRANSPORT_PORTS);
-            int initPort = driverInfo.getPorts().get(transportPorts).getHostPort();
-            props.setProperty(IKeys.DRIVER_RPC_PORT, String.valueOf(initPort + 1));
-            props.setProperty(IKeys.EXECUTOR_RPC_PORT, String.valueOf(initPort));
-            props.setProperty(IKeys.DRIVER_HEALTHCHECK_PORT, "0");
-        }
-
-        IAttributes attributes = new IAttributes(props);
-        attributes.driver.initInfo(driverInfo);
-        attributes.ssh.setPortForwarding(driverInfo.getNetworkMode() != INetworkMode.HOST);
-
-        LOGGER.info("Setting dynamic properties");
-        props.setProperty(IKeys.DRIVER_PUBLIC_KEY, attributes.ssh.getPublicKey());
-        props.setProperty(IKeys.DRIVER_PRIVATE_KEY, attributes.ssh.getPrivateKey());
-        String healthcheck = "http://" + attributes.driver.getInfo().getHost() + ":";
-        healthcheck += attributes.driver.getInfo().searchHostPort(healthcheckPort);
-        props.setProperty(IKeys.DRIVER_HEALTHCHECK_URL, healthcheck);
+        IThreadPool pool = new IThreadPool(props);
+        IServiceStorage ss = new IServiceStorage(new IDriver(props, driver), pool);
 
         if (Boolean.getBoolean(IKeys.DEBUG)) {
             LOGGER.info("Debug: " + props);
@@ -139,35 +200,27 @@ public final class Main {
         IClusterServiceImpl clusters = null;
 
         try {
-            processor.registerProcessor("IBackend", new IBackendService.Processor<>(backend = new IBackendServiceImpl(attributes)));
-            processor.registerProcessor("ICluster", new IClusterService.Processor<>(clusters = new IClusterServiceImpl(attributes, scheduler)));
-            processor.registerProcessor("IWorker", new IWorkerService.Processor<>(new IWorkerServiceImpl(attributes)));
-            processor.registerProcessor("IDataFrame", new IDataFrameService.Processor<>(new IDataFrameServiceImpl(attributes)));
-            processor.registerProcessor("IProperties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(attributes)));
+            processor.registerProcessor("IBackend", new IBackendService.Processor<>(backend = new IBackendServiceImpl(ss)));
+            processor.registerProcessor("ICluster", new IClusterService.Processor<>(clusters = new IClusterServiceImpl(ss, scheduler)));
+            processor.registerProcessor("IWorker", new IWorkerService.Processor<>(new IWorkerServiceImpl(ss)));
+            processor.registerProcessor("IDataFrame", new IDataFrameService.Processor<>(new IDataFrameServiceImpl(ss)));
+            processor.registerProcessor("IProperties", new IPropertiesService.Processor<>(new IPropertiesServiceImpl(ss, staticProps)));
         } catch (Exception ex) {
-            LOGGER.error("Error starting services, aborting", ex);
+            LOGGER.error("Error creating services, aborting", ex);
             System.exit(-1);
         }
 
         try {
-            Integer backendPort = props.getInteger(IKeys.DRIVER_RPC_PORT);
-            Integer backendCompression = props.getInteger(IKeys.DRIVER_RPC_COMPRESSION);
-            Integer driverPort = props.getInteger(IKeys.EXECUTOR_RPC_PORT);
-            Integer driverCompression = props.getInteger(IKeys.EXECUTOR_RPC_COMPRESSION);
-            System.out.println(backendPort);
-            System.out.println(backendCompression);
-            System.out.println(driverPort);
-            System.out.println(driverCompression);
-            backend.start(processor, backendPort, backendCompression);
+            backend.start(processor);
 
             if (!Boolean.getBoolean(IKeys.DEBUG)) {
                 clusters.destroyClusters();
             }
 
             try {
-                if (attributes.driver.getExecutor().isConnected()) {
-                    attributes.driver.getExecutor().getExecutorServerModule().stop();
-                    attributes.driver.getExecutor().disconnect();
+                if (ss.driver.getExecutor().isConnected()) {
+                    ss.driver.getExecutor().getExecutorServerModule().stop();
+                    ss.driver.getExecutor().disconnect();
                 }
             } catch (Exception ex) {
                 LOGGER.warn("Driver callback could not be stopped");

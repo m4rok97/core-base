@@ -19,16 +19,12 @@ package org.ignis.backend.cluster.tasks.executor;
 import org.apache.thrift.TException;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.backend.cluster.ITaskContext;
+import org.ignis.backend.cluster.tasks.IMpiConfig;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
-import org.ignis.backend.cluster.tasks.IMpiConfig;
 import org.ignis.rpc.IExecutorException;
-import org.ignis.scheduler.model.IContainerInfo;
-import org.ignis.scheduler.model.INetworkMode;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * @author César Pomar
@@ -76,25 +72,17 @@ public final class IExecutorCreateTask extends IExecutorTask {
             }
 
         }
-        IContainerInfo containerInfo = executor.getContainer().getInfo();
+
         if (!running) {
             LOGGER.info(log() + "Starting new executor");
-            StringBuilder startScript = new StringBuilder();
 
-            startScript.append("export IGNIS_WORKING_DIRECTORY='");
-            startScript.append(executor.getProperties().getString(IKeys.WORKING_DIRECTORY));
-            startScript.append("'\n");
-
-            startScript.append("nohup ignis-run ");
-            startScript.append("ignis-").append(type).append(' ');
-            startScript.append(executor.getContainer().getTunnel().getRemotePort(executor.getPort())).append(' ');
-            startScript.append(executor.getProperties().getInteger(IKeys.EXECUTOR_RPC_COMPRESSION)).append(' ');
-            startScript.append(containerInfo.getNetworkMode() == INetworkMode.HOST ? 0 : 1).append(' ');
-            startScript.append("> ${LOG_PIPE}/1 2> ${LOG_PIPE}/2 ");
-            startScript.append("&\n");
-            startScript.append("sleep 1\n");
-            startScript.append("jobs -p 1\n");
-            String output = executor.getContainer().getTunnel().execute(startScript.toString(), true);
+            String script = "nohup ignis-run " +
+                    "ignis-" + type + ' ' + executor.getSocket() +
+                    "> ${IGNIS_JOB_STDOUT} 2> ${IGNIS_JOB_STDERR} " +
+                    "&\n" +
+                    "sleep 1\n" +
+                    "jobs -p 1\n";
+            String output = executor.getContainer().getTunnel().execute(script, true);
 
             if (Boolean.getBoolean(IKeys.DEBUG)) {
                 String procs = executor.getContainer().getTunnel().execute("ps aux", true);
@@ -108,10 +96,9 @@ public final class IExecutorCreateTask extends IExecutorTask {
             }
         }
 
-        String address = containerInfo.getNetworkMode() == INetworkMode.HOST ? containerInfo.getHost() : "localhost";
         for (int i = 0; i < 300; i++) {
             try {
-                executor.connect(address);
+                executor.connect();
                 executor.getExecutorServerModule().test();
                 break;
             } catch (Exception ex) {
@@ -130,15 +117,14 @@ public final class IExecutorCreateTask extends IExecutorTask {
 
         try {
             if (!running) {
-                Map<String, String> executorProperties = executor.getExecutorProperties();
                 if (Boolean.getBoolean(IKeys.DEBUG)) {
                     StringBuilder writer = new StringBuilder();
-                    for (Map.Entry<String, String> entry : executorProperties.entrySet()) {
+                    for (var entry : executor.getContext().toMap(true).entrySet()) {
                         writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
                     }
                     LOGGER.info("Debug:" + log() + " ExecutorProperties{\n" + writer + '}');
                 }
-                executor.getExecutorServerModule().start(executorProperties, IMpiConfig.get(executor));
+                executor.getExecutorServerModule().start(executor.getContext().toMap(true), IMpiConfig.getEnv(executor));
             }
         } catch (IExecutorException ex) {
             kill();

@@ -23,7 +23,7 @@ import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.container.IContainerDestroyTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler.IScheduler;
+import org.ignis.scheduler3.IScheduler;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -40,8 +40,9 @@ public final class IClusterDestroyHelper extends IClusterHelper {
     public ILazy<Void> destroy(IScheduler scheduler) {
         LOGGER.info(log() + "Preparing cluster to destroy");
         ITaskGroup.Builder builder = new ITaskGroup.Builder(cluster.getLock());
-        if (!cluster.getContainers().isEmpty()) {// All containers are destroyed in single task, faster in some schedulers
-            builder.newTask(new IContainerDestroyTask(getName(), cluster.getContainers().get(0), scheduler, cluster.getContainers()));
+        var shared = new IContainerDestroyTask.Shared(cluster.getContainers().size());
+        for (int i = 0; i < cluster.getContainers().size(); i++) {
+            builder.newTask(new IContainerDestroyTask(getName(), cluster.getContainers().get(i), scheduler, cluster.getName(), shared));
         }
 
         for (int i = 0; i < cluster.workers(); i++) {

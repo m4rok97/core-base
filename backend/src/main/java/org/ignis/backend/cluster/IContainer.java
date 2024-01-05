@@ -19,7 +19,7 @@ package org.ignis.backend.cluster;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler.model.IContainerInfo;
+import org.ignis.scheduler3.model.IContainerInfo;
 
 /**
  * @author César Pomar
@@ -30,16 +30,14 @@ public final class IContainer {
     private final long cluster;
     private final ITunnel tunnel;
     private final IProperties properties;
-    private final IContainerInfo containerRequest;
     private IContainerInfo info;
     private int resets;
 
-    public IContainer(long id, long cluster, ITunnel tunnel, IProperties properties, IContainerInfo containerRequest) {
+    public IContainer(long id, long cluster, ITunnel tunnel, IProperties properties) {
         this.id = id;
         this.cluster = cluster;
         this.tunnel = tunnel;
         this.properties = properties;
-        this.containerRequest = containerRequest;
         this.resets = -1;
     }
 
@@ -53,10 +51,6 @@ public final class IContainer {
 
     public ITunnel getTunnel() {
         return tunnel;
-    }
-
-    public IContainerInfo getContainerRequest() {
-        return containerRequest;
     }
 
     public IContainerInfo getInfo() {
@@ -81,10 +75,22 @@ public final class IContainer {
     }
 
     public void connect() throws IgnisException {
-        tunnel.open(info.getHost(), info.searchHostPort(properties.getInteger(IKeys.EXECUTOR_RPC_PORT)));
+        var user = getInfo().user().split(":")[0];
+        if (getInfo().network().equals(IContainerInfo.INetworkMode.BRIDGE)) {
+            tunnel.open(user, getInfo().node(), properties.getInteger(IKeys.PORT));
+        } else {
+            tunnel.open(user, getInfo().node(), discovery());
+        }
+    }
+
+    private int discovery() throws IgnisException {
+        //TODO
+        throw new UnsupportedOperationException();
     }
 
     public IExecutor createExecutor(long id, long worker, int cores) throws IgnisException {
-        return new IExecutor(id, worker, this, tunnel.registerPort(), cores);
+        var exec = new IExecutor(id, worker, this, cores);
+        tunnel.registerSocket(exec.getSocket());
+        return exec;
     }
 }

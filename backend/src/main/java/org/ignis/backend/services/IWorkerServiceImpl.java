@@ -37,8 +37,8 @@ import org.ignis.rpc.driver.IWorkerService;
  */
 public final class IWorkerServiceImpl extends IService implements IWorkerService.Iface {
 
-    public IWorkerServiceImpl(IAttributes attributes) {
-        super(attributes);
+    public IWorkerServiceImpl(IServiceStorage ss) {
+        super(ss);
     }
 
     @Override
@@ -49,7 +49,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public void start(IWorkerId id) throws TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             ILazy<Void> result;
             synchronized (worker.getLock()) {
@@ -64,7 +64,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public void destroy(IWorkerId id) throws TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             ILazy<Void> result;
             synchronized (worker.getLock()) {
@@ -79,7 +79,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IWorkerId newInstance3(long id, String name, String type) throws IDriverException, TException {
         try {
-            int cores = attributes.getCluster(id).getProperties().getInteger(IKeys.EXECUTOR_CORES);
+            int cores = ss.getCluster(id).getProperties().getInteger(IKeys.EXECUTOR_CORES);
             return newInstance5(id, name, type, cores, 0);
         } catch (IgnisException ex) {
             throw new IDriverExceptionImpl(ex);
@@ -94,7 +94,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IWorkerId newInstance5(long id, String name, String type, int cores, int instances) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id);
+            ICluster cluster = ss.getCluster(id);
             synchronized (cluster.getLock()) {
                 IWorker worker = cluster.createWorker(name, type, cores, instances);
                 return new IWorkerId(id, worker.getId());
@@ -107,7 +107,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public void setName(IWorkerId id, String name) throws IDriverException, TException {
         try {
-            ICluster clusterObject = attributes.getCluster(id.getCluster());
+            ICluster clusterObject = ss.getCluster(id.getCluster());
             IWorker workerObject = clusterObject.getWorker(id.getWorker());
             synchronized (workerObject.getLock()) {
                 workerObject.setName(name);
@@ -120,10 +120,10 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId parallelize(IWorkerId id, long dataId, long partitions) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver, dataId, partitions);
+                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(ss.driver, dataId, partitions);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {
@@ -135,10 +135,10 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId parallelize4(IWorkerId id, long dataId, long partitions, ISource src) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
-                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(attributes.driver, dataId, partitions, src);
+                IDataFrame data = new IWorkerParallelizeDataHelper(worker, cluster.getProperties()).parallelize(ss.driver, dataId, partitions, src);
                 return new IDataFrameId(cluster.getId(), worker.getId(), data.getId());
             }
         } catch (Exception ex) {
@@ -149,8 +149,8 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId importDataFrame(IWorkerId id, IDataFrameId data) throws IDriverException, TException {
         try {
-            ICluster clusterSource = attributes.getCluster(data.getCluster());
-            ICluster clusterTarget = attributes.getCluster(id.getCluster());
+            ICluster clusterSource = ss.getCluster(data.getCluster());
+            ICluster clusterTarget = ss.getCluster(id.getCluster());
             IWorker workerSource = clusterSource.getWorker(data.getWorker());
             IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
 
@@ -176,8 +176,8 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId importDataFrame3(IWorkerId id, IDataFrameId data, ISource src) throws IDriverException, TException {
         try {
-            ICluster clusterSource = attributes.getCluster(data.getCluster());
-            ICluster clusterTarget = attributes.getCluster(id.getCluster());
+            ICluster clusterSource = ss.getCluster(data.getCluster());
+            ICluster clusterTarget = ss.getCluster(id.getCluster());
             IWorker workerSource = clusterSource.getWorker(data.getWorker());
             IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
 
@@ -203,7 +203,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId plainFile(IWorkerId id, String path, String delim) throws IDriverException,TException{
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).plainFile(path, delim);
@@ -217,7 +217,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId plainFile4(IWorkerId id, String path, long minPartitions, String delim) throws IDriverException, TException{
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).plainFile(path, minPartitions, delim);
@@ -231,7 +231,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId textFile(IWorkerId id, String path) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).textFile(path);
@@ -245,7 +245,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId textFile3(IWorkerId id, String path, long partitions) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).textFile(path, partitions);
@@ -259,7 +259,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId partitionObjectFile(IWorkerId id, String path) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionObjectFile(path);
@@ -273,7 +273,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId partitionObjectFile3(IWorkerId id, String path, ISource src) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionObjectFile(path, src);
@@ -287,7 +287,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId partitionTextFile(IWorkerId id, String path) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionTextFile(path);
@@ -301,7 +301,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId partitionJsonFile3a(IWorkerId id, String path, boolean objectMapping) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionJsonFile(path, objectMapping);
@@ -315,7 +315,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId partitionJsonFile3b(IWorkerId id, String path, ISource src) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerReadFileHelper(worker, worker.getProperties()).partitionJsonFile(path, src);
@@ -329,7 +329,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public void loadLibrary(IWorkerId id, String path) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             ILazy<Void> result;
             synchronized (worker.getLock()) {
@@ -344,7 +344,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public void execute(IWorkerId id, ISource src) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             ILazy<Void> result;
             synchronized (worker.getLock()) {
@@ -359,7 +359,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId executeTo(IWorkerId id, ISource src) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerExecuteHelper(worker, worker.getProperties()).executeTo(src);
@@ -373,7 +373,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public void voidCall(IWorkerId id, ISource src) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             ILazy<Void> result;
             synchronized (worker.getLock()) {
@@ -388,8 +388,8 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public void voidCall3(IWorkerId id, IDataFrameId data, ISource src) throws IDriverException, TException {
         try {
-            ICluster clusterSource = attributes.getCluster(data.getCluster());
-            ICluster clusterTarget = attributes.getCluster(id.getCluster());
+            ICluster clusterSource = ss.getCluster(data.getCluster());
+            ICluster clusterTarget = ss.getCluster(id.getCluster());
             IWorker workerSource = clusterSource.getWorker(data.getWorker());
             IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
 
@@ -416,7 +416,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId call(IWorkerId id, ISource src) throws IDriverException, TException {
         try {
-            ICluster cluster = attributes.getCluster(id.getCluster());
+            ICluster cluster = ss.getCluster(id.getCluster());
             IWorker worker = cluster.getWorker(id.getWorker());
             synchronized (worker.getLock()) {
                 IDataFrame data = new IWorkerCallHelper(worker, worker.getProperties()).call(src);
@@ -430,8 +430,8 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     @Override
     public IDataFrameId call3(IWorkerId id, IDataFrameId data, ISource src) throws IDriverException, TException {
         try {
-            ICluster clusterSource = attributes.getCluster(data.getCluster());
-            ICluster clusterTarget = attributes.getCluster(id.getCluster());
+            ICluster clusterSource = ss.getCluster(data.getCluster());
+            ICluster clusterTarget = ss.getCluster(id.getCluster());
             IWorker workerSource = clusterSource.getWorker(data.getWorker());
             IWorker workerTarget = clusterTarget.getWorker(id.getWorker());
 

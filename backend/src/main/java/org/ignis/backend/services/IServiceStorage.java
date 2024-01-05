@@ -18,49 +18,51 @@ package org.ignis.backend.services;
 
 import org.ignis.backend.cluster.ICluster;
 import org.ignis.backend.cluster.IDriver;
-import org.ignis.backend.cluster.ISSH;
+import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;
-import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
+import org.ignis.scheduler3.model.IContainerInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author César Pomar
  */
-public final class IAttributes {
+public final class IServiceStorage {
 
     private static final Pattern DEFAULT_CLUSTER_NAMES = Pattern.compile("Cluster\\([0-9]+\\)");
 
-    public final IProperties defaultProperties;
-    public final ISSH ssh;
     public final IDriver driver;
     private final List<ICluster> clusterList;
     private final List<IProperties> propertiesList;
+    private final IThreadPool pool;
 
-    public IAttributes(IProperties defaultProperties) {
-        this.defaultProperties = defaultProperties;
+    public IServiceStorage(IDriver driver, IThreadPool pool) {
+        this.driver = driver;
         this.clusterList = new ArrayList<>();
         this.propertiesList = new ArrayList<>();
-        this.ssh = new ISSH(defaultProperties.getInteger(IKeys.DRIVER_RPC_PORT) + 1,//backend + 1
-                defaultProperties.getInteger(IKeys.EXECUTOR_RPC_PORT) + 1, //ssh server + 1
-                defaultProperties.getProperty(IKeys.DRIVER_PRIVATE_KEY, null),
-                defaultProperties.getProperty(IKeys.DRIVER_PUBLIC_KEY, null));
-        this.driver = new IDriver(defaultProperties.getInteger(IKeys.EXECUTOR_RPC_PORT), defaultProperties);
+        this.pool = pool;
+        addProperties(driver.getProperties());
     }
 
-    public IProperties getProperties(long id) throws IgnisException {
-        synchronized (propertiesList) {
-            if (propertiesList.size() > id) {
-                return propertiesList.get((int) id);
-            }
-        }
-        throw new IgnisException("Properties doesn't exist");
+    public IProperties props() {
+        return driver.getProperties();
+    }
+
+    public IDriver driver() {
+        return driver;
+    }
+
+    public IThreadPool pool() {
+        return pool;
+    }
+
+    public boolean isHostNetwork() {
+        return driver.getInfo().network().equals(IContainerInfo.INetworkMode.HOST);
     }
 
     public long addProperties(IProperties properties) {
@@ -70,44 +72,56 @@ public final class IAttributes {
         }
     }
 
+    public IProperties getProperties(long id) throws IgnisException {
+        if (id < 0) {
+            return getCluster(-id).getProperties();
+        }
+        synchronized (propertiesList) {
+            if (propertiesList.size() > id) {
+                return propertiesList.get((int) id);
+            }
+        }
+        throw new IgnisException("Properties doesn't exist");
+    }
+
+    public int propertiesCount() {
+        synchronized (propertiesList) {
+            return propertiesList.size();
+        }
+    }
+
     public ICluster getCluster(long id) throws IgnisException {
         synchronized (clusterList) {
-            if (clusterList.size() > id) {
-                return clusterList.get((int) id);
+            if (clusterList.size() >= id || clusterList.get((int) id - 1) == null) {
+                return clusterList.get((int) id - 1);
             }
         }
         throw new IgnisException("Cluster doesn't exist");
     }
 
-    public void changeClusterName(long id, String name) throws IgnisException {
-        Set<String> names;
-        synchronized (clusterList) {
-            names = clusterList.stream().map(c -> c.getName()).collect(Collectors.toSet());
-        }
-        if (names.contains(name) || DEFAULT_CLUSTER_NAMES.matcher(name).matches()) {
-            throw new IgnisException("Cluster must be unique");
-        }
-        ICluster cluster = getCluster(id);
-        synchronized (cluster.getLock()) {
-            cluster.setName(name);
-        }
-    }
-
     public long newCluster() {
         synchronized (clusterList) {
             clusterList.add(null);
-            return clusterList.size() - 1;
+            return clusterList.size();
         }
     }
 
     public void setCluster(ICluster cluster) {
         synchronized (clusterList) {
-            clusterList.set((int) cluster.getId(), cluster);
+            clusterList.set((int) cluster.getId() - 1, cluster);
         }
     }
 
     public Collection<ICluster> getClusters() {
-        return clusterList;
+        synchronized (clusterList) {
+            return clusterList.stream().filter(Objects::nonNull).toList();
+        }
+    }
+
+    public int clustersCount() {
+        synchronized (clusterList) {
+            return clusterList.size();
+        }
     }
 
 }
