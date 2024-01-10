@@ -20,17 +20,19 @@ import com.sun.net.httpserver.HttpServer;
 import org.apache.thrift.TException;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TCompactProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.server.ServerContext;
 import org.apache.thrift.server.TServer;
+import org.apache.thrift.server.TServerEventHandler;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.*;
+import org.ignis.backend.unix.IServerSocket;
 import org.ignis.properties.IKeys;
 import org.ignis.rpc.driver.IBackendService;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.UnixDomainSocketAddress;
 import java.nio.file.Path;
 import java.util.concurrent.Executors;
 
@@ -42,23 +44,21 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IBackendServiceImpl.class);
     private TServer server;
     private HttpServer healthEndpoint;
+    private BackendEventHandler events;
 
     public IBackendServiceImpl(IServiceStorage ss) {
         super(ss);
     }
 
     public void start(TProcessor processor) {
-        LOGGER.info("Backend server started");
         driverHealthCheck();
         TServerSocket transport = null;
         try {
             startHealthServer();
             var path = Path.of(ss.props().getProperty(IKeys.JOB_SOCKETS), "backend.sock");
             var compression = ss.props().getInteger(IKeys.TRANSPORT_COMPRESSION);
-            var socket = new ServerSocket();
-            socket.bind(UnixDomainSocketAddress.of(path));
-            socket.setSoTimeout(0);
-            transport = new TServerSocket(socket);
+            events = new BackendEventHandler();
+            transport = newServerSocket(path.toString());
             server = new TThreadPoolServer(new TThreadPoolServer.Args(transport)
                     .protocolFactory(new TCompactProtocol.Factory())
                     .transportFactory(new TTransportFactory() {
@@ -72,9 +72,11 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
                         }
                     })
                     .executorService(Executors.newVirtualThreadPerTaskExecutor())
-                    .processor(processor));
+                    .processor(new SafeBackendProcessor(processor)));
+            server.setServerEventHandler(events);
             ss.props().setReadOnly(true);
             server.serve();
+            path.toFile().delete();
         } catch (TTransportException | IOException ex) {
             LOGGER.error("Backend server fails", ex);
         }
@@ -86,13 +88,7 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
 
     @Override
     public void stop() throws TException {
-        Thread.startVirtualThread(() -> {
-            try {
-                Thread.sleep(20000);//wait driver disconnection
-            } catch (InterruptedException ex) {
-            }
-            stopAll();
-        });
+        events.stop();
     }
 
     private void stopAll() {
@@ -147,6 +143,104 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
             }
         } catch (Exception ex) {
         }
+    }
+
+    private class SafeBackendProcessor implements TProcessor {
+
+        private final TProcessor impl;
+
+        public SafeBackendProcessor(TProcessor impl) {
+            this.impl = impl;
+        }
+
+        @Override
+        public void process(TProtocol in, TProtocol out) throws TException {
+            try {
+                impl.process(in, out);
+            } catch (TException ex) {
+                if (events.isStopped()) {
+                    throw new TTransportException(TTransportException.END_OF_FILE);
+                }
+                throw ex;
+            }
+        }
+    }
+
+    private class BackendEventHandler implements TServerEventHandler {
+
+        private int clients;
+        private boolean stopped;
+
+        @Override
+        public void preServe() {
+            LOGGER.info("Backend server started");
+            clients = 0;
+        }
+
+        @Override
+        public ServerContext createContext(TProtocol input, TProtocol output) {
+            clients++;
+            return null;
+        }
+
+        @Override
+        public void deleteContext(ServerContext serverContext, TProtocol input, TProtocol output) {
+            clients--;
+            if (stopped && clients == 0) {
+                stopAll();
+            }
+        }
+
+        @Override
+        public void processContext(ServerContext serverContext, TTransport inputTransport, TTransport outputTransport) {
+        }
+
+        public void stop() {
+            if (stopped) {
+                return;
+            }
+            if (clients == 0) {
+                stopAll();
+            }
+            stopped = true;
+            Thread.startVirtualThread(() -> {
+                try {
+                    Thread.sleep(60000);
+                } catch (Exception ex) {
+                }
+                if (clients > 0) {
+                    LOGGER.warn("Backend stop requested, but the client is still connected, forcing stop");
+                    stopAll();
+                }
+            });
+        }
+
+        public boolean isStopped() {
+            return stopped;
+        }
+    }
+
+    private TServerSocket newServerSocket(String address) throws IOException, TTransportException {
+        return new TServerSocket(new IServerSocket(address)) {
+            @Override
+            public TSocket accept() throws TTransportException {
+                return new TSocket(super.accept().getSocket()) {
+                    @Override
+                    public void close() {
+                        if (events.isStopped()) {
+                            try {
+                                getSocket().close();
+                            } catch (IOException e) {
+                            }
+                        } else {
+                            super.close();
+                        }
+                    }
+                };
+            }
+
+            ;
+        };
     }
 
 }

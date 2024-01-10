@@ -25,8 +25,11 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IMpiConfig;
 import org.ignis.backend.exception.IExecutorExceptionWrapper;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.properties.IKeys;
 import org.ignis.rpc.IExecutorException;
 import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
 
 /**
  * @author César Pomar
@@ -53,7 +56,7 @@ public class IDriverConectionTask extends IExecutorTask {
 
         for (int i = 0; i < 300; i++) {
             try {
-                executor.connect();
+                executor.connect(Path.of(executor.getProperties().getProperty(IKeys.JOB_SOCKETS), "driver.sock").toString());
                 break;
             } catch (TException ex) {
                 if (i == 299) {

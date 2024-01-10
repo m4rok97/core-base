@@ -22,14 +22,13 @@ import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TZlibTransport;
+import org.ignis.backend.unix.ISocket;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.executor.*;
 import org.ignis.scheduler3.ISchedulerParser;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.net.UnixDomainSocketAddress;
 import java.nio.file.Path;
 
 /**
@@ -120,12 +119,14 @@ public final class IExecutor {
     }
 
     public void connect() throws TException {
+        connect(getSocket());
+    }
+
+    public void connect(String address) throws TException {
         try {
             initContext();
             disconnect();
-            var rawSocket = new Socket();
-            rawSocket.bind(UnixDomainSocketAddress.of(getSocket()));
-            var socket = new TSocket(rawSocket);
+            var socket = new TSocket(new ISocket(address));
             var zlib = new TZlibTransport(socket, container.getProperties().getInteger(IKeys.TRANSPORT_COMPRESSION));
             transport.setConcreteTransport(zlib);
             zlib.open();

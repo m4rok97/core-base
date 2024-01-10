@@ -30,6 +30,7 @@ public class Docker implements IScheduler {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Docker.class);
     private final DockerClient client;
+    private final String unixSocket;
 
     private final static Map<String, IContainerInfo.IStatus> DOCKER_STATUS = new HashMap<>() {
         {
@@ -49,6 +50,12 @@ public class Docker implements IScheduler {
         }
         if (!url.contains(":")) {
             url = "unix://" + url;
+        }
+
+        if (url.startsWith("unix://")) {
+            unixSocket = url.substring(7);
+        } else {
+            unixSocket = null;
         }
 
         var config = DefaultDockerClientConfig.
@@ -121,8 +128,8 @@ public class Docker implements IScheduler {
                 container.getHostConfig().withNetworkMode("bridge");
             }
 
+            container.getHostConfig().withMounts(new ArrayList<>());
             if (resources.binds() != null) {
-                container.getHostConfig().withMounts(new ArrayList<>());
                 for (var bind : resources.binds()) {
                     Mount mount = new Mount();
                     mount.withSource(bind.host());
@@ -149,7 +156,7 @@ public class Docker implements IScheduler {
             container.withLabels(new HashMap<>() {{
                 put("scheduler.resources", ISchedulerUtils.encode(resources));
                 put("scheduler.job", jobID);
-                put("scheduler.cluster", ISchedulerUtils.name(request.name()));
+                put("scheduler.cluster", request.name());
                 put("scheduler.instances", String.valueOf(request.instances()));
             }});
 
@@ -192,7 +199,7 @@ public class Docker implements IScheduler {
         try {
             for (CreateContainerCmd container : containers) {
                 containerIDs.add(container.exec().getId());
-                client.startContainerCmd(containerIDs.getLast());
+                client.startContainerCmd(containerIDs.getLast()).exec();
             }
 
         } catch (NotFoundException | ConflictException ex) {
@@ -210,7 +217,7 @@ public class Docker implements IScheduler {
 
     private List<Container> listContainers(String job, String name) throws ISchedulerException {
         try {
-            return client.listContainersCmd().withNameFilter(
+            return client.listContainersCmd().withShowAll(true).withNameFilter(
                     Collections.singleton(job + "-" + name)).exec();
         } catch (Exception ex) {
             throw new ISchedulerException("docker list containers error", ex);
@@ -220,12 +227,21 @@ public class Docker implements IScheduler {
     @Override
     public String createJob(String name, IClusterRequest driver, IClusterRequest... executors) throws ISchedulerException {
         var id = ISchedulerUtils.genId();
-        if (driver.resources().schedulerOptArgs().containsKey("docker.id")) {
-            int sz = Integer.parseInt(driver.resources().schedulerOptArgs().get("docker.id"));
-            id = id.substring(0, Math.max(0, Math.min(sz, id.length())));
-        }
+        int idSz = Integer.parseInt(driver.resources().schedulerOptArgs().getOrDefault("docker.id", "5"));
+        id = id.substring(0, Math.max(0, Math.min(idSz, id.length())));
+
         String jobID = ISchedulerUtils.name(name) + "-" + id;
         var containers = new ArrayList<>(parseRequest(jobID, driver));
+
+        if(unixSocket != null){
+            Mount usock = new Mount();
+            usock.withSource(unixSocket);
+            usock.withTarget(unixSocket);
+            usock.withReadOnly(false);
+            usock.withType(MountType.BIND);
+            containers.getFirst().getHostConfig().getMounts().add(usock);
+        }
+
         for (var exec : executors) {
             containers.addAll(parseRequest(jobID, exec));
         }
@@ -239,7 +255,7 @@ public class Docker implements IScheduler {
         try {
             for (var c : listContainers(id, "*")) {
                 try {
-                    client.removeContainerCmd(c.getId()).withForce(true).exec();
+                    client.stopContainerCmd(c.getId()).exec();
                 } catch (Exception ex) {
                     LOGGER.debug("docker error", ex);
                 }
@@ -279,7 +295,7 @@ public class Docker implements IScheduler {
     public IClusterInfo createCluster(String job, IClusterRequest request) throws ISchedulerException {
         startContainers(parseRequest(job, request));
 
-        var list = listContainers(job, request.name() + "-*");
+        var list = listContainers(job, ISchedulerUtils.name(request.name()) + "-*");
 
         var cluster = list.get(0).getLabels().get("scheduler.cluster");
         var instances = Integer.parseInt(list.get(0).getLabels().get("scheduler.instances"));
@@ -291,7 +307,7 @@ public class Docker implements IScheduler {
     @Override
     public void destroyCluster(String job, String id) throws ISchedulerException {
         try {
-            for (var c : listContainers(job, id)) {
+            for (var c : listContainers(job, ISchedulerUtils.name(id))) {
                 try {
                     client.removeContainerCmd(c.getId()).withForce(true).exec();
                 } catch (Exception ex) {
@@ -307,7 +323,7 @@ public class Docker implements IScheduler {
     @Override
     public IClusterInfo getCluster(String job, String id) throws ISchedulerException {
         try {
-            var list = listContainers(job, id);
+            var list = listContainers(job, ISchedulerUtils.name(id));
             if (list.isEmpty()) {
                 throw new ISchedulerException("cluster not found");
             }
@@ -321,7 +337,7 @@ public class Docker implements IScheduler {
 
     @Override
     public IClusterInfo repairCluster(String job, IClusterInfo cluster, IClusterRequest request) throws ISchedulerException {
-        var source = listContainers(job, cluster.id() + "-*").stream().
+        var source = listContainers(job, ISchedulerUtils.name(cluster.id()) + "-*").stream().
                 collect(Collectors.toMap(Container::getId, (v) -> v));
         var newContainers = new ArrayList<>(parseRequest(job, request));
 
@@ -347,7 +363,7 @@ public class Docker implements IScheduler {
     @Override
     public IContainerInfo.IStatus getContainerStatus(String job, String id) throws ISchedulerException {
         try {
-            var list = listContainers(job, id);
+            var list = listContainers(job, ISchedulerUtils.name(id));
             if (list.isEmpty()) {
                 return IContainerInfo.IStatus.DESTROYED;
             }

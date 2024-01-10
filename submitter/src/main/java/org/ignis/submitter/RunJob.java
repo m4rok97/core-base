@@ -212,17 +212,19 @@ public class RunJob extends BaseJob {
                 executors = new IClusterRequest[Integer.parseInt(staticConfig)];
                 setPorts.accept(props);
                 for (int i = 0; i < executors.length; i++) {
-                    executors[i] = schedulerParser.parse(IKeys.EXECUTOR, execArgs);
+                    var name = (i + 1) + "-" + props.getProperty(IKeys.EXECUTOR_NAME);
+                    executors[i] = schedulerParser.parse(IKeys.EXECUTOR, name, execArgs);
                     schedulerParser.containerEnvironment(executors[i]);
                 }
             } else {
                 var multiple = props.multiLoad(staticConfig);
                 executors = new IClusterRequest[multiple.size()];
                 for (int i = 0; i < executors.length; i++) {
+                    var name = (i + 1) + "-" + props.getProperty(IKeys.EXECUTOR_NAME);
                     setPorts.accept(multiple.get(i));
                     options.add(multiple.get(i).store64());
                     var parser = new ISchedulerParser(multiple.get(i));
-                    executors[i] = parser.parse(IKeys.EXECUTOR, execArgs);
+                    executors[i] = parser.parse(IKeys.EXECUTOR, name, execArgs);
                     schedulerParser.containerEnvironment(executors[i]);
                 }
             }
@@ -230,7 +232,8 @@ public class RunJob extends BaseJob {
 
         props.setProperty(IProperties.join(IKeys.DRIVER_ENV, IProperties.asEnv(IKeys.OPTIONS)),
                 String.join(";", options));
-        var driver = schedulerParser.parse(IKeys.DRIVER, driverArgs);
+        var driverName = "0-" + props.getProperty(IKeys.DRIVER_NAME);
+        var driver = schedulerParser.parse(IKeys.DRIVER, driverName, driverArgs);
         schedulerParser.containerEnvironment(driver);
 
         if (Boolean.getBoolean(IKeys.DEBUG)) {
@@ -243,13 +246,13 @@ public class RunJob extends BaseJob {
 
         String jobID = scheduler.createJob(name, driver, executors);
         if (interactive) {
-            System.exit(connect(jobID));
+            System.exit(connect(jobID, driverName));
         } else {
             System.out.println("submitted job " + jobID);
         }
     }
 
-    private synchronized int connect(String jobID) throws Exception {
+    private synchronized int connect(String jobID, String driverName) throws Exception {
         var cancel = new Thread(() -> {
             try {
                 scheduler.cancelJob(jobID);
@@ -261,7 +264,7 @@ public class RunJob extends BaseJob {
         var job = scheduler.getJob(jobID);
         IContainerInfo driver = null;
         for (var cluster : job.clusters()) {
-            if (cluster.id().startsWith("0")) {
+            if (cluster.id().equals(driverName)) {
                 driver = cluster.containers().get(0);
                 break;
             }
@@ -285,7 +288,7 @@ public class RunJob extends BaseJob {
         session.setConfig("StrictHostKeyChecking", "no");
         jsch.addIdentity(user, keyPair.privateKey().getBytes(), keyPair.publicKey().getBytes(), null);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 60; i++) {
             try {
                 session.connect(60000);
                 break;
@@ -293,7 +296,7 @@ public class RunJob extends BaseJob {
                 if (!(ex.getCause() != null && ex.getCause() instanceof IOException) || i == 9) {
                     throw ex;
                 }
-                Thread.sleep(10000);
+                Thread.sleep(1000);
             }
         }
         var channel = (ChannelExec) session.openChannel("exec");

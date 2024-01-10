@@ -18,13 +18,12 @@ package org.ignis.backend.cluster;
 
 import com.jcraft.jsch.*;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.backend.unix.IServerSocket;
 import org.ignis.properties.IKeys;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.UnixDomainSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -107,23 +106,18 @@ public final class ITunnel {
         }
     }
 
-    private void setSocketForwardingL(String path, int id) throws JSchException {
-        ServerSocketFactory ssf = (int port, int backlog, InetAddress bindAddr) -> {
-            var socket = new ServerSocket();
-            socket.bind(UnixDomainSocketAddress.of(path));
-            socket.setSoTimeout(0);
-            return socket;
-        };
-        session.setSocketForwardingL("0.0.0.0", id, path, ssf, 0);
+    private void setSocketForwardingL(String address, int id) throws JSchException {
+        ServerSocketFactory ssf = (int port, int backlog, InetAddress bindAddr) -> new IServerSocket(address);
+        session.setSocketForwardingL("0.0.0.0", id, address, ssf, 0);
 
 
     }
 
-    public synchronized void registerSocket(String path) throws IgnisException {
-        sockets.put(path, socketIDs++);
+    public synchronized void registerSocket(String address) throws IgnisException {
+        sockets.put(address, socketIDs++);
         if (session != null) {
             try {
-                setSocketForwardingL(path, socketIDs - 1);
+                setSocketForwardingL(address, socketIDs - 1);
             } catch (JSchException ex) {
             }
         }

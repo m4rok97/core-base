@@ -80,7 +80,7 @@ public final class IClusterCreateHelper extends IClusterHelper {
         } else {
             port = 0;
         }
-        return parser.parse(IKeys.EXECUTOR, List.of("ignis-sshserver", "executor", String.valueOf(port)));
+        return parser.parse(IKeys.EXECUTOR, cluster.getName(), List.of("ignis-sshserver", "executor", String.valueOf(port)));
     }
 
 }

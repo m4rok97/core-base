@@ -18,7 +18,7 @@ public final class ISchedulerParser {
     }
 
 
-    public IClusterRequest parse(String prefix, List<String> args) {
+    public IClusterRequest parse(String prefix, String name, List<String> args) {
         var builder = create();
         builder.args(args);
         var ports = new ArrayList<IPortMapping>();
@@ -31,7 +31,6 @@ public final class ISchedulerParser {
         builder.env(env);
         var schedulerOptArgs = new HashMap<String, String>();
         builder.schedulerOptArgs(schedulerOptArgs);
-        String name = null;
         String image = null;
         for (var subkey : props.withPrefix(prefix).toMap(true).keySet()) {
             var key = IProperties.join(prefix, subkey);
@@ -39,10 +38,6 @@ public final class ISchedulerParser {
             SEARCH:
             while (!parent.isEmpty()) {
                 switch (parent) {
-                    case IKeys.DRIVER_NAME:
-                    case IKeys.EXECUTOR_NAME:
-                        name = props.getProperty(key);
-                        break SEARCH;
                     case IKeys.DRIVER_IMAGE:
                     case IKeys.EXECUTOR_IMAGE:
                         image = props.getProperty(key);
@@ -268,6 +263,8 @@ public final class ISchedulerParser {
         props.toEnv(IKeys.WDIR, env, true);
         props.toEnv(IKeys.TRANSPORT_COMPRESSION, env, true);
 
+        props.toEnv(IKeys.DEBUG, env, false);
+        props.toEnv(IKeys.VERBOSE, env, false);
         props.toEnv(IKeys.TMPDIR, env, false);
         props.toEnv(IKeys.HEALTHCHECK_INTERVAL, env, false);
         props.toEnv(IKeys.HEALTHCHECK_TIMEOUT, env, false);

@@ -1,4 +1,5 @@
 #!/bin/env bash
+set -e
 
 apt update
 apt -y --no-install-recommends install \

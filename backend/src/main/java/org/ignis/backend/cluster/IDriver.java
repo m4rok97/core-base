@@ -36,7 +36,7 @@ public final class IDriver {
 
     public IDriver(IProperties props, IContainerInfo info) {
         this.lock = new ILock(-1);
-        dummy = new IContainer(0, -1, null, props);
+        dummy = new IContainer(0, 0, null, props);
         dummy.setInfo(info);
         this.executor = new IExecutor(0, 0, dummy, 1);
         this.connection = new ITaskGroup.Builder().

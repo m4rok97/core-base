@@ -25,15 +25,10 @@ import org.ignis.properties.ICrypto;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.properties.IPropertyException;
-import org.ignis.rpc.driver.IBackendService;
-import org.ignis.rpc.driver.IClusterService;
-import org.ignis.rpc.driver.IPropertiesService;
-import org.ignis.rpc.driver.IDataFrameService;
-import org.ignis.rpc.driver.IWorkerService;
+import org.ignis.rpc.driver.*;
 import org.ignis.scheduler3.IScheduler;
 import org.ignis.scheduler3.ISchedulerException;
 import org.ignis.scheduler3.ISchedulerFactory;
-import org.ignis.scheduler3.model.IClusterInfo;
 import org.ignis.scheduler3.model.IContainerInfo;
 import org.ignis.scheduler3.model.IJobInfo;
 import org.slf4j.LoggerFactory;
@@ -58,8 +53,8 @@ public final class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ILogger.init(Boolean.getBoolean(IProperties.asEnv(IKeys.DEBUG)),
-                Boolean.getBoolean(IProperties.asEnv(IKeys.VERBOSE)));
+        ILogger.init(Boolean.parseBoolean(System.getenv(IProperties.asEnv(IKeys.DEBUG))),
+                Boolean.parseBoolean(System.getenv(IProperties.asEnv(IKeys.VERBOSE))));
         LOGGER.info("Backend started");
         var props = new IProperties();
         try {
@@ -70,7 +65,7 @@ public final class Main {
 
         LOGGER.info("Loading configuration file");
         try {
-            props.load(new File(props.getString(IKeys.HOME), "etc/ignis.yaml").getPath());
+            props.load(new File(System.getenv(IProperties.asEnv(IKeys.HOME)), "etc/ignis.yaml").getPath());
         } catch (IPropertyException | IOException ex) {
             LOGGER.error("Error loading ignis.yaml", ex);
         }
@@ -103,6 +98,7 @@ public final class Main {
         } else {
             System.setProperty(IKeys.DEBUG, "false");
         }
+        System.setProperty("jna.tmpdir", props.getProperty(IKeys.JOB_CONTAINER_DIR));
 
         LOGGER.info("Loading scheduler");
         IScheduler scheduler = null;
