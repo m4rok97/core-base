@@ -30,6 +30,8 @@ import org.ignis.scheduler3.model.IClusterRequest;
 import org.ignis.scheduler3.model.IContainerInfo;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -77,10 +79,20 @@ public final class IClusterCreateHelper extends IClusterHelper {
         int port;
         if (parser.networkMode().equals(IContainerInfo.INetworkMode.BRIDGE)) {
             port = properties.getInteger(IKeys.PORT);
+
+            var lprops = parser.getProperties();
+            lprops.setProperty(IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", lprops.getString(IKeys.PORT)), "0");
+            var key = IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "host");
+            var ports = lprops.hasProperty(key) ? lprops.getStringList(key) : new ArrayList<String>();
+            ports.addAll(Collections.nCopies(lprops.getInteger(IKeys.TRANSPORT_PORTS), "0"));
+            lprops.setList(key, ports);
         } else {
             port = 0;
         }
-        return parser.parse(IKeys.EXECUTOR, cluster.getName(), List.of("ignis-sshserver", "executor", String.valueOf(port)));
+        var request = parser.parse(IKeys.EXECUTOR, cluster.getName(),
+                List.of("ignis-sshserver", "executor", String.valueOf(port)));
+        parser.containerEnvironment(request);
+        return request;
     }
 
 }

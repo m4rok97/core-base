@@ -60,6 +60,7 @@ public final class ICluster {
         if (Boolean.getBoolean(IKeys.DEBUG)) {
             LOGGER.info("Debug: " + getName() + " " + properties.toString());
         }
+        this.properties.setReadOnly(true);
     }
 
     public long getId() {

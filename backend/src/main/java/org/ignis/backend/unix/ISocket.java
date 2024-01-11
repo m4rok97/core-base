@@ -15,10 +15,13 @@ public final class ISocket extends Socket {
     private boolean inputShutdown;
     private boolean outputShutdown;
 
+    public ISocket() throws IOException {
+        this(SocketChannel.open(StandardProtocolFamily.UNIX));
+    }
+
     public ISocket(String address) throws IOException {
         this(SocketChannel.open(StandardProtocolFamily.UNIX));
-        channel.bind(UnixDomainSocketAddress.of(address));
-        bound = true;
+        connect(UnixDomainSocketAddress.of(address));
     }
 
     ISocket(SocketChannel channel) throws IOException {
@@ -27,12 +30,12 @@ public final class ISocket extends Socket {
 
     @Override
     public void connect(SocketAddress endpoint) throws IOException {
-        super.connect(endpoint);
+        channel.connect(endpoint);
     }
 
     @Override
     public void connect(SocketAddress endpoint, int timeout) throws IOException {
-        super.connect(endpoint, timeout);
+        channel.connect(endpoint);
     }
 
     @Override
@@ -43,7 +46,11 @@ public final class ISocket extends Socket {
 
     @Override
     public InetAddress getInetAddress() {
-        throw new UnsupportedOperationException();
+        try {
+            return InetAddress.getByName("0.0.0.0");
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -53,12 +60,12 @@ public final class ISocket extends Socket {
 
     @Override
     public int getPort() {
-        throw new UnsupportedOperationException();
+        return 0;
     }
 
     @Override
     public int getLocalPort() {
-        throw new UnsupportedOperationException();
+        return 0;
     }
 
     @Override

@@ -168,7 +168,7 @@ public class RunJob extends BaseJob {
             props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.HEALTHCHECK_PORT)), "0");
             var key = IProperties.join(IKeys.DRIVER_PORTS, "tcp", "host");
             var ports = props.hasProperty(key) ? props.getStringList(key) : new ArrayList<String>();
-            ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), ""));
+            ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), "0"));
             props.setList(key, ports);
         }
 
@@ -203,7 +203,7 @@ public class RunJob extends BaseJob {
                     props.setProperty(IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", props.getString(IKeys.PORT)), "0");
                     var key = IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "host");
                     var ports = props.hasProperty(key) ? props.getStringList(key) : new ArrayList<String>();
-                    ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), ""));
+                    ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), "0"));
                     props.setList(key, ports);
                 }
             };

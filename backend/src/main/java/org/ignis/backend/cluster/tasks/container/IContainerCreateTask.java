@@ -96,13 +96,13 @@ public final class IContainerCreateTask extends IContainerTask {
 
         if (shared.alive.get() != shared.containers.size()) {
             if (shared.barrier.await() == 0) {
-                LOGGER.info(log() + "Repairing new Cluster");
+                LOGGER.info(log() + "Repairing Cluster");
                 shared.clusterInfo = scheduler.repairCluster(jobID, shared.clusterInfo, request);
             }
         }
 
         if (!ok) {
-            container.setInfo(shared.clusterInfo.containers().get((int)container.getId()));
+            container.setInfo(shared.clusterInfo.containers().get((int) container.getId()));
             container.connect();
         }
 
@@ -113,10 +113,10 @@ public final class IContainerCreateTask extends IContainerTask {
         LOGGER.info(log() + "Container not found");
         if (shared.barrier.await() == 0) {
             LOGGER.info(log() + "Creating new Cluster");
-            scheduler.createCluster(jobID, request);
+            shared.clusterInfo = scheduler.createCluster(jobID, request);
         }
         shared.barrier.await();
-        container.setInfo(shared.clusterInfo.containers().get((int)container.getId()));
+        container.setInfo(shared.clusterInfo.containers().get((int) container.getId()));
         LOGGER.info(log() + "Connecting to the container");
         container.connect();
     }
@@ -133,7 +133,7 @@ public final class IContainerCreateTask extends IContainerTask {
 
             if (Boolean.getBoolean(IKeys.DEBUG)) {
                 LOGGER.info("Debug:" + log() + " ExecutorEnvironment{\n" +
-                        container.getTunnel().execute("env", false)
+                        container.getTunnel().execute("ignis-run env", false)
                         + '}');
             }
         } catch (IgnisException ex) {

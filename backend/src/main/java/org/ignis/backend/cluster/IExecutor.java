@@ -27,6 +27,7 @@ import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.executor.*;
 import org.ignis.scheduler3.ISchedulerParser;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -35,6 +36,8 @@ import java.nio.file.Path;
  * @author César Pomar
  */
 public final class IExecutor {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(IExecutor.class);
 
     private final long id;
     private final long worker;
@@ -97,12 +100,15 @@ public final class IExecutor {
         if (context.hasProperty(IKeys.CRYPTO_$PRIVATE$)) {
             context.rmProperty(IKeys.CRYPTO_$PRIVATE$);
         }
-        context.setProperty(IKeys.EXECUTOR_CORES, String.valueOf(cores));
-        context.setProperty(IKeys.JOB_CLUSTER, String.valueOf(container.getCluster()));
-        context.setProperty(IKeys.JOB_CONTAINER_ID, String.valueOf(container.getId()));
-        context.setProperty(IKeys.JOB_CONTAINER_ID, Path.of(context.getProperty(IKeys.JOB_DIR),
+        context.setProperty(IKeys.EXECUTOR_NODE, container.getInfo().node());
+        context.setProperty(IKeys.EXECUTOR_CORES, cores);
+        context.setProperty(IKeys.JOB_CLUSTER, container.getCluster());
+        context.setProperty(IKeys.JOB_CONTAINER_ID, container.getId());
+        context.setProperty(IKeys.JOB_CONTAINER_DIR, Path.of(context.getProperty(IKeys.JOB_DIR),
                 "tmp", context.getProperty(IKeys.JOB_CONTAINER_ID)).toString());
-
+        context.setProperty(IKeys.JOB_EXECUTOR_ID, this.id);
+        context.setProperty(IKeys.JOB_EXECUTOR_DIR, Path.of(context.getProperty(IKeys.JOB_CONTAINER_DIR),
+                context.getProperty(IKeys.JOB_EXECUTOR_ID)));
     }
 
     public IProperties getContext() {
@@ -113,13 +119,18 @@ public final class IExecutor {
         return transport.getConcreteTransport() != null && transport.getConcreteTransport().isOpen();
     }
 
-    public String getSocket() {
-        var name = container.getCluster() + "-" + worker + "-" + id + ".sock";
+    public String getLocalSocket() {
+        var name = "b-" + container.getCluster() + "-" + worker + "-" + id + ".sock";
+        return Path.of(getProperties().getProperty(IKeys.JOB_SOCKETS), name).toString();
+    }
+
+    public String getRemoteSocket() {
+        var name = "e-" + container.getCluster() + "-" + worker + "-" + id + ".sock";
         return Path.of(getProperties().getProperty(IKeys.JOB_SOCKETS), name).toString();
     }
 
     public void connect() throws TException {
-        connect(getSocket());
+        connect(getLocalSocket());
     }
 
     public void connect(String address) throws TException {
@@ -129,7 +140,6 @@ public final class IExecutor {
             var socket = new TSocket(new ISocket(address));
             var zlib = new TZlibTransport(socket, container.getProperties().getInteger(IKeys.TRANSPORT_COMPRESSION));
             transport.setConcreteTransport(zlib);
-            zlib.open();
         } catch (IOException ex) {
             throw new TException(ex);
         }

@@ -43,7 +43,7 @@ public class IMpiConfig {
             List<String> ports = executor.getContext().getStringList(
                     IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "host"));
 
-            env.put("MPICH_LIST_PORTS", String.join(" ", ports.subList(n - 1, ports.size())));
+            env.put("MPICH_LIST_PORTS", String.join(" ", ports.subList(ports.size() - n, ports.size())));
         }
         return env;
     }

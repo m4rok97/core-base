@@ -90,7 +90,7 @@ public final class IContainer {
 
     public IExecutor createExecutor(long id, long worker, int cores) throws IgnisException {
         var exec = new IExecutor(id, worker, this, cores);
-        tunnel.registerSocket(exec.getSocket());
+        tunnel.registerSocket(exec.getLocalSocket(), exec.getRemoteSocket());
         return exec;
     }
 }

@@ -73,6 +73,9 @@ ignis:
     #container:
       #id
       #dir
+    #executor
+      #id
+      #dir
   partition:
     type: Memory
     minimal: 128MB

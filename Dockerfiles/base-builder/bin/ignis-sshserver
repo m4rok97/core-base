@@ -97,9 +97,9 @@ if [ "${MODE}" == "driver" ]; then
   exit 0
 elif [ "${MODE}" == "executor" ] && [ -z "${IGNIS_HEALTHCHECK_DISABLE}" ]; then
   while true; do
+    sleep ${H_INTERVAL}
     for i in {1..${H_RETRIES}}; do
-      curl --output /dev/null --silent --head --fail --connect-timeout ${H_TIMEOUT} ${H_URL} && \
-      continue 2 || sleep ${H_INTERVAL}
+      curl --output /dev/null --silent --head --fail --connect-timeout ${H_TIMEOUT} ${H_URL} && continue 2
     done
     echo "Driver lost, exiting" 1>&2
     exit 1

@@ -23,6 +23,7 @@ import org.ignis.backend.cluster.helpers.cluster.IClusterFileHelper;
 import org.ignis.backend.cluster.tasks.ILazy;
 import org.ignis.backend.exception.IDriverExceptionImpl;
 import org.ignis.backend.exception.IgnisException;
+import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.driver.IClusterService;
 import org.ignis.rpc.driver.IDriverException;
@@ -72,15 +73,17 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
 
     @Override
     public long newInstance0() throws IDriverException, TException {
-        return newInstance1a("");
+        return newInstance1a(null);
     }
 
     @Override
     public long newInstance1a(String name) throws IDriverException, TException {
         try {
             IProperties propertiesObject = ss.props().copy();
-            propertiesObject.setReadOnly(true);
             long id = ss.newCluster();
+            if (name == null) {
+                name = propertiesObject.getProperty(IKeys.EXECUTOR_NAME);
+            }
             ss.setCluster(new ICluster(name, id, propertiesObject, ss.pool(), scheduler));
             return id;
         } catch (Exception ex) {
@@ -90,7 +93,7 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
 
     @Override
     public long newInstance1b(long properties) throws IDriverException, TException {
-        return newInstance2("", properties);
+        return newInstance2(null, properties);
     }
 
     @Override
@@ -101,8 +104,10 @@ public final class IClusterServiceImpl extends IService implements IClusterServi
             synchronized (propertiesObject) {
                 clusterProperties = propertiesObject.copy();
             }
-            clusterProperties.setReadOnly(true);
             long id = ss.newCluster();
+            if (name == null) {
+                name = clusterProperties.getProperty(IKeys.EXECUTOR_NAME);
+            }
             ss.setCluster(new ICluster(name, id, clusterProperties, ss.pool(), scheduler));
             return id;
         } catch (Exception ex) {

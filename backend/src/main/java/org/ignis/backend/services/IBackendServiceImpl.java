@@ -107,7 +107,10 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
                 System.in.read();
             } catch (Exception ex) {
             }
-            stopAll();
+            try {
+                stop();
+            } catch (Exception ex) {
+            }
         });
     }
 
@@ -238,8 +241,6 @@ public final class IBackendServiceImpl extends IService implements IBackendServi
                     }
                 };
             }
-
-            ;
         };
     }
 

@@ -79,6 +79,8 @@ public final class IKeys {
     public static final String JOB_DIR = "ignis.job.dir";
     public static final String JOB_CONTAINER_ID = "ignis.job.container.id";
     public static final String JOB_CONTAINER_DIR = "ignis.job.container.dir";
+    public static final String JOB_EXECUTOR_ID = "ignis.job.executor.id";
+    public static final String JOB_EXECUTOR_DIR = "ignis.job.executor.dir";
 
     public static final String PARTITION_TYPE = "ignis.partition.type";
     public static final String PARTITION_MINIMAL = "ignis.partition.minimal";

@@ -17,6 +17,9 @@ public final class ISchedulerParser {
         this.props = props;
     }
 
+    public IProperties getProperties(){
+        return props;
+    }
 
     public IClusterRequest parse(String prefix, String name, List<String> args) {
         var builder = create();
@@ -266,9 +269,9 @@ public final class ISchedulerParser {
         props.toEnv(IKeys.DEBUG, env, false);
         props.toEnv(IKeys.VERBOSE, env, false);
         props.toEnv(IKeys.TMPDIR, env, false);
-        props.toEnv(IKeys.HEALTHCHECK_INTERVAL, env, false);
-        props.toEnv(IKeys.HEALTHCHECK_TIMEOUT, env, false);
-        props.toEnv(IKeys.HEALTHCHECK_RETRIES, env, false);
+        props.toEnv(IKeys.HEALTHCHECK_INTERVAL, env, true);
+        props.toEnv(IKeys.HEALTHCHECK_TIMEOUT, env, true);
+        props.toEnv(IKeys.HEALTHCHECK_RETRIES, env, true);
         props.toEnv(IKeys.HEALTHCHECK_URL, env, false);
 
         props.toEnv(IKeys.CRYPTO_PUBLIC, env, false);

@@ -70,15 +70,22 @@ public final class IExecutorCreateTask extends IExecutorTask {
                     LOGGER.warn(log() + "Executor dead");
                 }
             }
-
+        } else if (executor.getPid() != 0) {
+            try {
+                executor.getContainer().getTunnel().execute("ps -p " + executor.getPid() + " > /dev/null", false);
+                running = true;
+            } catch (IgnisException ex) {
+                LOGGER.warn(log() + "Executor dead");
+            }
         }
 
         if (!running) {
             LOGGER.info(log() + "Starting new executor");
 
-            String script = "nohup ignis-run " +
-                    "ignis-" + type + ' ' + executor.getSocket() +
-                    "> ${IGNIS_JOB_STDOUT} 2> ${IGNIS_JOB_STDERR} " +
+            String script = "source ${IGNIS_HOME}/etc/environment\n" +
+                    "nohup ignis-run " +
+                    "ignis-" + type + ' ' + executor.getRemoteSocket() +
+                    " >${IGNIS_JOB_STDOUT} 2>${IGNIS_JOB_STDERR} " +
                     "&\n" +
                     "sleep 1\n" +
                     "jobs -p 1\n";
@@ -96,13 +103,19 @@ public final class IExecutorCreateTask extends IExecutorTask {
             }
         }
 
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 60; i++) {
             try {
                 executor.connect();
-                executor.getExecutorServerModule().test();
+                try {
+                    executor.getExecutorServerModule().test();
+                } catch (Exception ex) {
+                    if (Boolean.getBoolean(IKeys.DEBUG)) {
+                        LOGGER.error("Debug:" + log() + ex.getMessage(), ex);
+                    }
+                }
                 break;
             } catch (Exception ex) {
-                if (i == 299) {
+                if (i == 59) {
                     kill();
                     executor.disconnect();
                     throw new IgnisException(ex.getMessage(), ex);
@@ -118,11 +131,14 @@ public final class IExecutorCreateTask extends IExecutorTask {
         try {
             if (!running) {
                 if (Boolean.getBoolean(IKeys.DEBUG)) {
-                    StringBuilder writer = new StringBuilder();
-                    for (var entry : executor.getContext().toMap(true).entrySet()) {
-                        writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
+                    if (Boolean.getBoolean(IKeys.DEBUG)) {
+                        StringBuilder writer = new StringBuilder();
+                        for (var entry : IMpiConfig.getEnv(executor).entrySet()) {
+                            writer.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
+                        }
+                        LOGGER.info("Debug:" + log() + "Executor Context " + executor.getContext().toString() +
+                                "\n Executor env{\n" + writer + '}');
                     }
-                    LOGGER.info("Debug:" + log() + " ExecutorProperties{\n" + writer + '}');
                 }
                 executor.getExecutorServerModule().start(executor.getContext().toMap(true), IMpiConfig.getEnv(executor));
             }

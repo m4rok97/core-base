@@ -80,7 +80,7 @@ public final class IWorkerServiceImpl extends IService implements IWorkerService
     public IWorkerId newInstance3(long id, String name, String type) throws IDriverException, TException {
         try {
             int cores = ss.getCluster(id).getProperties().getInteger(IKeys.EXECUTOR_CORES);
-            return newInstance5(id, name, type, cores, 0);
+            return newInstance5(id, name, type, cores, 1);
         } catch (IgnisException ex) {
             throw new IDriverExceptionImpl(ex);
         }

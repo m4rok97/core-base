@@ -23,6 +23,7 @@ import org.ignis.properties.IKeys;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -39,11 +40,14 @@ public final class ITunnel {
 
     private final JSch jsch;
     private final Semaphore sem;
-    private final Map<String, Integer> sockets;
+    private final Map<String, Forwarding> sockets;
     private int socketIDs;
     private final String privateKey;
     private final String publicKey;
     private Session session;
+
+    private static record Forwarding(String remoteAddress, int id) {
+    }
 
     public ITunnel(String privateKey, String publicKey) {
         this.privateKey = privateKey;
@@ -58,17 +62,18 @@ public final class ITunnel {
         for (int i = 0; i < 300; i++) {
             try {
                 if (session != null) {
-                    try {
-                        close();
-                    } catch (Exception ex) {
-                    }
+                    close();
                 }
                 session = jsch.getSession(user, host, port);
                 session.setConfig("StrictHostKeyChecking", "no");
                 jsch.addIdentity(user, privateKey.getBytes(), publicKey.getBytes(), null);
                 for (var entry : sockets.entrySet()) {
-                    setSocketForwardingL(entry.getKey(), entry.getValue());
+                    setSocketForwardingL(entry.getKey(), entry.getValue().remoteAddress, entry.getValue().id);
                 }
+            } catch (JSchException ex) {
+                throw new IgnisException(ex);
+            }
+            try {
                 session.connect();
                 break;
             } catch (JSchException ex) {
@@ -95,9 +100,9 @@ public final class ITunnel {
 
     public void close() {
         if (session != null) {
-            for (Integer id : sockets.values()) {
+            for (var entry : sockets.entrySet()) {
                 try {
-                    session.delPortForwardingL(id);
+                    session.delPortForwardingL("0.0.0.0", entry.getValue().id);
                 } catch (JSchException ex) {
                     LOGGER.info(ex.getMessage(), ex);
                 }
@@ -106,18 +111,22 @@ public final class ITunnel {
         }
     }
 
-    private void setSocketForwardingL(String address, int id) throws JSchException {
-        ServerSocketFactory ssf = (int port, int backlog, InetAddress bindAddr) -> new IServerSocket(address);
-        session.setSocketForwardingL("0.0.0.0", id, address, ssf, 0);
-
-
+    private void setSocketForwardingL(String localAddress, String remoteAddress, int id) throws JSchException {
+        try {
+            new File(localAddress).delete();
+            ServerSocketFactory ssf = (int port, int backlog, InetAddress bindAddr) -> new IServerSocket(localAddress);
+            session.setSocketForwardingL("0.0.0.0", id, remoteAddress, ssf, 0);
+        } catch (JSchException ex) {
+            LOGGER.error("forwarding " + localAddress + "->" + remoteAddress + " error", ex);
+            throw ex;
+        }
     }
 
-    public synchronized void registerSocket(String address) throws IgnisException {
-        sockets.put(address, socketIDs++);
+    public synchronized void registerSocket(String localAddress, String remoteAddress) throws IgnisException {
+        sockets.put(localAddress, new Forwarding(remoteAddress, socketIDs++));
         if (session != null) {
             try {
-                setSocketForwardingL(address, socketIDs - 1);
+                setSocketForwardingL(localAddress, remoteAddress, socketIDs - 1);
             } catch (JSchException ex) {
             }
         }

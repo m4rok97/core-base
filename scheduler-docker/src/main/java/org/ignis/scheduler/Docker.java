@@ -337,17 +337,23 @@ public class Docker implements IScheduler {
 
     @Override
     public IClusterInfo repairCluster(String job, IClusterInfo cluster, IClusterRequest request) throws ISchedulerException {
-        var source = listContainers(job, ISchedulerUtils.name(cluster.id()) + "-*").stream().
-                collect(Collectors.toMap(Container::getId, (v) -> v));
+        var source = listContainers(job, ISchedulerUtils.name(cluster.id())).stream().
+                collect(Collectors.toMap((c)->c.getNames()[0].substring(1), (v) -> v));
         var newContainers = new ArrayList<>(parseRequest(job, request));
 
         var containers = new ArrayList<>(cluster.containers());
         for (int i = 0; i < containers.size(); i++) {
+            if(!source.containsKey(containers.get(i).id())) {
+                newContainers.set(i, null);
+                continue;
+            }
+
             var state = source.get(containers.get(i).id()).getState();
             if (!DOCKER_STATUS.getOrDefault(state, IContainerInfo.IStatus.UNKNOWN).equals(IContainerInfo.IStatus.RUNNING)) {
                 newContainers.set(i, null);
                 continue;
             }
+
             try {
                 client.removeContainerCmd(containers.get(i).id()).withForce(true).exec();
             } catch (Exception ex) {
