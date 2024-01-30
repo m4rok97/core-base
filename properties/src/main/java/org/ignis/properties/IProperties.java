@@ -481,7 +481,11 @@ public final class IProperties {
     public void fromEnv(Map<String, String> env) {
         for (Map.Entry<String, String> entry : env.entrySet()) {
             if (entry.getKey().startsWith("IGNIS_")) {
-                setProperty(entry.getKey().replace('_', '.').toLowerCase(), entry.getValue());
+                var key = entry.getKey().replace('_', '.').toLowerCase();
+                if(key.contains("...")){
+                    key = key.replaceAll("\\.\\.(\\w+)\\.\\.","\\$$1\\$");
+                }
+                setProperty(key, entry.getValue());
             }
         }
     }

@@ -2,8 +2,8 @@
    :width: 128
    :alt: IgnisHPC logo
 
-================
-IgnisHPC Backend
-================
+==================
+IgnisHPC Core Base
+==================
 
 Documentation: `IgnisHPC docs <https://ignishpc.readthedocs.io>`_

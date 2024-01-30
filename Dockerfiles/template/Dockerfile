@@ -16,6 +16,7 @@ RUN mkdir -p \
     ${IGNIS_HOME}/core \
     ${IGNIS_HOME}/lib \
     ${IGNIS_HOME}/include \
-    ${IGNIS_HOME}/etc && \
+    ${IGNIS_HOME}/etc \
+    ${IGNIS_HOME}/env.d && \
     echo ${IGNIS_HOME}/lib > /etc/ld.so.conf.d/ignis-lib.conf && \
     ln -s /usr /usr2

@@ -76,7 +76,7 @@ public final class ISchedulerParser {
                         break SEARCH;
                     case IKeys.DRIVER_SETENV:
                     case IKeys.EXECUTOR_SETENV:
-                        if (key.startsWith("..")) {//bypass .$crypto$= keys
+                        if (key.endsWith("..")) {//bypass .$crypto$= keys
                             key = key.substring(0, key.length() - 2);
                         }
                         setenv.put(key, props.getBoolean(key));

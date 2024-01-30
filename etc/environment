@@ -24,3 +24,9 @@ else
   export IGNIS_JOB_CONTAINER_DIR=${IGNIS_JOB_DIR}/tmp/${IGNIS_JOB_CONTAINER_ID}
   export IGNIS_JOB_SOCKETS=${IGNIS_JOB_DIR}/sockets
 fi
+
+for FILE in ${IGNIS_HOME}/env.d/* ; do
+  if [ -f "$FILE" ]; then
+    source "$FILE"
+  fi
+done
