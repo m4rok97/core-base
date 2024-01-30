@@ -17,7 +17,7 @@ public final class ISchedulerParser {
         this.props = props;
     }
 
-    public IProperties getProperties(){
+    public IProperties getProperties() {
         return props;
     }
 
@@ -31,6 +31,7 @@ public final class ISchedulerParser {
         var hostnames = new HashMap<String, String>();
         builder.hostnames(hostnames);
         var env = new HashMap<String, String>();
+        var setenv = new HashMap<String, Boolean>();
         builder.env(env);
         var schedulerOptArgs = new HashMap<String, String>();
         builder.schedulerOptArgs(schedulerOptArgs);
@@ -73,11 +74,18 @@ public final class ISchedulerParser {
                     case IKeys.EXECUTOR_ENV:
                         parseKeyValue(prefix, env, key, props.getProperty(key));
                         break SEARCH;
+                    case IKeys.DRIVER_SETENV:
+                    case IKeys.EXECUTOR_SETENV:
+                        if (key.startsWith("..")) {//bypass .$crypto$= keys
+                            key = key.substring(0, key.length() - 2);
+                        }
+                        setenv.put(key, props.getBoolean(key));
+                        break SEARCH;
                 }
                 parent = IProperties.parent(parent);
             }
         }
-
+        containerEnvironment(setenv, env);
         builder.image(parseImage(image));
         if (IKeys.EXECUTOR_INSTANCES.startsWith(prefix)) {
             return new IClusterRequest(name, builder.build(), props.getInteger(IKeys.EXECUTOR_INSTANCES));
@@ -104,10 +112,14 @@ public final class ISchedulerParser {
     private IContainerInfo.IContainerInfoBuilder create() {
         var builder = IContainerInfo.builder();
         builder.time(parseTime());
-        UnixSystem user = new UnixSystem();
-        builder.user(user.getUsername() + ":" + user.getUid() + ":" + user.getGid());
         var provider = props.getString(IKeys.CONTAINER_PROVIDER).equals("docker") ? IContainerInfo.IProvider.DOCKER :
                 IContainerInfo.IProvider.SINGULARITY;
+        if (provider.equals(IContainerInfo.IProvider.DOCKER) && props.getBoolean(IKeys.CONTAINER_DOCKER_ROOT)) {
+            builder.user("root:0:0");
+        } else {
+            UnixSystem user = new UnixSystem();
+            builder.user(user.getUsername() + ":" + user.getUid() + ":" + user.getGid());
+        }
         builder.provider(provider);
         builder.network(networkMode());
         builder.writable(props.getBoolean(IKeys.CONTAINER_WRITABLE));
@@ -169,7 +181,7 @@ public final class ISchedulerParser {
         if (value.contains(":")) {
             var values = value.split(":");
             if (values.length != 2) {
-                throw new IPropertyException(key, " has bad format");
+                throw new IPropertyException(key, "has bad format");
             }
             if (values[0].isEmpty()) {
                 value = container;
@@ -182,7 +194,7 @@ public final class ISchedulerParser {
     private void parseKeyValue(String prefix, Map<String, String> dest, String key, String value) {
         var keys = IProperties.split(IProperties.relative(prefix, key));
         if (keys.length != 2) {
-            throw new IPropertyException(key, " has bad format");
+            throw new IPropertyException(key, "has bad format");
         }
         dest.put(keys[1], value);
     }
@@ -198,7 +210,7 @@ public final class ISchedulerParser {
                 try {
                     seconds += Long.parseLong(fields[i]) * w[i];
                 } catch (NumberFormatException ex) {
-                    throw new IPropertyException(IKeys.TIME, " has bad format");
+                    throw new IPropertyException(IKeys.TIME, "has bad format");
                 }
             }
             return seconds;
@@ -210,17 +222,26 @@ public final class ISchedulerParser {
         var ports = new ArrayList<IPortMapping>();
         var keys = IProperties.split(IProperties.relative(prefix, key));
         if (keys.length != 3) {
-            throw new IPropertyException(key, " has bad format, use " +
-                    "*.ports.{type}.{container_port}={host_port} or *.ports.{type}.host={host_port},...");
+            throw new IPropertyException(key, "has bad format, use " +
+                    "*.ports.{type}.{container_port}={host_port} or *.ports.{type}.{name}=0,...");
         }
         if (keys[1].startsWith("tcp") || keys[1].startsWith("udp")) {
             var proto = IPortMapping.Protocol.valueOf(keys[1].toUpperCase());
-            if (keys[2].equals("host")) {
-                for (var port : value.split(",")) {
-                    ports.add(new IPortMapping(Integer.parseInt(port), Integer.parseInt(port), proto));
+            if (keys[2].matches("-?\\d+")) {
+                ports.add(new IPortMapping(Integer.parseInt(keys[2]), Integer.parseInt(value), proto));
+                if (ports.getLast().container() < 1) {
+                    throw new IPropertyException(key, "container port must be >0, found " + keys[2]);
+                }
+                if (ports.getLast().host() < 0) {
+                    throw new IPropertyException(key, "host port must be >=0, found " + value);
                 }
             } else {
-                ports.add(new IPortMapping(Integer.parseInt(keys[2]), Integer.parseInt(value), proto));
+                for (var port : value.split(",")) {
+                    ports.add(new IPortMapping(0, Integer.parseInt(port), proto));
+                    if (ports.getLast().host() != 0) {
+                        throw new IPropertyException(key, "random ports must be 0, found " + port);
+                    }
+                }
             }
         } else {
             throw new IPropertyException(key, "expected type tcp/udp, found " + keys[1]);
@@ -234,35 +255,39 @@ public final class ISchedulerParser {
             return Map.of();
         }
         for (var proto : List.of("tcp", "udp")) {
-            var khost = IProperties.join(prefix, proto, "host");
-            var host = props.hasProperty(khost) ? props.getStringList(khost) : List.<String>of();
             var free = new LinkedList<String>();
-            for(var port: info.ports()){
-                if(!port.protocol().name().equalsIgnoreCase(proto)){
+            for (var port : info.ports()) {
+                if (!port.protocol().name().equalsIgnoreCase(proto)) {
                     continue;
                 }
                 var n = IProperties.join(prefix, proto, String.valueOf(port.container()));
-                if(props.hasProperty(n)){
+                if (props.hasProperty(n)) {
                     result.setProperty(n, port.host());
                 } else {
                     free.add(String.valueOf(port.host()));
                 }
             }
-            for(int i=0; i< host.size();i++){
-                if(host.get(i).equals("0")){
-                    host.set(i, free.pollFirst());
+
+            List<String> named = props.withPrefix(IProperties.join(prefix, proto)).toMap(true).keySet().stream().
+                    filter((s) -> !s.matches("-?\\d+")).sorted().toList();
+
+            for (var id : named) {
+                var portName = IProperties.join(prefix, proto, id);
+                int n = props.getStringList(portName).size();
+                if (n > free.size()) {
+                    throw new IPropertyException(portName, "scheduler assignment not enough ports");
                 }
-            }
-            if(!host.isEmpty()){
-                result.setList(khost, host);
+                result.setList(portName, free.subList(free.size() - n, free.size()));
+                for (int i = 0; i < n; i++) {
+                    free.removeLast();
+                }
             }
         }
 
         return result.toMap(true);
     }
 
-    public void containerEnvironment(IClusterRequest request) {
-        var env = request.resources().env();
+    public void containerEnvironment(Map<String, Boolean> setenv, Map<String, String> env) {
         props.toEnv(IKeys.WDIR, env, true);
         props.toEnv(IKeys.TRANSPORT_COMPRESSION, env, true);
 
@@ -281,6 +306,10 @@ public final class ISchedulerParser {
         props.toEnv(IKeys.DISCOVERY_ETCD_$PASSWORD$, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_ENDPOINT, env, false);
         props.toEnv(IKeys.DISCOVERY_ETCD_CA, env, false);
+
+        for (var entry : setenv.entrySet()) {
+            props.toEnv(entry.getKey(), env, entry.getValue());
+        }
     }
 
 }

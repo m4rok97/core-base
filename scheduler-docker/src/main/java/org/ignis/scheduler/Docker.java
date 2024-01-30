@@ -126,6 +126,17 @@ public class Docker implements IScheduler {
                 container.getHostConfig().withNetworkMode("host");
             } else {
                 container.getHostConfig().withNetworkMode("bridge");
+                var exposed = new ArrayList<ExposedPort>();
+                var ports = new ArrayList<PortBinding>();
+                for (var port : resources.ports()) {
+                    if (port.container() > 0) {
+                        ports.add(PortBinding.parse("0.0.0.0:" + port.host() + ":" + port.container() +
+                                "/" + port.protocol().toString().toLowerCase()));
+                        exposed.add(ports.getLast().getExposedPort());
+                    }
+                }
+                container.withExposedPorts(exposed);
+                container.getHostConfig().withPortBindings(ports);
             }
 
             container.getHostConfig().withMounts(new ArrayList<>());
@@ -177,14 +188,22 @@ public class Docker implements IScheduler {
         var builder = info.toBuilder();
 
         builder.id(c.getNames()[0].substring(1));
-        var port = new Integer[]{6000};
+        var port = new Integer[]{50000};
         if (c.getNetworkSettings() != null && c.getNetworkSettings().getNetworks().containsKey("bridge")) {
             builder.node(c.getNetworkSettings().getNetworks().get("bridge").getIpAddress());
+            var mapping = Arrays.stream(c.getPorts()).collect(
+                    Collectors.toMap(v -> v.getType() + v.getPrivatePort(), v -> v.getPublicPort()));
             builder.ports(info.ports().stream().map((p) -> {
-                var p2 = IPortMapping.builder();
-                int container = p.container() != 0 ? p.container() : (p.host() != 0 ? p.host() : port[0]++);
-                int host = p.host() != 0 ? p.host() : container;
-                return p2.container(container).host(host).protocol(p.protocol()).build();
+                int container;
+                int host;
+                if (p.container() > 0) {
+                    container = p.container();
+                    host = mapping.get(p.protocol().toString().toLowerCase() + p.container());
+                } else {
+                    container = port[0]++;
+                    host = container;
+                }
+                return IPortMapping.builder().container(container).host(host).protocol(p.protocol()).build();
             }).toList());
         } else {
             builder.node("localhost");
@@ -233,7 +252,7 @@ public class Docker implements IScheduler {
         String jobID = ISchedulerUtils.name(name) + "-" + id;
         var containers = new ArrayList<>(parseRequest(jobID, driver));
 
-        if(unixSocket != null){
+        if (unixSocket != null) {
             Mount usock = new Mount();
             usock.withSource(unixSocket);
             usock.withTarget(unixSocket);
@@ -338,12 +357,12 @@ public class Docker implements IScheduler {
     @Override
     public IClusterInfo repairCluster(String job, IClusterInfo cluster, IClusterRequest request) throws ISchedulerException {
         var source = listContainers(job, ISchedulerUtils.name(cluster.id())).stream().
-                collect(Collectors.toMap((c)->c.getNames()[0].substring(1), (v) -> v));
+                collect(Collectors.toMap((c) -> c.getNames()[0].substring(1), (v) -> v));
         var newContainers = new ArrayList<>(parseRequest(job, request));
 
         var containers = new ArrayList<>(cluster.containers());
         for (int i = 0; i < containers.size(); i++) {
-            if(!source.containsKey(containers.get(i).id())) {
+            if (!source.containsKey(containers.get(i).id())) {
                 newContainers.set(i, null);
                 continue;
             }

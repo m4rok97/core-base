@@ -166,10 +166,8 @@ public class RunJob extends BaseJob {
         if (!hostNetwork) {
             props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.PORT)), "0");
             props.setProperty(IProperties.join(IKeys.DRIVER_PORTS, "tcp", props.getString(IKeys.HEALTHCHECK_PORT)), "0");
-            var key = IProperties.join(IKeys.DRIVER_PORTS, "tcp", "host");
-            var ports = props.hasProperty(key) ? props.getStringList(key) : new ArrayList<String>();
-            ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), "0"));
-            props.setList(key, ports);
+            props.setList(IProperties.join(IKeys.DRIVER_PORTS, "tcp", "ignismpi"),
+                    Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), "0"));
         }
 
         if (interactive) {
@@ -201,10 +199,8 @@ public class RunJob extends BaseJob {
             Consumer<IProperties> setPorts = (p) -> {
                 if (!hostNetwork) {
                     props.setProperty(IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", props.getString(IKeys.PORT)), "0");
-                    var key = IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "host");
-                    var ports = props.hasProperty(key) ? props.getStringList(key) : new ArrayList<String>();
-                    ports.addAll(Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), "0"));
-                    props.setList(key, ports);
+                    props.setList(IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "ignismpi"),
+                            Collections.nCopies(props.getInteger(IKeys.TRANSPORT_PORTS), "0"));
                 }
             };
 
@@ -214,7 +210,6 @@ public class RunJob extends BaseJob {
                 for (int i = 0; i < executors.length; i++) {
                     var name = (i + 1) + "-" + props.getProperty(IKeys.EXECUTOR_NAME);
                     executors[i] = schedulerParser.parse(IKeys.EXECUTOR, name, execArgs);
-                    schedulerParser.containerEnvironment(executors[i]);
                 }
             } else {
                 var multiple = props.multiLoad(staticConfig);
@@ -225,7 +220,6 @@ public class RunJob extends BaseJob {
                     options.add(multiple.get(i).store64());
                     var parser = new ISchedulerParser(multiple.get(i));
                     executors[i] = parser.parse(IKeys.EXECUTOR, name, execArgs);
-                    schedulerParser.containerEnvironment(executors[i]);
                 }
             }
         }
@@ -234,7 +228,6 @@ public class RunJob extends BaseJob {
                 String.join(";", options));
         var driverName = "0-" + props.getProperty(IKeys.DRIVER_NAME);
         var driver = schedulerParser.parse(IKeys.DRIVER, driverName, driverArgs);
-        schedulerParser.containerEnvironment(driver);
 
         if (Boolean.getBoolean(IKeys.DEBUG)) {
             LOGGER.info(props.toString());

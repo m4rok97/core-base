@@ -29,6 +29,7 @@ import org.ignis.rpc.driver.*;
 import org.ignis.scheduler3.IScheduler;
 import org.ignis.scheduler3.ISchedulerException;
 import org.ignis.scheduler3.ISchedulerFactory;
+import org.ignis.scheduler3.ISchedulerParser;
 import org.ignis.scheduler3.model.IContainerInfo;
 import org.ignis.scheduler3.model.IJobInfo;
 import org.slf4j.LoggerFactory;
@@ -159,6 +160,8 @@ public final class Main {
 
         if (driver.network().equals(IContainerInfo.INetworkMode.HOST)) {
             LOGGER.info("Backend is running in network host mode, properties 'ignis.ports.*' will be ignored");
+        }else{
+            props.fromMap(new ISchedulerParser(props).dumpPorts(IKeys.DRIVER_PORTS, driver));
         }
 
         LOGGER.info("Creating job folders");

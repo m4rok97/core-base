@@ -25,7 +25,6 @@ import org.ignis.properties.IProperties;
 import org.ignis.scheduler3.model.IContainerInfo;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class IMpiConfig {
@@ -38,12 +37,10 @@ public class IMpiConfig {
         }
         if (executor.getContainer().getInfo().network().equals(IContainerInfo.INetworkMode.BRIDGE)) {
             env.put("MPICH_SERVICE", executor.getContainer().getInfo().node());
-            int n = executor.getProperties().getInteger(IKeys.TRANSPORT_PORTS);
+            var ports = executor.getContext().getStringList(
+                    IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "ignismpi"));
 
-            List<String> ports = executor.getContext().getStringList(
-                    IProperties.join(IKeys.EXECUTOR_PORTS, "tcp", "host"));
-
-            env.put("MPICH_LIST_PORTS", String.join(" ", ports.subList(ports.size() - n, ports.size())));
+            env.put("MPICH_LIST_PORTS", String.join(" ", ports));
         }
         return env;
     }

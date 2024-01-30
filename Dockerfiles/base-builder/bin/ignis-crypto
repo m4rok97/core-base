@@ -1,8 +1,11 @@
 #!/bin/env bash
 
-if [ "$1" == "encode" ]; then
-  openssl aes-256-cbc -pbkdf2 -a -e -kfile $2
-elif [ "$1" == "decode" ]; then
-  openssl aes-256-cbc -pbkdf2 -a -d -kfile $2
+if [ -f "${IGNIS_CRYPTO_SECRET}" ]; then
+  if [ "$1" == "encode" ]; then
+    openssl aes-256-cbc -pbkdf2 -a -e -kfile "${IGNIS_CRYPTO_SECRET}"
+  elif [ "$1" == "decode" ]; then
+    openssl aes-256-cbc -pbkdf2 -a -d -kfile "${IGNIS_CRYPTO_SECRET}"
+  fi
+else
+  cat
 fi
-

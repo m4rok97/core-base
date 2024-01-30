@@ -41,6 +41,7 @@ public final class IKeys {
     public static final String DRIVER_PORTS = "ignis.driver.ports";
     public static final String DRIVER_BINDS = "ignis.driver.binds";
     public static final String DRIVER_ENV = "ignis.driver.env";
+    public static final String DRIVER_SETENV = "ignis.driver.setenv";
 
     public static final String DISCOVERY_TYPE = "ignis.discovery.type";
     public static final String DISCOVERY_ETCD_CA = "ignis.discovery.etcd.ca";
@@ -64,6 +65,7 @@ public final class IKeys {
     public static final String EXECUTOR_PORTS = "ignis.executor.ports";
     public static final String EXECUTOR_BINDS = "ignis.executor.binds";
     public static final String EXECUTOR_ENV = "ignis.executor.env";
+    public static final String EXECUTOR_SETENV = "ignis.executor.setenv";
     public static final String EXECUTOR_ISOLATION = "ignis.executor.isolation";
 
     public static final String HEALTHCHECK_PORT = "ignis.healthcheck.port";
@@ -103,9 +105,9 @@ public final class IKeys {
 
     public static final String SCHEDULER_URL = "ignis.scheduler.url";
     public static final String SCHEDULER_NAME = "ignis.scheduler.name";
-    public static final String SCHEDULER_ENV = "ignis.scheduler.env";
     public static final String SCHEDULER_PARAM = "ignis.scheduler.param";
     public static final String SUBMITTER_BINDS = "ignis.submitter.binds";
+    public static final String SCHEDULER_ENV = "ignis.submitter.env";
 
     public static final String CONTAINER_DOCKER_REGISTRY = "ignis.container.docker.registry";
     public static final String CONTAINER_DOCKER_NAMESPACE = "ignis.container.docker.namespace";

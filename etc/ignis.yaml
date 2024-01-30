@@ -26,6 +26,8 @@ ignis:
       #"/container": "/host"
     #env:
       #name: value
+    #setenv:
+      #prop:required
   discovery:
     type: file #etcd
     #etcd
@@ -57,6 +59,8 @@ ignis:
       #"/container": "/host"
     #env:
       #name: value
+    #setenv:
+      #prop:required
     isolation: true
   healthcheck:
     port: 2005
@@ -106,6 +110,7 @@ ignis:
       #a: b
   #submitter:
     #binds:
+    #env
   container:
     docker:
       registry: ""

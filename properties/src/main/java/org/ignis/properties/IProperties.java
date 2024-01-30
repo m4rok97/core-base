@@ -76,7 +76,12 @@ public final class IProperties {
     }
 
     public static String asEnv(String key) {
-        return key.toUpperCase().replace(".", "_");
+        var rawKey = key.replaceAll("[^a-zA-Z0-9.]", "");
+        var envName = rawKey.toUpperCase().replace(".", "_");
+        if (key.equals(rawKey)) {
+            return envName;
+        }
+        return "_" + envName;
     }
 
     public static boolean isCrypted(String s) {
@@ -195,7 +200,7 @@ public final class IProperties {
 
     public boolean requireCrypto() {
         return toMap(true).entrySet().stream().anyMatch(e ->
-            isCrypted(basekey(e.getKey())) && !isCrypted(e.getValue())
+                isCrypted(basekey(e.getKey())) && !isCrypted(e.getValue())
         );
     }
 
@@ -204,7 +209,7 @@ public final class IProperties {
     }
 
     public <T> String setProperty(String key, T value) {
-        if(value == null){
+        if (value == null) {
             return nn(put(nn(key), ""));
         }
         return nn(put(nn(key), value.toString()));
