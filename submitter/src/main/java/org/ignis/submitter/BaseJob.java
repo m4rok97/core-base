@@ -41,7 +41,11 @@ public abstract class BaseJob implements Callable<Integer> {
             init();
             run();
         } catch (Exception ex) {
-            LOGGER.error(ex.getMessage(), ex);
+            if (Boolean.getBoolean(IKeys.DEBUG)) {
+                LOGGER.error(ex.getMessage(), ex);
+            } else {
+                System.err.println(ex.getMessage());
+            }
             return -1;
         }
         return 0;

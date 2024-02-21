@@ -1,12 +1,14 @@
 package org.ignis.scheduler3;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import org.ignis.properties.IProperties;
 import org.ignis.scheduler3.model.IContainerInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.Base64;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -37,6 +39,29 @@ public final class ISchedulerUtils {
             var baos = new ByteArrayOutputStream();
             yamlMapper.writeValue(baos, obj);
             return baos.toString();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static <T> String yaml(T obj, String key){
+        try {
+            var yamlMapper = new YAMLMapper();
+            Object fields = yamlMapper.convertValue(obj, Map.class);
+            for (var name: IProperties.split(key)){
+                if(fields == null){
+                    break;
+                }
+                if (fields instanceof Map m){
+                    fields = m.get(name);
+                }else{
+                    break;
+                }
+            }
+            if(fields == null){
+                return "";
+            }
+            return yaml(fields);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
