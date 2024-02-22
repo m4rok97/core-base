@@ -1,0 +1,11 @@
+#!/bin/env bash
+
+if [ -f "${IGNIS_HOME}/etc/environment" ]; then
+  source "${IGNIS_HOME}/etc/environment"
+fi
+
+mkdir -p -m 700 "${IGNIS_JOB_DIR}"
+mkdir -p -m 700 "${IGNIS_JOB_CONTAINER_DIR}"
+mkdir -p -m 700 "${IGNIS_JOB_SOCKETS}"
+
+exec ignis-run "$@"

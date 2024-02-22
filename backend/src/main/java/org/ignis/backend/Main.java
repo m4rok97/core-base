@@ -164,22 +164,6 @@ public final class Main {
             props.fromMap(new ISchedulerParser(props).dumpPorts(IKeys.DRIVER_PORTS, driver));
         }
 
-        LOGGER.info("Creating job folders");
-        var perm = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
-
-        try {
-            Files.createDirectory(Path.of(props.getProperty(IKeys.JOB_CONTAINER_DIR)), perm);
-        } catch (FileAlreadyExistsException ex) {
-        } catch (IOException ex) {
-            LOGGER.error(ex.getMessage(), ex);
-        }
-        try {
-            Files.createDirectory(Path.of(props.getProperty(IKeys.JOB_SOCKETS)), perm);
-        } catch (FileAlreadyExistsException ex) {
-        } catch (IOException ex) {
-            LOGGER.error(ex.getMessage(), ex);
-        }
-
         if (!props.hasProperty(IKeys.CRYPTO_$PRIVATE$)) {
             var pair = ICrypto.genKeyPair();
             props.setProperty(IKeys.CRYPTO_PUBLIC, pair.publicKey());

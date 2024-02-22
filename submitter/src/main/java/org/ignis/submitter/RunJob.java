@@ -179,7 +179,7 @@ public class RunJob extends BaseJob {
                 driverArgs.add(props.getString(IKeys.PORT));
             }
         } else {
-            driverArgs.add("ignis-run");
+            driverArgs.add("ignis-job");
             driverArgs.add(cmd);
             if (args != null) {
                 driverArgs.addAll(args);
@@ -299,7 +299,7 @@ public class RunJob extends BaseJob {
 
         var driverArgs = new ArrayList<String>();
         driverArgs.add("ignis-client");
-        driverArgs.add("ignis-run");
+        driverArgs.add("ignis-job");
         driverArgs.add(cmd);
         if (args != null) {
             driverArgs.addAll(args);

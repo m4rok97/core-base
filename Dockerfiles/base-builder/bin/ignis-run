@@ -4,5 +4,5 @@ if [ -f "${IGNIS_HOME}/etc/environment" ]; then
   source "${IGNIS_HOME}/etc/environment"
 fi
 
-cd ${IGNIS_WDIR};
+cd ${IGNIS_WDIR}
 exec mpirun "$@"
