@@ -77,8 +77,8 @@ public final class ITunnel {
                 session.connect();
                 break;
             } catch (JSchException ex) {
-                if (i == 299) {
-                    throw new IgnisException("Could not connect to " + user + " " + host + ":" + port, ex);
+                if (i == 60) {
+                    throw new IgnisException("Could not connect to " + user + "@" + host + ":" + port, ex);
                 }
                 try {
                     Thread.sleep(1000);

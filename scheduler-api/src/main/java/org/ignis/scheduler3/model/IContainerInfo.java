@@ -17,7 +17,7 @@ public record IContainerInfo(
         Long time,//Seconds
         String user,//name:UID:GUID
         boolean writable,
-        String tmpdir,
+        boolean tmpdir,
         List<IPortMapping> ports,
         List<IBindMount> binds,
         List<String> nodelist,

@@ -23,12 +23,11 @@ repositories {
 dependencies {
     implementation(project(":scheduler-api"))
     implementation(group: 'org.slf4j', name: 'slf4j-api', version: '2.0.9')
-    implementation(group: 'com.github.docker-java', name: 'docker-java-core', version: '3.3.4')
-    implementation(group: 'com.github.docker-java', name: 'docker-java-transport-httpclient5', version: '3.3.4')
+    implementation(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.0')
 }
 
 jar {
-    archiveBaseName = 'ignishpc-scheduler-docker'
+    archiveBaseName = 'ignishpc-scheduler-singularity'
     version = file("../VERSION").text.trim()
     manifest {
         attributes("Implementation-Title": archiveBaseName,

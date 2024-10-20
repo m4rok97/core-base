@@ -15,6 +15,10 @@ import org.ignis.scheduler3.ISchedulerUtils;
 import org.ignis.scheduler3.model.*;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -114,13 +118,14 @@ public class Docker implements IScheduler {
                 container.withUser(fields[1] + ":" + fields[2]);
             }
             container.getHostConfig().withReadonlyRootfs(!resources.writable());
-            if (resources.tmpdir() != null) {
+            if (resources.tmpdir()) {
                 String opts = "nosuid,";
                 if (container.getUser() != null) {
                     opts += "uid=" + container.getUser().replace(":", ",gid=") + ",";
                 }
                 opts += "mode=0700,size=20m";
-                container.getHostConfig().withTmpFs(Collections.singletonMap(resources.tmpdir(), opts));
+                container.getHostConfig().withTmpFs(Collections.singletonMap("/ignis-tmp", opts));
+                env.add("IGNIS_TMPDIR=/ignis-tmp");
             }
             if (resources.network().equals(IContainerInfo.INetworkMode.HOST)) {
                 container.getHostConfig().withNetworkMode("host");
@@ -259,6 +264,16 @@ public class Docker implements IScheduler {
             usock.withReadOnly(false);
             usock.withType(MountType.BIND);
             containers.getFirst().getHostConfig().getMounts().add(usock);
+
+            if (containers.getFirst().getUser() != null && !containers.getFirst().getUser().startsWith("root:")) {
+                try {
+                    containers.getFirst().getHostConfig().withGroupAdd(Arrays.asList(
+                            Files.readAttributes(Paths.get(unixSocket), PosixFileAttributes.class).group().getName()
+                    ));
+                } catch (IOException ex) {
+                    throw new ISchedulerException(ex.getMessage(), ex);
+                }
+            }
         }
 
         for (var exec : executors) {
@@ -344,10 +359,10 @@ public class Docker implements IScheduler {
         try {
             var list = listContainers(job, ISchedulerUtils.name(id));
             if (list.isEmpty()) {
-                throw new ISchedulerException("cluster not found");
+                throw new ISchedulerException("cluster " + id + " not found");
             }
             var resources = list.stream().map(this::parseContainer).toList();
-            var instances = Integer.parseInt(list.get(0).getLabels().get("scheduler.instances"));
+            var instances = Integer.parseInt(list.getFirst().getLabels().get("scheduler.instances"));
             return IClusterInfo.builder().id(id).instances(instances).containers(resources).build();
         } catch (Exception ex) {
             throw new ISchedulerException(ex.getMessage(), ex);

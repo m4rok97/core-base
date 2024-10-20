@@ -117,15 +117,14 @@ public final class ISchedulerParser {
         if (provider.equals(IContainerInfo.IProvider.DOCKER) && props.getBoolean(IKeys.CONTAINER_DOCKER_ROOT)) {
             builder.user("root:0:0");
         } else {
-            UnixSystem user = new UnixSystem();
-            builder.user(user.getUsername() + ":" + user.getUid() + ":" + user.getGid());
+            UnixSystem us = new UnixSystem();
+            String username = us.getUsername() != null ? us.getUsername() : "ignis";
+            builder.user(username + ":" + us.getUid() + ":" + us.getGid());
         }
         builder.provider(provider);
         builder.network(networkMode());
         builder.writable(props.getBoolean(IKeys.CONTAINER_WRITABLE));
-        if (props.hasProperty(IKeys.TMPDIR)) {
-            builder.tmpdir(props.getString(IKeys.TMPDIR));
-        }
+        builder.tmpdir(props.hasProperty(IKeys.TMPDIR) && props.getBoolean(IKeys.TMPDIR));
         return builder;
     }
 

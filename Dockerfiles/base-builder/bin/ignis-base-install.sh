@@ -10,6 +10,7 @@ apt -y --no-install-recommends install \
   ca-certificates \
   openssh-server \
   gettext \
-  socat
+  socat \
+  libnss-wrapper
 rm -rf /var/lib/apt/lists/*
 mkdir /run/sshd

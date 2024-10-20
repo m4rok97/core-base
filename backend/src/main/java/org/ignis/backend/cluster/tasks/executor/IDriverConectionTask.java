@@ -59,7 +59,7 @@ public class IDriverConectionTask extends IExecutorTask {
                 executor.connect(Path.of(executor.getProperties().getProperty(IKeys.JOB_SOCKETS), "driver.sock").toString());
                 break;
             } catch (TException ex) {
-                if (i == 299) {
+                if (i == 60) {
                     throw new IgnisException(ex.getMessage(), ex);
                 }
                 try {

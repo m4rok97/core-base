@@ -2,6 +2,17 @@
 
 source "${IGNIS_HOME}/etc/environment"
 
+if whoami >/dev/null 2>&1 && [ -z "${NSS_WRAPPER_PASSWD}" ]; then
+  mkdir -p -m 700 "${IGNIS_JOB_CONTAINER_DIR}"
+  echo "ubuntu:x:$(id -u):$(id -g):ubuntu:/tmp:/bin/bash" > "${IGNIS_JOB_CONTAINER_DIR}/passwd"
+  echo "ubuntu:x:$(id -g):ubuntu" > "${IGNIS_JOB_CONTAINER_DIR}/group"
+
+  LD_PRELOAD=libnss_wrapper.so \
+   NSS_WRAPPER_PASSWD="${IGNIS_JOB_CONTAINER_DIR}/passwd" \
+   NSS_WRAPPER_GROUP="${IGNIS_JOB_CONTAINER_DIR}/group" \
+   exec $0 "$@"
+fi
+
 MODE=$1
 PORT=$2
 H_INTERVAL=${IGNIS_HEALTHCHECK_INTERVAL}
