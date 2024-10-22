@@ -292,7 +292,6 @@ public final class ISchedulerParser {
 
         props.toEnv(IKeys.DEBUG, env, false);
         props.toEnv(IKeys.VERBOSE, env, false);
-        props.toEnv(IKeys.TMPDIR, env, false);
         props.toEnv(IKeys.HEALTHCHECK_INTERVAL, env, true);
         props.toEnv(IKeys.HEALTHCHECK_TIMEOUT, env, true);
         props.toEnv(IKeys.HEALTHCHECK_RETRIES, env, true);

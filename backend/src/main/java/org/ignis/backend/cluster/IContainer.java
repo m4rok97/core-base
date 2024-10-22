@@ -75,7 +75,7 @@ public final class IContainer {
     }
 
     public void connect() throws IgnisException {
-        var user = getInfo().user().split(":")[0];
+        var user = System.getProperty("user.name");
         if (getInfo().network().equals(IContainerInfo.INetworkMode.BRIDGE)) {
             tunnel.open(user, getInfo().node(), properties.getInteger(IKeys.PORT));
         } else {

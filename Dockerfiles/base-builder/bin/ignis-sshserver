@@ -2,10 +2,12 @@
 
 source "${IGNIS_HOME}/etc/environment"
 
-if whoami >/dev/null 2>&1 && [ -z "${NSS_WRAPPER_PASSWD}" ]; then
+if [ -z "${NSS_WRAPPER_PASSWD}" ]; then
+  USER=$(whoami 2>/dev/null || echo ignis)
   mkdir -p -m 700 "${IGNIS_JOB_CONTAINER_DIR}"
-  echo "ubuntu:x:$(id -u):$(id -g):ubuntu:/tmp:/bin/bash" > "${IGNIS_JOB_CONTAINER_DIR}/passwd"
-  echo "ubuntu:x:$(id -g):ubuntu" > "${IGNIS_JOB_CONTAINER_DIR}/group"
+  echo "${USER}:x:$(id -u):$(id -g):${USER}:/tmp:/bin/bash" > "${IGNIS_JOB_CONTAINER_DIR}/passwd"
+  echo "sshd:x:$(id -u):$(id -g):sshd:/tmp:/bin/bash" >> "${IGNIS_JOB_CONTAINER_DIR}/passwd"
+  echo "${USER}:x:$(id -g):${USER}" > "${IGNIS_JOB_CONTAINER_DIR}/group"
 
   LD_PRELOAD=libnss_wrapper.so \
    NSS_WRAPPER_PASSWD="${IGNIS_JOB_CONTAINER_DIR}/passwd" \
