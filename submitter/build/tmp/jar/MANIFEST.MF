@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Implementation-Title: ignishpc-submitter
+Implementation-Version: 3.0
+

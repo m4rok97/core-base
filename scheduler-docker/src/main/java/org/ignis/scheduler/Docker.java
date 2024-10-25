@@ -322,7 +322,86 @@ public class Docker implements IScheduler {
 
     @Override
     public List<IJobInfo> listJobs(Map<String, String> filters) throws ISchedulerException {
-        throw new UnsupportedOperationException();
+        try {
+            System.out.println("Entra al método list jobs");
+        
+            var containersCmd = client.listContainersCmd().withShowAll(true);
+            
+            if (filters != null && !filters.isEmpty()) {
+                System.out.println("Detecta filters");
+                containersCmd = containersCmd.withLabelFilter(filters);
+            }
+            
+            System.out.println("Continua luego de los filters");
+
+            var containers = containersCmd.exec();
+
+            
+            if (containers.isEmpty()) {
+                System.out.println("No se encontraron contenedores.");
+            } else {
+                System.out.println("Detalles de los contenedores obtenidos:");
+                for (var container : containers) {
+                    System.out.println("Container ID: " + container.getId());
+                    System.out.println("Labels: " + container.getLabels());
+                    System.out.println("Image: " + container.getImage());
+                    System.out.println("State: " + container.getState());
+                    System.out.println("Status: " + container.getStatus());
+                }
+            }
+            
+            System.out.println("Obtiene los containers");
+
+
+            var jobsMap = containers.stream()
+                    .filter(container -> container.getLabels().get("scheduler.job") != null)
+                    .collect(Collectors.groupingBy(container -> container.getLabels().get("scheduler.job")));
+            
+            System.out.println("Hace el JobsMap");
+
+
+            var jobInfos = new ArrayList<IJobInfo>();
+            
+            System.out.println("Itera sobre job infos");
+            for (var entry : jobsMap.entrySet()) {
+                String jobID = entry.getKey();
+                System.out.println("Job Id: " + jobID);
+                List<Container> jobContainers = entry.getValue();
+                
+                var clustersMap = jobContainers.stream()
+                    .filter(container -> container.getLabels().get("scheduler.cluster") != null) // Filtra contenedores sin la etiqueta
+                    .collect(Collectors.groupingBy(container -> container.getLabels().get("scheduler.cluster")));
+                
+                var clusterInfos = new ArrayList<IClusterInfo>();
+                
+                for (var clusterEntry : clustersMap.entrySet()) {
+                    String clusterID = clusterEntry.getKey();
+                    List<Container> clusterContainers = clusterEntry.getValue();
+                    
+                    var containerInfos = clusterContainers.stream()
+                            .sorted(Comparator.comparing(Container::getId))
+                            .map(this::parseContainer)
+                            .collect(Collectors.toList());
+                    
+                    clusterInfos.add(IClusterInfo.builder()
+                            .id(clusterID)
+                            .instances(clusterContainers.size())
+                            .containers(containerInfos)
+                            .build());
+                }
+                
+                jobInfos.add(IJobInfo.builder()
+                        .name(jobID.split("-")[0])
+                        .id(jobID)
+                        .clusters(clusterInfos)
+                        .build());
+        }
+        
+        return jobInfos;
+        
+        } catch (Exception ex) {
+            throw new ISchedulerException("Error listing jobs: " + ex.getMessage(), ex);
+        }
     }
 
     @Override
