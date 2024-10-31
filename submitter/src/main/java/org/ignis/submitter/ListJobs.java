@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ignis.scheduler3.model.IClusterInfo;
+import org.ignis.scheduler3.model.IContainerInfo;
 import org.ignis.scheduler3.model.IJobInfo;
 
 import picocli.CommandLine;
@@ -27,23 +27,24 @@ public class ListJobs extends BaseJob {
         System.out.printf("%-20s %-20s %-15s %-10s\n", "JOB ID", "NAME", "STATUS", "INSTANCES");
         System.out.println("-------------------------------------------------------------------");
 
-        // Iterar sobre cada trabajo e imprimir la información relevante
         for (IJobInfo job : jobs) {
             String jobId = job.id();
             String jobName = job.name();
 
-            // Determinar el estado del primer cluster
             String jobStatus = "N/A";
-            if (!job.clusters().isEmpty()) {
-                IClusterInfo firstCluster = job.clusters().get(0);
-                jobStatus = firstCluster.containers().isEmpty() ? "UNKNOWN"
-                        : firstCluster.containers().get(0).status().toString();
+           
+            IContainerInfo driver = null;
+            for (var cluster : job.clusters()) {
+                if (cluster.id().startsWith("0")) {
+                    driver = cluster.containers().get(0);
+                    break;
+                }
             }
-
-            // Contar el número total de instancias del primer cluster
+            
+            jobStatus = driver.status().name();
+            
             int totalInstances = job.clusters().isEmpty() ? 0 : job.clusters().get(0).instances();
 
-            // Imprimir la información del trabajo
             System.out.printf("%-20s %-20s %-15s %-10d\n", jobId, jobName, jobStatus, totalInstances);
         }
     }
