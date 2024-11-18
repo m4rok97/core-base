@@ -56,7 +56,7 @@ public final class Slurm implements IScheduler {
         script.append(" --env IGNIS_JOB_NAME=${IGNIS_JOB_NAME}");
         script.append(" --env SCHEDULER_PATH=${SCHEDULER_PATH}");
 
-        script.append(' ').append(containerInfo.image()).append(' ').append(containerInfo.command());
+        script.append(' ').append(containerInfo.image()).append(' ').append(containerInfo.args().get(0));
         for (String arg : c.getArguments()) {
             script.append(' ').append(esc(arg));
         }
