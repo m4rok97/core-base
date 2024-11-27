@@ -109,6 +109,12 @@ public class Singularity implements IScheduler {
             }
         }
 
+        System.out.println("CMD parsed");
+        for (String line : cmd) {
+            System.out.println(line);
+        }
+        System.out.println("End of CMD parsed");
+
         var createContainers = new ArrayList<CreateContainerCmd>();
         for (int i = 0; i < request.instances(); i++) {
             var instance = new ArrayList<>(cmd);
@@ -128,6 +134,12 @@ public class Singularity implements IScheduler {
             cmd.add(containerName);
             cmd.add("ignis-logger");
             cmd.addAll(resources.args());
+
+            System.out.println("CMD parsed");
+            for (String line : cmd) {
+                System.out.println(line);
+            }
+            System.out.println("End of CMD parsed");
 
             createContainers.add(new CreateContainerCmd(containerName, instance));
         }
