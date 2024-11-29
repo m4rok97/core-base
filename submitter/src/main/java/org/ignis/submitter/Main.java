@@ -2,8 +2,6 @@ package org.ignis.submitter;
 
 import picocli.CommandLine;
 
-import java.util.Arrays;
-
 @CommandLine.Command(versionProvider = Main.Version.class, mixinStandardHelpOptions = true,
         subcommands = {RunJob.class, CancelJob.class, InfoJob.class, ListJobs.class})
 public class Main  {
@@ -20,6 +18,7 @@ public class Main  {
     }
 
     public static void main(String[] args) {
+        System.out.println("Executing main file of submitter");
         CommandLine cli = new CommandLine(Main.class)
                 .setCommandName("ignis-submit")
                 .setUsageHelpAutoWidth(true);
