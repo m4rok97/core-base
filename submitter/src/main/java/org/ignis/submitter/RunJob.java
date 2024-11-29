@@ -121,6 +121,7 @@ public class RunJob extends BaseJob {
 
     @Override
     public void run() throws Exception {
+        System.out.println("Run executed in java");
         if (name == null) {
             name = cmd;
         }
