@@ -16,13 +16,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.ignis.scheduler3.model.IContainerInfo;
 import org.ignis.scheduler3.IScheduler;
 import org.ignis.scheduler3.ISchedulerException;
 import org.ignis.scheduler3.model.IBindMount;
 import org.ignis.scheduler3.model.IClusterInfo;
 import org.ignis.scheduler3.model.IClusterRequest;
-import org.ignis.scheduler3.model.IContainerInfo.IStatus;
+import org.ignis.scheduler3.model.IContainerInfo;
 import org.ignis.scheduler3.model.IJobInfo;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +67,7 @@ public final class Slurm implements IScheduler {
         script.append(" --env SCHEDULER_PATH=${SCHEDULER_PATH}");
 
         script.append(' ').append(containerInfo.image()).append(' ').append(containerInfo.args().get(0));
-        for (String arg : c.getArguments()) {
+        for (String arg : containerInfo.args()) {
             script.append(' ').append(esc(arg));
         }
         script.append('\n');
@@ -82,7 +81,8 @@ public final class Slurm implements IScheduler {
 
             script.append("export SLURM_STEP_RESV_PORTS=").append(initPort).append("-").append(endPort).append('\n');
         }
-
+        
+        String wd = "${IGNIS_WDIR}";
         for (IBindMount bindMount : containerInfo.binds()) {
             if (bindMount.host().equals(wd)) {
                 script.append("export SCHEDULER_PATH='").append(bindMount.container()).append("'\n");
@@ -102,8 +102,7 @@ public final class Slurm implements IScheduler {
         script.append("export IGNIS_JOB_NAME=${SLURM_JOB_NAME}-${SLURM_JOB_ID}\n");
 
 
-        String wd = "${IGNIS_WDIR}/";
-        String file = wd + "${IGNIS_JOB_NAME}/slurm/${IGNIS_JOB_ID}";
+        String file = wd + "/" + "${IGNIS_JOB_NAME}/slurm/${IGNIS_JOB_ID}";
 
         script.append("mkdir -p ").append(wd).append("${IGNIS_JOB_NAME}/slurm\n");
         script.append("env --null > ").append(file).append(".env\n");
@@ -186,7 +185,7 @@ public final class Slurm implements IScheduler {
     }
  
     private String runAndCaptureOutput(List<String> args) throws ISchedulerException {
-    ProcessBuilder builder = new ProcessBuilder(args); // Use args directly as the command
+    ProcessBuilder builder = new ProcessBuilder(args); 
     StringBuilder output = new StringBuilder();
 
     try {
@@ -298,7 +297,6 @@ public final class Slurm implements IScheduler {
 
     @Override
     public void cancelJob(String id) throws ISchedulerException {
-    // Validate the input job ID
     if (id == null || id.isEmpty()) {
         throw new ISchedulerException("Job ID cannot be null or empty");
     }
@@ -354,13 +352,11 @@ public final class Slurm implements IScheduler {
             throw new ISchedulerException("Failed to retrieve job info for ID " + id + ". Error: " + errorMessage);
         }
 
-        // Parse the output and return an IJobInfo object
         return parseJobInfo(id, output);
 
     } catch (IOException e) {
         throw new ISchedulerException("Error executing `scontrol` command.", e);
     } catch (InterruptedException e) {
-        // Restore the interrupt status of the thread
         Thread.currentThread().interrupt();
         throw new ISchedulerException("Job retrieval process was interrupted.", e);
     }
@@ -393,7 +389,6 @@ public final class Slurm implements IScheduler {
         }
     }
 
-    // Return the constructed IJobInfo record
     return new IJobInfo(name, jobId, clusters);
 }
 
@@ -679,14 +674,12 @@ private String extractValue(String line, String key) {
 
 
     private IClusterInfo parseClusterInfo(String job, String clusterId, String output) {
-        // Parse the output from `scontrol show jobid` to extract cluster information
-        int instances = 1; // Default to 1 instance if not explicitly mentioned
+        int instances = 1;
         List<IContainerInfo> containers = new ArrayList<>();
 
         String[] lines = output.split("\n");
         Map<String, String> jobAttributes = new HashMap<>();
 
-        // Parse the output into a key-value map
         for (String line : lines) {
             String[] keyValue = line.split("=", 2);
             if (keyValue.length == 2) {
@@ -694,16 +687,14 @@ private String extractValue(String line, String key) {
             }
         }
 
-        // Extract relevant details
         String clusterName = jobAttributes.getOrDefault("JobName", "unknown");
         String nodes = jobAttributes.getOrDefault("Nodes", "");
         String state = jobAttributes.getOrDefault("JobState", "UNKNOWN");
         String user = jobAttributes.getOrDefault("UserId", "");
         long memory = parseMemory(jobAttributes.getOrDefault("MinMemoryNode", "0"));
-        long time = parseTime(jobAttributes.getOrDefault("TimeLimit", "0-00:00:00")); // Slurm's format is days-hh:mm:ss
+        long time = parseTime(jobAttributes.getOrDefault("TimeLimit", "0-00:00:00")); 
         int cpus = Integer.parseInt(jobAttributes.getOrDefault("NumCPUs", "1"));
 
-        // Create container info (can be adjusted as per Slurm details)
         containers.add(IContainerInfo.builder()
                 .id(clusterId)
                 .node(nodes)
@@ -729,34 +720,32 @@ private String extractValue(String line, String key) {
         } else if (memoryStr.endsWith("G")) {
             return Long.parseLong(memoryStr.replace("G", "")) * 1024 * 1024 * 1024;
         }
-        return Long.parseLong(memoryStr); // Assume bytes if no suffix
+        return Long.parseLong(memoryStr);
     }
 
     private long parseTime(String timeStr) {
-        // Slurm time format: days-hh:mm:ss
         String[] parts = timeStr.split("[-:]");
         long days = 0, hours = 0, minutes = 0, seconds = 0;
 
-        if (parts.length == 4) { // days-hh:mm:ss
+        if (parts.length == 4) {
             days = Long.parseLong(parts[0]);
             hours = Long.parseLong(parts[1]);
             minutes = Long.parseLong(parts[2]);
             seconds = Long.parseLong(parts[3]);
-        } else if (parts.length == 3) { // hh:mm:ss
+        } else if (parts.length == 3) {
             hours = Long.parseLong(parts[0]);
             minutes = Long.parseLong(parts[1]);
             seconds = Long.parseLong(parts[2]);
         }
 
-        return days * 86400 + hours * 3600 + minutes * 60 + seconds; // Convert to seconds
+        return days * 86400 + hours * 3600 + minutes * 60 + seconds;
     }
 
     private IContainerInfo.IStatus mapStatus(String slurmState) {
     if (slurmState == null || slurmState.isBlank()) {
-        return IContainerInfo.IStatus.UNKNOWN; // Handle null or empty state
+        return IContainerInfo.IStatus.UNKNOWN; 
     }
 
-    // Map Slurm states to IContainerInfo.IStatus using a predefined mapping
     Map<String, IContainerInfo.IStatus> stateMap = Map.ofEntries(
         Map.entry("PENDING", IContainerInfo.IStatus.ACCEPTED),
         Map.entry("RUNNING", IContainerInfo.IStatus.RUNNING),
@@ -771,7 +760,6 @@ private String extractValue(String line, String key) {
         Map.entry("UNKNOWN", IContainerInfo.IStatus.UNKNOWN)
     );
 
-    // Normalize the input state to uppercase and retrieve its mapped status
     return stateMap.getOrDefault(slurmState.toUpperCase(), IContainerInfo.IStatus.UNKNOWN);
 }
 
@@ -814,7 +802,7 @@ public void destroyCluster(String job, String id) throws ISchedulerException {
                     LOGGER.warn("Failed to destroy container: " + container.id(), ex);
                 }
 
-                newContainers.add(parseRequest(job, request).get(0)); // Parse and add a new container
+                newContainers.add(parseRequest(job, request).get(0));
             } else {
                 newContainers.add(container);
             }
@@ -965,7 +953,6 @@ private List<IContainerInfo> parseRequest(String job, IClusterRequest request) t
     @Override
     public void healthCheck() throws ISchedulerException {
         try {
-            // Run a simple Slurm command to verify Slurm is responsive
             String command = "sinfo --noheader";
             runAndCaptureOutput(List.of("/bin/bash", "-c", command));
             LOGGER.info("Slurm health check passed.");
