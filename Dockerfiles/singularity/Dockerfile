@@ -1,13 +1,12 @@
 ARG REGISTRY=""
 ARG NAMESPACE="ignishpc/"
 ARG TAG=""
-FROM ubuntu:20.04
-ARG BUILDARCH
+FROM ubuntu:24.04
 
 LABEL ignis.build="optional"
 
 ENV VERSION=4.0.2
-ENV GO_VERSION=1.21.4
+ENV GO_VERSION=1.22
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt update && \
@@ -22,11 +21,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
       pkg-config \
       wget \
       squashfs-tools \
-      tar && \
-    wget https://dl.google.com/go/go${GO_VERSION}.linux-${BUILDARCH}.tar.gz && \
-    tar -C /tmp -xzvf go${GO_VERSION}.linux-${BUILDARCH}.tar.gz && \
-    rm go${GO_VERSION}.linux-${BUILDARCH}.tar.gz && \
-    export PATH=/tmp/go/bin:${PATH} && \
+      tar \
+      golang-${GO_VERSION} && \
+    ln -s /usr/lib/go-${GO_VERSION}/bin/go /usr/bin/go && \
     wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
     tar -xzf singularity-ce-${VERSION}.tar.gz && \
     rm singularity-ce-${VERSION}.tar.gz && \
