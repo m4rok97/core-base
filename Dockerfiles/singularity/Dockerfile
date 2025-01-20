@@ -23,7 +23,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
       wget \
       squashfs-tools \
       tar && \
-    wget https://dl.google.com/go/go${GO_VERSION}.linux-${BUILDARCH}.tar.gz && \
+    wget https://go.dev/dl/go${GO_VERSION}.linux-${BUILDARCH}.tar.gz && \
     tar -C /tmp -xzvf go${GO_VERSION}.linux-${BUILDARCH}.tar.gz && \
     rm go${GO_VERSION}.linux-${BUILDARCH}.tar.gz && \
     export PATH=/tmp/go/bin:${PATH} && \
