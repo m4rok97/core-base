@@ -13,11 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Singularity implements IScheduler {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Singularity.class);
-
+    private static final Set<String> initializedJobs = Collections.synchronizedSet(new HashSet<>());
+    private static final Map<String, Process> pipeProcesses = new ConcurrentHashMap<>();
     private record CreateContainerCmd(String name, List<String> cmd) {
     }
 
@@ -64,7 +66,29 @@ public class Singularity implements IScheduler {
         return result;
     }
 
+    private void initializePipes(String jobID) throws ISchedulerException {
+        if (!initializedJobs.contains(jobID)) {
+            try {
+                // Start persistent Python pipe manager
+                ProcessBuilder pb = new ProcessBuilder(
+                    "python3", 
+                    "pipes_manager.py",
+                    jobID
+                );
+                Process process = pb.start();
+                pipeProcesses.put(jobID, process);
+                
+                // Wait for pipe initialization
+                Thread.sleep(500);
+                initializedJobs.add(jobID);
+            } catch (IOException | InterruptedException ex) {
+                throw new ISchedulerException("Pipe initialization failed: " + ex.getMessage(), ex);
+            }
+        }
+    }
+
     private List<CreateContainerCmd> parseRequest(String jobID, IClusterRequest request) throws ISchedulerException {
+        initializePipes(jobID);
         var resources = request.resources();
         var cmd = new ArrayList<>(Arrays.asList("ignis-host", "singularity", "instance", "start"));
         cmd.add("--cpus");
@@ -256,6 +280,14 @@ public class Singularity implements IScheduler {
 
     @Override
     public void cancelJob(String id) throws ISchedulerException {
+        // Cleanup pipe resources
+        if (initializedJobs.remove(id)) {
+            Process process = pipeProcesses.get(id);
+            if (process != null) {
+                process.destroy();
+                pipeProcesses.remove(id);
+            }
+        }
         var containers = getInstances();
         containers.removeIf(name -> !name.startsWith(id));
         destroyContainers(containers);
