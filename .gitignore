@@ -1,0 +1,26 @@
+# Ignore Gradle cache and build artifacts
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Ignore compiled Java files
+*.class
+bin/
+build/
+out/
+
+# Ignore IDE-specific files
+.idea/
+*.iml
+.vscode/
+
+# Ignore logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Ignore Maven target directory (if using Maven)
+target/
+
+# Ignore NetBeans cache files
+nbproject/private/
+nb-cache/
