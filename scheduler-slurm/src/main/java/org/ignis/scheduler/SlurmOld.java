@@ -29,7 +29,7 @@ import java.util.stream.IntStream;
 /**
  * @author César Pomar
  */
-public final class Slurm implements IScheduler {
+public final class SlurmOld implements IScheduler {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Slurm.class);
 
