@@ -24,3 +24,5 @@ target/
 # Ignore NetBeans cache files
 nbproject/private/
 nb-cache/
+
+.gradle/
