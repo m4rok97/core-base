@@ -66,14 +66,15 @@ public class Singularity implements IScheduler {
         return result;
     }
 
-    private void initializePipes(String jobID) throws ISchedulerException {
+    private void initializePipes(String jobID, Boolean isCreateJob) throws ISchedulerException {
         if (!initializedJobs.contains(jobID)) {
             try {
                 // Start persistent Python pipe manager
                 ProcessBuilder pb = new ProcessBuilder(
                     "python3", 
                     "pipes_manager.py",
-                    jobID
+                    jobID,
+                    isCreateJob.toString() 
                 );
                 Process process = pb.start();
                 pipeProcesses.put(jobID, process);
@@ -87,8 +88,8 @@ public class Singularity implements IScheduler {
         }
     }
 
-    private List<CreateContainerCmd> parseRequest(String jobID, IClusterRequest request) throws ISchedulerException {
-        initializePipes(jobID);
+    private List<CreateContainerCmd> parseRequest(String jobID, IClusterRequest request, Boolean isCreateJob) throws ISchedulerException {
+        initializePipes(jobID, isCreateJob);
         var resources = request.resources();
         var cmd = new ArrayList<>(Arrays.asList("ignis-host", "singularity", "instance", "start"));
         cmd.add("--cpus");
@@ -268,10 +269,10 @@ public class Singularity implements IScheduler {
         id = id.substring(0, Math.max(0, Math.min(idSz, id.length())));
 
         String jobID = ISchedulerUtils.name(name) + "-" + id;
-        var containers = new ArrayList<>(parseRequest(jobID, driver));
+        var containers = new ArrayList<>(parseRequest(jobID, driver, true));
 
         for (var exec : executors) {
-            containers.addAll(parseRequest(jobID, exec));
+            containers.addAll(parseRequest(jobID, exec, false));
         }
         startContainers(containers);
 
@@ -311,7 +312,7 @@ public class Singularity implements IScheduler {
 
     @Override
     public IClusterInfo createCluster(String job, IClusterRequest request) throws ISchedulerException {
-        var containers = new ArrayList<>(parseRequest(job, request));
+        var containers = new ArrayList<>(parseRequest(job, request, false));
         startContainers(containers);
         return getCluster(job, containers.getFirst().name);
     }
@@ -335,7 +336,7 @@ public class Singularity implements IScheduler {
 
     @Override
     public IClusterInfo repairCluster(String job, IClusterInfo cluster, IClusterRequest request) throws ISchedulerException {
-        var newContainers = new ArrayList<>(parseRequest(job, request));
+        var newContainers = new ArrayList<>(parseRequest(job, request, false));
         for (int i = 0; i < newContainers.size(); i++) {
             if (getContainerStatus(job, cluster.containers().get(i).id()).equals(IContainerInfo.IStatus.RUNNING)) {
                 newContainers.set(i, null);
