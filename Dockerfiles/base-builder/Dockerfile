@@ -37,3 +37,5 @@ COPY ${DOCK_DIR}bin ${IGNIS_HOME}/bin/
 RUN cd ${IGNIS_HOME}/bin && \
     chmod +x * && \
     envsubst <ignis-base-install.sh | sponge ignis-base-install.sh
+
+COPY ${DOCK_DIR}env.d ${IGNIS_HOME}/env.d/
