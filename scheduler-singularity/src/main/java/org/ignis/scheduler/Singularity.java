@@ -14,11 +14,26 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author César Pomar
+ * <p>
+ * Scheduler parameters:
+ * singularity.cgroup=true : Allows to disable cgroup
+ */
 public class Singularity implements IScheduler {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Singularity.class);
 
-    private record CreateContainerCmd(String name, List<String> cmd) {
+    private record CreateContainerCmd(String name, String cmd) {
+    }
+
+    private final String binary;
+
+    public Singularity(String binary) {
+        if (binary == null) {
+            binary = "singularity";
+        }
+        this.binary = binary;
     }
 
     private JsonNode parseJson(String json) throws ISchedulerException {
@@ -31,7 +46,7 @@ public class Singularity implements IScheduler {
     }
 
     private String run(String... args) throws ISchedulerException {
-        return run(false, args);
+        return run(Boolean.getBoolean("ignis.debug"), args);
     }
 
     private String run(boolean inheritIO, String... args) throws ISchedulerException {
@@ -55,7 +70,7 @@ public class Singularity implements IScheduler {
     }
 
     private List<String> getInstances() throws ISchedulerException {
-        var list = parseJson(run("ignis-host", "singularity", "instance", "list", "--json"));
+        var list = parseJson(run("ignis-host", this.binary, "instance", "list", "--json"));
         var result = new ArrayList<String>();
 
         for (var instance : list.get("instances")) {
@@ -65,15 +80,61 @@ public class Singularity implements IScheduler {
     }
 
     private List<CreateContainerCmd> parseRequest(String jobID, IClusterRequest request) throws ISchedulerException {
+        return parseRequest(jobID, request, false);
+    }
+
+    private String createPipes(String name, String cmd) {
+        return """
+                {cmd}
+                code=$?
+                if [ $code -ne 0 ]; then
+                    exit $code
+                fi
+                nohup bash -c '
+                    run_pipes(){
+                        temp_dir=$(mktemp -d)
+                        trap "rm -rf $temp_dir" EXIT
+
+                        mkfifo "$temp_dir/run"
+                        mkfifo "$temp_dir/code"
+                        mkfifo "$temp_dir/out"
+                        mkfifo "$temp_dir/err"
+
+                        while true; do
+                          read run < "$temp_dir/run"
+                          if [ "$run" == "run\\n" ]; then
+                            echo -n $(bash "$temp_dir/script" > "$temp_dir/out" 2> "$temp_dir/err") > "$temp_dir/code"
+                          fi
+                        done
+                    }
+                
+                    {singularity} exec instance://{name} sleep inf &
+                    RUNNING=$!
+                    run_pipes &
+                    wait $RUNNING
+                    exit
+                ' > /dev/null 2>&1 &
+
+                exit $code
+                """.replace("{name}", name).
+                replace("{cmd}", cmd).
+                replace("{singularity}", this.binary);
+    }
+
+    private List<CreateContainerCmd> parseRequest(String jobID, IClusterRequest request, boolean pipes) throws ISchedulerException {
         var resources = request.resources();
-        var cmd = new ArrayList<>(Arrays.asList("ignis-host", "singularity", "instance", "start"));
-        cmd.add("--cpus");
-        cmd.add(String.valueOf(resources.cpus()));
+        var cmd = new ArrayList<>(Arrays.asList(this.binary, "instance", "start"));
+        var cgroup = Boolean.parseBoolean(resources.schedulerOptArgs().getOrDefault("singularity.cgroup", "true"));
+
+        if (cgroup) {
+            cmd.add("--cpus");
+            cmd.add(String.valueOf(resources.cpus()));
+            cmd.add("--memory");
+            cmd.add(String.valueOf(resources.memory()));
+        }
         if (resources.gpu() != null) {
             cmd.add("--nv");
         }
-        cmd.add("--memory");
-        cmd.add(String.valueOf(resources.memory()));
         //resources.user()
         if (resources.writable() || resources.tmpdir()) {
             cmd.add("--writable-tmfs");
@@ -125,11 +186,18 @@ public class Singularity implements IScheduler {
             instance.add("--env");
             instance.add("IGNIS_SCHEDULER_ENV_CONTAINER=" + containerName);
 
-            cmd.add(containerName);
-            cmd.add("ignis-logger");
-            cmd.addAll(resources.args());
+            instance.add(resources.image());
+            instance.add(containerName);
+            instance.add("ignis-logger");
+            instance.addAll(resources.args());
 
-            createContainers.add(new CreateContainerCmd(containerName, instance));
+            String script = String.join(" ", instance);
+
+            if (pipes) {
+                script = createPipes(containerName, script);
+            }
+
+            createContainers.add(new CreateContainerCmd(containerName, script));
         }
 
         return createContainers;
@@ -139,13 +207,13 @@ public class Singularity implements IScheduler {
         var started = new ArrayList<String>();
         try {
             for (var instance : containers) {
-                run(instance.cmd().toArray(new String[0]));
+                run("ignis-host", instance.cmd);
                 started.add(instance.name);
             }
         } catch (ISchedulerException ex) {
             for (var c : started) {
                 try {
-                    run(false, "ignis-host", "singularity", "instance", "stop", c);
+                    run(false, "ignis-host", this.binary, "instance", "stop", c);
                 } catch (ISchedulerException ex2) {
                 }
             }
@@ -157,7 +225,7 @@ public class Singularity implements IScheduler {
         Exception error = null;
         for (var c : containers) {
             try {
-                run("ignis-host", "singularity", "instance", "stop", c);
+                run("ignis-host", this.binary, "instance", "stop", c);
             } catch (Exception ex) {
                 LOGGER.error(ex.getMessage());
                 error = ex;
@@ -172,7 +240,7 @@ public class Singularity implements IScheduler {
     }
 
     private RawContainer parseContainer(String name) throws ISchedulerException {
-        String out = run("ignis-host", "singularity", "exec", "instance://" + name, "env", "--null");
+        String out = run("ignis-host", this.binary, "exec", "instance://" + name, "env", "--null");
         var env = new HashMap<String, String>();
         for (var entry : out.split("\0")) {
             var key_val = entry.split("=", 1);
@@ -232,7 +300,7 @@ public class Singularity implements IScheduler {
         id = id.substring(0, Math.max(0, Math.min(idSz, id.length())));
 
         String jobID = ISchedulerUtils.name(name) + "-" + id;
-        var containers = new ArrayList<>(parseRequest(jobID, driver));
+        var containers = new ArrayList<>(parseRequest(jobID, driver, true));
 
         for (var exec : executors) {
             containers.addAll(parseRequest(jobID, exec));
@@ -314,6 +382,6 @@ public class Singularity implements IScheduler {
 
     @Override
     public void healthCheck() throws ISchedulerException {
-        run("ignis-host", "singularity", "version");
+        run("ignis-host", this.binary, "version");
     }
 }
