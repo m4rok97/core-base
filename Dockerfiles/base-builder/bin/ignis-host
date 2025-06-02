@@ -1,10 +1,11 @@
 #!/bin/env bash
 set -e
 
-EXIT_CODE=$(cat </ignis-pipe/code)
+echo "$@" >/ignis-pipes/script
+echo "run" >/ignis-pipes/run
+EXIT_CODE=$(cat </ignis-pipes/code)
 
-echo "$@">/ignis-pipe/in
-cat </ignis-pipe/out
-cat </ignis-pipe/err >&2
+cat </ignis-pipes/err >&2
+cat </ignis-pipes/out
 
 exit ${EXIT_CODE}
