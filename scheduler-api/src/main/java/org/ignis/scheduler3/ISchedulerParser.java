@@ -81,6 +81,9 @@ public final class ISchedulerParser {
                         }
                         setenv.put(key, props.getBoolean(key));
                         break SEARCH;
+                    case IKeys.SCHEDULER_PARAM:
+                        schedulerOptArgs.put(key.substring(IKeys.SCHEDULER_PARAM.length() + 1), props.getString(key));
+                        break SEARCH;
                 }
                 parent = IProperties.parent(parent);
             }
