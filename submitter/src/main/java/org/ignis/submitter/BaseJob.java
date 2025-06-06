@@ -1,5 +1,10 @@
 package org.ignis.submitter;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.Callable;
+
 import org.ignis.logging.ILogger;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
@@ -8,12 +13,8 @@ import org.ignis.scheduler3.IScheduler;
 import org.ignis.scheduler3.ISchedulerException;
 import org.ignis.scheduler3.ISchedulerFactory;
 import org.slf4j.LoggerFactory;
-import picocli.CommandLine;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.Callable;
+import picocli.CommandLine;
 
 public abstract class BaseJob implements Callable<Integer> {
 
@@ -56,9 +57,6 @@ public abstract class BaseJob implements Callable<Integer> {
         defaults.load(getClass().getClassLoader().getResourceAsStream("etc/ignis.yaml"));
         props = new IProperties(defaults);
         props.setProperty(IKeys.WDIR, System.getProperty("user.dir"));
-        if(!props.hasProperty(IKeys.SCHEDULER_NAME) && props.hasProperty(IKeys.CONTAINER_PROVIDER)){
-            props.setProperty(IKeys.SCHEDULER_NAME, props.getProperty(IKeys.CONTAINER_PROVIDER));
-        }
         LOGGER.info("Loading environment variables");
         props.fromEnv(System.getenv());
 
@@ -94,6 +92,9 @@ public abstract class BaseJob implements Callable<Integer> {
         }
 
         LOGGER.info("Loading scheduler");
+        if(!props.hasProperty(IKeys.SCHEDULER_NAME) && props.hasProperty(IKeys.CONTAINER_PROVIDER)){
+            props.setProperty(IKeys.SCHEDULER_NAME, props.getProperty(IKeys.CONTAINER_PROVIDER));
+        }
         String url = "", type = null;
         try {
             url = props.getProperty(IKeys.SCHEDULER_URL, null);
