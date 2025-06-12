@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.scheduler3;
+package org.ignis.scheduler2;
 
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 /**
  * @author César Pomar
  */
-public final class ISchedulerFactory {
+public final class ISchedulerBuilder {
 
-    private ISchedulerFactory() {
+    private ISchedulerBuilder() {
     }
 
     private static String capitalize(String str) {
@@ -36,15 +36,16 @@ public final class ISchedulerFactory {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
-    public static IScheduler create(String type, String url) throws ISchedulerException {
+    @SuppressWarnings({"unchecked"})
+    public static IScheduler create(String type, String url) {
         Class<? extends IScheduler> found;
         if (type.indexOf('.') == -1) {
             type = "org.ignis.scheduler." + Arrays.stream(type.split("_"))
-                    .map(ISchedulerFactory::capitalize).collect(Collectors.joining());
+                    .map(ISchedulerBuilder::capitalize).collect(Collectors.joining());
         }
 
         try {
-            found = Class.forName(type).asSubclass(IScheduler.class);
+            found = (Class<? extends IScheduler>) Class.forName(type);
         } catch (ClassNotFoundException ex) {
             throw new ISchedulerException("Scheduler '" + type + "' not found", ex);
         } catch (ClassCastException ex) {

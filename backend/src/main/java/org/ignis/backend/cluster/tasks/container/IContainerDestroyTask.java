@@ -21,8 +21,8 @@ import org.ignis.backend.cluster.ITaskContext;
 import org.ignis.backend.cluster.tasks.IBarrier;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
-import org.ignis.scheduler3.IScheduler;
-import org.ignis.scheduler3.ISchedulerException;
+import org.ignis.scheduler.IScheduler;
+import org.ignis.scheduler.ISchedulerException;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BrokenBarrierException;

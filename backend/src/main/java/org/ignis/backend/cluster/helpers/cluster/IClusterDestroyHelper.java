@@ -23,7 +23,7 @@ import org.ignis.backend.cluster.tasks.ITaskGroup;
 import org.ignis.backend.cluster.tasks.container.IContainerDestroyTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler3.IScheduler;
+import org.ignis.scheduler.IScheduler;
 import org.slf4j.LoggerFactory;
 
 /**

@@ -16,83 +16,66 @@
  */
 package org.ignis.scheduler;
 
+
+import org.ignis.scheduler.model.IClusterInfo;
+import org.ignis.scheduler.model.IClusterRequest;
 import org.ignis.scheduler.model.IContainerInfo;
-import org.ignis.scheduler.model.IContainerStatus;
+import org.ignis.scheduler.model.IJobInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author César Pomar
  */
 public class Ancoris implements IScheduler {
 
-    public static final String NAME = "ancoris";
-
     public Ancoris(String url) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public String createGroup(String name) throws ISchedulerException {
+    public String createJob(String name, IClusterRequest driver, IClusterRequest... executors) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void destroyGroup(String group) throws ISchedulerException {
+    public void cancelJob(String id) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public String createDriverContainer(String group, String name, IContainerInfo container) throws ISchedulerException {
+    public IJobInfo getJob(String id) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<String> createExecutorContainers(String group, String name, IContainerInfo container, int instances)
-            throws ISchedulerException {
+    public List<IJobInfo> listJobs(Map<String, String> filters) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public String createDriverWithExecutorContainers(String group, String driverName,
-                                                     IContainerInfo driverContainer,
-                                                     List<ExecutorContainers> executorContainers)
-            throws ISchedulerException {
+    public IClusterInfo createCluster(String job, IClusterRequest request) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public IContainerStatus getStatus(String id) throws ISchedulerException {
+    public IClusterInfo getCluster(String job, String id) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<IContainerStatus> getStatus(List<String> ids) throws ISchedulerException {
+    public void destroyCluster(String job, String id) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public IContainerInfo getContainer(String id) throws ISchedulerException {
+    public IClusterInfo repairCluster(String job, IClusterInfo cluster, IClusterRequest request) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<IContainerInfo> getExecutorContainers(List<String> ids) throws ISchedulerException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public IContainerInfo restartContainer(String id) throws ISchedulerException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void destroyDriverContainer(String id) throws ISchedulerException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void destroyExecutorInstances(List<String> ids) throws ISchedulerException {
+    public IContainerInfo.IStatus getContainerStatus(String job, String id) throws ISchedulerException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -101,13 +84,4 @@ public class Ancoris implements IScheduler {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return true;
-    }
 }

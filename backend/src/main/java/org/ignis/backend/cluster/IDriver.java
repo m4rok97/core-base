@@ -22,7 +22,7 @@ import org.ignis.backend.cluster.tasks.executor.IDriverConectionTask;
 import org.ignis.backend.cluster.tasks.executor.IDriverDataTask;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler3.model.IContainerInfo;
+import org.ignis.scheduler.model.IContainerInfo;
 
 /**
  * @author César Pomar

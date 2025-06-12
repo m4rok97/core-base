@@ -118,6 +118,9 @@ public final class IKeys {
     public static final String CONTAINER_SINGULARITY_SOURCE = "ignis.container.singularity.source";
     public static final String CONTAINER_SINGULARITY_DEFAULT = "ignis.container.singularity.default";
     public static final String CONTAINER_SINGULARITY_NETWORK = "ignis.container.singularity.network";
+    public static final String CONTAINER_APPTAINER_SOURCE = "ignis.container.apptainer.source";
+    public static final String CONTAINER_APPTAINER_DEFAULT = "ignis.container.apptainer.default";
+    public static final String CONTAINER_APPTAINER_NETWORK = "ignis.container.apptainer.network";
     public static final String CONTAINER_WRITABLE = "ignis.container.writable";
     public static final String CONTAINER_PROVIDER = "ignis.container.provider";
 }

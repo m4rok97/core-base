@@ -1,4 +1,4 @@
-package org.ignis.scheduler;
+package org.ignis.scheduler2;
 
 class GroupId {
 

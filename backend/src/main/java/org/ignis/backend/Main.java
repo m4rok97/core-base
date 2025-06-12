@@ -26,20 +26,16 @@ import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.properties.IPropertyException;
 import org.ignis.rpc.driver.*;
-import org.ignis.scheduler3.IScheduler;
-import org.ignis.scheduler3.ISchedulerException;
-import org.ignis.scheduler3.ISchedulerFactory;
-import org.ignis.scheduler3.ISchedulerParser;
-import org.ignis.scheduler3.model.IContainerInfo;
-import org.ignis.scheduler3.model.IJobInfo;
+import org.ignis.scheduler.IScheduler;
+import org.ignis.scheduler.ISchedulerException;
+import org.ignis.scheduler.ISchedulerFactory;
+import org.ignis.scheduler.ISchedulerParser;
+import org.ignis.scheduler.model.IContainerInfo;
+import org.ignis.scheduler.model.IJobInfo;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
 

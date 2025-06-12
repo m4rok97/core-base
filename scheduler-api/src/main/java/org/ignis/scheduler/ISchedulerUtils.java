@@ -1,8 +1,8 @@
-package org.ignis.scheduler3;
+package org.ignis.scheduler;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler3.model.IContainerInfo;
+import org.ignis.scheduler.model.IContainerInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

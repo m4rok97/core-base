@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.scheduler;
+package org.ignis.scheduler2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -26,7 +26,7 @@ import com.hubspot.horizon.ning.NingHttpClient;
 import com.hubspot.mesos.*;
 import com.hubspot.singularity.*;
 import com.hubspot.singularity.client.SingularityClientException;
-import org.ignis.scheduler.model.*;
+import org.ignis.scheduler2.model.*;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;

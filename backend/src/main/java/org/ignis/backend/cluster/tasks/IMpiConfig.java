@@ -22,7 +22,7 @@ package org.ignis.backend.cluster.tasks;
 import org.ignis.backend.cluster.IExecutor;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler3.model.IContainerInfo;
+import org.ignis.scheduler.model.IContainerInfo;
 
 import java.util.HashMap;
 import java.util.Map;

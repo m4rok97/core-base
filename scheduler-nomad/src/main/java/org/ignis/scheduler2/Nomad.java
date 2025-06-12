@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.scheduler;
+package org.ignis.scheduler2;
 
 import com.hashicorp.nomad.apimodel.*;
 import com.hashicorp.nomad.javasdk.*;
-import org.ignis.scheduler.model.*;
+import org.ignis.scheduler2.model.*;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;

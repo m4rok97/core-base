@@ -23,7 +23,7 @@ package org.ignis.scheduler;
  *
  * @author César Pomar
  */
-public class ISchedulerException extends RuntimeException {
+public class ISchedulerException extends Exception {
 
     public ISchedulerException(String message) {
         super(message);

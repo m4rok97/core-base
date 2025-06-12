@@ -4,9 +4,9 @@ import org.ignis.logging.ILogger;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.properties.IPropertyException;
-import org.ignis.scheduler3.IScheduler;
-import org.ignis.scheduler3.ISchedulerException;
-import org.ignis.scheduler3.ISchedulerFactory;
+import org.ignis.scheduler.IScheduler;
+import org.ignis.scheduler.ISchedulerException;
+import org.ignis.scheduler.ISchedulerFactory;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 

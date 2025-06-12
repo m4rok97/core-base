@@ -1,4 +1,4 @@
-package org.ignis.scheduler3.model;
+package org.ignis.scheduler.model;
 
 import lombok.Builder;
 

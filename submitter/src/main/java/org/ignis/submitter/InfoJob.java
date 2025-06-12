@@ -1,6 +1,6 @@
 package org.ignis.submitter;
 
-import org.ignis.scheduler3.ISchedulerUtils;
+import org.ignis.scheduler.ISchedulerUtils;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "info", helpCommand = true, description = "Get job info")

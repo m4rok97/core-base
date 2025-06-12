@@ -2,13 +2,10 @@ package org.ignis.scheduler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.ignis.scheduler3.IScheduler;
-import org.ignis.scheduler3.ISchedulerException;
-import org.ignis.scheduler3.ISchedulerUtils;
-import org.ignis.scheduler3.model.IClusterInfo;
-import org.ignis.scheduler3.model.IClusterRequest;
-import org.ignis.scheduler3.model.IContainerInfo;
-import org.ignis.scheduler3.model.IJobInfo;
+import org.ignis.scheduler.model.IClusterInfo;
+import org.ignis.scheduler.model.IClusterRequest;
+import org.ignis.scheduler.model.IContainerInfo;
+import org.ignis.scheduler.model.IJobInfo;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -28,12 +25,15 @@ public class Singularity implements IScheduler {
     }
 
     private final String binary;
+    private final String name;
+
+    protected Singularity(String name, String binary) {
+        this.binary = binary;
+        this.name = name;
+    }
 
     public Singularity(String binary) {
-        if (binary == null) {
-            binary = "singularity";
-        }
-        this.binary = binary;
+        this(binary == null ? "singularity" : binary, "singularity");
     }
 
     private JsonNode parseJson(String json) throws ISchedulerException {
@@ -94,12 +94,12 @@ public class Singularity implements IScheduler {
                     run_pipes(){
                         temp_dir=$(mktemp -d)
                         trap "rm -rf $temp_dir" EXIT
-
+                
                         mkfifo "$temp_dir/run"
                         mkfifo "$temp_dir/code"
                         mkfifo "$temp_dir/out"
                         mkfifo "$temp_dir/err"
-
+                
                         while true; do
                           read run < "$temp_dir/run"
                           if [ "$run" == "run\\n" ]; then
@@ -114,7 +114,7 @@ public class Singularity implements IScheduler {
                     wait $RUNNING
                     exit
                 ' > /dev/null 2>&1 &
-
+                
                 exit $code
                 """.replace("{name}", name).
                 replace("{cmd}", cmd).
@@ -124,7 +124,7 @@ public class Singularity implements IScheduler {
     private List<CreateContainerCmd> parseRequest(String jobID, IClusterRequest request, boolean pipes) throws ISchedulerException {
         var resources = request.resources();
         var cmd = new ArrayList<>(Arrays.asList(this.binary, "instance", "start"));
-        var cgroup = Boolean.parseBoolean(resources.schedulerOptArgs().getOrDefault("singularity.cgroup", "true"));
+        var cgroup = Boolean.parseBoolean(resources.schedulerOptArgs().getOrDefault(this.name + ".cgroup", "true"));
 
         if (cgroup) {
             cmd.add("--cpus");

@@ -19,7 +19,7 @@ package org.ignis.backend.cluster;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler3.model.IContainerInfo;
+import org.ignis.scheduler.model.IContainerInfo;
 
 /**
  * @author César Pomar

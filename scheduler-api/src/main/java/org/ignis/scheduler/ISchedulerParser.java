@@ -1,37 +1,14 @@
-/*
- *
- *  * Copyright (C) 2019 César Pomar
- *  *
- *  * This program is free software: you can redistribute it and/or modify
- *  * it under the terms of the GNU General Public License as published by
- *  * the Free Software Foundation, either version 3 of the License, or
- *  * (at your option) any later version.
- *  *
- *  * This program is distributed in the hope that it will be useful,
- *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  * GNU General Public License for more details.
- *  *
- *  * You should have received a copy of the GNU General Public License
- *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
 package org.ignis.scheduler;
 
+import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler.model.IBind;
-import org.ignis.scheduler.model.IPort;
-import org.ignis.scheduler.model.IVolume;
+import org.ignis.properties.IPropertyException;
+import org.ignis.scheduler.model.*;
+import com.sun.security.auth.module.UnixSystem;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
-
-/**
- * @author César Pomar
- */
 public final class ISchedulerParser {
 
     private final IProperties props;
@@ -40,98 +17,313 @@ public final class ISchedulerParser {
         this.props = props;
     }
 
-    public Map<String, String> schedulerParams() {
-        Map<String, String> params = new HashMap<>();/*
-        int plen = IKeys.SCHEDULER_PARAMS.length() + 1;
-        for (String key : props.getPrefixKeys(IKeys.SCHEDULER_PARAMS)) {
-            params.put(key.substring(plen), props.getProperty(key));
-        }*/
-        return params;
+    public IProperties getProperties() {
+        return props;
+    }
+
+    public IClusterRequest parse(String prefix, String name, List<String> args) {
+        var builder = create();
+        builder.args(args);
+        var ports = new ArrayList<IPortMapping>();
+        builder.ports(ports);
+        var binds = new ArrayList<IBindMount>();
+        builder.binds(binds);
+        var hostnames = new HashMap<String, String>();
+        builder.hostnames(hostnames);
+        var env = new HashMap<String, String>();
+        var setenv = new HashMap<String, Boolean>();
+        builder.env(env);
+        var schedulerOptArgs = new HashMap<String, String>();
+        builder.schedulerOptArgs(schedulerOptArgs);
+        String image = null;
+        for (var subkey : props.withPrefix(prefix).toMap(true).keySet()) {
+            var key = IProperties.join(prefix, subkey);
+            var parent = key;
+            SEARCH:
+            while (!parent.isEmpty()) {
+                switch (parent) {
+                    case IKeys.DRIVER_IMAGE:
+                    case IKeys.EXECUTOR_IMAGE:
+                        image = props.getProperty(key);
+                        break SEARCH;
+                    case IKeys.DRIVER_CORES:
+                    case IKeys.EXECUTOR_CORES:
+                        builder.cpus(props.getInteger(key));
+                        break SEARCH;
+                    case IKeys.DRIVER_GPU:
+                    case IKeys.EXECUTOR_GPU:
+                        builder.gpu(props.getProperty(key));
+                        break SEARCH;
+                    case IKeys.DRIVER_MEMORY:
+                    case IKeys.EXECUTOR_MEMORY:
+                        builder.memory(props.getSILong(key));
+                        break SEARCH;
+                    case IKeys.DRIVER_PORTS:
+                    case IKeys.EXECUTOR_PORTS:
+                        ports.addAll(parsePort(prefix, key, props.getProperty(key)));
+                        break SEARCH;
+                    case IKeys.DRIVER_BINDS:
+                    case IKeys.EXECUTOR_BINDS:
+                        binds.add(parseBind(prefix, key, props.getProperty(key)));
+                        break SEARCH;
+                    case IKeys.DRIVER_NODELIST:
+                    case IKeys.EXECUTOR_NODELIST:
+                        builder.nodelist(props.getStringList(key));
+                        break SEARCH;
+                    case IKeys.DRIVER_ENV:
+                    case IKeys.EXECUTOR_ENV:
+                        parseKeyValue(prefix, env, key, props.getProperty(key));
+                        break SEARCH;
+                    case IKeys.DRIVER_SETENV:
+                    case IKeys.EXECUTOR_SETENV:
+                        if (key.endsWith("..")) {//bypass .$crypto$= keys
+                            key = key.substring(0, key.length() - 2);
+                        }
+                        setenv.put(key, props.getBoolean(key));
+                        break SEARCH;
+                    case IKeys.SCHEDULER_PARAM:
+                        schedulerOptArgs.put(key.substring(IKeys.SCHEDULER_PARAM.length() + 1), props.getString(key));
+                        break SEARCH;
+                }
+                parent = IProperties.parent(parent);
+            }
+        }
+        containerEnvironment(setenv, env);
+        builder.image(parseImage(image));
+        if (IKeys.EXECUTOR_INSTANCES.startsWith(prefix)) {
+            return new IClusterRequest(name, builder.build(), props.getInteger(IKeys.EXECUTOR_INSTANCES));
+        }
+        return new IClusterRequest(name, builder.build(), 1);
+    }
+
+    public IContainerInfo.INetworkMode networkMode() {
+        String network;
+        var provider = IContainerInfo.IProvider.valueOf(props.getString(IKeys.CONTAINER_PROVIDER).toUpperCase());
+        if (provider.equals(IContainerInfo.IProvider.DOCKER)) {
+            network = props.getString(IKeys.CONTAINER_DOCKER_NETWORK).toUpperCase();
+            if (network.equals("DEFAULT")) {
+                network = "BRIDGE";
+            }
+        } else {
+            if (provider.equals(IContainerInfo.IProvider.SINGULARITY)) {
+                network = props.getString(IKeys.CONTAINER_SINGULARITY_NETWORK).toUpperCase();
+            } else {
+                network = props.getString(IKeys.CONTAINER_APPTAINER_NETWORK).toUpperCase();
+            }
+            if (network.equals("DEFAULT")) {
+                network = "HOST";
+            }
+        }
+        return IContainerInfo.INetworkMode.valueOf(network);
+    }
+
+    private IContainerInfo.IContainerInfoBuilder create() {
+        var builder = IContainerInfo.builder();
+        builder.time(parseTime());
+        var provider = IContainerInfo.IProvider.valueOf(props.getString(IKeys.CONTAINER_PROVIDER).toUpperCase());
+        if (provider.equals(IContainerInfo.IProvider.DOCKER) && props.getBoolean(IKeys.CONTAINER_DOCKER_ROOT)) {
+            builder.user("root:0:0");
+        } else {
+            UnixSystem us = new UnixSystem();
+            String username = us.getUsername() != null ? us.getUsername() : "ignis";
+            builder.user(username + ":" + us.getUid() + ":" + us.getGid());
+        }
+        builder.provider(provider);
+        builder.network(networkMode());
+        builder.writable(props.getBoolean(IKeys.CONTAINER_WRITABLE));
+        builder.tmpdir(props.hasProperty(IKeys.TMPDIR) && props.getBoolean(IKeys.TMPDIR));
+        return builder;
     }
 
 
-    public List<IPort> ports(String prefix) {
-        List<IPort> ports = new ArrayList<>();/*
-        Collection<String> propsPorts = props.getPrefixKeys(prefix);
+    private String parseImage(String image) {
+        String prefix = "";
+        var provider = IContainerInfo.IProvider.valueOf(props.getString(IKeys.CONTAINER_PROVIDER).toUpperCase());
 
-        int transportPorts = props.getInteger(IKeys.TRANSPORT_PORTS);
-        ports.addAll(Collections.nCopies(transportPorts, new IPort(0, 0, "tcp")));
 
-        for (String key : propsPorts) {
-            String subkey = key.substring((prefix + ".").length());
-            String[] portSpec = subkey.split("\\.");
-            if (portSpec.length != 2) {
-                throw new IPropertyException(key, " has bad format, use *.{type}.{continer_port}={host_port}");
+        if (!provider.equals(IContainerInfo.IProvider.DOCKER)) {
+            String src, image_default;
+            if  (provider.equals(IContainerInfo.IProvider.SINGULARITY)) {
+                src = props.getString(IKeys.CONTAINER_SINGULARITY_SOURCE);
+                image_default = props.getString(IKeys.CONTAINER_SINGULARITY_DEFAULT);
+            } else {
+                src = props.getString(IKeys.CONTAINER_APPTAINER_SOURCE);
+                image_default = props.getString(IKeys.CONTAINER_APPTAINER_DEFAULT);
+            }
+            if (image == null) {
+                image = src + (src.endsWith("/") ? "" : "/") + image_default;
+            } else if (image.contains(":") || (!image.isEmpty() && image.charAt(0) == '/')) {
+                image = src + (src.endsWith("/") ? "" : "/") + image;
             }
 
-            String type = portSpec[0].toLowerCase();
-            if (!type.equals("tcp") && !type.equals("udp")) {
-                throw new IPropertyException(key, " expected type tcp/udp found " + type);
+            if (new File(image).exists() || image.contains(":")) {
+                return image;
             }
-
-            int continerPort = Integer.parseInt(portSpec[1]);
-            int hostPort = props.getInteger(key);
-            ports.add(new IPort(continerPort, hostPort, type));
+            prefix = "docker://";
+        }
+        if (image == null) {
+            image = props.getString(IKeys.CONTAINER_DOCKER_DEFAULT);
+        }
+        if (!image.contains("/")) {
+            var n = props.getString(IKeys.CONTAINER_DOCKER_NAMESPACE);
+            if (!n.isEmpty() && n.charAt(n.length() - 1) != '/') {
+                n += "/";
+            }
+            image = n + image;
         }
 
-        if (props.contains(prefix + "s.tcp")) {
-            for (Integer port : props.getIntegerList(prefix + "s.tcp")) {
-                ports.add(new IPort(port, 0, "tcp"));
+        if (image.indexOf('/') != image.lastIndexOf('/')) {
+            var r = props.getString(IKeys.CONTAINER_DOCKER_REGISTRY);
+            if (!r.isEmpty() && r.charAt(r.length() - 1) != '/') {
+                r += "/";
             }
+            image = r + image;
         }
 
-        if (props.contains(prefix + "s.udp")) {
-            for (Integer port : props.getIntegerList(prefix + "s.udp")) {
-                ports.add(new IPort(port, 0, "tcp"));
+        if (!image.contains(":") || image.indexOf(':') > image.lastIndexOf('/')) {
+            var t = props.getString(IKeys.CONTAINER_DOCKER_TAG);
+            if (!t.startsWith(":")) {
+                t = ":" + t;
             }
-        }*/
+            image += t;
+        }
+        return prefix + image;
+    }
 
+    private IBindMount parseBind(String prefix, String key, String value) {
+        var keys = IProperties.split(key);
+        var container = IProperties.relative(prefix, key).substring("binds.".length());
+        if (value.contains(":")) {
+            var values = value.split(":");
+            if (values.length != 2) {
+                throw new IPropertyException(key, "has bad format");
+            }
+            if (values[0].isEmpty()) {
+                value = container;
+            }
+            return new IBindMount(container, value, values[1].equals("ro"));
+        }
+        return new IBindMount(container, value, false);
+    }
+
+    private void parseKeyValue(String prefix, Map<String, String> dest, String key, String value) {
+        var keys = IProperties.split(IProperties.relative(prefix, key));
+        if (keys.length != 2) {
+            throw new IPropertyException(key, "has bad format");
+        }
+        dest.put(keys[1], value);
+    }
+
+    private Long parseTime() {
+        if (props.hasProperty(IKeys.TIME)) {
+            var text = props.getString(IKeys.TIME);
+            var fields = text.split("[-:]");
+            Collections.reverse(Arrays.asList(fields));
+            int[] w = {1, 60, 60 * 60, 60 * 60 * 24};
+            long seconds = 0;
+            for (int i = 0; i < fields.length; i++) {
+                try {
+                    seconds += Long.parseLong(fields[i]) * w[i];
+                } catch (NumberFormatException ex) {
+                    throw new IPropertyException(IKeys.TIME, "has bad format");
+                }
+            }
+            return seconds;
+        }
+        return null;
+    }
+
+    private List<IPortMapping> parsePort(String prefix, String key, String value) {
+        var ports = new ArrayList<IPortMapping>();
+        var keys = IProperties.split(IProperties.relative(prefix, key));
+        if (keys.length != 3) {
+            throw new IPropertyException(key, "has bad format, use " +
+                    "*.ports.{type}.{container_port}={host_port} or *.ports.{type}.{name}=0,...");
+        }
+        if (keys[1].startsWith("tcp") || keys[1].startsWith("udp")) {
+            var proto = IPortMapping.Protocol.valueOf(keys[1].toUpperCase());
+            if (keys[2].matches("-?\\d+")) {
+                ports.add(new IPortMapping(Integer.parseInt(keys[2]), Integer.parseInt(value), proto));
+                if (ports.getLast().container() < 1) {
+                    throw new IPropertyException(key, "container port must be >0, found " + keys[2]);
+                }
+                if (ports.getLast().host() < 0) {
+                    throw new IPropertyException(key, "host port must be >=0, found " + value);
+                }
+            } else {
+                for (var port : value.split(",")) {
+                    ports.add(new IPortMapping(0, Integer.parseInt(port), proto));
+                    if (ports.getLast().host() != 0) {
+                        throw new IPropertyException(key, "random ports must be 0, found " + port);
+                    }
+                }
+            }
+        } else {
+            throw new IPropertyException(key, "expected type tcp/udp, found " + keys[1]);
+        }
         return ports;
     }
 
-    public List<IBind> binds(String prefix) {
-        List<IBind> binds = new ArrayList<>();
-        /*
-        binds.add(IBind.builder()
-                .hostPath(props.getString(IKeys.DFS_ID))
-                .containerPath(props.getString(IKeys.DFS_HOME))
-                .readOnly(false).build());
-
-        for (String key : props.getPrefixKeys(prefix)) {
-            String hostpath = props.getString(key);
-            boolean ro = false;
-            if (hostpath.endsWith(":ro")) {
-                ro = true;
-                hostpath = hostpath.substring(0, hostpath.length() - 3);
+    public Map<String, String> dumpPorts(String prefix, IContainerInfo info) {
+        var result = new IProperties();
+        if (info.network().equals(IContainerInfo.INetworkMode.HOST)) {
+            return Map.of();
+        }
+        for (var proto : List.of("tcp", "udp")) {
+            var free = new LinkedList<String>();
+            for (var port : info.ports()) {
+                if (!port.protocol().name().equalsIgnoreCase(proto)) {
+                    continue;
+                }
+                var n = IProperties.join(prefix, proto, String.valueOf(port.container()));
+                if (props.hasProperty(n)) {
+                    result.setProperty(n, port.host());
+                } else {
+                    free.add(String.valueOf(port.host()));
+                }
             }
 
-            binds.add(IBind.builder()
-                    .hostPath(hostpath)
-                    .containerPath(key.substring(prefix.length() + 1))
-                    .readOnly(ro).build());
-        }*/
+            List<String> named = props.withPrefix(IProperties.join(prefix, proto)).toMap(true).keySet().stream().
+                    filter((s) -> !s.matches("-?\\d+")).sorted().toList();
 
-        return binds;
+            for (var id : named) {
+                var portName = IProperties.join(prefix, proto, id);
+                int n = props.getStringList(portName).size();
+                if (n > free.size()) {
+                    throw new IPropertyException(portName, "scheduler assignment not enough ports");
+                }
+                result.setList(portName, free.subList(free.size() - n, free.size()));
+                for (int i = 0; i < n; i++) {
+                    free.removeLast();
+                }
+            }
+        }
+
+        return result.toMap(true);
     }
 
-    public List<IVolume> volumes(String prefix) {
-        List<IVolume> volumes = new ArrayList<>();
-/*
-        for (String key : props.getPrefixKeys(prefix)) {
-            volumes.add(IVolume.builder()
-                    .containerPath(key.substring(prefix.length() + 1))
-                    .size(props.getSILong(key)).build());
-        }*/
-        return volumes;
-    }
+    public void containerEnvironment(Map<String, Boolean> setenv, Map<String, String> env) {
+        props.toEnv(IKeys.WDIR, env, true);
+        props.toEnv(IKeys.TRANSPORT_COMPRESSION, env, true);
 
-    public Map<String, String> env(String prefix) {
-        Map<String, String> env = new HashMap<>();
-        int plen = prefix.length() + 1;/*
-        for (String key : props.getPrefixKeys(prefix)) {
-            env.put(key.substring(plen), props.getString(key));
-        }*/
-        return env;
+        props.toEnv(IKeys.DEBUG, env, false);
+        props.toEnv(IKeys.VERBOSE, env, false);
+        props.toEnv(IKeys.HEALTHCHECK_INTERVAL, env, true);
+        props.toEnv(IKeys.HEALTHCHECK_TIMEOUT, env, true);
+        props.toEnv(IKeys.HEALTHCHECK_RETRIES, env, true);
+        props.toEnv(IKeys.HEALTHCHECK_URL, env, false);
+
+        props.toEnv(IKeys.CRYPTO_PUBLIC, env, false);
+        props.toEnv(IKeys.CRYPTO_SECRET, env, false);
+        props.toEnv(IKeys.DISCOVERY_TYPE, env, false);
+        props.toEnv(IKeys.DISCOVERY_ETCD_USER, env, false);
+        props.toEnv(IKeys.DISCOVERY_ETCD_$PASSWORD$, env, false);
+        props.toEnv(IKeys.DISCOVERY_ETCD_ENDPOINT, env, false);
+        props.toEnv(IKeys.DISCOVERY_ETCD_CA, env, false);
+
+        for (var entry : setenv.entrySet()) {
+            props.toEnv(entry.getKey(), env, entry.getValue());
+        }
     }
 
 }

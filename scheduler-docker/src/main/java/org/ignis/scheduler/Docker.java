@@ -9,10 +9,7 @@ import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
-import org.ignis.scheduler3.IScheduler;
-import org.ignis.scheduler3.ISchedulerException;
-import org.ignis.scheduler3.ISchedulerUtils;
-import org.ignis.scheduler3.model.*;
+import org.ignis.scheduler.model.*;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;

@@ -24,10 +24,10 @@ import org.ignis.backend.cluster.tasks.container.IContainerCreateTask;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler3.IScheduler;
-import org.ignis.scheduler3.ISchedulerParser;
-import org.ignis.scheduler3.model.IClusterRequest;
-import org.ignis.scheduler3.model.IContainerInfo;
+import org.ignis.scheduler.IScheduler;
+import org.ignis.scheduler.ISchedulerParser;
+import org.ignis.scheduler.model.IClusterRequest;
+import org.ignis.scheduler.model.IContainerInfo;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;

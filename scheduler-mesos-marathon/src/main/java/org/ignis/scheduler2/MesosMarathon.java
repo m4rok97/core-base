@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ignis.scheduler;
+package org.ignis.scheduler2;
 
 import com.google.gson.Gson;
 import mesosphere.marathon.client.MarathonClient;
 import mesosphere.marathon.client.MarathonException;
 import mesosphere.marathon.client.model.v2.*;
-import org.ignis.scheduler.model.*;
+import org.ignis.scheduler2.model.*;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;

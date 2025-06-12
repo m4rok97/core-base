@@ -27,7 +27,7 @@ import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.driver.IClusterService;
 import org.ignis.rpc.driver.IDriverException;
-import org.ignis.scheduler3.IScheduler;
+import org.ignis.scheduler.IScheduler;
 
 import java.util.List;
 

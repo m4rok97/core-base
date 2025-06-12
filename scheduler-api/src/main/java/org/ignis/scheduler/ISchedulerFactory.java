@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 /**
  * @author César Pomar
  */
-public final class ISchedulerBuilder {
+public final class ISchedulerFactory {
 
-    private ISchedulerBuilder() {
+    private ISchedulerFactory() {
     }
 
     private static String capitalize(String str) {
@@ -36,16 +36,15 @@ public final class ISchedulerBuilder {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
-    @SuppressWarnings({"unchecked"})
-    public static IScheduler create(String type, String url) {
+    public static IScheduler create(String type, String url) throws ISchedulerException {
         Class<? extends IScheduler> found;
         if (type.indexOf('.') == -1) {
             type = "org.ignis.scheduler." + Arrays.stream(type.split("_"))
-                    .map(ISchedulerBuilder::capitalize).collect(Collectors.joining());
+                    .map(ISchedulerFactory::capitalize).collect(Collectors.joining());
         }
 
         try {
-            found = (Class<? extends IScheduler>) Class.forName(type);
+            found = Class.forName(type).asSubclass(IScheduler.class);
         } catch (ClassNotFoundException ex) {
             throw new ISchedulerException("Scheduler '" + type + "' not found", ex);
         } catch (ClassCastException ex) {

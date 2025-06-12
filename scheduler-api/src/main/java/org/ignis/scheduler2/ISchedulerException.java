@@ -16,21 +16,21 @@
  *  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-package org.ignis.scheduler.model;
-
-import java.io.Serializable;
+package org.ignis.scheduler2;
 
 /**
- * Represents a Container status
+ * Represent a Scheduler general Exception
  *
  * @author César Pomar
  */
-public enum IContainerStatus implements Serializable {
-    ACCEPTED,
-    RUNNING,
-    ERROR,
-    FINISHED,
-    DESTROYED,
-    UNKNOWN
+public class ISchedulerException extends RuntimeException {
+
+    public ISchedulerException(String message) {
+        super(message);
+    }
+
+    public ISchedulerException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

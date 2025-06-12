@@ -1,4 +1,4 @@
-package org.ignis.scheduler;
+package org.ignis.scheduler2;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.rholder.retry.*;

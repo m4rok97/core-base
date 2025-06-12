@@ -26,7 +26,7 @@ import org.ignis.backend.unix.ISocket;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.rpc.executor.*;
-import org.ignis.scheduler3.ISchedulerParser;
+import org.ignis.scheduler.ISchedulerParser;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;

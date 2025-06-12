@@ -21,7 +21,7 @@ import org.ignis.backend.cluster.IDriver;
 import org.ignis.backend.cluster.tasks.IThreadPool;
 import org.ignis.backend.exception.IgnisException;
 import org.ignis.properties.IProperties;
-import org.ignis.scheduler3.model.IContainerInfo;
+import org.ignis.scheduler.model.IContainerInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
