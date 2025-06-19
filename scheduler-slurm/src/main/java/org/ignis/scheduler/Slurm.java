@@ -70,7 +70,7 @@ public final class Slurm implements IScheduler {
             throws ISchedulerException {
         // TODO: I need to update this part and use an implementation that the singularity implementation 
         // Add singularity exec command with the appropriate options
-        script.append("ignis-host ").append(provider(containerInfo)).append(provider(containerInfo)).append(" instance start");
+        script.append("ignis-host ").append(provider(containerInfo)).append(" instance start");
         script.append(" --writable-tmpfs --pid --cleanenv");
         
         // Add bind mounts
@@ -299,6 +299,44 @@ public final class Slurm implements IScheduler {
         }
     }
     
+    private String extractValue(String line, String key) {
+        int index = line.indexOf(key + "=");
+        if (index == -1) {
+            return null;
+        }
+        int start = index + key.length() + 1;
+        int end = line.indexOf(' ', start);
+        return end == -1 ? line.substring(start) : line.substring(start, end);
+    }
+
+    private long parseMemory(String memoryStr) {
+        if (memoryStr.endsWith("K")) {
+            return Long.parseLong(memoryStr.replace("K", "")) * 1024;
+        } else if (memoryStr.endsWith("M")) {
+            return Long.parseLong(memoryStr.replace("M", "")) * 1024 * 1024;
+        } else if (memoryStr.endsWith("G")) {
+            return Long.parseLong(memoryStr.replace("G", "")) * 1024 * 1024 * 1024;
+        }
+        return Long.parseLong(memoryStr);
+    }
+
+    private long parseTime(String timeStr) {
+        String[] parts = timeStr.split("[-:]");
+        long days = 0, hours = 0, minutes = 0, seconds = 0;
+
+        if (parts.length == 4) {
+            days = Long.parseLong(parts[0]);
+            hours = Long.parseLong(parts[1]);
+            minutes = Long.parseLong(parts[2]);
+            seconds = Long.parseLong(parts[3]);
+        } else if (parts.length == 3) {
+            hours = Long.parseLong(parts[0]);
+            minutes = Long.parseLong(parts[1]);
+            seconds = Long.parseLong(parts[2]);
+        }
+
+        return days * 86400 + hours * 3600 + minutes * 60 + seconds;
+    }
 
     private List<IJobInfo> parseJobs(List<String> outputLines, Map<String, String> filters) {
         List<IJobInfo> jobs = new ArrayList<>();
