@@ -16,16 +16,30 @@
  */
 package org.ignis.backend;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.thrift.TMultiplexedProcessor;
 import org.ignis.backend.cluster.IDriver;
 import org.ignis.backend.cluster.tasks.IThreadPool;
-import org.ignis.backend.services.*;
+import org.ignis.backend.services.IBackendServiceImpl;
+import org.ignis.backend.services.IClusterServiceImpl;
+import org.ignis.backend.services.IDataFrameServiceImpl;
+import org.ignis.backend.services.IPropertiesServiceImpl;
+import org.ignis.backend.services.IServiceStorage;
+import org.ignis.backend.services.IWorkerServiceImpl;
 import org.ignis.logging.ILogger;
 import org.ignis.properties.ICrypto;
 import org.ignis.properties.IKeys;
 import org.ignis.properties.IProperties;
 import org.ignis.properties.IPropertyException;
-import org.ignis.rpc.driver.*;
+import org.ignis.rpc.driver.IBackendService;
+import org.ignis.rpc.driver.IClusterService;
+import org.ignis.rpc.driver.IDataFrameService;
+import org.ignis.rpc.driver.IPropertiesService;
+import org.ignis.rpc.driver.IWorkerService;
 import org.ignis.scheduler.IScheduler;
 import org.ignis.scheduler.ISchedulerException;
 import org.ignis.scheduler.ISchedulerFactory;
@@ -33,11 +47,6 @@ import org.ignis.scheduler.ISchedulerParser;
 import org.ignis.scheduler.model.IContainerInfo;
 import org.ignis.scheduler.model.IJobInfo;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author César Pomar
@@ -104,7 +113,8 @@ public final class Main {
             try {
                 url = props.getProperty(IKeys.SCHEDULER_URL, null);
                 type = props.getProperty(IKeys.SCHEDULER_NAME);
-
+                
+                LOGGER.info("This log is for ensure compilation with the latest code");
                 LOGGER.info("Checking scheduler " + type);
                 scheduler = ISchedulerFactory.create(type, url);
                 scheduler.healthCheck();
