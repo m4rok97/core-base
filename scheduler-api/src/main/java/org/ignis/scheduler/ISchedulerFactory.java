@@ -44,6 +44,7 @@ public final class ISchedulerFactory {
         }
 
         try {
+            System.out.println(Class.forName(type));
             found = Class.forName(type).asSubclass(IScheduler.class);
         } catch (ClassNotFoundException ex) {
             throw new ISchedulerException("Scheduler '" + type + "' not found", ex);
