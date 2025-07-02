@@ -948,7 +948,7 @@ public final class Slurm implements IScheduler {
     @Override
     public void healthCheck() throws ISchedulerException {
         try {
-            String command = "sinfo --noheader";
+            String command = "ignis-host sinfo --noheader";
             runAndCaptureOutput(List.of("/bin/bash", "-c", command));
             LOGGER.info("Slurm health check passed.");
         } catch (Exception ex) {
