@@ -118,10 +118,11 @@ public final class Slurm implements IScheduler {
             }
         }
         
+        String containerInfoEncoded = ISchedulerUtils.encode(containerInfo);
         // Export container information
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-            oos.writeObject(containerInfo);
+            oos.writeObject(containerInfoEncoded);
             script.append("export CONTAINER_INFO=").append(new String(Base64.getEncoder().encode(bos.toByteArray()))).append("\n");
         } catch (IOException e) {
             throw new ISchedulerException("IO error", e);
