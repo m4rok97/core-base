@@ -689,7 +689,10 @@ public final class Slurm implements IScheduler {
         if (Boolean.getBoolean("ignis.debug")) {
             LOGGER.info("Debug: slurm script{ \n    " + script.toString().replace("\n", "\n    ") + "\n}\n");
         }
-       
+        
+        System.out.println("===== SLURM SCRIPT FILE ===== ");
+        System.out.println(script.toString());
+        
         // Run the script and capture the output
         String output = runAndCaptureOutput(List.of(), script.toString());
 
