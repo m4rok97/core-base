@@ -120,13 +120,7 @@ public final class Slurm implements IScheduler {
         
         String containerInfoEncoded = ISchedulerUtils.encode(containerInfo);
         // Export container information
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-            oos.writeObject(containerInfoEncoded);
-            script.append("export CONTAINER_INFO=").append(new String(Base64.getEncoder().encode(bos.toByteArray()))).append("\n");
-        } catch (IOException e) {
-            throw new ISchedulerException("IO error", e);
-        }
+        script.append("export CONTAINER_INFO=").append(containerInfoEncoded).append("\n");
 
         // export the job ID and name
         script.append("export IGNIS_JOB_ID=").append(driver ? "driver" : "${SLURM_PROCID}").append("\n");
@@ -409,7 +403,7 @@ public final class Slurm implements IScheduler {
 
     private List<IContainerInfo> parseContainers(String clusterId) throws ISchedulerException {
         try {
-            String command = "scontrol show job " + clusterId;
+            String command = "ignis-host scontrol show job " + clusterId;
             String output = runAndCaptureOutput(List.of("/bin/bash", "-c", command));
     
             List<IContainerInfo> containers = new ArrayList<>();
@@ -510,7 +504,7 @@ public final class Slurm implements IScheduler {
                     script.append(String.join(" ", args)).append('\n');
                 }
     
-                script.append("srun ");
+                script.append("ignis-host srun ");
                 if (container.network() == IContainerInfo.INetworkMode.HOST) {
                     script.append("--network=host ");
                 }
@@ -651,14 +645,14 @@ public final class Slurm implements IScheduler {
             parseSlurmArgs(script, executor.resources(), executor.instances());
         }
 
-        String errorCheck = "trap \"scancel --batch ${SLURM_JOBID}\" err\n";
+        String errorCheck = "trap \"ignis-host scancel --batch ${SLURM_JOBID}\" err\n";
         String exit = "trap \"exit 0\" SIGUSR1\n";
         
         // Add the error check and exit trap
         script.append(exit).append("\n");
         script.append("DRIVER=$(cat - <<'EOF'").append("\n");
         script.append("#!/bin/bash\n");
-        script.append("trap \"scancel --batch --signal=USR1 ${SLURM_JOBID}\" exit\n");
+        script.append("trap \"ignis-host scancel --batch --signal=USR1 ${SLURM_JOBID}\" exit\n");
         script.append(exit);
         script.append(errorCheck);
 
@@ -687,8 +681,8 @@ public final class Slurm implements IScheduler {
         }
         // Add the srun commands to run the driver and executors
         script.append("\n");
-        script.append("srun").append(resvPorts).append(" --het-group=1 bash - <<< ${EXECUTOR} &").append("\n");
-        script.append("srun").append(resvPorts).append(" --het-group=0 bash - <<< ${DRIVER}   &").append("\n");
+        script.append("ignis-host srun").append(resvPorts).append(" --het-group=1 bash - <<< ${EXECUTOR} &").append("\n");
+        script.append("ignis-host srun").append(resvPorts).append(" --het-group=0 bash - <<< ${DRIVER}   &").append("\n");
         script.append("wait\n");
         
         // Log the script if debugging is enabled
@@ -713,7 +707,7 @@ public final class Slurm implements IScheduler {
             throw new ISchedulerException("Job ID cannot be null or empty");
         }
 
-        List<String> cmdArgs = List.of("scancel", id);
+        List<String> cmdArgs = List.of("ignis-host scancel", id);
 
         ProcessBuilder builder = new ProcessBuilder(cmdArgs);
 
@@ -743,7 +737,7 @@ public final class Slurm implements IScheduler {
             throw new ISchedulerException("Job ID cannot be null or empty.");
         }
 
-        List<String> cmdArgs = List.of("scontrol", "show", "job", id);
+        List<String> cmdArgs = List.of("ignis-host scontrol", "show", "job", id);
         ProcessBuilder builder = new ProcessBuilder(cmdArgs);
 
         try {
@@ -776,7 +770,7 @@ public final class Slurm implements IScheduler {
     @Override
     public List<IJobInfo> listJobs(Map<String, String> filters) throws ISchedulerException {
         List<String> cmdArgs = new ArrayList<>();
-        cmdArgs.add("squeue");
+        cmdArgs.add("ignis-host squeue");
         cmdArgs.add("--noheader");
         cmdArgs.add("--format=%i|%j|%u|%T|%N");
 
@@ -824,7 +818,7 @@ public final class Slurm implements IScheduler {
         script.append("CLUSTER=$(cat - <<'EOF'").append("\n");
         script.append("#!/bin/bash\n");
 
-        script.append("trap \"scancel --batch ${SLURM_JOBID}\" ERR\n");
+        script.append("trap \"ignis-host scancel --batch ${SLURM_JOBID}\" ERR\n");
         script.append("trap \"exit 0\" SIGUSR1\n");
 
         parseContainerArgs(script, request.resources(), false);
@@ -836,7 +830,7 @@ public final class Slurm implements IScheduler {
         if (!request.resources().ports().isEmpty()) {
             resvPorts = " --resv-ports=" + request.resources().ports().size();
         }
-        script.append("srun").append(resvPorts).append(" bash - <<< ${CLUSTER} &\n");
+        script.append("ignis-host srun").append(resvPorts).append(" bash - <<< ${CLUSTER} &\n");
         script.append("wait\n");
 
         if (Boolean.getBoolean("ignis.debug")) {
@@ -860,7 +854,7 @@ public final class Slurm implements IScheduler {
     @Override
     public IClusterInfo getCluster(String job, String id) throws ISchedulerException {
         try {
-            String command = String.format("scontrol show jobid=%s", id);
+            String command = String.format("ignis-host scontrol show jobid=%s", id);
             String output = runAndCaptureOutput(List.of("/bin/bash", "-c", command));
 
             IClusterInfo clusterInfo = parseClusterInfo(job, id, output);
@@ -878,7 +872,7 @@ public final class Slurm implements IScheduler {
     @Override
     public void destroyCluster(String job, String id) throws ISchedulerException {
         try {
-            String command = String.format("scancel %s", id);
+            String command = String.format("ignis-host scancel %s", id);
             runAndCaptureOutput(List.of("/bin/bash", "-c", command));
 
             LOGGER.info("Successfully destroyed cluster for job: {}, cluster ID: {}", job, id);
@@ -926,7 +920,7 @@ public final class Slurm implements IScheduler {
     @Override
     public IContainerInfo.IStatus getContainerStatus(String job, String id) throws ISchedulerException {
         try {
-            String command = String.format("squeue -j %s --noheader --format=%%T", id);
+            String command = String.format("ignis-host squeue -j %s --noheader --format=%%T", id);
             String output = runAndCaptureOutput(List.of("/bin/bash", "-c", command)).trim();
 
             if (output.isEmpty()) {
