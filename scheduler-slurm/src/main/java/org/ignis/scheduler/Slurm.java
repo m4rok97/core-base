@@ -38,7 +38,7 @@ public final class Slurm implements IScheduler {
 
     public Slurm(String binary) {
         if (binary == null) {
-            binary = "sbatch";
+            binary = "ignis-host sbatch";
         }
         this.binary = binary;
     }
