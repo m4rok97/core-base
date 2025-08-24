@@ -38,7 +38,7 @@ public final class Slurm implements IScheduler {
 
     public Slurm(String binary) {
         if (binary == null) {
-            binary = "sbatch";
+            binary = "ignis-host sbatch";
         }
         this.binary = binary;
     }
@@ -143,10 +143,8 @@ public final class Slurm implements IScheduler {
 
     private String runAndCaptureOutput(List<String> args, String script) throws ISchedulerException {
         List<String> cmdArgs = new ArrayList<>();
-        cmdArgs.add("ignis-host");
         cmdArgs.add(binary);
         cmdArgs.addAll(args);
-        cmdArgs.addAll(args.isEmpty() ? List.of("-") : args);
 
         ProcessBuilder builder = new ProcessBuilder(cmdArgs);
         StringBuilder output = new StringBuilder();
@@ -180,18 +178,9 @@ public final class Slurm implements IScheduler {
     }
 
     private String runAndCaptureOutput(List<String> args) throws ISchedulerException {
-
-        List<String> cmd = new ArrayList<>(args.size() + 1);
-        if (!"ignis-host".equals(args.get(0))) {
-            cmd.add("ignis-host");
-        }
-        cmd.addAll(args);
-        
-        ProcessBuilder builder = new ProcessBuilder(cmd); 
+        ProcessBuilder builder = new ProcessBuilder(args); 
         StringBuilder output = new StringBuilder();
-        
-
-        
+    
         try {
             builder.redirectErrorStream(true);
             Process process = builder.start();
@@ -414,8 +403,8 @@ public final class Slurm implements IScheduler {
 
     private List<IContainerInfo> parseContainers(String clusterId) throws ISchedulerException {
         try {
-            String command = "scontrol show job " + clusterId;
-            String output = runAndCaptureOutput(List.of("/bin/bash", "-c", "ignis-host",command));
+            String command = "ignis-host scontrol show job " + clusterId;
+            String output = runAndCaptureOutput(List.of("/bin/bash", "-c", command));
     
             List<IContainerInfo> containers = new ArrayList<>();
     
@@ -751,7 +740,7 @@ public final class Slurm implements IScheduler {
             throw new ISchedulerException("Job ID cannot be null or empty.");
         }
 
-        List<String> cmdArgs = List.of("ignis-host","scontrol", "show", "job", id);
+        List<String> cmdArgs = List.of("ignis-host scontrol", "show", "job", id);
         ProcessBuilder builder = new ProcessBuilder(cmdArgs);
 
         try {
@@ -784,8 +773,7 @@ public final class Slurm implements IScheduler {
     @Override
     public List<IJobInfo> listJobs(Map<String, String> filters) throws ISchedulerException {
         List<String> cmdArgs = new ArrayList<>();
-        cmdArgs.add("ignis-host");
-        cmdArgs.add("squeue");
+        cmdArgs.add("ignis-host squeue");
         cmdArgs.add("--noheader");
         cmdArgs.add("--format=%i|%j|%u|%T|%N");
 
@@ -939,7 +927,7 @@ public final class Slurm implements IScheduler {
             String output = runAndCaptureOutput(List.of("/bin/bash", "-c", command)).trim();
 
             if (output.isEmpty()) {
-                command = String.format("ignis-host sacct -j %s --format=State --noheader", id);
+                command = String.format("sacct -j %s --format=State --noheader", id);
                 output = runAndCaptureOutput(List.of("/bin/bash", "-c", command)).trim();
 
                 if (output.isEmpty()) {
