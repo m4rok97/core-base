@@ -38,7 +38,7 @@ public final class Slurm implements IScheduler {
 
     public Slurm(String binary) {
         if (binary == null) {
-            binary = "sbatch";
+            binary = "ignis-host sbatch";
         }
         this.binary = binary;
     }
@@ -70,7 +70,7 @@ public final class Slurm implements IScheduler {
             throws ISchedulerException {
         // TODO: I need to update this part and use an implementation that the singularity implementation 
         // Add singularity exec command with the appropriate options
-        script.append("ignis-host ").append(provider(containerInfo)).append(" instance start");
+        script.append(provider(containerInfo)).append(" instance start");
         script.append(" --writable-tmpfs --pid --cleanenv");
         
         // Add bind mounts
@@ -143,7 +143,11 @@ public final class Slurm implements IScheduler {
 
     private String runAndCaptureOutput(List<String> args, String script) throws ISchedulerException {
         List<String> cmdArgs = new ArrayList<>();
-        cmdArgs.add(binary);
+        // Split binary in case it contains multiple commands (like "ignis-host sbatch")
+        String[] binaryParts = binary.split("\\s+");
+        for (String part : binaryParts) {
+            cmdArgs.add(part);
+        }
         cmdArgs.addAll(args);
 
         ProcessBuilder builder = new ProcessBuilder(cmdArgs);
@@ -504,7 +508,7 @@ public final class Slurm implements IScheduler {
                     script.append(String.join(" ", args)).append('\n');
                 }
     
-                script.append("ignis-host srun ");
+                script.append("srun ");
                 if (container.network() == IContainerInfo.INetworkMode.HOST) {
                     script.append("--network=host ");
                 }
@@ -645,14 +649,14 @@ public final class Slurm implements IScheduler {
             parseSlurmArgs(script, executor.resources(), executor.instances());
         }
 
-        String errorCheck = "trap \"ignis-host scancel --batch ${SLURM_JOBID}\" err\n";
+        String errorCheck = "trap \"scancel --batch ${SLURM_JOBID}\" err\n";
         String exit = "trap \"exit 0\" SIGUSR1\n";
         
         // Add the error check and exit trap
         script.append(exit).append("\n");
         script.append("DRIVER=$(cat - <<'EOF'").append("\n");
         script.append("#!/bin/bash\n");
-        script.append("trap \"ignis-host scancel --batch --signal=USR1 ${SLURM_JOBID}\" exit\n");
+        script.append("trap \"scancel --batch --signal=USR1 ${SLURM_JOBID}\" exit\n");
         script.append(exit);
         script.append(errorCheck);
 
@@ -681,8 +685,8 @@ public final class Slurm implements IScheduler {
         }
         // Add the srun commands to run the driver and executors
         script.append("\n");
-        script.append("ignis-host srun").append(resvPorts).append(" --het-group=1 bash - <<< ${EXECUTOR} &").append("\n");
-        script.append("ignis-host srun").append(resvPorts).append(" --het-group=0 bash - <<< ${DRIVER}   &").append("\n");
+        script.append("srun").append(resvPorts).append(" --het-group=1 bash - <<< ${EXECUTOR} &").append("\n");
+        script.append("srun").append(resvPorts).append(" --het-group=0 bash - <<< ${DRIVER}   &").append("\n");
         script.append("wait\n");
         
         // Log the script if debugging is enabled
@@ -821,7 +825,7 @@ public final class Slurm implements IScheduler {
         script.append("CLUSTER=$(cat - <<'EOF'").append("\n");
         script.append("#!/bin/bash\n");
 
-        script.append("trap \"ignis-host scancel --batch ${SLURM_JOBID}\" ERR\n");
+        script.append("trap \"scancel --batch ${SLURM_JOBID}\" ERR\n");
         script.append("trap \"exit 0\" SIGUSR1\n");
 
         parseContainerArgs(script, request.resources(), false);
@@ -833,7 +837,7 @@ public final class Slurm implements IScheduler {
         if (!request.resources().ports().isEmpty()) {
             resvPorts = " --resv-ports=" + request.resources().ports().size();
         }
-        script.append("ignis-host srun").append(resvPorts).append(" bash - <<< ${CLUSTER} &\n");
+        script.append("srun").append(resvPorts).append(" bash - <<< ${CLUSTER} &\n");
         script.append("wait\n");
 
         if (Boolean.getBoolean("ignis.debug")) {
