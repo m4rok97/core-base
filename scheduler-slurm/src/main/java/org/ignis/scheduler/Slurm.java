@@ -633,19 +633,10 @@ public final class Slurm implements IScheduler {
         //  Parse slurm arguments for the driver
         parseSlurmArgs(script, driver.resources(), 1);
 
-        // Add args from the driver
-        List<String> args = driver.resources().args();
-        if (!args.isEmpty()) {
-            script.append("#SBATCH ").append(args).append('\n');
-        }
-        
 
         // Add the batch script header for executors
         for (IClusterRequest executor : executors) {
             script.append("#SBATCH hetjob").append('\n');
-            if (!args.isEmpty()) {
-                script.append("#SBATCH ").append(executor.resources().args()).append('\n');
-            }
             parseSlurmArgs(script, executor.resources(), executor.instances());
         }
 
@@ -665,14 +656,17 @@ public final class Slurm implements IScheduler {
         script.append("EOF").append("\n");
         script.append(")").append("\n");
         script.append("\n");
-        script.append("EXECUTOR=$(cat - <<'EOF'").append("\n");
-        script.append("#!/bin/bash\n");
-        script.append(exit);
-        script.append(errorCheck);
-        
-        // Parse the executor container arguments
-        for (IClusterRequest executor : executors) {
-            parseContainerArgs(script, executor.resources(), false);
+        // Only create EXECUTOR section if there are executors
+        if (executors.length > 0) {
+            script.append("EXECUTOR=$(cat - <<'EOF'").append("\n");
+            script.append("#!/bin/bash\n");
+            script.append(exit);
+            script.append(errorCheck);
+            
+            // Parse the executor container arguments
+            for (IClusterRequest executor : executors) {
+                parseContainerArgs(script, executor.resources(), false);
+            }
             script.append("EOF").append("\n");
             script.append(")").append("\n");
         }
@@ -685,8 +679,10 @@ public final class Slurm implements IScheduler {
         }
         // Add the srun commands to run the driver and executors
         script.append("\n");
-        script.append("srun").append(resvPorts).append(" --het-group=1 bash - <<< ${EXECUTOR} &").append("\n");
-        script.append("srun").append(resvPorts).append(" --het-group=0 bash - <<< ${DRIVER}   &").append("\n");
+        if (executors.length > 0) {
+            script.append("srun").append(resvPorts).append(" --het-group=1 bash - <<< \"${EXECUTOR}\" &").append("\n");
+        }
+        script.append("srun").append(resvPorts).append(" --het-group=0 bash - <<< \"${DRIVER}\" &").append("\n");
         script.append("wait\n");
         
         // Log the script if debugging is enabled
