@@ -90,11 +90,18 @@ public final class Slurm implements IScheduler {
         script.append(" --env IGNIS_JOB_NAME=${IGNIS_JOB_NAME}");
         script.append(" --env SCHEDULER_PATH=${SCHEDULER_PATH}");
 
-        script.append(' ').append(containerInfo.image()).append(' ').append(containerInfo.args().get(0));
+        script.append(' ').append(containerInfo.image()).append(' ').append("${IGNIS_JOB_ID}");
+        script.append('\n');
+        
+        // Execute the job inside the singularity instance
+        script.append(provider(containerInfo)).append(" exec instance://").append("${IGNIS_JOB_ID}");
         for (String arg : containerInfo.args()) {
             script.append(' ').append(esc(arg));
         }
         script.append('\n');
+        
+        // Stop the instance after execution
+        script.append(provider(containerInfo)).append(" instance stop ").append("${IGNIS_JOB_ID}").append('\n');
     }
 
     
@@ -130,7 +137,7 @@ public final class Slurm implements IScheduler {
         // Create the working directory and environment files
         String file = wd + "/" + "${IGNIS_JOB_NAME}/slurm/${IGNIS_JOB_ID}";
 
-        script.append("mkdir -p ").append(wd).append("${IGNIS_JOB_NAME}/slurm\n");
+        script.append("mkdir -p ").append(wd).append("/${IGNIS_JOB_NAME}/slurm\n");
         script.append("env --null > ").append(file).append(".env\n");
         script.append("echo 1 > ").append(file).append(".ok\n");
         script.append("{\n");
@@ -680,9 +687,9 @@ public final class Slurm implements IScheduler {
         // Add the srun commands to run the driver and executors
         script.append("\n");
         if (executors.length > 0) {
-            script.append("srun").append(resvPorts).append(" --het-group=1 bash - <<< \"${EXECUTOR}\" &").append("\n");
+            script.append("srun").append(resvPorts).append(" bash - <<< \"${EXECUTOR}\" &").append("\n");
         }
-        script.append("srun").append(resvPorts).append(" --het-group=0 bash - <<< \"${DRIVER}\" &").append("\n");
+        script.append("srun").append(resvPorts).append(" bash - <<< \"${DRIVER}\" &").append("\n");
         script.append("wait\n");
         
         // Log the script if debugging is enabled
