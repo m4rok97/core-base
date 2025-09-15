@@ -692,10 +692,13 @@ public final class Slurm implements IScheduler {
         // Add the srun commands to run the driver and executors
         script.append("\n");
         if (executors.length > 0) {
-            script.append("srun").append(resvPorts).append(" bash - <<< \"${EXECUTOR}\" &").append("\n");
+            script.append("srun").append(resvPorts).append(" --het-group=1 bash - <<< \"${EXECUTOR}\" &").append("\n");
+            script.append("srun").append(resvPorts).append(" --het-group=0 bash - <<< \"${DRIVER}\" &").append("\n");
+            script.append("wait\n");
+        } else {
+            // When no executors, just run the driver directly
+            script.append("srun").append(resvPorts).append(" bash - <<< \"${DRIVER}\"").append("\n");
         }
-        script.append("srun").append(resvPorts).append(" bash - <<< \"${DRIVER}\" &").append("\n");
-        script.append("wait\n");
         
         // Log the script if debugging is enabled
         if (Boolean.getBoolean("ignis.debug")) {
