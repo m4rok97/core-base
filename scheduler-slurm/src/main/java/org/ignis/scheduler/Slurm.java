@@ -39,6 +39,8 @@ public final class Slurm implements IScheduler {
     public Slurm(String binary) {
         if (binary == null) {
             binary = "ignis-host sbatch";
+        } else {
+            binary = "ignis-host " + binary;
         }
         this.binary = binary;
     }
@@ -526,8 +528,11 @@ public final class Slurm implements IScheduler {
                       .append(" ")
                       .append(String.join(" ", container.args()))
                       .append('\n');
-    
-                String output = runAndCaptureOutput(List.of("/bin/bash", "-c", script.toString()));
+                
+                System.out.println("Test of execution ");
+                String output = runAndCaptureOutput(List.of("bash", "-c", "sbatch <<< '"+script.toString()+"'"));
+
+                // String output = runAndCaptureOutput(List.of("bash", "-c", "sbatch <<< 'ls'"));
     
                 String jobId = extractJobId(output);
                 if (jobId == null) {
